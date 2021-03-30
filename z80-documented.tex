@@ -3,25 +3,30 @@
 \usepackage{fancyhdr}
 \usepackage{a4wide}
 \usepackage{url}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{titletoc}
 
 % redefine the default "plain" pagestyle (used by chapter pages)
 \fancypagestyle{plain}{
-\fancyhf{} 
-\fancyfoot[C]{\thepage}
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
+	\fancyhf{} 
+	\fancyfoot[C]{\thepage}
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
 }
 
 % define style used for normal pages
 \fancypagestyle{clean}{
-\fancyhf{} 
-\fancyfoot[C]{\thepage}
-\fancyhead[L]{\leftmark}
+	\fancyhf{} 
+	\fancyfoot[C]{\thepage}
+	\fancyhead[L]{\leftmark}
 }
 
 \pagestyle{clean}
 
-\usepackage{multicol}
+
+
+
 \begin{document}
 
 % TODO
@@ -37,6 +42,9 @@
 
 \frontmatter
 
+
+
+
 \chapter*{Copyright Statement}
 
       Copyright {\copyright} 1997, 1998, 2001, 2003, 2005 Sean Young.\\
@@ -51,6 +59,9 @@
 \tableofcontents
 
 \mainmatter
+
+
+
 
 \setcounter{page}{5}
 \chapter{Introduction}
@@ -84,12 +95,14 @@ and I have checked a lot of things that were already in here.\\\\
 (Tomaz)
 Added ZX Spectrum Next specific commands.
 
+
 \section{Where to get this document}
 
 The latest version is always available in {\LaTeX} and pdf at 
 the following location:
 
 {\tt http://www.myquest.nl/z80undocumented/}
+
 
 \section{Feedback}
 
@@ -99,6 +112,7 @@ are still unknown, it would be great if someone found out how they work.
 You can reach me at {\ttfamily jw@dds.nl} and my website can be 
 found at {\ttfamily http://www.myquest.nl/z80undocumented/}.
 Sean's website is at {\ttfamily http://www.msxnet.org/}.
+
 
 \pagebreak
 \section{ChangeLog}
@@ -143,6 +157,9 @@ and use {\LaTeX}. Apart from a full re-write, the only changed information is
 and HF flags for {\tt OTIR} and friends (section \ref{block_io}).
 
 \end{description}
+
+
+
 
 \chapter{Overview}
 
@@ -202,6 +219,7 @@ bit indexed offsets and more flexible indirect register
 addressing. All of the addressing modes allow access to
 the entire 32-bit addressing space.
 
+
 \section{Registers}
 
 The following accessible registers exist in the Z80. \\[1ex]
@@ -227,6 +245,7 @@ For interrupts, there are two interrupt flop-flops, IFF1 and IFF2, and the
 interrupt mode is retained. See chapter \ref{interrupts} for more about
 interrupts. Also there is an internal register which is described in section 
 \ref{block_io}.
+
 
 \section{Flags}
 \label{flags}
@@ -281,6 +300,7 @@ flag & SF & ZF & YF & HF & XF & PF & NF & CF \\ \hline
 Note that the only way to read the XF, YF and NF can only be read using
 {\tt PUSH AF}.
 
+
 \section{Power on defaults}
 \label{pon}
 
@@ -294,6 +314,7 @@ compatible, interrupt mode is probably 0.
 
 Probably the best way to simulate this in an emulator is set PC, IFF1,
 IFF2, IM to 0 and set all other registers to FFFFh.
+
 
 \section{Pin Descriptions \cite{datasheet}}
 
@@ -463,6 +484,7 @@ it took me hours to draw this.\\[1ex]
 
 \end{description}
 
+
 \chapter{Undocumented Opcodes}
 
 There are quite a few undocumented opcodes/instructions. This section 
@@ -474,6 +496,7 @@ the way the following opcodes are interpreted. All instructions without a
 prefix (not a value of one the above) are single byte opcodes\footnote{
 Without the operand, that is.}, which are documented in the official 
 documentation.
+
 
 \section{CB Prefix \cite{gerton}}
 \label{prefix_cb}
@@ -495,6 +518,7 @@ which are usually denoted with {\tt SLL} (Shift Logical Left). It works like
        CB37\>SLL A
 \end{tabbing}
 }
+
 
 \section{DD Prefix \cite{gerton}}
 
@@ -530,6 +554,7 @@ LD DE,0\>LD DE,0\\
 LD HL,0\>LD IX,0\\
 \end{tabbing}
 }
+
 
 \section{FD Prefix \cite{gerton}}
 
@@ -610,6 +635,7 @@ All the {\tt RETI/RETN} instructions are the same, all like the {\tt RETN}
 instruction. So they all, including {\tt RETI}, copy IFF2 to IFF1. More 
 information on {\tt RETI} and {\tt RETN} and {\tt IM x} is in 
 section \ref{flipflop}.
+
 
 \section{DDCB Prefix}
 \label{prefix_cbdd}
@@ -692,9 +718,11 @@ the official ones:
   \end{tabbing}
 }
 
+
 \section{FDCB Prefixes}
 
 Same as for the DDCB prefix, though IY is used instead of IX.
+
 
 \section{Combinations of Prefixes}
 
@@ -709,6 +737,8 @@ bytes, it is the last one that counts. Also any other byte (or instruction)
 resets this flag. \\[0.5ex]
 
 {\tt {\qquad}FD DD 00 21 00 10{\qquad}NOP NOP NOP LD HL,1000h}
+
+
 
 
 \chapter{Undocumented Effects}
@@ -782,6 +812,7 @@ Doesn't change this register.
 
 Any help here would be most appreciated!
 
+
 \section{Memory Block Instructions \cite{mrison}}
 \label{block_mem}
 
@@ -837,6 +868,7 @@ of HF flag, which is set or reset by the hypothetical {\tt CP (HL)}. So,
   Unchanged.
 
 \end{description}
+
 
 \section{I/O Block Instructions}
 \label{block_io}
@@ -900,6 +932,7 @@ And last {\tt IND/INDR}:
 
 \end{description}
 
+
 \section{16 Bit I/O ports}
 
 Officially the Z80 has an 8 bit I/O port address space. When using the I/O
@@ -912,12 +945,14 @@ A $\times$ 256 + n on the address bus.
 The {\tt INI/INIR/IND/INDR} instructions use BC after decrementing B, and
 the {\tt OUTI/OTIR/OUTD/OTDR} instructions before.
 
+
 \section{Block Instructions}
 
 The repeated block instructions simply decrease the PC by two so the 
 instruction is simply re-executed. So interrupts can occur during block 
 instructions. So, {\tt LDIR} is simply {\tt LDI} + if BC is not 0, decrease 
 PC by 2.
+
 
 \section{16 Bit Additions}
 
@@ -926,6 +961,7 @@ Z80 is an 8-bit CPU, 16 bit additions are done in two stages: first the
 lower bytes are added, then the two higher bytes. The SF, YF, HF, XF flags 
 are affected as by the second (high) 8 bit addition. ZF is set if the whole 
 16 bit result is 0.
+
 
 \section{DAA Instruction}
 \label{daa}
@@ -1030,6 +1066,7 @@ NF & HF & low    & HF' \\
 SF, YF, XF are copies of bit 7,5,3 of the result respectively; ZF is set 
 according to the result and NF is always unchanged.
 
+
 \chapter{Interrupts}
 \label{interrupts}
 
@@ -1044,6 +1081,7 @@ flip-flops (IFF1 and IFF2), and the I register. When a maskable interrupt
 is accepted, a external device can put a value on the databus.
 
 Both types of interrupts increase the R register by one, when accepted.
+
 
 \section{Non-Maskable Interrupts (NMI)}
 
@@ -1064,6 +1102,7 @@ the {\ttfamily LD A,I} or {\ttfamily LD A,R} instruction. These instructions
 copy IFF2 to the PF flag.
 
 Accepting an {\tt NMI} costs 11 t-states.
+
 
 \section{Maskable Interrupts (INT)}
 
@@ -1141,6 +1180,7 @@ interrupt. That is why I called all the undocumented EDxx RET instructions
 {\tt RETN}: All of them operate alike, the only difference of {\tt RETI} is 
 its specific opcode which the Z80 PIO recognises.
 
+
 \section{Things affecting the Interrupt flip-flops}
 \label{flipflop}
 
@@ -1182,6 +1222,7 @@ Since every INT routine must end with {\ttfamily EI} followed by
 {\ttfamily RETI} officially, It does not matter that RETI copies IFF2 into 
 IFF1; both are set anyway.
 
+
 \section{HALT instruction}
 
 The HALT instruction halts the Z80; it does not increase the PC so
@@ -1189,6 +1230,7 @@ that the instruction is re-executed, until a maskable or non-maskable
 interrupt is accepted. Only then does the Z80 increase the PC again 
 and continues with the next instruction. During the HALT state, the 
 HALT line is set. The PC is increased before the interrupt routine is called.
+
 
 \section{Where interrupts are accepted}
 
@@ -1259,6 +1301,9 @@ could be interpreted as a simple {\tt LD HL,0} if the interrupt was after the
 last DD. Which never happens, so the implementation is correct.
 Although I haven't tested this, as I imagine the same holds for NMI interrupts. 
 
+
+
+
 \chapter{Timing and R register}
 
 \section{R register and memory refresh}
@@ -1291,6 +1336,9 @@ After a hardware reset, or after power on, the R register is reset to 0.
 That should cover all there is to say about the R register. It is often
 used in programs for a random value, which is good but of course not
 truly random.
+
+
+
 
 \chapter{Other Information}
 
@@ -1357,6 +1405,9 @@ some are very confusing, so I'll mention the ones I have found here:
   
 \end{itemize}
 
+
+
+
 \begin{thebibliography}{}
 
  \bibitem{mrison}  Mark Rison Z80 page for !CPC. \\
@@ -1397,160 +1448,278 @@ some are very confusing, so I'll mention the ones I have found here:
 
 \end{thebibliography}
 
+
+
+
 \chapter{Instruction Tables}
+
+
+\newcommand{\instrheader}{
+	\hline
+		
+		& 
+		Symbolic &
+		\multicolumn{8}{c}{Flags} & 
+		\multicolumn{3}{c}{Opcode} &
+		& & 
+		M & 
+		T & \\
+
+		Mnemonic & 
+		Operation &
+		SF & ZF & YF & HF & XF & PF & NF & CF &
+		76 & 543 & 210 & 
+		Hex & Bytes & 
+		Cycles & States & 
+		Comments \\
+
+	\hline
+}
+
+
+% Chapters have large gap on top so we'd have to wrap tables. Instead we show table of contents for all sections on chapter title page as filler and start actual tables on next page.
+\startcontents[intrstructionsections]
+\printcontents[intrstructionsections]{}{1}{}
+
 
 \section{8-Bit Load Group}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
-\setlength{\tabcolsep}{1mm}
-\begin{tabular}{llc@{ }c@{ }c@{ }c@{ }c@{ }c@{ }c@{ }cc@{ }c@{ }cccccll}\hline
- & \multicolumn{1}{c}{Symbolic} & \multicolumn{8}{c}{Flags} & \multicolumn{3}{c}{Opcode} & & & M & T & \\
-Mnemonic & \multicolumn{1}{c}{Operation} & SF & ZF & YF & HF & XF & PF & NF & CF & 76 & 543 & 210 
-	& Hex & Bytes & Cycles & States & \multicolumn{2}{l}{Comments} \\ \hline
+	\setlength{\tabcolsep}{1mm}
+	\begin{tabular}{llcccccccccccccccl}
+		     
+		\instrheader
+	
+		& & & & & & & & & & & & & & & & &
+		\multirow{9}{*}{
+			\begin{tabular}{ll}
+				r,r' & Reg \\
+				\hline
+				000 & B \\
+				001 & C \\
+				010 & D \\
+				011 & E \\
+				100 & H \\
+				101 & L \\
+				111 & A \\
+			\end{tabular}
+		} \\
 
-LD r,r'	& r$\leftarrow$r' & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 01 & r & r'
-	& & 1 & 1 & 4 & r,r' & Reg\\ \cline{18-19}
+		LD r,r'	& 
+			r$\leftarrow$r' & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+			01 & r & r' &
+			.. & 1 & 
+			1 & 4 & \\[3pt]
+			
+		LD p,p' & 
+			p$\leftarrow$p' & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 011 & 101 & 
+			DD & 2 & 
+			2 & 8 & \\
+		\multicolumn{10}{c}{} & 01 & p & p' & .. & & & \\[3pt]
 
-LD p,p' & p$\leftarrow$p' & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 011 & 101
-	& DD & 2 & 2 & 8 & 000 & B \\
-\multicolumn{10}{c}{} & 01 & p & p' & \multicolumn{4}{c}{} & 001 & C \\
+		LD q,q' & 
+			q$\leftarrow$q' & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 111 & 101 & 
+			FD & 2 & 
+			2 & 8 & \\
+		\multicolumn{10}{c}{} & 01 & q & q' & .. & & & \\[3pt]
 
-LD q,q' & q$\leftarrow$q' & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 111 & 101
-	& FD & 2 & 2 & 8 & 010 & D \\
-\multicolumn{10}{c}{} & 01 & q & q' & \multicolumn{4}{c}{} & 011 & E \\
+		LD r,n	& 
+			r$\leftarrow$n & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			00 & r & 110 & 
+			.. & 2 & 
+			2 & 7 & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow $ n $\longrightarrow$} & .. & & & \\[3pt]
 
-LD r,n	& r$\leftarrow$n & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & r & 110
-	& & 2 & 2 & 7 & 100 & H \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & 101 & L \\
+		LD p,n	& 
+			p$\leftarrow$n & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 011 & 101 & 
+			DD & 3 & 
+			3 & 11 & \\
+		\multicolumn{10}{c}{} & 00 & p & 110 & .. & & & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[3pt]
+		
+		LD q,n	&
+			q$\leftarrow$n & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 111 & 101 &
+			FD & 3 & 
+			3 & 11 & 
+			\multirow{8}{*}{
+				\begin{tabular}{ll}
+					p,p' & Reg \\
+					\hline
+					000 & B \\
+					001 & C \\
+					010 & D \\
+					011 & E \\
+					100 & IXh \\
+					101 & IXl \\
+					111 & A \\
+				\end{tabular}
+		}\\
+		\multicolumn{10}{c}{} & 00 & q & 110 & .. & & & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & & \\[3pt]
 
-LD p,n	& p$\leftarrow$n & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 011 & 101
-	& DD & 3 & 3 & 11 & 111 & A \\
-\multicolumn{10}{c}{} & 00 & p & 110 & \multicolumn{4}{c}{} & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & & \\
+		LD r,(HL) & r$\leftarrow$(HL) & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 01 & r & 110 &
+			.. & 1 & 
+			2 & 7 & \\[3pt]
 
-LD q,n	& q$\leftarrow$n & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 111 & 101
-	& FD & 3 & 3 & 11 & p,p' & Reg \\ \cline{18-19}
-\multicolumn{10}{c}{} & 00 & q & 110 & \multicolumn{4}{c}{} & 000 & B \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & 001 & C\\
+		LD r,(IX+d) & r$\leftarrow$(IX+d) & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 011 & 101 & 
+			DD & 3 & 
+			5 & 19 & \\
+		\multicolumn{10}{c}{} & 01 & r & 110 & .. & & & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \\[3pt]
 
-LD r,(HL) & r$\leftarrow$(HL) & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 01 & r & 110
-	& & 1 & 2 & 7 & 010 & D \\
+		LD r,(IY+d) & r$\leftarrow$(IY+d) & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 111 & 101 & 
+			FD & 3 & 
+			5 & 19 & \\
+		\multicolumn{10}{c}{} & 01 & r & 110 & .. & & & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \\[3pt]
 
-LD r,(IX+d) & r$\leftarrow$(IX+d) & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 011 & 101
-	& DD & 3 & 5 & 19 & 011 & E \\
-\multicolumn{10}{c}{} & 01 & r & 110 & \multicolumn{4}{c}{} & 100 & IXh \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & 101 & IXl\\
+		LD (HL),r & (HL)$\leftarrow$r & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+			01 & 110 & r & 
+			.. & 1 & 
+			2 & 7 & 
+		\multirow{8}{*}{
+			\begin{tabular}{ll}
+				q,q' & Reg \\
+				\hline
+				000 & B \\
+				001 & C \\
+				010 & D \\
+				011 & E \\
+				100 & IYh \\
+				101 & IYl \\
+				111 & A \\
+			\end{tabular}
+		}\\[3pt]
 
-LD r,(IY+d) & r$\leftarrow$(IY+d) & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 111 & 101
-	& FD & 3 & 5 & 19 & 111 & A \\
-\multicolumn{10}{c}{} & 01 & r & 110 & \multicolumn{4}{c}{} & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & & \\
+		LD (IX+d),r & (IX+d)$\leftarrow$r & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+			11 & 011 & 101 & 
+			DD & 3 & 
+			5 & 19 & \\
+		\multicolumn{10}{c}{} & 01 & 110 & r & .. & & & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \\[3pt]
 
-LD (HL),r & (HL)$\leftarrow$r & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 01 & 110 & r
-	& & 1 & 2 & 7 & q,q' & Reg \\ \cline{18-19}
+		LD (IY+d),r & (IY+d)$\leftarrow$r & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+			11 & 111 & 101 & 
+			FD & 3 & 
+			5 & 19 & \\
+		\multicolumn{10}{c}{} & 01 & 110 & r & .. & & & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \\[3pt]
 
-LD (IX+d),r & (IX+d)$\leftarrow$r & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 011 & 101
-	& DD & 3 & 5 & 19 & 000 & B \\
-\multicolumn{10}{c}{} & 01 & 110 & r & \multicolumn{4}{c}{} & 001 & C \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & 010 & D \\
+		LD (HL),n & (HL)$\leftarrow$n & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			00 & 110 & 110 & 
+			36 & 2 & 
+			3 & 10 & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[3pt]
 
-LD (IY+d),r & (IY+d)$\leftarrow$r & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 111 & 101
-	& FD & 3 & 5 & 19 & 011 & E \\
-\multicolumn{10}{c}{} & 01 & 110 & r & \multicolumn{4}{c}{} & 100 & IYh \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & 101 & IYl \\
+		LD (IX+d),n & (IX+d)$\leftarrow$n & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 011 & 101 & 
+			DD & 4 & 
+			5 & 19 & \\
+		\multicolumn{10}{c}{} & 00 & 110 & 110 &  36 & & & & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[3pt]
 
-LD (HL),n & (HL)$\leftarrow$n & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 110 & 110
-	& 36 & 2 & 3 & 10 & 111 & A \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & & \\
+		LD (IY+d),n & (IY+d)$\leftarrow$n & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 111 & 101 & 
+			FD & 4 & 
+			5 & 19 & \\
+		\multicolumn{10}{c}{} & 00 & 110 & 110 & 36 & .. & & & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[3pt]
 
-LD (IX+d),n & (IX+d)$\leftarrow$n & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 011 & 101
-	& DD & 4 & 5 & 19 & & \\
-\multicolumn{10}{c}{} & 00 & 110 & 110 &  36 & \multicolumn{3}{c}{} & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & & \\
+		LD A,(BC) & A$\leftarrow$(BC) & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			00 & 001 & 010 & 
+			0A & 1 & 
+			2 & 7 & \\[3pt]
 
-LD (IY+d),n & (IY+d)$\leftarrow$n & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 111 & 101
-	& FD & 4 & 5 & 19 & & \\
-\multicolumn{10}{c}{} & 00 & 110 & 110 &  36 & \multicolumn{3}{c}{} & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & & \\
+		LD A,(DE) & A$\leftarrow$(DE) & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			00 & 011 & 01 & 
+			1A & 1 & 
+			2 & 7 & \\[3pt]
 
-LD A,(BC) & A$\leftarrow$(BC) & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 001 & 010
-	& 0A & 1 & 2 & 7 & & \\
+		LD A,(nm) & A$\leftarrow$(nm) & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			00 & 111 & 010 & 
+			3A & 3 & 
+			4 & 13 & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ m $\longrightarrow$} & .. & & & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[3pt]
+		
+		LD (BC),A & (BC)$\leftarrow$A & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			00 & 000 & 010 & 
+			02 & 1 & 
+			2 & 7 & \\[3pt]
 
-LD A,(DE) & A$\leftarrow$(DE) & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 011 & 010
-	& 1A & 1 & 2 & 7 & & \\
+		LD (DE),A & (DE)$\leftarrow$A & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			00 & 010 & 010 & 
+			12 & 1 & 
+			2 & 7 & \\[3pt]
 
-LD A,(nn) & A$\leftarrow$(nn) & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 111 & 010
-	& 3A & 3 & 4 & 13 & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & & \\ \hline
+		LD (nn),A & (nn)$\leftarrow$A & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			00 & 110 & 010 & 
+			32 & 3 & 
+			4 & 13 & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[3pt]
 
-\end{tabular}
+		LD A,I & A$\leftarrow$I & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & IFF2 & 0 & $\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 9 & \\ 
+		\multicolumn{10}{c}{} & 01 & 010 & 111 & 57 & & & & \\[3pt]
+
+		LD A,R & A$\leftarrow$R & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & IFF2 & 0 & $\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 9 & \\ 
+		\multicolumn{10}{c}{} & 01 & 011 & 111 & 5F & & & & \\[3pt]
+
+		LD I,A & I$\leftarrow$A & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 9 & \\ 
+		\multicolumn{10}{c}{} & 01 & 000 & 111 & 47 & & & & \\[3pt]
+
+		LD R,A & R$\leftarrow$A & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 9 & \\ 
+		\multicolumn{10}{c}{} & 01 & 001 & 111 & 4F & & & & \\[3pt]
+
+	\hline
+
+	\end{tabular}
 }
 
-(continued)\\
-{\tt \scriptsize \setlength{\fboxsep}{0.25mm}
-\setlength{\tabcolsep}{1mm}
-\begin{tabular}{llc@{ }c@{ }c@{ }c@{ }c@{ }c@{ }c@{ }cc@{ }c@{ }cccccll}\hline
- & \multicolumn{1}{c}{Symbolic} & \multicolumn{8}{c}{Flags} & \multicolumn{3}{c}{Opcode} & & & M & T & \\
-Mnemonic & \multicolumn{1}{c}{Operation} & SF & ZF & YF & HF & XF & PF & NF & CF & 76 & 543 & 210 
-	& Hex & Bytes & Cycles & States & \multicolumn{2}{l}{Comments} \\ \hline
-
-LD (BC),A & (BC)$\leftarrow$A & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 000 & 010
-	& 02 & 1 & 2 & 7 & & \\
-
-LD (DE),A & (DE)$\leftarrow$A & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 010 & 010
-	& 12 & 1 & 2 & 7 & & \\
-
-LD (nn),A & (nn)$\leftarrow$A & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 110 & 010
-	& 32 & 3 & 4 & 13 & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & & \\
-
-LD A,I & A$\leftarrow$I & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & IFF2 & 0 & $\bullet$ & 11 & 101 & 101 
-	& ED & 2 & 2 & 9 & & \\ 
-\multicolumn{10}{c}{} & 01 & 010 & 111 & 57 & \multicolumn{3}{c}{} & & \\
-
-LD A,R & A$\leftarrow$R & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & IFF2 & 0 & $\bullet$ & 11 & 101 & 101 
-	& ED & 2 & 2 & 9 & & \\ 
-\multicolumn{10}{c}{} & 01 & 011 & 111 & 5F & \multicolumn{3}{c}{} & & \\
-
-LD I,A & I$\leftarrow$A & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 2 & 9 & & \\ 
-\multicolumn{10}{c}{} & 01 & 000 & 111 & 47 & \multicolumn{3}{c}{} & & \\
-
-LD R,A & R$\leftarrow$A & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 2 & 9 & & \\ 
-\multicolumn{10}{c}{} & 01 & 001 & 111 & 4F & \multicolumn{3}{c}{} & & \\ \hline
-
-\end{tabular}
-}
 
 \section{16-Bit Load Group}
 
@@ -1647,18 +1816,7 @@ LD SP,IX & SP$\leftarrow$IX &
 LD SP,IY & SP$\leftarrow$IY & 
 	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 111 & 101
 	& FD & 2 & 2 & 10 & & \\ 
-\multicolumn{10}{c}{} & 11 & 111 & 001 & F9 & \multicolumn{3}{c}{} & & \\  \hline
-
-\end{tabular}
-}
-
-(continued) \\
-{\tt \scriptsize \setlength{\fboxsep}{0.25mm}
-\setlength{\tabcolsep}{1mm}
-\begin{tabular}{llc@{ }c@{ }c@{ }c@{ }c@{ }c@{ }c@{ }cc@{ }c@{ }cccccll}\hline
- & \multicolumn{1}{c}{Symbolic} & \multicolumn{8}{c}{Flags} & \multicolumn{3}{c}{Opcode} & & & M & T & \\
-Mnemonic & \multicolumn{1}{c}{Operation} & SF & ZF & YF & HF & XF & PF & NF & CF & 76 & 543 & 210 
-	& Hex & Bytes & Cycles & States & \multicolumn{2}{l}{Comments} \\ \hline
+\multicolumn{10}{c}{} & 11 & 111 & 001 & F9 & \multicolumn{3}{c}{} & & \\
 
 PUSH qq & (SP-2)$\leftarrow$qql &
 	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & qq0 & 101 
@@ -1698,6 +1856,7 @@ POP IY & IYh$\leftarrow$(SP+1) &
 
 \end{tabular}
 }
+
 
 \section{Exchange, Block Transfer, Search Group}
 
@@ -2723,6 +2882,11 @@ Note: & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[1] flag is affected by t
 
 \end{tabular}
 }
+
+% we only want to list sections within this chapter; without stop, it would continue to include all subsequent ones as well
+\stopcontents[intrstructionsections]
+
+
 
 \chapter{Instructions Sorted by Opcode}
 
