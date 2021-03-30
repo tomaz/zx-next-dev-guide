@@ -2527,324 +2527,339 @@ some are very confusing, so I'll mention the ones I have found here:
 \section{Rotate and Shift Group}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
-\setlength{\tabcolsep}{1mm}
-\begin{tabular}{llc@{ }c@{ }c@{ }c@{ }c@{ }c@{ }c@{ }cc@{ }c@{ }cccccll}\hline
- & \multicolumn{1}{c}{Symbolic} & \multicolumn{8}{c}{Flags} & \multicolumn{3}{c}{Opcode} & & & M & T & \\
-Mnemonic & \multicolumn{1}{c}{Operation} & SF & ZF & YF & HF & XF & PF & NF & CF & 76 & 543 & 210 
-	& Hex & Bytes & Cycles & States & \multicolumn{2}{l}{Comments} \\ \hline
+	\setlength{\tabcolsep}{1mm}
+	\begin{tabular}{llcccccccccccccccl}
+		 
+	\instrheader
 
-RLCA & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,5)
-\put(0,0){\framebox(4,3){CF}}
-\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-\put(8,1.5){\vector(-1,0){4}}
-\put(6,1.5){\line(0,1){2.5}}
-\put(6,4){\line(1,0){11}}
-\put(17,4){\line(0,-1){2.5}}
-\put(17,1.5){\vector(-1,0){2}}
-\end{picture} &
-	$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 00 & 000 & 111 
-	& 07 & 1 & 1 & 4 & & \\ 
+	& & & & & & & & & & & & & & & & &
+	\multirow{11}{*}{
+		\begin{tabular}{ll}
+			r,r' & Reg \\
+			\hline
+			000 & B \\
+			001 & C \\
+			010 & D \\
+			011 & E \\
+			100 & H \\
+			101 & L \\
+			111 & A \\
+		\end{tabular}
+	}\\
 
-RLA & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,4)
-\put(2,0){\framebox(4,3){CF}}
-\put(9,0){\framebox(7,3){7$\leftarrow$0}}
+		RLCA & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,5)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(8,1.5){\vector(-1,0){4}}
+				\put(6,1.5){\line(0,1){2.5}}
+				\put(6,4){\line(1,0){11}}
+				\put(17,4){\line(0,-1){2.5}}
+				\put(17,1.5){\vector(-1,0){2}}
+			\end{picture} &
+			$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 
+			00 & 000 & 111 & 
+			07 & 1 & 
+			1 & 4 & \\[4pt]
 
-\put(9,1.5){\vector(-1,0){3}}
-\put(2,1.5){\line(-1,0){2}}
+		RLA & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(2,0){\framebox(4,3){CF}}
+				\put(9,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(9,1.5){\vector(-1,0){3}}
+				\put(2,1.5){\line(-1,0){2}}
+				\put(0,1.5){\line(0,1){2.5}}
+				\put(0,4){\line(1,0){17.5}}
+				\put(17.5,4){\line(0,-1){2.5}}
+				\put(17.5,1.5){\vector(-1,0){1.5}}
+			\end{picture} &
+			$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 
+			00 & 010 & 111 & 
+			17 & 1 & 
+			1 & 4 & \\[4pt]
 
-\put(0,1.5){\line(0,1){2.5}}
-\put(0,4){\line(1,0){17.5}}
-\put(17.5,4){\line(0,-1){2.5}}
-\put(17.5,1.5){\vector(-1,0){1.5}}
-\end{picture} &
-	$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 00 & 010 & 111 
-	& 17 & 1 & 1 & 4 & & \\ 
+		RRCA & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(13,0){\framebox(4,3){CF}}
+				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(0,1.5){\vector(1,0){2}}
+				\put(9,1.5){\vector(1,0){4}}
+				\put(0,1.5){\line(0,1){2.5}}
+				\put(0,4){\line(1,0){11}}
+				\put(11,4){\line(0,-1){2.5}}
+			\end{picture} &
+			$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 
+			00 & 001 & 111 & 
+			0F & 1 & 
+			1 & 4 & \\[4pt]
 
-RRCA & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,4)
-\put(13,0){\framebox(4,3){CF}}
-\put(2,0){\framebox(7,3){7$\leftarrow$0}}
+		RRA & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(12,0){\framebox(4,3){CF}}
+				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(0,1.5){\vector(1,0){2}}
+				\put(9,1.5){\vector(1,0){3}}
+				\put(0,1.5){\line(0,1){2.5}}
+				\put(0,4){\line(1,0){17.5}}
+				\put(17.5,4){\line(0,-1){2.5}}
+				\put(16,1.5){\line(1,0){1.5}}
+			\end{picture} &
+			$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 
+			00 & 011 & 111 & 
+			1F & 1 & 
+			1 & 4 & \\[4pt]
 
-\put(0,1.5){\vector(1,0){2}}
-\put(9,1.5){\vector(1,0){4}}
+		RLC r & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,5)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(8,1.5){\vector(-1,0){4}}
+				\put(6,1.5){\line(0,1){2.5}}
+				\put(6,4){\line(1,0){11}}
+				\put(17,4){\line(0,-1){2.5}}
+				\put(17,1.5){\vector(-1,0){2}}
+			\end{picture} &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
+			11 & 001 & 011 & 
+			CB & 2 & 
+			2 & 8 & \\
+		\multicolumn{10}{c}{} & 00 & \fbox{000} & r & .. & \\[4pt]
 
-\put(0,1.5){\line(0,1){2.5}}
-\put(0,4){\line(1,0){11}}
-\put(11,4){\line(0,-1){2.5}}
-\end{picture} &
-	$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 00 & 001 & 111 
-	& 0F & 1 & 1 & 4 & & \\ 
+		RLC (HL) & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,5)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(8,1.5){\vector(-1,0){4}}
+				\put(6,1.5){\line(0,1){2.5}}
+				\put(6,4){\line(1,0){11}}
+				\put(17,4){\line(0,-1){2.5}}
+				\put(17,1.5){\vector(-1,0){2}}
+			\end{picture} &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
+			11 & 001 & 011 & 
+			CB & 2 & 
+			4 & 15 & \\ 
+		\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & 06 & \\[4pt]
 
-RRA & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,4)
-\put(12,0){\framebox(4,3){CF}}
-\put(2,0){\framebox(7,3){7$\leftarrow$0}}
+		RLC (IX+d) & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,5)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(8,1.5){\vector(-1,0){4}}
+				\put(6,1.5){\line(0,1){2.5}}
+				\put(6,4){\line(1,0){11}}
+				\put(17,4){\line(0,-1){2.5}}
+				\put(17,1.5){\vector(-1,0){2}}
+			\end{picture} &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
+			11 & 011 & 101 & 
+			DD & 4 & 
+			6 & 23 & \\ 
+		\multicolumn{10}{c}{} & 11 & 001 & 011 & CB & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \\
+		\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & 06 & \\[4pt]
 
-\put(0,1.5){\vector(1,0){2}}
-\put(9,1.5){\vector(1,0){3}}
+		RLC (IY+d) & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,5)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(8,1.5){\vector(-1,0){4}}
+				\put(6,1.5){\line(0,1){2.5}}
+				\put(6,4){\line(1,0){11}}
+				\put(17,4){\line(0,-1){2.5}}
+				\put(17,1.5){\vector(-1,0){2}}
+			\end{picture} &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ &
+			11 & 111 & 101 & 
+			FD & 4 & 
+			6 & 23 & \\ 
+		\multicolumn{10}{c}{} & 11 & 001 & 011 & CB & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \\
+		\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & 06 & \\[4pt]
 
-\put(0,1.5){\line(0,1){2.5}}
-\put(0,4){\line(1,0){17.5}}
-\put(17.5,4){\line(0,-1){2.5}}
-\put(16,1.5){\line(1,0){1.5}}
-\end{picture} &
-	$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 00 & 011 & 111 
-	& 1F & 1 & 1 & 4 & & \\ 
+		RLC r,(IX+d) & r$\leftarrow$(IX+d) &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
+			11 & 011 & 101 & 
+			DD & 4 & 
+			6 & 23 & \\ 
+			& RLC r & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & \\
+			& (IX+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \\
+			\multicolumn{10}{c}{} & 00 & \fbox{000} & r & .. & \\[4pt]
 
+		RLC r,(IY+d) & r$\leftarrow$(IY+d) &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
+			11 & 111 & 101 & 
+			FD & 4 & 
+			6 & 23 & \\ 
+			& RLC r & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & & \\
+			& (IY+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \\
+			& & \multicolumn{8}{c}{} & 00 & \fbox{000} & r & .. & \\[4pt]
 
-RLC r & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,5)
-\put(0,0){\framebox(4,3){CF}}
-\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-\put(8,1.5){\vector(-1,0){4}}
-\put(6,1.5){\line(0,1){2.5}}
-\put(6,4){\line(1,0){11}}
-\put(17,4){\line(0,-1){2.5}}
-\put(17,1.5){\vector(-1,0){2}}
-\end{picture} &
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 11 & 001 & 011 
-	& CB & 2 & 2 & 8 & r & Reg \\ \cline{18-19}
-\multicolumn{10}{c}{} & 00 & \fbox{000} & r & \multicolumn{4}{c}{} & 000 & B \\
+	& & & & & & & & & & & $\uparrow$ & & & & & & \\
 
-RLC (HL) & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,5)
-\put(0,0){\framebox(4,3){CF}}
-\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-\put(8,1.5){\vector(-1,0){4}}
-\put(6,1.5){\line(0,1){2.5}}
-\put(6,4){\line(1,0){11}}
-\put(17,4){\line(0,-1){2.5}}
-\put(17,1.5){\vector(-1,0){2}}
-\end{picture} &
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 11 & 001 & 011 
-	& CB & 2 & 4 & 15 & 001 & C \\ 
-\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & \multicolumn{4}{c}{} & 010 & D \\
+		RL m & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(2,0){\framebox(4,3){CF}}
+				\put(9,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(9,1.5){\vector(-1,0){3}}
+				\put(2,1.5){\line(-1,0){2}}
+				\put(0,1.5){\line(0,1){2.5}}
+				\put(0,4){\line(1,0){17.5}}
+				\put(17.5,4){\line(0,-1){2.5}}
+				\put(17.5,1.5){\vector(-1,0){1.5}}
+			\end{picture} &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
+			.. &\fbox{010} & ... & \\[4pt]
 
-RLC (IX+d) & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,5)
-\put(0,0){\framebox(4,3){CF}}
-\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-\put(8,1.5){\vector(-1,0){4}}
-\put(6,1.5){\line(0,1){2.5}}
-\put(6,4){\line(1,0){11}}
-\put(17,4){\line(0,-1){2.5}}
-\put(17,1.5){\vector(-1,0){2}}
-\end{picture} &
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 11 & 011 & 101 
-	& DD & 4 & 6 & 23 & 011 & E \\ 
-\multicolumn{10}{c}{} & 11 & 001 & 011 & CB & \multicolumn{3}{c}{} & 100 & H \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & 101 & L \\
-\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & & \multicolumn{3}{c}{} & 111 & A \\
+		RRC m & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(13,0){\framebox(4,3){CF}}
+				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(0,1.5){\vector(1,0){2}}
+				\put(9,1.5){\vector(1,0){4}}
+				\put(0,1.5){\line(0,1){2.5}}
+				\put(0,4){\line(1,0){11}}
+				\put(11,4){\line(0,-1){2.5}}
+			\end{picture} &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
+			.. &\fbox{001} & ... & \\[4pt]
 
-RLC (IY+d) & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,5)
-\put(0,0){\framebox(4,3){CF}}
-\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-\put(8,1.5){\vector(-1,0){4}}
-\put(6,1.5){\line(0,1){2.5}}
-\put(6,4){\line(1,0){11}}
-\put(17,4){\line(0,-1){2.5}}
-\put(17,1.5){\vector(-1,0){2}}
-\end{picture} &
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 11 & 111 & 101 
-	& FD & 4 & 6 & 23 & & \\ 
-\multicolumn{10}{c}{} & 11 & 001 & 011 & CB & \multicolumn{3}{c}{} & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & & \\
-	& & \multicolumn{8}{c}{} & 00 & \fbox{000} & 110  & & \multicolumn{3}{c}{} & & \\
+		RR m & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(12,0){\framebox(4,3){CF}}
+				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(0,1.5){\vector(1,0){2}}
+				\put(9,1.5){\vector(1,0){3}}
+				\put(0,1.5){\line(0,1){2.5}}
+				\put(0,4){\line(1,0){17.5}}
+				\put(17.5,4){\line(0,-1){2.5}}
+				\put(16,1.5){\line(1,0){1.5}}
+			\end{picture} &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
+			.. &\fbox{011} & ... & \\[4pt]
 
-RLC (IX+d),r & r$\leftarrow$(IX+d) &
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 11 & 011 & 101 
-	& DD & 4 & 6 & 23 & & \\ 
-	& RLC r & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & \multicolumn{3}{c}{} & & \\
-	& (IX+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & & \\
-	& & \multicolumn{8}{c}{} & 00 & \fbox{000} & r & & \multicolumn{3}{c}{} & & \\
+		SLA m & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(7,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(7,1.5){\vector(-1,0){3}}
+				\put(17,1.5){\vector(-1,0){3}}
+				\put(16,0){\makebox(4,3){0}}
+			\end{picture} &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
+			.. &\fbox{100} & ... & \\[4pt]
 
-RLC (IY+d),r & r$\leftarrow$(IY+d) &
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 11 & 111 & 101 
-	& FD & 4 & 6 & 23 & & \\ 
-	& RLC r & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & \multicolumn{3}{c}{} & & \\
-	& (IY+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & & \\
-	& & \multicolumn{8}{c}{} & 00 & \fbox{000} & r & & \multicolumn{3}{c}{} & & \\
+		SLL m & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(7,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(7,1.5){\vector(-1,0){3}}
+				\put(17,1.5){\vector(-1,0){3}}
+				\put(16,0){\makebox(4,3){1}}
+			\end{picture} &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
+			.. &\fbox{110} & ... & \\[4pt]
 
-RL m & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,4)
-\put(2,0){\framebox(4,3){CF}}
-\put(9,0){\framebox(7,3){7$\leftarrow$0}}
+		SRA m & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(13,0){\framebox(4,3){CF}}
+				\put(3,0){\framebox(7,3){7$\rightarrow$0}}
+				\put(10,1.5){\vector(1,0){3}}
+				\put(1,1.5){\vector(1,0){2}}
+				\put(1,-1.5){\line(0,1){3}}
+				\put(1,-1.5){\line(1,0){2.5}}
+				\put(3.5,-1.5){\line(0,1){1.5}}
+			\end{picture} &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
+			.. &\fbox{101} & ... & \\[4pt]
 
-\put(9,1.5){\vector(-1,0){3}}
-\put(2,1.5){\line(-1,0){2}}
+		SRL m & 
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(-0.5,0){\makebox(1,3){0}}
+				\put(13,0){\framebox(4,3){CF}}
+				\put(3,0){\framebox(7,3){7$\rightarrow$0}}
+				\put(10,1.5){\vector(1,0){3}}
+				\put(1,1.5){\vector(1,0){2}}
+			\end{picture} &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
+			.. &\fbox{111} & ... & \\[4pt]
 
-\put(0,1.5){\line(0,1){2.5}}
-\put(0,4){\line(1,0){17.5}}
-\put(17.5,4){\line(0,-1){2.5}}
-\put(17.5,1.5){\vector(-1,0){1.5}}
-\end{picture} &
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & &\fbox{010} & \\
+	& & & & & & & & & & & & & & & & & \\
 
-RRC m & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,4)
-\put(13,0){\framebox(4,3){CF}}
-\put(2,0){\framebox(7,3){7$\leftarrow$0}}
+		RLD &
+			\setlength{\unitlength}{0.9mm}
+			\put(-7,0){\makebox(4,3){A}}
+			\put(20,0){\makebox(4,3){(HL)}}
+			\begin{picture}(25,5.5)
+				\put(-2,0){\framebox(4.5,3){7-4}}
+				\put(2.65,0){\framebox(4.5,3){3-0}}
+				\put(9,0){\framebox(4.5,3){7-4}}
+				\put(13.65,0){\framebox(4.5,3){3-0}}
+				\put(5,4.45){\line(0,-1){1.45}}
+				\put(5,4.45){\line(1,0){11.5}}
+				\put(16.5,4.45){\vector(0,-1){1.45}}
+				\put(12,-1.45){\vector(0,1){1.45}}
+				\put(12,-1.45){\line(1,0){3.75}}
+				\put(15.75,-1.45){\line(0,1){1.45}}
+				\put(5,-1.45){\vector(0,1){1.45}}
+				\put(10.5,-1.45){\line(-1,0){5.5}}
+				\put(10.5,-1.45){\line(0,1){1.45}}
+			\end{picture} &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			5 & 18 & \\
+		\multicolumn{10}{c}{} & 01 & 101 & 111 & 6F & \\[4pt]
+			
+		RRD &
+			\setlength{\unitlength}{0.9mm}
+			\put(-7,0){\makebox(4,3){A}}
+			\put(20,0){\makebox(4,3){(HL)}}
+			\begin{picture}(25,5.5)
+				\put(-2,0){\framebox(4.5,3){7-4}}
+				\put(2.65,0){\framebox(4.5,3){3-0}}
+				\put(9,0){\framebox(4.5,3){7-4}}
+				\put(13.65,0){\framebox(4.5,3){3-0}}
+				\put(16.5,-1.45){\line(0,1){1.45}}
+				\put(5,-1.45){\line(1,0){11.5}}
+				\put(5,-1.45){\vector(0,1){1.45}}
+				\put(15.75,4.45){\vector(0,-1){1.45}}
+				\put(12,4.45){\line(1,0){3.75}}
+				\put(12,4.45){\line(0,-1){1.45}}
+				\put(10.5,4.45){\vector(0,-1){1.45}}
+				\put(10.5,4.45){\line(-1,0){5.5}}
+				\put(5,4.45){\line(0,-1){1.45}}
+			\end{picture} &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			5 & 18 & \\
+		\multicolumn{10}{c}{} & 01 & 100 & 111 & 67 & \\[4pt]
+		
+		\hline
 
-\put(0,1.5){\vector(1,0){2}}
-\put(9,1.5){\vector(1,0){4}}
+		Note: & \multicolumn{17}{l}{
+			\parbox{12cm}{m is one of r,(HL),(IX+d),(IY+d). To form new opcode replace \fbox{000} of RLCs with shown code.}
+		} \\
+		
+		\hline
 
-\put(0,1.5){\line(0,1){2.5}}
-\put(0,4){\line(1,0){11}}
-\put(11,4){\line(0,-1){2.5}}
-\end{picture} &
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & &\fbox{001} & \\
-
-RR m & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,4)
-\put(12,0){\framebox(4,3){CF}}
-\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-
-\put(0,1.5){\vector(1,0){2}}
-\put(9,1.5){\vector(1,0){3}}
-
-\put(0,1.5){\line(0,1){2.5}}
-\put(0,4){\line(1,0){17.5}}
-\put(17.5,4){\line(0,-1){2.5}}
-\put(16,1.5){\line(1,0){1.5}}
-\end{picture} &
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & &\fbox{011} & \\
-
-SLA m & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,4)
-\put(0,0){\framebox(4,3){CF}}
-\put(7,0){\framebox(7,3){7$\leftarrow$0}}
-
-\put(7,1.5){\vector(-1,0){3}}
-\put(17,1.5){\vector(-1,0){3}}
-
-\put(16,0){\makebox(4,3){0}}
-\end{picture} &
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & &\fbox{100} & \\
-
-SLL m & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,4)
-\put(0,0){\framebox(4,3){CF}}
-\put(7,0){\framebox(7,3){7$\leftarrow$0}}
-
-\put(7,1.5){\vector(-1,0){3}}
-\put(17,1.5){\vector(-1,0){3}}
-
-\put(16,0){\makebox(4,3){1}}
-\end{picture} &
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & &\fbox{110} & \\
-
-SRA m & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,4)
-\put(13,0){\framebox(4,3){CF}}
-\put(3,0){\framebox(7,3){7$\rightarrow$0}}
-
-\put(10,1.5){\vector(1,0){3}}
-\put(1,1.5){\vector(1,0){2}}
-
-\put(1,-1.5){\line(0,1){3}}
-\put(1,-1.5){\line(1,0){2.5}}
-\put(3.5,-1.5){\line(0,1){1.5}}
-\end{picture} &
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & &\fbox{101} & \\
-
-SRL m & 
-\setlength{\unitlength}{0.9mm}
-\begin{picture}(17,4)
-\put(-0.5,0){\makebox(1,3){0}}
-\put(13,0){\framebox(4,3){CF}}
-\put(3,0){\framebox(7,3){7$\rightarrow$0}}
-
-\put(10,1.5){\vector(1,0){3}}
-\put(1,1.5){\vector(1,0){2}}
-\end{picture} &
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & &\fbox{111} & \\
-
-RLD &
-\setlength{\unitlength}{0.9mm}
-
-\put(-7,0){\makebox(4,3){A}}
-\put(20,0){\makebox(4,3){(HL)}}
-
-\begin{picture}(25,5.5)
-
-\put(-2,0){\framebox(4.5,3){7-4}}
-\put(2.65,0){\framebox(4.5,3){3-0}}
-
-\put(9,0){\framebox(4.5,3){7-4}}
-\put(13.65,0){\framebox(4.5,3){3-0}}
-
-\put(5,4.45){\line(0,-1){1.45}}
-\put(5,4.45){\line(1,0){11.5}}
-\put(16.5,4.45){\vector(0,-1){1.45}}
-
-\put(12,-1.45){\vector(0,1){1.45}}
-\put(12,-1.45){\line(1,0){3.75}}
-\put(15.75,-1.45){\line(0,1){1.45}}
-
-\put(5,-1.45){\vector(0,1){1.45}}
-\put(10.5,-1.45){\line(-1,0){5.5}}
-\put(10.5,-1.45){\line(0,1){1.45}}
-
-\end{picture} 
-        &
-        $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$
-& PF & 0 & $\bullet$ & 11 & 101 & 101
-        & ED & 2 & 5 & 18 & & \\
-\multicolumn{10}{c}{} & 01 & 101 & 111 & 6F & \multicolumn{3}{c}{} & & \\ 
-	
-RRD &
-\setlength{\unitlength}{0.9mm}
-
-\put(-7,0){\makebox(4,3){A}}
-\put(20,0){\makebox(4,3){(HL)}}
-
-\begin{picture}(25,5.5)
-
-\put(-2,0){\framebox(4.5,3){7-4}}
-\put(2.65,0){\framebox(4.5,3){3-0}}
-
-\put(9,0){\framebox(4.5,3){7-4}}
-\put(13.65,0){\framebox(4.5,3){3-0}}
-
-\put(16.5,-1.45){\line(0,1){1.45}}
-\put(5,-1.45){\line(1,0){11.5}}
-\put(5,-1.45){\vector(0,1){1.45}}
-
-\put(15.75,4.45){\vector(0,-1){1.45}}
-\put(12,4.45){\line(1,0){3.75}}
-\put(12,4.45){\line(0,-1){1.45}}
-
-\put(10.5,4.45){\vector(0,-1){1.45}}
-\put(10.5,4.45){\line(-1,0){5.5}}
-\put(5,4.45){\line(0,-1){1.45}}
-
-\end{picture} 
-	&
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 5 & 18 & & \\
-\multicolumn{10}{c}{} & 01 & 100 & 111 & 67 & \multicolumn{3}{c}{} & & \\ \hline
-
-Note: & \multicolumn{18}{l}{\parbox{12cm}{m is one of r,(HL),(IX+d),(IY+d). To form new opcode replace \fbox{000} of RLCs 
-	with shown code.}} \\ \hline
-
-\end{tabular}
+	\end{tabular}
 }
 
 \section{Bit Set, Reset and Test Group}
@@ -2852,7 +2867,7 @@ Note: & \multicolumn{18}{l}{\parbox{12cm}{m is one of r,(HL),(IX+d),(IY+d). To f
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 \setlength{\tabcolsep}{1mm}
 \begin{tabular}{llc@{ }c@{ }c@{ }c@{ }c@{ }c@{ }c@{ }cc@{ }c@{ }cccccll}\hline
- & \multicolumn{1}{c}{Symbolic} & \multicolumn{8}{c}{Flags} & \multicolumn{3}{c}{Opcode} & & & M & T & \\
+& \multicolumn{1}{c}{Symbolic} & \multicolumn{8}{c}{Flags} & \multicolumn{3}{c}{Opcode} & & & M & T & \\
 Mnemonic & \multicolumn{1}{c}{Operation} & SF & ZF & YF & HF & XF & PF & NF & CF & 76 & 543 & 210 
 	& Hex & Bytes & Cycles & States & \multicolumn{2}{l}{Comments} \\ \hline
 
@@ -2911,15 +2926,15 @@ SET b,(IY+d) & $\mathtt{(IY+d)_b}\leftarrow$1 &
 SET b,(IX+d),r & r$\leftarrow$(IX+d) &
 	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 011 & 101
 	& DD & 4 & 6 & 23 & & \\ 
- & $\mathtt{r_b}\leftarrow$1 & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & \multicolumn{3}{c}{} & & \\
- & (IX+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & &  \\
+& $\mathtt{r_b}\leftarrow$1 & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & \multicolumn{3}{c}{} & & \\
+& (IX+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & &  \\
 \multicolumn{10}{c}{} & \fbox{11} & b & r & & \multicolumn{3}{c}{} & & \\
 
 SET b,(IY+d),r & r$\leftarrow$(IY+d) &
 	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 111 & 101
 	& FD & 4 & 6 & 23 & & \\ 
- & $\mathtt{r_b}\leftarrow$1 & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & \multicolumn{3}{c}{} & & \\
- & (IY+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & &  \\
+& $\mathtt{r_b}\leftarrow$1 & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & \multicolumn{3}{c}{} & & \\
+& (IY+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & &  \\
 \multicolumn{10}{c}{} & \fbox{11} & b & r & & \multicolumn{3}{c}{} & & \\
 
 RES b,m & $\mathtt{m_b}\leftarrow$0 &
@@ -2927,9 +2942,9 @@ RES b,m & $\mathtt{m_b}\leftarrow$0 &
 	\multicolumn{4}{c}{} & & \\ \hline
 
 Note: & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[1]See section \ref{bit_flags} for a complete description.}} \\
-      & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[2]Instruction has other undocumented opcodes.}} \\
-      & \multicolumn{18}{l}{\parbox{12cm}{m is one of r, (HL), (IX+d), (IY+d). To form RES instruction, replace \fbox{11}
-  					  with \fbox{10}.}} \\ \hline
+	& \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[2]Instruction has other undocumented opcodes.}} \\
+	& \multicolumn{18}{l}{\parbox{12cm}{m is one of r, (HL), (IX+d), (IY+d). To form RES instruction, replace \fbox{11}
+					with \fbox{10}.}} \\ \hline
 
 \end{tabular}
 }
@@ -2939,7 +2954,7 @@ Note: & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[1]See section \ref{bit_f
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 \setlength{\tabcolsep}{1mm}
 \begin{tabular}{llc@{ }c@{ }c@{ }c@{ }c@{ }c@{ }c@{ }cc@{ }c@{ }cccccll}\hline
- & \multicolumn{1}{c}{Symbolic} & \multicolumn{8}{c}{Flags} & \multicolumn{3}{c}{Opcode} & & & M & T & \\
+& \multicolumn{1}{c}{Symbolic} & \multicolumn{8}{c}{Flags} & \multicolumn{3}{c}{Opcode} & & & M & T & \\
 Mnemonic & \multicolumn{1}{c}{Operation} & SF & ZF & YF & HF & XF & PF & NF & CF & 76 & 543 & 210 
 	& Hex & Bytes & Cycles & States & \multicolumn{2}{l}{Comments} \\ \hline
 
@@ -2965,7 +2980,7 @@ JR e & PC$\leftarrow$PC+e &
 JR ss,e & if ss &
 	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 1ss & 000
 	& & 2 & 3 & 12 & \multicolumn{2}{l}{if ss is true} \\
- & PC$\leftarrow$PC+e & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ e-2 $\rightarrow$} & & 2 & 2 & 7 & 
+& PC$\leftarrow$PC+e & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ e-2 $\rightarrow$} & & 2 & 2 & 7 & 
 	\multicolumn{2}{l}{if ss is false} \\
 
 JP (HL) & PC$\leftarrow$HL &
@@ -2987,13 +3002,14 @@ JP (IY) & PC$\leftarrow$IY &
 DJNZ e & B$\leftarrow$B-1 &
 	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 010 & 000
 	& 10 & 2 & 2 & 8 & \multicolumn{2}{l}{if B=0} \\
- & if B$\not=$0 & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ e-2 $\rightarrow$} & & & & &  & \\
- & PC$\leftarrow$PC+e & \multicolumn{8}{c}{} & \multicolumn{3}{c}{} & & 2 & 3 & 13 & 
+& if B$\not=$0 & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ e-2 $\rightarrow$} & & & & &  & \\
+& PC$\leftarrow$PC+e & \multicolumn{8}{c}{} & \multicolumn{3}{c}{} & & 2 & 3 & 13 & 
 	\multicolumn{2}{l}{if B$\not=$0} \\ \hline
 
 Note: & \multicolumn{18}{l}{\parbox{12cm}{e is a signed two-compliment in the range -127, 129.}} \\
-      & \multicolumn{18}{l}{\parbox{12cm}{e-2 in the opcode provides an effective number of PC+e as PC is incremented 
+	& \multicolumn{18}{l}{\parbox{12cm}{e-2 in the opcode provides an effective number of PC+e as PC is incremented 
 	by two prior to the addition of e.}} \\[1ex] \hline
+
 \end{tabular}
 }
 
