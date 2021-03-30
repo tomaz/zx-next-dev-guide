@@ -2299,72 +2299,103 @@ some are very confusing, so I'll mention the ones I have found here:
 \section{General-Purpose Arithmetic and CPU Control Group}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
-\setlength{\tabcolsep}{1mm}
-\begin{tabular}{llc@{ }c@{ }c@{ }c@{ }c@{ }c@{ }c@{ }cc@{ }c@{ }cccccll}\hline
- & \multicolumn{1}{c}{Symbolic} & \multicolumn{8}{c}{Flags} & \multicolumn{3}{c}{Opcode} & & & M & T & \\
-Mnemonic & \multicolumn{1}{c}{Operation} & SF & ZF & YF & HF & XF & PF & NF & CF & 76 & 543 & 210 
-	& Hex & Bytes & Cycles & States & \multicolumn{2}{l}{Comments} \\ \hline
+	\setlength{\tabcolsep}{1mm}
+	\begin{tabular}{llcccccccccccccccl}
+		     
+		\instrheader
 
-DAA &  & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & PF & $\bullet$ & $\updownarrow$ & 00 & 100 & 111
-	& 27 & 1 & 1 & 4 & \multicolumn{2}{l}{Decimal adjust} \\
- \multicolumn{17}{c}{} & \multicolumn{2}{l}{accumulator}  \\
+	& & & & & & & & & & & & & & & & & \\
 
-CPL & A$\leftarrow\mathtt{\overline{A}}$ & 
-	$\bullet$ & $\bullet$ & $\updownarrow$ & 1 & $\updownarrow$ & $\bullet$ & 1 & $\bullet$ & 00 & 101 & 111
-	& 2F & 1 & 1 & 4 & \multicolumn{2}{l}{Compliment} \\
+		DAA & & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & PF & $\bullet$ & $\updownarrow$ &
+			00 & 100 & 111 & 
+			27 & 1 & 
+			1 & 4 & \\[4pt]
 
-NEG & A$\leftarrow$0-A & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 1 & $\updownarrow$ & 11 & 101 & 101 
-	& ED & 2 & 2 & 8 & \multicolumn{2}{l}{Negate} \\
-\multicolumn{10}{c}{} & 01 & 000 & 100 & 44 & \multicolumn{3}{c}{} & & \\ 
+		CPL & A$\leftarrow\mathtt{\overline{A}}$ & 
+			$\bullet$ & $\bullet$ & $\updownarrow$ & 1 & $\updownarrow$ & $\bullet$ & 1 & $\bullet$ & 
+			00 & 101 & 111 & 
+			2F & 1 & 
+			1 & 4 & \\[4pt]
 
-CCF & CF$\leftarrow\mathtt{\overline{CF}}$ & 
-	$\bullet$ & $\bullet$ & $\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[1] & 
-	$\bullet$ & 0 & $\updownarrow$ & 00 & 111 & 111
-	& 3F & 1 & 1 & 4 & & \\
+		NEG & A$\leftarrow$0-A & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 1 & $\updownarrow$ &
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 8 & \\
+		\multicolumn{10}{c}{} & 01 & 000 & 100 & 44 & \\[4pt]
 
-SCF & CF$\leftarrow$1 & 
-	$\bullet$ & $\bullet$ & $\updownarrow$\footnotemark[1] & 0 & $\updownarrow$\footnotemark[1] & $\bullet$ & 0 & 1 & 00 & 110 & 111
-	& 37 & 1 & 1 & 4 & & \\
+		CCF & CF$\leftarrow\mathtt{\overline{CF}}$ & 
+			$\bullet$ & $\bullet$ & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[1] & 
+			$\bullet$ & 0 & $\updownarrow$ & 
+			00 & 111 & 111 & 
+			3F & 1 & 
+			1 & 4 & \\[4pt]
 
-NOP & & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 000 & 000
-	& 00 & 1 & 1 & 4 & & \\
+		SCF & CF$\leftarrow$1 & 
+			$\bullet$ & $\bullet$ & $\updownarrow$\footnotemark[1] & 0 & $\updownarrow$\footnotemark[1] & $\bullet$ & 0 & 1 & 
+			00 & 110 & 111 & 
+			37 & 1 & 
+			1 & 4 & \\[4pt]
 
-HALT & & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 01 & 110 & 110
-	& 76 & 1 & 1 & 4 & & \\
+		NOP & & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+			00 & 000 & 000 & 
+			00 & 1 & 
+			1 & 4 & \\[4pt]
 
-DI\footnotemark[3] & IFF1,2$\leftarrow$0 & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 110 & 011
-	& F3 & 1 & 1 & 4 & & \\
+		HALT & & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+			01 & 110 & 110 & 
+			76 & 1 & 
+			1 & 4 & \\[4pt]
 
-EI\footnotemark[3] & IFF1,2$\leftarrow$1 & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 111 & 011
-	& FB & 1 & 1 & 4 & & \\
+		DI\footnotemark[3] & IFF1,2$\leftarrow$0 & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+			11 & 110 & 011 & 
+			F3 & 1 & 
+			1 & 4 & \\[4pt]
 
-IM 0\footnotemark[4] & & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 2 & 8 & & \\
-\multicolumn{10}{c}{} & 01 & 000 & 110 & 46 & \multicolumn{3}{c}{} & & \\ 
+		EI\footnotemark[3] & IFF1,2$\leftarrow$1 & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+			11 & 111 & 011 & 
+			FB & 1 & 
+			1 & 4 & \\[4pt]
 
-IM 1\footnotemark[4] & & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 2 & 8 & & \\
-\multicolumn{10}{c}{} & 01 & 010 & 110 & 56 & \multicolumn{3}{c}{} & & \\ 
+		IM 0\footnotemark[4] & & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 8 & \\
+		\multicolumn{10}{c}{} & 01 & 000 & 110 & 46 & \\[4pt]
 
-IM 2\footnotemark[4] & & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 2 & 8 & & \\
-\multicolumn{10}{c}{} & 01 & 011 & 110 & 5E & \multicolumn{3}{c}{} & & \\ \hline
+		IM 1\footnotemark[4] & & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 8 & \\
+		\multicolumn{10}{c}{} & 01 & 010 & 110 & 56 & \\[4pt]
 
-Note: & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[1]YF and XF are copied from register A.}} \\
-      & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[2]HF is like CF before the instruction.}} \\
-      & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[3]No interrupts are accepted directly after EI or DI.}} \\
-      & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[4]This instruction has other undocumented opcodes.}} \\ \hline
+		IM 2\footnotemark[4] & & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 8 & \\
+		\multicolumn{10}{c}{} & 01 & 011 & 110 & 5E & \\[4pt]
+		
+		\hline
 
-\end{tabular}
+		Note: & \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1]YF and XF are copied from register A.}} \\
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[2]HF is like CF before the instruction.}} \\
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[3]No interrupts are accepted directly after EI or DI.}} \\
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[4]This instruction has other undocumented opcodes.}} \\ 
+	  
+	\hline
+
+	\end{tabular}
 }
 
 \section{16-Bit Arithmetic Group}
