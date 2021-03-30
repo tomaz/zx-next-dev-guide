@@ -1459,7 +1459,7 @@ some are very confusing, so I'll mention the ones I have found here:
 
 \chapter{Instruction Tables}
 
-
+% writes table header.
 \newcommand{\instrheader}{
 	\hline
 		
@@ -1482,6 +1482,14 @@ some are very confusing, so I'll mention the ones I have found here:
 	\hline
 }
 
+% top and bottom "struts" for instruction lines
+\newcommand{\instrt}{\rule{0pt}{2.7ex}}
+\newcommand{\instrb}{\rule[-1.7ex]{0pt}{0pt}}
+
+% top and bottom "struts" for note lines
+\newcommand{\notet}{\rule{0pt}{2.4ex}}
+\newcommand{\noteb}{\rule[-1.3ex]{0pt}{0pt}}
+
 
 % Chapters have large gap on top so we'd have to wrap tables. Instead we show table of contents for all sections on chapter title page as filler and start actual tables on next page.
 \startcontents[intrstructionsections]
@@ -1497,7 +1505,7 @@ some are very confusing, so I'll mention the ones I have found here:
 		\instrheader
 	
 		& & & & & & & & & & & & & & & & &
-		\multirow{9}{*}{
+		\multirow{10}{*}{
 			\begin{tabular}{ll}
 				r,r' & Reg \\
 				\hline
@@ -1511,49 +1519,91 @@ some are very confusing, so I'll mention the ones I have found here:
 			\end{tabular}
 		} \\
 
-		LD r,r'	& 
+		LD r,r'\instrt & 
 			r$\leftarrow$r' & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+			$\bullet$ & 
+				$\bullet$ &
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			01 & r & r' &
 			.. & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 			
-		LD p,p' & 
+		LD p,p'\instrt & 
 			p$\leftarrow$p' & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 011 & 101 & 
 			DD & 2 & 
 			2 & 8 & \\
-		\multicolumn{10}{c}{} & 01 & p & p' & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & p & p' & .. & & & \instrb \\
 
-		LD q,q' & 
+		LD q,q'\instrt & 
 			q$\leftarrow$q' & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 111 & 101 & 
 			FD & 2 & 
 			2 & 8 & \\
-		\multicolumn{10}{c}{} & 01 & q & q' & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & q & q' & .. & & & \instrb \\
 
-		LD r,n	& 
+		LD r,n\instrt & 
 			r$\leftarrow$n & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			00 & r & 110 & 
 			.. & 2 & 
 			2 & 7 & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow $ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow $ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD p,n	& 
+		LD p,n\instrt& 
 			p$\leftarrow$n & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 011 & 101 & 
 			DD & 3 & 
 			3 & 11 & \\
 		\multicolumn{10}{c}{} & 00 & p & 110 & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 		
-		LD q,n	&
+		LD q,n\instrt &
 			q$\leftarrow$n & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 111 & 101 &
 			FD & 3 & 
 			3 & 11 & 
@@ -1571,36 +1621,77 @@ some are very confusing, so I'll mention the ones I have found here:
 				\end{tabular}
 		}\\
 		\multicolumn{10}{c}{} & 00 & q & 110 & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & & \instrb \\
 
-		LD r,(HL) & r$\leftarrow$(HL) & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 01 & r & 110 &
+		LD r,(HL)\instrt & 
+			r$\leftarrow$(HL) & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			01 & r & 110 &
 			.. & 1 & 
-			2 & 7 & \\[4pt]
+			2 & 7 & \instrb \\
 
-		LD r,(IX+d) & r$\leftarrow$(IX+d) & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD r,(IX+d)\instrt & 
+			r$\leftarrow$(IX+d) & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 011 & 101 & 
 			DD & 3 & 
 			5 & 19 & \\
 		\multicolumn{10}{c}{} & 01 & r & 110 & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \instrb \\
 
-		LD r,(IY+d) & r$\leftarrow$(IY+d) & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 111 & 101 & 
+		LD r,(IY+d)\instrt & 
+			r$\leftarrow$(IY+d) & 
+			$\bullet$ &
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+			11 & 111 & 101 & 
 			FD & 3 & 
 			5 & 19 & \\
 		\multicolumn{10}{c}{} & 01 & r & 110 & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \instrb \\
 
-		LD (HL),r & (HL)$\leftarrow$r & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		LD (HL),r \instrt& (HL)$\leftarrow$r & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			01 & 110 & r & 
 			.. & 1 & 
-			2 & 7 & \\[4pt]
+			2 & 7 & \instrb \\
 
-		LD (IX+d),r & (IX+d)$\leftarrow$r & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		LD (IX+d),r\instrt & 
+			(IX+d)$\leftarrow$r & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			11 & 011 & 101 & 
 			DD & 3 & 
 			5 & 19 & 
@@ -1618,108 +1709,220 @@ some are very confusing, so I'll mention the ones I have found here:
 				\end{tabular}
 			}\\
 		\multicolumn{10}{c}{} & 01 & 110 & r & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \instrb \\
 
-		LD (IY+d),r & (IY+d)$\leftarrow$r & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		LD (IY+d),r\instrt &
+			(IY+d)$\leftarrow$r & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			11 & 111 & 101 & 
 			FD & 3 & 
 			5 & 19 & \\
 		\multicolumn{10}{c}{} & 01 & 110 & r & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \instrb \\
 
-		LD (HL),n & (HL)$\leftarrow$n & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD (HL),n\instrt &
+			(HL)$\leftarrow$n & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			00 & 110 & 110 & 
 			36 & 2 & 
 			3 & 10 & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD (IX+d),n & (IX+d)$\leftarrow$n & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD (IX+d),n\instrt & 
+			(IX+d)$\leftarrow$n & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 011 & 101 & 
 			DD & 4 & 
 			5 & 19 & \\
 		\multicolumn{10}{c}{} & 00 & 110 & 110 &  36 & & & & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD (IY+d),n & (IY+d)$\leftarrow$n & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD (IY+d),n\instrt & 
+			(IY+d)$\leftarrow$n & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 111 & 101 & 
 			FD & 4 & 
 			5 & 19 & \\
 		\multicolumn{10}{c}{} & 00 & 110 & 110 & 36 & .. & & & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD A,(BC) & A$\leftarrow$(BC) & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD A,(BC)\instrt & 
+			A$\leftarrow$(BC) & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			00 & 001 & 010 & 
 			0A & 1 & 
-			2 & 7 & \\[4pt]
+			2 & 7 & \instrb \\
 
-		LD A,(DE) & A$\leftarrow$(DE) & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD A,(DE)\instrt & 
+			A$\leftarrow$(DE) & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			00 & 011 & 01 & 
 			1A & 1 & 
-			2 & 7 & \\[4pt]
+			2 & 7 & \instrb \\
 
-		LD A,(nm) & A$\leftarrow$(nm) & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD A,(nm)\instrt & 
+			A$\leftarrow$(nm) & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			00 & 111 & 010 & 
 			3A & 3 & 
 			4 & 13 & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ m $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 		
-		LD (BC),A & (BC)$\leftarrow$A & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD (BC),A\instrt & 
+			(BC)$\leftarrow$A & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			00 & 000 & 010 & 
 			02 & 1 & 
-			2 & 7 & \\[4pt]
+			2 & 7 & \instrb \\
 
-		LD (DE),A & (DE)$\leftarrow$A & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD (DE),A\instrt & 
+			(DE)$\leftarrow$A & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			00 & 010 & 010 & 
 			12 & 1 & 
-			2 & 7 & \\[4pt]
+			2 & 7 & \instrb \\
 
-		LD (nn),A & (nn)$\leftarrow$A & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD (nn),A\instrt & 
+			(nn)$\leftarrow$A & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			00 & 110 & 010 & 
 			32 & 3 & 
 			4 & 13 & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD A,I & A$\leftarrow$I & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & {\tiny FF2} & 0 & $\bullet$ & 
+		LD A,I\instrt & 
+			A$\leftarrow$I & 
+			$\updownarrow$ & 
+				$\updownarrow$ &
+				 $\updownarrow$ & 
+				 0 & 
+				 $\updownarrow$ & 
+				 {\tiny FF2} & 
+				 0 & 
+				 $\bullet$ & 
 			11 & 101 & 101 & 
 			ED & 2 & 
 			2 & 9 & \\ 
-		\multicolumn{10}{c}{} & 01 & 010 & 111 & 57 & & & & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & 010 & 111 & 57 & & & & \instrb \\
 
-		LD A,R & A$\leftarrow$R & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & {\tiny IFF2} & 0 & $\bullet$ & 
+		LD A,R\instrt & 
+			A$\leftarrow$R & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				{\tiny IFF2} & 
+				0 & 
+				$\bullet$ & 
 			11 & 101 & 101 & 
 			ED & 2 & 
 			2 & 9 & \\ 
-		\multicolumn{10}{c}{} & 01 & 011 & 111 & 5F & & & & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & 011 & 111 & 5F & & & & \instrb \\
 
-		LD I,A & I$\leftarrow$A & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD I,A\instrt & 
+			I$\leftarrow$A & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 101 & 101 & 
 			ED & 2 & 
 			2 & 9 & \\ 
-		\multicolumn{10}{c}{} & 01 & 000 & 111 & 47 & & & & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & 000 & 111 & 47 & & & & \instrb \\
 
-		LD R,A & R$\leftarrow$A & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD R,A\instrt & 
+			R$\leftarrow$A & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 101 & 101 & 
 			ED & 2 & 
 			2 & 9 & \\ 
-		\multicolumn{10}{c}{} & 01 & 001 & 111 & 4F & & & & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & 001 & 111 & 4F & & & & \instrb \\
 
 	\hline
 
@@ -1747,123 +1950,230 @@ some are very confusing, so I'll mention the ones I have found here:
 			\end{tabular}
 		} \\
 
-		LD dd,nm & dd$\leftarrow$nm & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD dd,nm\instrt & 
+			dd$\leftarrow$nm & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			00 & dd0 & 001 & 
 			.. & 3 & 
 			3 & 10 & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ m $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD IX,nm & IX$\leftarrow$nm & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		LD IX,nm\instrt & 
+			IX$\leftarrow$nm & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 011 & 101 & 
 			DD & 4 & 
 			4 & 14 & \\
 		\multicolumn{10}{c}{} & 00 & 100 & 001 & 21 & & & & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ m $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD IY,nm & IX$\leftarrow$nm & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 111 & 101 
+		LD IY,nm\instrt & 
+			IX$\leftarrow$nm & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 111 & 101 
 			& FD & 4 & 
 			4 & 14 & \\
 		\multicolumn{10}{c}{} & 00 & 100 & 001 & 21 & & & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ m $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD HL,(nm) & H$\leftarrow$(nm+1) &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD HL,(nm)\instrt & 
+			H$\leftarrow$(nm+1) &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			00 & 101 & 010 & 
 			2A & 3 & 
 			5 & 16 & \\ 
 		& L$\leftarrow$(nm) & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ m $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD dd,(nm) & ddh$\leftarrow$(nm+1) &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD dd,(nm)\instrt & 
+			ddh$\leftarrow$(nm+1) &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 101 & 101 & 
 			ED & 4 & 
 			6 & 20 & \\ 
 		& ddl$\leftarrow$(nm) & \multicolumn{8}{c}{} & 01 & dd1 & 011 & .. & & & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ m $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD IX,(nm) & IXh$\leftarrow$(nm+1) &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD IX,(nm)\instrt &
+			IXh$\leftarrow$(nm+1) &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 011 & 101 & 
 			DD & 4 & 
 			6 & 20 & \\ 
 		& IXl$\leftarrow$(nm) & \multicolumn{8}{c}{} & 00 & 101 & 010 & 2A & & & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ m $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD IY,(nm) & IYh$\leftarrow$(nm+1) &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD IY,(nm)\instrt &
+			IYh$\leftarrow$(nm+1) &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 111 & 101 & 
 			FD & 4 & 
 			6 & 20 & \\ 
 		& IYl$\leftarrow$(nn) & \multicolumn{8}{c}{} & 00 & 101 & 010 & 2A & & & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD (nm),HL & (nn+1)$\leftarrow$H &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD (nm),HL\instrt &
+			(nn+1)$\leftarrow$H &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			00 & 100 & 010 & 
 			22 & 3 & 
 			5 & 16 & \\ 
 		& (nm)$\leftarrow$L & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ m $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD (nm),dd & (nm+1)$\leftarrow$ddh &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD (nm),dd\instrt & 
+			(nm+1)$\leftarrow$ddh &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 101 & 101 & 
 			ED & 4 & 
 			6 & 20 & \\ 
 		& (nm)$\leftarrow$ddl & \multicolumn{8}{c}{} & 01 & dd0 & 011 & .. & & & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ m $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD (nm),IX & (nm+1)$\leftarrow$IXh &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD (nm),IX\instrt & 
+			(nm+1)$\leftarrow$IXh &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 011 & 101 & 
 			DD & 4 & 
 			6 & 20 & \\ 
 		& (nm)$\leftarrow$IXl & \multicolumn{8}{c}{} & 00 & 100 & 010 & 22 & & & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ m $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD (nm),IY & (nm+1)$\leftarrow$IYh &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD (nm),IY\instrt & 
+			(nm+1)$\leftarrow$IYh &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 111 & 101 & 
 			FD & 4 & 
 			6 & 20 & \\ 
 		& (nm)$\leftarrow$IYl & \multicolumn{8}{c}{} & 00 & 100 & 010 & 22 & & & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ m $\longrightarrow$} & .. & & & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & & & \instrb \\
 
-		LD SP,HL & SP$\leftarrow$HL & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD SP,HL\instrt & 
+			SP$\leftarrow$HL & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 111 & 001 & 
 			F9 & 1 & 
-			1 & 6 & \\[4pt]
+			1 & 6 & \instrb \\
 
-		LD SP,IX & SP$\leftarrow$IX & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD SP,IX\instrt & 
+			SP$\leftarrow$IX & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 011 & 101 & 
 			DD & 2 & 
 			2 & 10 & \\ 
-		\multicolumn{10}{c}{} & 11 & 111 & 001 & F9 & & & \\[4pt]
+		\multicolumn{10}{c}{} & 11 & 111 & 001 & F9 & & & \instrb \\
 
-		LD SP,IY & SP$\leftarrow$IY & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		LD SP,IY\instrt & 
+			SP$\leftarrow$IY & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 111 & 101 & 
 			FD & 2 & 
 			2 & 10 & \\ 
-		\multicolumn{10}{c}{} & 11 & 111 & 001 & F9 & & & \\[4pt]
+		\multicolumn{10}{c}{} & 11 & 111 & 001 & F9 & & & \instrb \\
 
-		PUSH qq & (SP-2)$\leftarrow$qql &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		PUSH qq\instrt & 
+			(SP-2)$\leftarrow$qql &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & qq0 & 101 & 
 			.. & 1 & 
 			3 & 11 &
@@ -1878,47 +2188,82 @@ some are very confusing, so I'll mention the ones I have found here:
 				\end{tabular}
 			}\\
 		& (SP-1)$\leftarrow$qqh & \\
-		& SP$\leftarrow$SP-2 & \\[4pt]
+		& SP$\leftarrow$SP-2 & \instrb \\
 
-		PUSH IX & (SP-2)$\leftarrow$IXl &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		PUSH IX\instrt & 
+			(SP-2)$\leftarrow$IXl &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 011 & 101 & 
 			DD & 2 & 
 			4 & 15 & \\ 
 		& (SP-1)$\leftarrow$IXh & \multicolumn{8}{c}{} & 11 & 100 & 101 & E5 & & & \\
-		& SP$\leftarrow$SP-2 & \\[4pt]
+		& SP$\leftarrow$SP-2 & \instrb \\
 
-		PUSH IY & (SP-2)$\leftarrow$IYl &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		PUSH IY\instrt & 
+			(SP-2)$\leftarrow$IYl &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 111 & 101 & 
 			FD & 2 & 
 			4 & 15 & \\ 
 		& (SP-1)$\leftarrow$IYh & \multicolumn{8}{c}{} & 11 & 100 & 101 & E5 & & & \\
-		& SP$\leftarrow$SP-2 & \\[4pt]
+		& SP$\leftarrow$SP-2 & \instrb \\
 
-		POP qq & qqh$\leftarrow$(SP+1) &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		POP qq\instrt & 
+			qqh$\leftarrow$(SP+1) &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & qq0 & 001 & 
 			.. & 1 & 
 			3 & 10 & \\
 		& qql$\leftarrow$(SP) & \\
-		& SP$\leftarrow$SP+2 & \\[4pt]
+		& SP$\leftarrow$SP+2 & \instrb \\
 
-		POP IX & IXh$\leftarrow$(SP+1) &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		POP IX\instrt & 
+			IXh$\leftarrow$(SP+1) &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 011 & 101 & 
 			DD & 2 & 
 			4 & 14 & \\ 
 		& IXl$\leftarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 001 & E1 & & & \\
-		& SP$\leftarrow$SP+2 & \\[4pt]
+		& SP$\leftarrow$SP+2 & \instrb \\
 
-		POP IY & IYh$\leftarrow$(SP+1) &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		POP IY\instrt &
+			IYh$\leftarrow$(SP+1) &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 111 & 101 & 
 			FD & 2 & 
 			4 & 14 & \\ 
 		& IYl$\leftarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 001 & E1 & & & \\
-		& SP$\leftarrow$SP+2 & \\[4pt]
+		& SP$\leftarrow$SP+2 & \instrb \\
 
 		\hline
 
@@ -1936,49 +2281,103 @@ some are very confusing, so I'll mention the ones I have found here:
 
 		& & & & & & & & & & & & & & & & & \\
 
-		EX DE,HL & DE$\leftrightarrow$HL & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		EX DE,HL\instrt & 
+			DE$\leftrightarrow$HL & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 101 & 011 & 
 			EB & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
-		EX AF,AF' & AF$\leftrightarrow$AF' & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 001 & 000
-			& 08 & 1 & 1 & 4 & \\[4pt]
+		EX AF,AF'\instrt & 
+			AF$\leftrightarrow$AF' & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 	
+			00 & 001 & 000
+			& 08 & 1 & 1 & 4 & \instrb \\
 
-		EXX & BC$\leftrightarrow$BC' & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		EXX\instrt & 
+			BC$\leftrightarrow$BC' & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 011 & 001 & 
 			D9 & 1 & 1 & 4 & \\ 
 		& DE$\leftrightarrow$DE' & \\ 
-		& HL$\leftrightarrow$HL' & \\[4pt]
+		& HL$\leftrightarrow$HL' & \instrb \\
 
-		EX (SP),HL & H$\leftrightarrow$(SP+1) & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		EX (SP),HL\instrt & 
+			H$\leftrightarrow$(SP+1) & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 100 & 011 & 
 			E3 & 1 & 
 			5 & 19 & \\ 
-		& L$\leftrightarrow$(SP) & \\[4pt]
+		& L$\leftrightarrow$(SP) & \instrb \\
 
-		EX (SP),IX & IXh$\leftrightarrow$(SP+1) & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		EX (SP),IX\instrt & 
+			IXh$\leftrightarrow$(SP+1) & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 011 & 101 & 
 			DD & 2 & 
 			6 & 23 & \\ 
-		& IXl$\leftrightarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 011 & E3 & & \\[4pt]
+		& IXl$\leftrightarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 011 & E3 & & \instrb \\
 
-		EX (SP),IY & IYh$\leftrightarrow$(SP+1) & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		EX (SP),IY\instrt & 
+			IYh$\leftrightarrow$(SP+1) & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
 			11 & 111 & 101 & 
 			FD & 2 & 
 			6 & 23 & \\
-		& IYl$\leftrightarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 011 & E3 & & \\[4pt]
+		& IYl$\leftrightarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 011 & E3 & & \instrb \\
 
-		LDI & (DE)$\leftarrow$(HL) & 
-			$\bullet$ & $\bullet$ & 
-				$\updownarrow$\footnotemark[4] & 0 & 
+		LDI\instrt & 
+			(DE)$\leftarrow$(HL) & 
+			$\bullet$ & 
+				$\bullet$ & 
 				$\updownarrow$\footnotemark[4] & 
-				$\updownarrow$\footnotemark[1] & 0 & $\bullet$ & 
+				0 & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[1] & 
+				0 & 
+				$\bullet$ & 
 			11 & 101 & 101 & 
 			ED & 2 & 
 			4 & 16 \\ 
@@ -1986,11 +2385,16 @@ some are very confusing, so I'll mention the ones I have found here:
 		& HL$\leftarrow$HL+1 & \\
 		& BC$\leftarrow$BC-1 & \\ [4pt]
 
-		LDIR & (DE)$\leftarrow$(HL) & 
-			$\bullet$ & $\bullet$ &
-				$\updownarrow$\footnotemark[4] & 0 & 
+		LDIR\instrt & 
+			(DE)$\leftarrow$(HL) & 
+			$\bullet$ & 
+				$\bullet$ &
 				$\updownarrow$\footnotemark[4] & 
-				0\footnotemark[2] & 0 & $\bullet$ & 
+				0 & 
+				$\updownarrow$\footnotemark[4] & 
+				0\footnotemark[2] & 
+				0 & 
+				$\bullet$ & 
 			11 & 101 & 101 & 
 			ED & 2 & 
 			5 & 21 & {if BC$\not=$0} \\
@@ -1998,25 +2402,35 @@ some are very confusing, so I'll mention the ones I have found here:
 		& HL$\leftarrow$HL+1 & \\
 		& BC$\leftarrow$BC-1 & \\ 
 		& Repeat until & \\ 
-		& BC=0 & \\[4pt]
+		& BC=0 & \instrb \\
 
-		LDD & (DE)$\leftarrow$(HL) & 
-			$\bullet$ & $\bullet$ & 
-				$\updownarrow$\footnotemark[4] & 0 & 
+		LDD\instrt & 
+			(DE)$\leftarrow$(HL) & 
+			$\bullet$ & 
+				$\bullet$ & 
 				$\updownarrow$\footnotemark[4] & 
-				$\updownarrow$\footnotemark[1] & 0 & $\bullet$ & 
+				0 & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[1] & 
+				0 & 
+				$\bullet$ & 
 			11 & 101 & 101 & 
 			ED & 2 & 
 			4 & 16 & \\ 
 		& DE$\leftarrow$DE-1 & \multicolumn{8}{c}{} & 10 & 101 & 000 & A8 & & \\ 
 		& HL$\leftarrow$HL-1 & \\
-		& BC$\leftarrow$BC-1 & \\[4pt]
+		& BC$\leftarrow$BC-1 & \instrb \\
 
-		LDDR & (DE)$\leftarrow$(HL) & 
-			$\bullet$ & $\bullet$ & 
-				$\updownarrow$\footnotemark[4] & 0 & 
+		LDDR\instrt & 
+			(DE)$\leftarrow$(HL) & 
+			$\bullet$ & 
+				$\bullet$ & 
 				$\updownarrow$\footnotemark[4] & 
-				0\footnotemark[2] & 0 & $\bullet$ & 
+				0 & 
+				$\updownarrow$\footnotemark[4] & 
+				0\footnotemark[2] & 
+				0 & 
+				$\bullet$ & 
 			11 & 101 & 101 & 
 			ED & 2 & 
 			5 & 21 & {if BC$\not=$0} \\ 
@@ -2024,24 +2438,32 @@ some are very confusing, so I'll mention the ones I have found here:
 		& HL$\leftarrow$HL-1 & \\
 		& BC$\leftarrow$BC-1 & \\ 
 		& Repeat until & \\ 
-		& BC=0 & \\[4pt]
+		& BC=0 & \instrb \\
 
-		CPI & A-(HL) &
-			$\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[3] & $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[4] 
-			& $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[1] & 1 & $\bullet$ &
+		CPI\instrt & 
+			A-(HL) &
+			$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[1] & 
+				1 & 
+				$\bullet$ &
 			11 & 101 & 101 & 
 			ED & 2 & 
 			4 & 16 & \\ 
 		& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 100 & 001 & A1 & \\ 
-		& BC$\leftarrow$BC-1 & \\[4pt]
+		& BC$\leftarrow$BC-1 & \instrb \\
 
-		CPIR & A-(HL) &
+		CPIR\instrt & 
+			A-(HL) &
 			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[1] & 1 & $\bullet$ &
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[1] & 1 & $\bullet$ &
 			11 & 101 & 101 & 
 			ED & 2 & 
 			5 & 21 & {if BC$\not=$0} \\
@@ -2049,28 +2471,34 @@ some are very confusing, so I'll mention the ones I have found here:
 		& BC$\leftarrow$BC-1 & \multicolumn{12}{c}{} & & 4 & 16 & {if BC=0} \\
 		& Repeat until & \multicolumn{15}{c}{} & {or A=(HL)} \\ 
 		& A=(HL) or & \\ 
-		& BC=0 & \\[4pt]
+		& BC=0 & \instrb \\
 
-		CPD & A-(HL) &
+		CPD\instrt & 
+			A-(HL) &
 			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[1] & 1 & $\bullet$ &
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[1] & 
+				1 & 
+				$\bullet$ &
 			11 & 101 & 101 & 
 			ED & 2 & 
 			4 & 16 & \\ 
 			& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 101 & 001 & A9 & & & \\ 
-			& BC$\leftarrow$BC-1 & \\[4pt]
+			& BC$\leftarrow$BC-1 & \instrb \\
 
-		CPDR & A-(HL) &
+		CPDR\instrt & 
+			A-(HL) &
 			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[1] & 1 & $\bullet$ &
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[1] & 
+				1 & 
+				$\bullet$ &
 			11 & 101 & 101 & 
 			ED & 2 & 
 			5 & 21 & {if BC$\not=$0} \\
@@ -2078,14 +2506,15 @@ some are very confusing, so I'll mention the ones I have found here:
 		& BC$\leftarrow$BC-1 & \multicolumn{12}{c}{} & & 4 & 16 & {if BC=0} \\
 		& Repeat until & \multicolumn{15}{c}{} & {or A=(HL)} \\ 
 		& A=(HL) or & \\ 
-		& BC=0 & \\[4pt]
+		& BC=0 & \instrb \\
 
 		\hline
 
-		Note: & \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1]PF is 0 the result of BC-1=0, otherwise PF is set.}} \\
+		Note:
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1]PF is 0 the result of BC-1=0, otherwise PF is set.}}\notet \\
 			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[2]PF is 0 only at completion of the instruction.}} \\
 			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[3]ZF is set if A=(HL), otherwise ZF is reset.}} \\
-			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[4]See section \ref{block_mem} for a description.}} \\
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[4]See section \ref{block_mem} for a description.}}\noteb \\
 	  
 	\hline
 
@@ -2118,35 +2547,75 @@ some are very confusing, so I'll mention the ones I have found here:
 			\end{tabular}
 		}\\
 
-		ADD A,r & A$\leftarrow$A+r & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 
+		ADD A,r\instrt & 
+			A$\leftarrow$A+r & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ &
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\updownarrow$ & 
 			10 & \fbox{000} & r & 
 			.. & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
-		ADD A,p & A$\leftarrow$A+p & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 
+		ADD A,p\instrt & 
+			A$\leftarrow$A+p & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\updownarrow$ & 
 			11 & 011 & 101 &
 			DD & 2 & 
 			2 & 8 \\
-		\multicolumn{10}{c}{} & 10 & \fbox{000} & p & .. & \\[4pt]
+		\multicolumn{10}{c}{} & 10 & \fbox{000} & p & .. & \instrb \\
 
-		ADD A,q & A$\leftarrow$A+q & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 
+		ADD A,q\instrt & 
+			A$\leftarrow$A+q & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\updownarrow$ & 
 			11 & 111 & 101 &
 			FD & 2 & 
 			2 & 8 & \\
-		\multicolumn{10}{c}{} & 10 & \fbox{000} & q & .. & \\[4pt]
+		\multicolumn{10}{c}{} & 10 & \fbox{000} & q & .. & \instrb \\
 
-		ADD A,n & A$\leftarrow$A+n & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 
+		ADD A,n\instrt & 
+			A$\leftarrow$A+n & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\updownarrow$ &  
 			11 & \fbox{000} & 110 &
 			C6 & 2 & 
 			2 & 7 & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & \instrb \\
 
-		ADD A,(HL) & A$\leftarrow$A+(HL) & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ &
+		ADD A,(HL)\instrt & 
+			A$\leftarrow$A+(HL) & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\updownarrow$ & 
 			10 & \fbox{000} & 110 &
 			86 & 1 & 
 			2 & 7 & 
@@ -2162,28 +2631,52 @@ some are very confusing, so I'll mention the ones I have found here:
 					101 & IXl \\
 					111 & A \\
 				\end{tabular}
-			}\\[4pt]
+			}\instrb \\
 
-		ADD A,(IX+d) & A$\leftarrow$A+(IX+d) & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 
+		ADD A,(IX+d)\instrt & 
+			A$\leftarrow$A+(IX+d) & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\updownarrow$ & 
 			11 & 011 & 101 & 
 			DD & 3 & 
 			5 & 19 & \\
 		\multicolumn{10}{c}{} & 10 & \fbox{000} & 110 & 68 & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \instrb \\
 
-		ADD A,(IY+d) & A$\leftarrow$A+(IY+d) & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 
+		ADD A,(IY+d)\instrt & 
+			A$\leftarrow$A+(IY+d) & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\updownarrow$ & 
 			11 & 111 & 101 & 
 			FD & 3 & 
 			5 & 19 & \\
 		\multicolumn{10}{c}{} & 10 & \fbox{000} & 110 & 68 \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \instrb \\
 
-	& & & & & & & & & & & $\uparrow$ & & & & & & \\[4pt]
+	& & & & & & & & & & & $\uparrow$ & & & & & & \instrb \\
 
-		ADC A,s & A$\leftarrow$A+s+CF &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ &
+		ADC A,s\instrt & 
+			A$\leftarrow$A+s+CF &
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\updownarrow$ &
 			.. & \fbox{001} & ... & 
 			& & & &
 			\multirow{9}{*}{
@@ -2198,97 +2691,198 @@ some are very confusing, so I'll mention the ones I have found here:
 					101 & IYl \\
 					111 & A \\
 				\end{tabular}
-			}\\[4pt]
+			}\instrb \\
 
-		SUB s & A$\leftarrow$A-s &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 1 & $\updownarrow$ &
-			.. & \fbox{010} & ... & \\[4pt]
-
-		SBC A,s & A$\leftarrow$A-s-CF &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 1 & $\updownarrow$ &
-			.. & \fbox{011} & ... & \\[4pt]
-
-		AND s & A$\leftarrow$A$\wedge$s &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 1 & $\updownarrow$ & PF & 0 & 0 &
-			.. & \fbox{100} & ... & \\[4pt]
-
-		OR s & A$\leftarrow$A$\vee$s &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & 0 &
-			.. & \fbox{110} & ... & \\[4pt]
-
-		XOR s & A$\leftarrow$A$\bullet$s &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & 0 &
-			.. & \fbox{101} & ... & \\[4pt]
-
-		CP s & A-s &
+		SUB s\instrt & 
+			A$\leftarrow$A-s &
 			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				1 & 
+				$\updownarrow$ &
+			.. & \fbox{010} & ... & \instrb \\
+
+		SBC A,s\instrt & 
+			A$\leftarrow$A-s-CF &
 			$\updownarrow$ & 
-			$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				1 & 
+				$\updownarrow$ &
+			.. & \fbox{011} & ... & \instrb \\
+
+		AND s\instrt & 
+			A$\leftarrow$A$\wedge$s &
 			$\updownarrow$ & 
-			$\updownarrow$\footnotemark[1] & VF & 1 & 
-			$\updownarrow$ &
-			.. & \fbox{111} & ... & \\[4pt]
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				1 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				0 &
+			.. & \fbox{100} & ... & \instrb \\
+
+		OR s\instrt & 
+			A$\leftarrow$A$\vee$s &
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				0 &
+			.. & \fbox{110} & ... & \instrb \\
+
+		XOR s\instrt & 
+			A$\leftarrow$A$\bullet$s &
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				0 &
+			.. & \fbox{101} & ... & \instrb \\
+
+		CP s\instrt & 
+			A-s &
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$ & 
+				$\updownarrow$\footnotemark[1] & 
+				VF & 
+				1 & 
+				$\updownarrow$ &
+			.. & \fbox{111} & ... & \instrb \\
 
 	& & & & & & & & & & & & & & & & & \\
 	& & & & & & & & & & & & & & & & & \\
 
-		INC r & r$\leftarrow$r+1 & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 00 & r & \fbox{100} & 
+		INC r\instrt & 
+			r$\leftarrow$r+1 & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\bullet$ & 
+			00 & r & \fbox{100} & 
 			.. & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
-		INC p & p$\leftarrow$p+1 & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 11 & 011 & 101 & 
+		INC p\instrt & 
+			p$\leftarrow$p+1 & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\bullet$ & 
+			11 & 011 & 101 & 
 			DD & 2 & 
 			2 & 8 & \\
-		\multicolumn{10}{c}{} & 00 & p & \fbox{100} & .. & \\[4pt]
+		\multicolumn{10}{c}{} & 00 & p & \fbox{100} & .. & \instrb \\
 
-		INC q & q$\leftarrow$q+1 & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 11 & 111 & 101 & 
+		INC q\instrt & 
+			q$\leftarrow$q+1 & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\bullet$ & 
+			11 & 111 & 101 & 
 			FD & 2 & 
 			2 & 8 & \\ 
-		\multicolumn{10}{c}{} & 00 & q & \fbox{100} & .. & \\[4pt]
+		\multicolumn{10}{c}{} & 00 & q & \fbox{100} & .. & \instrb \\
 
-		INC (HL) & (HL)$\leftarrow$(HL)+1 & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 00 & 110 & \fbox{100} & 
+		INC (HL)\instrt & 
+			(HL)$\leftarrow$(HL)+1 & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\bullet$ & 
+			00 & 110 & \fbox{100} & 
 			34 & 1 & 
-			3 & 11 & \\[4pt]
+			3 & 11 & \instrb \\
 
-		INC (IX+d) & (IX+d)$\leftarrow$(IX+d)+1 & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 11 & 011 & 101 & 
+		INC (IX+d)\instrt & 
+			(IX+d)$\leftarrow$(IX+d)+1 & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\bullet$ & 
+			11 & 011 & 101 & 
 			DD & 3 & 
 			6 & 23 & \\ 
 		\multicolumn{10}{c}{} & 00 & 110 & \fbox{100} & 34 & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & \instrb \\
 
-		INC (IY+d) & (IY+d)$\leftarrow$(IY+d)+1 & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 11 & 111 & 101 & 
+		INC (IY+d)\instrt & 
+			(IY+d)$\leftarrow$(IY+d)+1 & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\bullet$ & 
+			11 & 111 & 101 & 
 			FD & 3 & 
 			6 & 23 & \\ 
 		\multicolumn{10}{c}{} & 00 & 110 & \fbox{100} & 34 & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} &  \\[4pt]
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} &  \instrb \\
 
-	& & & & & & & & & & & & $\uparrow$ & & & & & \\[4pt]
+	& & & & & & & & & & & & $\uparrow$ & & & & & \instrb \\
 
-		DEC m & m$\leftarrow$m-1 & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 1 & $\bullet$ &
+		DEC m\instrt &
+			m$\leftarrow$m-1 & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				1 & 
+				$\bullet$ &
 			.. & ... & \fbox{101}
 			& & 
-			& & & \\[4pt]
+			& & & \instrb \\
 
 	\hline
 
-		Note: & \multicolumn{17}{l}{
-			\parbox{12cm}{\footnotemark[1]YF and XF flags are copied from the operand s, not the result A-s}
-		} \\[2pt]
-		
-		& \multicolumn{17}{l}{
-			\parbox{12cm}{s is any of r, p, q, n, (HL), (IX+d), (IY+d) as shown for ADD. The indicated bits replace the \fbox{000} in the ADD set above}
-		} \\[5pt]
-		
-		& \multicolumn{17}{l}{
-			\parbox{12cm}{m is any of r, p, q, (HL), (IX+d), (IY+d) as shown for INC. Replace \fbox{100} with \fbox{101} in opcode}
-		} \\
+		Note:
+
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1]YF and XF flags are copied from the operand s, not the result A-s}}\notet\noteb \\
+
+			& \multicolumn{17}{l}{\parbox{12cm}{s is any of r, p, q, n, (HL), (IX+d), (IY+d) as shown for ADD. The indicated bits replace the \fbox{000} in the ADD set above}}\notet\noteb \\
+
+			& \multicolumn{17}{l}{\parbox{12cm}{m is any of r, p, q, (HL), (IX+d), (IY+d) as shown for INC. Replace \fbox{100} with \fbox{101} in opcode}}\notet\noteb \\
 	
 	\hline
 
@@ -2316,28 +2910,60 @@ some are very confusing, so I'll mention the ones I have found here:
 			\end{tabular}
 		}\\
 
-		ADD HL,ss & HL$\leftarrow$HL+ss &
-			$\bullet$ & $\bullet$ & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[2] & $\bullet$ & 0 & $\updownarrow$\footnotemark[1] & 
+		ADD HL,ss\instrt & 
+			HL$\leftarrow$HL+ss &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\bullet$ & 
+				0 & 
+				$\updownarrow$\footnotemark[1] & 
 			00 & ss1 & 001 & 
 			.. & 1 & 
-			3 & 11 & \\[4pt]
+			3 & 11 & \instrb \\
 
-		ADC HL,ss & HL$\leftarrow$HL+ss+CF &
-			$\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[2] & VF\footnotemark[1] & 0 & $\updownarrow$\footnotemark[1] & 
+		ADC HL,ss\instrt & 
+			HL$\leftarrow$HL+ss+CF &
+			$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[2] & 
+				VF\footnotemark[1] & 
+				0 & 
+				$\updownarrow$\footnotemark[1] & 
 			11 & 101 & 101 & 
 			ED & 2 & 
 			4 & 15 & \\
-		\multicolumn{10}{c}{} & 01 & ss1 & 010 & .. & & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & ss1 & 010 & .. & & \instrb \\
 
-		SBC HL,ss & HL$\leftarrow$HL-ss-CF &
-			$\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[2] & VF\footnotemark[1] & 1 & $\updownarrow$\footnotemark[1] & 
+		SBC HL,ss\instrt & 
+			HL$\leftarrow$HL-ss-CF &
+			$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[2] & 
+				VF\footnotemark[1] & 
+				1 & 
+				$\updownarrow$\footnotemark[1] & 
 			11 & 101 & 101 & 
 			ED & 2 & 
 			4 & 15 & \\
-		\multicolumn{10}{c}{} & 01 & ss0 & 010 & .. & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & ss0 & 010 & .. & \instrb \\
 
-		ADD IX,pp & IX$\leftarrow$IX+pp &
-			$\bullet$ & $\bullet$ & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[2] & $\bullet$ & 0 & $\updownarrow$\footnotemark[1] & 
+		ADD IX,pp\instrt & 
+			IX$\leftarrow$IX+pp &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\bullet$ & 
+				0 & 
+				$\updownarrow$\footnotemark[1] & 
 			11 & 011 & 110 & 
 			DD & 2 & 
 			4 & 15 & 
@@ -2351,23 +2977,47 @@ some are very confusing, so I'll mention the ones I have found here:
 					11 & SP \\
 				\end{tabular}
 			}\\
-		\multicolumn{10}{c}{} & 00 & pp1 & 001 & .. & \\[4pt]
+		\multicolumn{10}{c}{} & 00 & pp1 & 001 & .. & \instrb \\
 
-		ADD IY,qq & IY$\leftarrow$IY+qq &
-			$\bullet$ & $\bullet$ & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[2] & $\bullet$ & 0 & $\updownarrow$\footnotemark[1] & 
+		ADD IY,qq\instrt & 
+			IY$\leftarrow$IY+qq &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\bullet$ & 
+				0 & 
+				$\updownarrow$\footnotemark[1] & 
 			11 & 111 & 110 & 
 			FD & 2 & 
 			4 & 15 & \\
-		\multicolumn{10}{c}{} & 00 & qq1 & 001 & .. & \\[4pt]
+		\multicolumn{10}{c}{} & 00 & qq1 & 001 & .. & \instrb \\
 
-		INC ss & ss$\leftarrow$ss+1 &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		INC ss\instrt & 
+			ss$\leftarrow$ss+1 &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			00 & ss0 & 011 & 
 			.. & 1 & 
-			1 & 6 & \\[4pt]
+			1 & 6 & \instrb \\
 
-		INC IX & IX$\leftarrow$IX+1 &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		INC IX\instrt & 
+			IX$\leftarrow$IX+1 &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			11 & 011 & 101 & 
 			DD & 2 & 
 			2 & 10 &
@@ -2381,39 +3031,72 @@ some are very confusing, so I'll mention the ones I have found here:
 					11 & SP \\
 				\end{tabular}
 			}\\
-		\multicolumn{10}{c}{} & 00 & 100 & 011 & 23 & \\[4pt]
+		\multicolumn{10}{c}{} & 00 & 100 & 011 & 23 & \instrb \\
 
-		INC IY & IY$\leftarrow$IY+1 &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		INC IY\instrt & 
+			IY$\leftarrow$IY+1 &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			11 & 111 & 101 & 
 			FD & 2 & 
 			2 & 10 & \\
-		\multicolumn{10}{c}{} & 00 & 100 & 011 & 23 & \\[4pt]
+		\multicolumn{10}{c}{} & 00 & 100 & 011 & 23 & \instrb \\
 
-		DEC ss & ss$\leftarrow$ss-1 &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+		DEC ss\instrt & 
+			ss$\leftarrow$ss-1 &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			00 & ss1 & 011 & 
 			.. & 1 & 
-			1 & 6 & \\[4pt]
+			1 & 6 & \instrb \\
 
-		DEC IX & IX$\leftarrow$IX-1 &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		DEC IX\instrt & 
+			IX$\leftarrow$IX-1 &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			11 & 011 & 101 & 
 			DD & 2 & 
 			2 & 10 & \\
-		\multicolumn{10}{c}{} & 00 & 101 & 011 & 2B & \\[4pt]
+		\multicolumn{10}{c}{} & 00 & 101 & 011 & 2B & \instrb \\
 
-		DEC IY & IY$\leftarrow$IY-1 &
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		DEC IY\instrt & 
+			IY$\leftarrow$IY-1 &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			11 & 111 & 101 & 
 			FD & 2 & 
 			2 & 10 & \\
-		\multicolumn{10}{c}{} & 00 & 101 & 011 & 2B & \\[4pt]
+		\multicolumn{10}{c}{} & 00 & 101 & 011 & 2B & \instrb \\
 		
 		\hline
 
-		Note: & \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1]Flag is affected by the 16 bit result.}} \\
-			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[2]Flag is affected by the high-byte addition.}} \\
+		Note:
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1]Flag is affected by the 16 bit result.}}\notet \\
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[2]Flag is affected by the high-byte addition.}}\noteb \\
 			
 		\hline
 
@@ -2431,92 +3114,179 @@ some are very confusing, so I'll mention the ones I have found here:
 
 	& & & & & & & & & & & & & & & & & \\
 
-		DAA & & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & PF & $\bullet$ & $\updownarrow$ &
+		DAA\instrt & & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				PF & 
+				$\bullet$ & 
+				$\updownarrow$ &
 			00 & 100 & 111 & 
 			27 & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
-		CPL & A$\leftarrow\mathtt{\overline{A}}$ & 
-			$\bullet$ & $\bullet$ & $\updownarrow$ & 1 & $\updownarrow$ & $\bullet$ & 1 & $\bullet$ & 
+		CPL\instrt & 
+			A$\leftarrow\mathtt{\overline{A}}$ & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\updownarrow$ & 
+				1 & 
+				$\updownarrow$ & 
+				$\bullet$ & 
+				1 & 
+				$\bullet$ & 
 			00 & 101 & 111 & 
 			2F & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
-		NEG & A$\leftarrow$0-A & 
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 1 & $\updownarrow$ &
+		NEG\instrt & 
+			A$\leftarrow$0-A & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				1 & 
+				$\updownarrow$ &
 			11 & 101 & 101 & 
 			ED & 2 & 
 			2 & 8 & \\
-		\multicolumn{10}{c}{} & 01 & 000 & 100 & 44 & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & 000 & 100 & 44 & \instrb \\
 
-		CCF & CF$\leftarrow\mathtt{\overline{CF}}$ & 
-			$\bullet$ & $\bullet$ & 
+		CCF\instrt & 
+			CF$\leftarrow\mathtt{\overline{CF}}$ & 
+			$\bullet$ & 
+				$\bullet$ & 
 				$\updownarrow$\footnotemark[1] & 
 				$\updownarrow$\footnotemark[2] & 
 				$\updownarrow$\footnotemark[1] & 
-			$\bullet$ & 0 & $\updownarrow$ & 
+				$\bullet$ & 
+				0 & 
+				$\updownarrow$ & 
 			00 & 111 & 111 & 
 			3F & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
-		SCF & CF$\leftarrow$1 & 
-			$\bullet$ & $\bullet$ & $\updownarrow$\footnotemark[1] & 0 & $\updownarrow$\footnotemark[1] & $\bullet$ & 0 & 1 & 
+		SCF\instrt & 
+			CF$\leftarrow$1 & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\updownarrow$\footnotemark[1] & 
+				0 & 
+				$\updownarrow$\footnotemark[1] &
+				 $\bullet$ & 
+				 0 & 
+				 1 & 
 			00 & 110 & 111 & 
 			37 & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
-		NOP & & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		NOP\instrt & & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			00 & 000 & 000 & 
 			00 & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
-		HALT & & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		HALT\instrt & & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			01 & 110 & 110 & 
 			76 & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
-		DI\footnotemark[3] & IFF1,2$\leftarrow$0 & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		DI\footnotemark[3]\instrt & 
+			IFF1,2$\leftarrow$0 & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+				$\bullet$ & 
+				$\bullet$ &
 			11 & 110 & 011 & 
 			F3 & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
-		EI\footnotemark[3] & IFF1,2$\leftarrow$1 & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		EI\footnotemark[3]\instrt & 
+			IFF1,2$\leftarrow$1 & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			11 & 111 & 011 & 
 			FB & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
-		IM 0\footnotemark[4] & & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		IM 0\footnotemark[4]\instrt & & 
+			$\bullet$ & $
+				\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			11 & 101 & 101 & 
 			ED & 2 & 
 			2 & 8 & \\
-		\multicolumn{10}{c}{} & 01 & 000 & 110 & 46 & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & 000 & 110 & 46 & \instrb \\
 
-		IM 1\footnotemark[4] & & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		IM 1\footnotemark[4]\instrt & & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			11 & 101 & 101 & 
 			ED & 2 & 
 			2 & 8 & \\
-		\multicolumn{10}{c}{} & 01 & 010 & 110 & 56 & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & 010 & 110 & 56 & \instrb \\
 
-		IM 2\footnotemark[4] & & 
-			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ &
+		IM 2\footnotemark[4]\instrt & & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
 			11 & 101 & 101 & 
 			ED & 2 & 
 			2 & 8 & \\
-		\multicolumn{10}{c}{} & 01 & 011 & 110 & 5E & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & 011 & 110 & 5E & \instrb \\
 		
 		\hline
 
-		Note: & \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1]YF and XF are copied from register A.}} \\
+		Note: 
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1]YF and XF are copied from register A.}}\notet \\
 			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[2]HF is like CF before the instruction.}} \\
 			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[3]No interrupts are accepted directly after EI or DI.}} \\
-			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[4]This instruction has other undocumented opcodes.}} \\ 
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[4]This instruction has other undocumented opcodes.}}\noteb \\ 
 	  
 	\hline
 
@@ -2535,7 +3305,7 @@ some are very confusing, so I'll mention the ones I have found here:
 	& & & & & & & & & & & & & & & & &
 	\multirow{11}{*}{
 		\begin{tabular}{ll}
-			r,r' & Reg \\
+			r & Reg \\
 			\hline
 			000 & B \\
 			001 & C \\
@@ -2561,7 +3331,7 @@ some are very confusing, so I'll mention the ones I have found here:
 			$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 
 			00 & 000 & 111 & 
 			07 & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
 		RLA & 
 			\setlength{\unitlength}{0.9mm}
@@ -2578,7 +3348,7 @@ some are very confusing, so I'll mention the ones I have found here:
 			$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 
 			00 & 010 & 111 & 
 			17 & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
 		RRCA & 
 			\setlength{\unitlength}{0.9mm}
@@ -2594,7 +3364,7 @@ some are very confusing, so I'll mention the ones I have found here:
 			$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 
 			00 & 001 & 111 & 
 			0F & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
 		RRA & 
 			\setlength{\unitlength}{0.9mm}
@@ -2611,7 +3381,7 @@ some are very confusing, so I'll mention the ones I have found here:
 			$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 
 			00 & 011 & 111 & 
 			1F & 1 & 
-			1 & 4 & \\[4pt]
+			1 & 4 & \instrb \\
 
 		RLC r & 
 			\setlength{\unitlength}{0.9mm}
@@ -2628,7 +3398,7 @@ some are very confusing, so I'll mention the ones I have found here:
 			11 & 001 & 011 & 
 			CB & 2 & 
 			2 & 8 & \\
-		\multicolumn{10}{c}{} & 00 & \fbox{000} & r & .. & \\[4pt]
+		\multicolumn{10}{c}{} & 00 & \fbox{000} & r & .. & \instrb \\
 
 		RLC (HL) & 
 			\setlength{\unitlength}{0.9mm}
@@ -2645,7 +3415,7 @@ some are very confusing, so I'll mention the ones I have found here:
 			11 & 001 & 011 & 
 			CB & 2 & 
 			4 & 15 & \\ 
-		\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & 06 & \\[4pt]
+		\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & 06 & \instrb \\
 
 		RLC (IX+d) & 
 			\setlength{\unitlength}{0.9mm}
@@ -2664,7 +3434,7 @@ some are very confusing, so I'll mention the ones I have found here:
 			6 & 23 & \\ 
 		\multicolumn{10}{c}{} & 11 & 001 & 011 & CB & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \\
-		\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & 06 & \\[4pt]
+		\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & 06 & \instrb \\
 
 		RLC (IY+d) & 
 			\setlength{\unitlength}{0.9mm}
@@ -2683,7 +3453,7 @@ some are very confusing, so I'll mention the ones I have found here:
 			6 & 23 & \\ 
 		\multicolumn{10}{c}{} & 11 & 001 & 011 & CB & \\
 		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \\
-		\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & 06 & \\[4pt]
+		\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & 06 & \instrb \\
 
 		RLC r,(IX+d) & r$\leftarrow$(IX+d) &
 			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
@@ -2692,7 +3462,7 @@ some are very confusing, so I'll mention the ones I have found here:
 			6 & 23 & \\ 
 			& RLC r & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & \\
 			& (IX+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \\
-			\multicolumn{10}{c}{} & 00 & \fbox{000} & r & .. & \\[4pt]
+			\multicolumn{10}{c}{} & 00 & \fbox{000} & r & .. & \instrb \\
 
 		RLC r,(IY+d) & r$\leftarrow$(IY+d) &
 			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
@@ -2701,11 +3471,11 @@ some are very confusing, so I'll mention the ones I have found here:
 			6 & 23 & \\ 
 			& RLC r & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & & \\
 			& (IY+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \\
-			& & \multicolumn{8}{c}{} & 00 & \fbox{000} & r & .. & \\[4pt]
+			& & \multicolumn{8}{c}{} & 00 & \fbox{000} & r & .. & \instrb \\
 
 	& & & & & & & & & & & $\uparrow$ & & & & & & \\
 
-		RL m & 
+		RL m\instrt & 
 			\setlength{\unitlength}{0.9mm}
 			\begin{picture}(17,4)
 				\put(2,0){\framebox(4,3){CF}}
@@ -2717,10 +3487,17 @@ some are very confusing, so I'll mention the ones I have found here:
 				\put(17.5,4){\line(0,-1){2.5}}
 				\put(17.5,1.5){\vector(-1,0){1.5}}
 			\end{picture} &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
-			.. &\fbox{010} & ... & \\[4pt]
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				$\updownarrow$ & 
+			.. &\fbox{010} & ... & \instrb \\
 
-		RRC m & 
+		RRC m\instrt & 
 			\setlength{\unitlength}{0.9mm}
 			\begin{picture}(17,4)
 				\put(13,0){\framebox(4,3){CF}}
@@ -2731,10 +3508,17 @@ some are very confusing, so I'll mention the ones I have found here:
 				\put(0,4){\line(1,0){11}}
 				\put(11,4){\line(0,-1){2.5}}
 			\end{picture} &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
-			.. &\fbox{001} & ... & \\[4pt]
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				$\updownarrow$ & 
+			.. &\fbox{001} & ... & \instrb \\
 
-		RR m & 
+		RR m\instrt & 
 			\setlength{\unitlength}{0.9mm}
 			\begin{picture}(17,4)
 				\put(12,0){\framebox(4,3){CF}}
@@ -2746,10 +3530,17 @@ some are very confusing, so I'll mention the ones I have found here:
 				\put(17.5,4){\line(0,-1){2.5}}
 				\put(16,1.5){\line(1,0){1.5}}
 			\end{picture} &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
-			.. &\fbox{011} & ... & \\[4pt]
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				$\updownarrow$ & 
+			.. &\fbox{011} & ... & \instrb \\
 
-		SLA m & 
+		SLA m\instrt & 
 			\setlength{\unitlength}{0.9mm}
 			\begin{picture}(17,4)
 				\put(0,0){\framebox(4,3){CF}}
@@ -2758,10 +3549,17 @@ some are very confusing, so I'll mention the ones I have found here:
 				\put(17,1.5){\vector(-1,0){3}}
 				\put(16,0){\makebox(4,3){0}}
 			\end{picture} &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
-			.. &\fbox{100} & ... & \\[4pt]
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				$\updownarrow$ & 
+			.. &\fbox{100} & ... & \instrb \\
 
-		SLL m & 
+		SLL m\instrt & 
 			\setlength{\unitlength}{0.9mm}
 			\begin{picture}(17,4)
 				\put(0,0){\framebox(4,3){CF}}
@@ -2770,10 +3568,17 @@ some are very confusing, so I'll mention the ones I have found here:
 				\put(17,1.5){\vector(-1,0){3}}
 				\put(16,0){\makebox(4,3){1}}
 			\end{picture} &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
-			.. &\fbox{110} & ... & \\[4pt]
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				$\updownarrow$ & 
+			.. &\fbox{110} & ... & \instrb \\
 
-		SRA m & 
+		SRA m\instrt & 
 			\setlength{\unitlength}{0.9mm}
 			\begin{picture}(17,4)
 				\put(13,0){\framebox(4,3){CF}}
@@ -2784,10 +3589,17 @@ some are very confusing, so I'll mention the ones I have found here:
 				\put(1,-1.5){\line(1,0){2.5}}
 				\put(3.5,-1.5){\line(0,1){1.5}}
 			\end{picture} &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
-			.. &\fbox{101} & ... & \\[4pt]
+			$\updownarrow$ &
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				$\updownarrow$ & 
+			.. &\fbox{101} & ... & \instrb \\
 
-		SRL m & 
+		SRL m\instrt & 
 			\setlength{\unitlength}{0.9mm}
 			\begin{picture}(17,4)
 				\put(-0.5,0){\makebox(1,3){0}}
@@ -2796,12 +3608,19 @@ some are very confusing, so I'll mention the ones I have found here:
 				\put(10,1.5){\vector(1,0){3}}
 				\put(1,1.5){\vector(1,0){2}}
 			\end{picture} &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
-			.. &\fbox{111} & ... & \\[4pt]
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				$\updownarrow$ & 
+			.. &\fbox{111} & ... & \instrb \\
 
 	& & & & & & & & & & & & & & & & & \\
 
-		RLD &
+		RLD\instrt &
 			\setlength{\unitlength}{0.9mm}
 			\put(-7,0){\makebox(4,3){A}}
 			\put(20,0){\makebox(4,3){(HL)}}
@@ -2820,13 +3639,20 @@ some are very confusing, so I'll mention the ones I have found here:
 				\put(10.5,-1.45){\line(-1,0){5.5}}
 				\put(10.5,-1.45){\line(0,1){1.45}}
 			\end{picture} &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\bullet$ & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				$\bullet$ & 
 			11 & 101 & 101 & 
 			ED & 2 & 
 			5 & 18 & \\
-		\multicolumn{10}{c}{} & 01 & 101 & 111 & 6F & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & 101 & 111 & 6F & \instrb \\
 			
-		RRD &
+		RRD\instrt &
 			\setlength{\unitlength}{0.9mm}
 			\put(-7,0){\makebox(4,3){A}}
 			\put(20,0){\makebox(4,3){(HL)}}
@@ -2845,17 +3671,23 @@ some are very confusing, so I'll mention the ones I have found here:
 				\put(10.5,4.45){\line(-1,0){5.5}}
 				\put(5,4.45){\line(0,-1){1.45}}
 			\end{picture} &
-			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\bullet$ & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				$\bullet$ & 
 			11 & 101 & 101 & 
 			ED & 2 & 
 			5 & 18 & \\
-		\multicolumn{10}{c}{} & 01 & 100 & 111 & 67 & \\[4pt]
+		\multicolumn{10}{c}{} & 01 & 100 & 111 & 67 & \instrb \\
 		
 		\hline
 
-		Note: & \multicolumn{17}{l}{
-			\parbox{12cm}{m is one of r,(HL),(IX+d),(IY+d). To form new opcode replace \fbox{000} of RLCs with shown code.}
-		} \\
+		Note:
+			& \multicolumn{17}{l}{\parbox{12cm}{m is one of r,(HL),(IX+d),(IY+d). To form new opcode replace \fbox{000} of RLCs with shown code.}}\notet\noteb \\
 		
 		\hline
 
