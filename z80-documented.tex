@@ -1923,114 +1923,167 @@ some are very confusing, so I'll mention the ones I have found here:
 \section{Exchange, Block Transfer, Search Group}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
-\setlength{\tabcolsep}{1mm}
-\begin{tabular}{llc@{ }c@{ }c@{ }c@{ }c@{ }c@{ }c@{ }cc@{ }c@{ }cccccll}\hline
- & \multicolumn{1}{c}{Symbolic} & \multicolumn{8}{c}{Flags} & \multicolumn{3}{c}{Opcode} & & & M & T & \\
-Mnemonic & \multicolumn{1}{c}{Operation} & SF & ZF & YF & HF & XF & PF & NF & CF & 76 & 543 & 210 
-	& Hex & Bytes & Cycles & States & \multicolumn{2}{l}{Comments} \\ \hline
+	\setlength{\tabcolsep}{1mm}
+	\begin{tabular}{llcccccccccccccccl}
+		     
+		\instrheader
 
-EX DE,HL & DE$\leftrightarrow$HL & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 101 & 011
-	& EB & 1 & 1 & 4 & & \\ 
+		& & & & & & & & & & & & & & & & & \\
 
-EX AF,AF' & AF$\leftrightarrow$AF' & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 001 & 000
-	& 08 & 1 & 1 & 4 & & \\ 
+		EX DE,HL & DE$\leftrightarrow$HL & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 101 & 011 & 
+			EB & 1 & 
+			1 & 4 & \\[4pt]
 
-EXX & BC$\leftrightarrow$BC' & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 011 & 001
-	& D9 & 1 & 1 & 4 & & \\ 
-	& DE$\leftrightarrow$DE' & \multicolumn{15}{c}{} & & \\ 
-	& HL$\leftrightarrow$HL' & \multicolumn{15}{c}{} & & \\ 
+		EX AF,AF' & AF$\leftrightarrow$AF' & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 001 & 000
+			& 08 & 1 & 1 & 4 & \\[4pt]
 
-EX (SP),HL & H$\leftrightarrow$(SP+1) & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 100 & 011
-	& E3 & 1 & 5 & 19 & & \\ 
-	& L$\leftrightarrow$(SP) & \multicolumn{15}{c}{} & & \\ 
+		EXX & BC$\leftrightarrow$BC' & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 011 & 001 & 
+			D9 & 1 & 1 & 4 & \\ 
+		& DE$\leftrightarrow$DE' & \\ 
+		& HL$\leftrightarrow$HL' & \\[4pt]
 
-EX (SP),IX & IXh$\leftrightarrow$(SP+1) & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 011 & 101
-	& DD & 2 & 6 & 23 & & \\ 
-	& IXl$\leftrightarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 011 & \multicolumn{4}{c}{} & & \\ 
+		EX (SP),HL & H$\leftrightarrow$(SP+1) & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 100 & 011 & 
+			E3 & 1 & 
+			5 & 19 & \\ 
+		& L$\leftrightarrow$(SP) & \\[4pt]
 
-EX (SP),IY & IYh$\leftrightarrow$(SP+1) & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 111 & 101
-	& FD & 2 & 6 & 23 & & \\ 
-	& IYl$\leftrightarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 011 & \multicolumn{4}{c}{} & & \\ 
+		EX (SP),IX & IXh$\leftrightarrow$(SP+1) & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 011 & 101 & 
+			DD & 2 & 
+			6 & 23 & \\ 
+		& IXl$\leftrightarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 011 & E3 & & \\[4pt]
 
-LDI & (DE)$\leftarrow$(HL) & 
-	$\bullet$ & $\bullet$ & $\updownarrow$\footnotemark[4] & 0 & $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[1] & 0 & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 4 & 16 & & \\ 
-	& DE$\leftarrow$DE+1 & \multicolumn{8}{c}{} & 10 & 100 & 000 & A0 & \multicolumn{3}{c}{} & & \\ 
-	& HL$\leftarrow$HL+1 & \multicolumn{15}{c}{} & & \\
-	& BC$\leftarrow$BC-1 & \multicolumn{15}{c}{} & & \\ 
+		EX (SP),IY & IYh$\leftrightarrow$(SP+1) & 
+			$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 
+			11 & 111 & 101 & 
+			FD & 2 & 
+			6 & 23 & \\
+		& IYl$\leftrightarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 011 & E3 & & \\[4pt]
 
-LDIR & (DE)$\leftarrow$(HL) & 
-	$\bullet$ & $\bullet$ & $\updownarrow$\footnotemark[4] & 0 & $\updownarrow$\footnotemark[4] & 0\footnotemark[2] & 0 & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 5 & 21 & \multicolumn{2}{l}{if BC$\not=$0} \\ 
-	& DE$\leftarrow$DE+1 & \multicolumn{8}{c}{} & 10 & 110 & 000 & B0 & 2 & 4 & 16 & \multicolumn{2}{l}{if BC=0} \\
-	& HL$\leftarrow$HL+1 & \multicolumn{15}{c}{} & & \\
-	& BC$\leftarrow$BC-1 & \multicolumn{15}{c}{} & & \\ 
-	& Repeat until& \multicolumn{15}{c}{} & & \\ 
-	& BC=0 & \multicolumn{15}{c}{} & & \\ 
+		LDI & (DE)$\leftarrow$(HL) & 
+			$\bullet$ & $\bullet$ & 
+				$\updownarrow$\footnotemark[4] & 0 & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[1] & 0 & $\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			4 & 16 \\ 
+		& DE$\leftarrow$DE+1 & \multicolumn{8}{c}{} & 10 & 100 & 000 & A0 & & & \\ 
+		& HL$\leftarrow$HL+1 & \\
+		& BC$\leftarrow$BC-1 & \\ [4pt]
 
-LDD & (DE)$\leftarrow$(HL) & 
-	$\bullet$ & $\bullet$ & $\updownarrow$\footnotemark[4] & 0 & $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[1] & 0 & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 4 & 16 & & \\ 
-	& DE$\leftarrow$DE-1 & \multicolumn{8}{c}{} & 10 & 101 & 000 & A8 & \multicolumn{3}{c}{} & & \\ 
-	& HL$\leftarrow$HL-1 & \multicolumn{15}{c}{} & & \\
-	& BC$\leftarrow$BC-1 & \multicolumn{15}{c}{} & & \\ 
+		LDIR & (DE)$\leftarrow$(HL) & 
+			$\bullet$ & $\bullet$ &
+				$\updownarrow$\footnotemark[4] & 0 & 
+				$\updownarrow$\footnotemark[4] & 
+				0\footnotemark[2] & 0 & $\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			5 & 21 & {if BC$\not=$0} \\
+		& DE$\leftarrow$DE+1 & \multicolumn{8}{c}{} & 10 & 110 & 000 & B0 & & 4 & 16 & {if BC=0} \\
+		& HL$\leftarrow$HL+1 & \\
+		& BC$\leftarrow$BC-1 & \\ 
+		& Repeat until & \\ 
+		& BC=0 & \\[4pt]
 
-LDDR & (DE)$\leftarrow$(HL) & 
-	$\bullet$ & $\bullet$ & $\updownarrow$\footnotemark[4] & 0 & $\updownarrow$\footnotemark[4] & 0\footnotemark[2] & 0 & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 5 & 21 & \multicolumn{2}{l}{if BC$\not=$0} \\ 
-	& DE$\leftarrow$DE-1 & \multicolumn{8}{c}{} & 10 & 111 & 000 & B8 & 2 & 4 & 16 & \multicolumn{2}{l}{if BC=0} \\
-	& HL$\leftarrow$HL-1 & \multicolumn{15}{c}{} & & \\
-	& BC$\leftarrow$BC-1 & \multicolumn{15}{c}{} & & \\ 
-	& Repeat until& \multicolumn{15}{c}{} & & \\ 
-	& BC=0 & \multicolumn{15}{c}{} & & \\ 
+		LDD & (DE)$\leftarrow$(HL) & 
+			$\bullet$ & $\bullet$ & 
+				$\updownarrow$\footnotemark[4] & 0 & 
+				$\updownarrow$\footnotemark[4] & 
+				$\updownarrow$\footnotemark[1] & 0 & $\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			4 & 16 & \\ 
+		& DE$\leftarrow$DE-1 & \multicolumn{8}{c}{} & 10 & 101 & 000 & A8 & & \\ 
+		& HL$\leftarrow$HL-1 & \\
+		& BC$\leftarrow$BC-1 & \\[4pt]
 
-CPI & A-(HL) &
-	$\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[3] & $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[4] 
-	& $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[1] & 1 & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 4 & 16 & & \\ 
-	& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 100 & 001 & A1 & \multicolumn{3}{c}{} & & \\ 
-	& BC$\leftarrow$BC-1 & \multicolumn{15}{c}{} & & \\ 
+		LDDR & (DE)$\leftarrow$(HL) & 
+			$\bullet$ & $\bullet$ & 
+				$\updownarrow$\footnotemark[4] & 0 & 
+				$\updownarrow$\footnotemark[4] & 
+				0\footnotemark[2] & 0 & $\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			5 & 21 & {if BC$\not=$0} \\ 
+		& DE$\leftarrow$DE-1 & \multicolumn{8}{c}{} & 10 & 111 & 000 & B8 & & 4 & 16 & {if BC=0} \\
+		& HL$\leftarrow$HL-1 & \\
+		& BC$\leftarrow$BC-1 & \\ 
+		& Repeat until & \\ 
+		& BC=0 & \\[4pt]
 
-CPIR & A-(HL) &
-	$\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[3] & $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[4] 
-	& $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[1] & 1 & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 5 & 21 & \multicolumn{2}{l}{if BC$\not=$0 and}  \\ 
- \multicolumn{17}{c}{} & \multicolumn{2}{l}{A$\not=$(HL)}  \\
-	& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 110 & 001 & B1 & 2 & 4 & 16 & \multicolumn{2}{l}{if BC=0 or} \\
-	& BC$\leftarrow$BC-1 & \multicolumn{15}{c}{} & \multicolumn{2}{l}{A=(HL)} \\ 
-	& Repeat until& \multicolumn{15}{c}{} & & \\ 
-	& A=(HL) or & \multicolumn{15}{c}{} & & \\ 
-	& BC=0 & \multicolumn{15}{c}{} & & \\ 
+		CPI & A-(HL) &
+			$\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[3] & $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[4] 
+			& $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[1] & 1 & $\bullet$ &
+			11 & 101 & 101 & 
+			ED & 2 & 
+			4 & 16 & \\ 
+		& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 100 & 001 & A1 & \\ 
+		& BC$\leftarrow$BC-1 & \\[4pt]
 
-CPD & A-(HL) &
-	$\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[3] & $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[4] 
-	& $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[1] & 1 & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 4 & 16 & & \\ 
-	& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 101 & 001 & A9 & \multicolumn{3}{c}{} & & \\ 
-	& BC$\leftarrow$BC-1 & \multicolumn{15}{c}{} & & \\ 
+		CPIR & A-(HL) &
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[3] & 
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[1] & 1 & $\bullet$ &
+			11 & 101 & 101 & 
+			ED & 2 & 
+			5 & 21 & {if BC$\not=$0} \\
+		& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 110 & 001 & B1 & & & & {and A$\not=$(HL)} \\
+		& BC$\leftarrow$BC-1 & \multicolumn{12}{c}{} & & 4 & 16 & {if BC=0} \\
+		& Repeat until & \multicolumn{15}{c}{} & {or A=(HL)} \\ 
+		& A=(HL) or & \\ 
+		& BC=0 & \\[4pt]
 
-CPDR & A-(HL) &
-	$\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[3] & $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[4] 
-	& $\updownarrow$\footnotemark[4] & $\updownarrow$\footnotemark[1] & 1 & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 5 & 21 & \multicolumn{2}{l}{if BC$\not=$0 and}  \\ 
- \multicolumn{17}{c}{} & \multicolumn{2}{l}{A$\not=$(HL)}  \\
-	& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 111 & 001 & B9 & 2 & 4 & 16 & \multicolumn{2}{l}{if BC=0 or} \\
-	& BC$\leftarrow$BC-1 & \multicolumn{15}{c}{} & \multicolumn{2}{l}{A=(HL)} \\ 
-	& Repeat until& \multicolumn{15}{c}{} & & \\ 
-	& A=(HL) or & \multicolumn{15}{c}{} & & \\ 
-	& BC=0 & \multicolumn{15}{c}{} & & \\  \hline
+		CPD & A-(HL) &
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[3] & 
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[1] & 1 & $\bullet$ &
+			11 & 101 & 101 & 
+			ED & 2 & 
+			4 & 16 & \\ 
+			& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 101 & 001 & A9 & & & \\ 
+			& BC$\leftarrow$BC-1 & \\[4pt]
 
-Note: & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[1]PF is 0 the result of BC-1=0, otherwise PF is set.}} \\
-      & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[2]PF is 0 only at completion of the instruction.}} \\
-      & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[3]ZF is set if A=(HL), otherwise ZF is reset.}} \\
-      & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[4]See section \ref{block_mem} for a description.}} \\ \hline
-\end{tabular}
+		CPDR & A-(HL) &
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[3] & 
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[1] & 1 & $\bullet$ &
+			11 & 101 & 101 & 
+			ED & 2 & 
+			5 & 21 & {if BC$\not=$0} \\
+		& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 111 & 001 & B9 & & & & {and A$\not=$(HL)} \\
+		& BC$\leftarrow$BC-1 & \multicolumn{12}{c}{} & & 4 & 16 & {if BC=0} \\
+		& Repeat until & \multicolumn{15}{c}{} & {or A=(HL)} \\ 
+		& A=(HL) or & \\ 
+		& BC=0 & \\[4pt]
+
+		\hline
+
+		Note: & \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1]PF is 0 the result of BC-1=0, otherwise PF is set.}} \\
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[2]PF is 0 only at completion of the instruction.}} \\
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[3]ZF is set if A=(HL), otherwise ZF is reset.}} \\
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[4]See section \ref{block_mem} for a description.}} \\
+	  
+	\hline
+
+	\end{tabular}
 }
 
 \section{8-Bit Arithmetic and Logical Group}
