@@ -3,9 +3,15 @@
 \usepackage{fancyhdr}
 \usepackage{a4wide}
 \usepackage{url}
+\usepackage{arydshln}
 \usepackage{multicol}
 \usepackage{multirow}
 \usepackage{titletoc}
+
+% redefine dash line to be dotted line instead
+\setlength{\dashlinedash}{0.1pt}
+\setlength{\dashlinegap}{0.8pt}
+\setlength{\arrayrulewidth}{0.1pt}
 
 % redefine the default "plain" pagestyle (used by chapter pages)
 \fancypagestyle{plain}{
@@ -2086,122 +2092,209 @@ some are very confusing, so I'll mention the ones I have found here:
 	\end{tabular}
 }
 
+
 \section{8-Bit Arithmetic and Logical Group}
 
 \setlength{\textwidth}{18cm}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
-\setlength{\tabcolsep}{1mm}
-\begin{tabular}{llc@{ }c@{ }c@{ }c@{ }c@{ }c@{ }c@{ }cc@{ }c@{ }cccccll}\hline
- & \multicolumn{1}{c}{Symbolic} & \multicolumn{8}{c}{Flags} & \multicolumn{3}{c}{Opcode} & & & M & T & \\
-Mnemonic & \multicolumn{1}{c}{Operation} & SF & ZF & YF & HF & XF & PF & NF & CF & 76 & 543 & 210 
-	& Hex & Bytes & Cycles & States & \multicolumn{2}{l}{Comments} \\ \hline
+	\setlength{\tabcolsep}{1mm}
+	\begin{tabular}{llcccccccccccccccl}
+		     
+		\instrheader
 
-ADD A,r & A$\leftarrow$A+r & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 10 & \fbox{000} & r 
-	& & 1 & 1 & 4 & r & Reg\\ \cline{18-19}
+		& & & & & & & & & & & & & & & & &
+		\multirow{9}{*}{
+			\begin{tabular}{ll}
+				r & Reg \\
+				\hline
+				000 & B \\
+				001 & C \\
+				010 & D \\
+				011 & E \\
+				100 & H \\
+				101 & L \\
+				111 & A \\
+			\end{tabular}
+		}\\
 
-ADD A,p & A$\leftarrow$A+p & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 11 & 011 & 101 &
-	DD & 2 & 2 & 8 & 000 & B \\
-\multicolumn{10}{c}{} & 10 & \fbox{000} & p & \multicolumn{4}{c}{} & 001 & C \\
+		ADD A,r & A$\leftarrow$A+r & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 
+			10 & \fbox{000} & r & 
+			.. & 1 & 
+			1 & 4 & \\[4pt]
 
-ADD A,q & A$\leftarrow$A+q & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 11 & 111 & 101 &
-	FD & 2 & 2 & 8 & 010 & D \\
-\multicolumn{10}{c}{} & 10 & \fbox{000} & q & \multicolumn{4}{c}{} & 011 & E \\
+		ADD A,p & A$\leftarrow$A+p & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 
+			11 & 011 & 101 &
+			DD & 2 & 
+			2 & 8 \\
+		\multicolumn{10}{c}{} & 10 & \fbox{000} & p & .. & \\[4pt]
 
-ADD A,n & A$\leftarrow$A+n & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 11 & \fbox{000} & 110
-	& & 2 & 2 & 7 & 100 & H \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & 101 & L \\
+		ADD A,q & A$\leftarrow$A+q & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 
+			11 & 111 & 101 &
+			FD & 2 & 
+			2 & 8 & \\
+		\multicolumn{10}{c}{} & 10 & \fbox{000} & q & .. & \\[4pt]
 
-ADD A,(HL) & A$\leftarrow$A+(HL) & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 10 & \fbox{000} & 110 
-	& & 1 & 2 & 7 & 111 & A \\
+		ADD A,n & A$\leftarrow$A+n & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 
+			11 & \fbox{000} & 110 &
+			C6 & 2 & 
+			2 & 7 & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ n $\longrightarrow$} & .. & \\[4pt]
 
-ADD A,(IX+d) & A$\leftarrow$A+(IX+d) & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 11 & 011 & 101
-	& DD & 3 & 5 & 19 & & \\
-\multicolumn{10}{c}{} & 10 & \fbox{000} & 110 & \multicolumn{4}{c}{} & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & p & Reg \\ \cline{18-19}
+		ADD A,(HL) & A$\leftarrow$A+(HL) & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ &
+			10 & \fbox{000} & 110 &
+			86 & 1 & 
+			2 & 7 & 
+			\multirow{8}{*}{
+				\begin{tabular}{ll}
+					p & Reg \\
+					\hline
+					000 & B \\
+					001 & C \\
+					010 & D \\
+					011 & E \\
+					100 & IXh \\
+					101 & IXl \\
+					111 & A \\
+				\end{tabular}
+			}\\[4pt]
 
-ADD A,(IY+d) & A$\leftarrow$A+(IY+d) & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 11 & 111 & 101
-	& FD & 3 & 5 & 19 & 000 & B \\
-\multicolumn{10}{c}{} & 10 & \fbox{000} & 110 & \multicolumn{4}{c}{} & 001 & C \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & 010 & D \\
+		ADD A,(IX+d) & A$\leftarrow$A+(IX+d) & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 
+			11 & 011 & 101 & 
+			DD & 3 & 
+			5 & 19 & \\
+		\multicolumn{10}{c}{} & 10 & \fbox{000} & 110 & 68 & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \\[4pt]
 
-ADC A,s & A$\leftarrow$A+s+CF &
-	 $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & & \fbox{001} & 
-	\multicolumn{5}{c}{} & 011 & E \\
+		ADD A,(IY+d) & A$\leftarrow$A+(IY+d) & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ & 
+			11 & 111 & 101 & 
+			FD & 3 & 
+			5 & 19 & \\
+		\multicolumn{10}{c}{} & 10 & \fbox{000} & 110 & 68 \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & .. & \\[4pt]
 
-SUB s & A$\leftarrow$A-s &
-	 $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 1 & $\updownarrow$ & & \fbox{010} & 
-	\multicolumn{5}{c}{} & 100 & IXh \\
+	& & & & & & & & & & & $\uparrow$ & & & & & & \\[4pt]
 
-SBC A,s & A$\leftarrow$A-s-CF &
-	 $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 1 & $\updownarrow$ & & \fbox{011} & 
-	\multicolumn{5}{c}{} & 101 & IXl \\
+		ADC A,s & A$\leftarrow$A+s+CF &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\updownarrow$ &
+			.. & \fbox{001} & ... & 
+			& & & &
+			\multirow{9}{*}{
+				\begin{tabular}{ll}
+					q & Reg \\
+					\hline
+					000 & B \\
+					001 & C \\
+					010 & D \\
+					011 & E \\
+					100 & IYh \\
+					101 & IYl \\
+					111 & A \\
+				\end{tabular}
+			}\\[4pt]
 
-AND s & A$\leftarrow$A$\wedge$s &
-	 $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 1 & $\updownarrow$ & PF & 0 & 0 & & \fbox{100} & 
-	\multicolumn{5}{c}{} & 111 & A \\
+		SUB s & A$\leftarrow$A-s &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 1 & $\updownarrow$ &
+			.. & \fbox{010} & ... & \\[4pt]
 
-OR s & A$\leftarrow$A$\vee$s &
-	 $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & 0 & & \fbox{110} & 
-	\multicolumn{5}{c}{} & & \\
+		SBC A,s & A$\leftarrow$A-s-CF &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 1 & $\updownarrow$ &
+			.. & \fbox{011} & ... & \\[4pt]
 
-XOR s & A$\leftarrow$A$\bullet$s &
-	 $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & 0 & & \fbox{101} & 
-	\multicolumn{5}{c}{} & & \\
+		AND s & A$\leftarrow$A$\wedge$s &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 1 & $\updownarrow$ & PF & 0 & 0 &
+			.. & \fbox{100} & ... & \\[4pt]
 
-CP s & A-s &
-	 $\updownarrow$ & $\updownarrow$ & $\updownarrow$\footnotemark[1] & $\updownarrow$ & $\updownarrow$\footnotemark[1] & VF & 1 & 
-	$\updownarrow$ & & \fbox{111} & 
-	\multicolumn{5}{c}{} & q  & Reg \\ \cline{18-19}
+		OR s & A$\leftarrow$A$\vee$s &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & 0 &
+			.. & \fbox{110} & ... & \\[4pt]
 
-INC r & r$\leftarrow$r+1 & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 00 & r  & \fbox{100}
-	& & 1 & 1 & 4 & 000 & B \\ 
+		XOR s & A$\leftarrow$A$\bullet$s &
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & 0 &
+			.. & \fbox{101} & ... & \\[4pt]
 
-INC p & p$\leftarrow$p+1 & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 11 & 011 & 101
-	& DD & 2 & 2 & 8 & 001 & C \\ 
-\multicolumn{10}{c}{} & 00 & p & \fbox{100} & \multicolumn{4}{c}{} & 010 & D \\
+		CP s & A-s &
+			$\updownarrow$ & 
+			$\updownarrow$ & 
+			$\updownarrow$\footnotemark[1] & 
+			$\updownarrow$ & 
+			$\updownarrow$\footnotemark[1] & VF & 1 & 
+			$\updownarrow$ &
+			.. & \fbox{111} & ... & \\[4pt]
 
-INC q & q$\leftarrow$q+1 & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 11 & 111 & 101
-	& FD & 2 & 2 & 8 & 011 & E \\ 
-\multicolumn{10}{c}{} & 00 & q & \fbox{100} & \multicolumn{4}{c}{} & 100 & IYh \\
+	& & & & & & & & & & & & & & & & & \\
+	& & & & & & & & & & & & & & & & & \\
 
-INC (HL) & (HL)$\leftarrow$(HL)+1 & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 00 & 110 & \fbox{100}
-	& & 1 & 3 & 11 & 101 & IYl \\ 
+		INC r & r$\leftarrow$r+1 & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 00 & r & \fbox{100} & 
+			.. & 1 & 
+			1 & 4 & \\[4pt]
 
-INC (IX+d) & (IX+d)$\leftarrow$(IX+d)+1 & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 11 & 011 & 101
-	& DD & 3 & 6 & 23 & 111 & A \\ 
-\multicolumn{10}{c}{} & 00 & 110 & \fbox{100} & \multicolumn{4}{c}{} & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & & \\
+		INC p & p$\leftarrow$p+1 & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 11 & 011 & 101 & 
+			DD & 2 & 
+			2 & 8 & \\
+		\multicolumn{10}{c}{} & 00 & p & \fbox{100} & .. & \\[4pt]
 
-INC (IY+d) & (IY+d)$\leftarrow$(IY+d)+1 & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 11 & 111 & 101
-	& FD & 3 & 6 & 23 & & \\ 
-\multicolumn{10}{c}{} & 00 & 110 & \fbox{100} & \multicolumn{4}{c}{} & & \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ d $\rightarrow$} & \multicolumn{4}{c}{} & & \\
+		INC q & q$\leftarrow$q+1 & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 11 & 111 & 101 & 
+			FD & 2 & 
+			2 & 8 & \\ 
+		\multicolumn{10}{c}{} & 00 & q & \fbox{100} & .. & \\[4pt]
 
-DEC m & m$\leftarrow$m-1 & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 1 & $\bullet$ &  &  & \fbox{101}
-	& & & & & & \\ \hline
+		INC (HL) & (HL)$\leftarrow$(HL)+1 & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 00 & 110 & \fbox{100} & 
+			34 & 1 & 
+			3 & 11 & \\[4pt]
 
-Note: & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[1]YF and XF flags are copied from the operand s, not the result A-s}} \\
-      & \multicolumn{18}{l}{\parbox{12cm}{s is any of r, p, q, n, (HL), (IX+d), (IY+d) as shown for ADD. The indicated bits replace 
-	the \fbox{000} in the ADD set above}} \\ 
-      & \multicolumn{18}{l}{\parbox{12cm}{m is any of r, p, q, (HL), (IX+d), (IY+d) as shown for INC. Replace \fbox{100}
-	with \fbox{101} in opcode}} \\ \hline
-\end{tabular}
+		INC (IX+d) & (IX+d)$\leftarrow$(IX+d)+1 & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 11 & 011 & 101 & 
+			DD & 3 & 
+			6 & 23 & \\ 
+		\multicolumn{10}{c}{} & 00 & 110 & \fbox{100} & 34 & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} & \\[4pt]
+
+		INC (IY+d) & (IY+d)$\leftarrow$(IY+d)+1 & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 0 & $\bullet$ & 11 & 111 & 101 & 
+			FD & 3 & 
+			6 & 23 & \\ 
+		\multicolumn{10}{c}{} & 00 & 110 & \fbox{100} & 34 & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow$ d $\longrightarrow$} &  \\[4pt]
+
+	& & & & & & & & & & & & $\uparrow$ & & & & & \\[4pt]
+
+		DEC m & m$\leftarrow$m-1 & 
+			$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & $\updownarrow$ & VF & 1 & $\bullet$ &
+			.. & ... & \fbox{101}
+			& & 
+			& & & \\[4pt]
+
+	\hline
+
+		Note: & \multicolumn{17}{l}{
+			\parbox{12cm}{\footnotemark[1]YF and XF flags are copied from the operand s, not the result A-s}
+		} \\[2pt]
+		
+		& \multicolumn{17}{l}{
+			\parbox{12cm}{s is any of r, p, q, n, (HL), (IX+d), (IY+d) as shown for ADD. The indicated bits replace the \fbox{000} in the ADD set above}
+		} \\[5pt]
+		
+		& \multicolumn{17}{l}{
+			\parbox{12cm}{m is any of r, p, q, (HL), (IX+d), (IY+d) as shown for INC. Replace \fbox{100} with \fbox{101} in opcode}
+		} \\
+	
+	\hline
+
+	\end{tabular}
 }
+
 
 \section{General-Purpose Arithmetic and CPU Control Group}
 
