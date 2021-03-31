@@ -3924,65 +3924,170 @@ some are very confusing, so I'll mention the ones I have found here:
 \section{Jump Group}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
-\setlength{\tabcolsep}{1mm}
-\begin{tabular}{llc@{ }c@{ }c@{ }c@{ }c@{ }c@{ }c@{ }cc@{ }c@{ }cccccll}\hline
-& \multicolumn{1}{c}{Symbolic} & \multicolumn{8}{c}{Flags} & \multicolumn{3}{c}{Opcode} & & & M & T & \\
-Mnemonic & \multicolumn{1}{c}{Operation} & SF & ZF & YF & HF & XF & PF & NF & CF & 76 & 543 & 210 
-	& Hex & Bytes & Cycles & States & \multicolumn{2}{l}{Comments} \\ \hline
+	\setlength{\tabcolsep}{1mm}
+	\begin{tabular}{llcccccccccccccccl}
+		 
+	\instrheader
 
-JP nn & PC$\leftarrow$nn &
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 000 & 011
-	& C3 & 3 & 3 & 10 & cc & Condition \\ \cline{18-19}
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & 000 & NZ \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & 001 & Z \\
+		& & & & & & & & & & & & & & & & &
+		\multirow{11}{*}{
+			\begin{tabular}{ll}
+				cc & Condition \\
+				\hline
+				000 & NZ \\
+				001 & Z \\
+				010 & NC \\
+				011 & C \\
+				100 & PO \\
+				101 & PE \\
+				110 & P \\
+				111 & M \\
+			\end{tabular}
+		}\\
 
-JP cc,nn & if cc &
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & cc & 010
-	& & 3 & 3 & 10 & 010 & NC \\ 
-& PC$\leftarrow$nn & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & 011 & C \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & \multicolumn{4}{c}{} & 100 & PO \\
+		JP nm\instrt & 
+			PC$\leftarrow$nm &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 000 & 011 & 
+			C3 & 3 & 
+			3 & 10 & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
 
-JR e & PC$\leftarrow$PC+e &
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 011 & 000
-	& 18 & 2 & 3 & 12 & 101 & PE \\
-\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\leftarrow$ e-2 $\rightarrow$} & \multicolumn{4}{c}{} & 110 & P \\
-\multicolumn{17}{c}{} & 111 & M \\
-\multicolumn{17}{c}{} & & \\
+		JP cc,nm\instrt & 
+			if cc &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & cc & 010 &
+			.. & 3 & 
+			3 & 10 & \\ 
+		& PC$\leftarrow$nm & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
 
-JR ss,e & if ss &
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 1ss & 000
-	& & 2 & 3 & 12 & \multicolumn{2}{l}{if ss is true} \\
-& PC$\leftarrow$PC+e & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ e-2 $\rightarrow$} & & 2 & 2 & 7 & 
-	\multicolumn{2}{l}{if ss is false} \\
+		JR e\instrt & 
+			PC$\leftarrow$PC+e &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			00 & 011 & 000 & 
+			18 & 2 & 
+			3 & 12 & \\
+		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\leftarrow$ e-2 $\rightarrow|$} & .. & \instrb \\
 
-JP (HL) & PC$\leftarrow$HL &
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 101 & 001 
-	& E9 & 1 & 1 & 4 & & \\
+		JR ss,e\instrt & 
+			if ss &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			00 & 1ss & 000 &
+			.. & 2 & 
+			3 & 12 & {if ss is true} \\
+		& PC$\leftarrow$PC+e & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\leftarrow$ e-2 $\rightarrow|$} & .. & 2 & 2 & 7 & {if ss is false} \instrb \\
 
-JP (IX) & PC$\leftarrow$IX &
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 011 & 101 
-	& DD & 2 & 2 & 8 & ss & Condition \\ \cline{18-19}
-\multicolumn{10}{c}{} & 11 & 101 & 001 & E9 & \multicolumn{3}{c}{} & 11 & C \\
+		JP (HL)\instrt & 
+			PC$\leftarrow$HL &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 001 & 
+			E9 & 1 & 
+			1 & 4 & \instrb 
+			\multirow{6}{*}{
+				\begin{tabular}{ll}
+					ss & Condition \\
+					\hline
+					00 & NZ \\
+					01 & Z \\
+					10 & NC \\
+					11 & C \\
+				\end{tabular}
+			}\\
 
-JP (IY) & PC$\leftarrow$IY &
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 111 & 101 
-	& FD & 2 & 2 & 8 & 10 & NC \\
-\multicolumn{10}{c}{} & 11 & 101 & 001 & E9 & \multicolumn{3}{c}{} & 01 & Z \\
-\multicolumn{17}{c}{} & 00 & NZ \\
-\multicolumn{17}{c}{} & & \\
+		JP (IX)\instrt & 
+			PC$\leftarrow$IX &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 011 & 101 & 
+			DD & 2 & 
+			2 & 8 & \\
+		\multicolumn{10}{c}{} & 11 & 101 & 001 & E9 & \instrb \\
 
-DJNZ e & B$\leftarrow$B-1 &
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 00 & 010 & 000
-	& 10 & 2 & 2 & 8 & \multicolumn{2}{l}{if B=0} \\
-& if B$\not=$0 & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ e-2 $\rightarrow$} & & & & &  & \\
-& PC$\leftarrow$PC+e & \multicolumn{8}{c}{} & \multicolumn{3}{c}{} & & 2 & 3 & 13 & 
-	\multicolumn{2}{l}{if B$\not=$0} \\ \hline
+		JP (IY)\instrt & 
+			PC$\leftarrow$IY &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 111 & 101 & 
+			FD & 2 & 
+			2 & 8 & \\
+		\multicolumn{10}{c}{} & 11 & 101 & 001 & E9 & \instrb \\
 
-Note: & \multicolumn{18}{l}{\parbox{12cm}{e is a signed two-compliment in the range -127, 129.}} \\
-	& \multicolumn{18}{l}{\parbox{12cm}{e-2 in the opcode provides an effective number of PC+e as PC is incremented 
-	by two prior to the addition of e.}} \\[1ex] \hline
+		DJNZ e\instrt & 
+			B$\leftarrow$B-1 &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			00 & 010 & 000 & 
+			10 & 2 & 
+			2 & 8 & {if B=0} \\
+		& if B$\not=$0 & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\leftarrow$ e-2 $\rightarrow|$} & ..  & & 3 & 13 & {if B$\not=$0} \\
+		& PC$\leftarrow$PC+e & \instrb \\ 
+			
+		\hline
 
-\end{tabular}
+		Note:
+			& \multicolumn{17}{l}{\parbox{12cm}{e is a signed two-compliment in the range -127, 129.}}\notet\noteb \\
+
+			& \multicolumn{17}{l}{\parbox{12cm}{e-2 in the opcode provides an effective number of PC+e as PC is incremented by two prior to the addition of e.}}\noteb \\[5pt]
+			% note: \noteb was not enough to create a gap here, so some manual spacing was added to make it look better...
+			
+		\hline
+
+	\end{tabular}
 }
 
 \section{Call and Return Group}
