@@ -4261,110 +4261,268 @@ some are very confusing, so I'll mention the ones I have found here:
 	\end{tabular}
 }
 
+
 \section{Input and Output Group}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
-\setlength{\tabcolsep}{1mm}
-\begin{tabular}{llc@{ }c@{ }c@{ }c@{ }c@{ }c@{ }c@{ }cc@{ }c@{ }cccccll}\hline
- & \multicolumn{1}{c}{Symbolic} & \multicolumn{8}{c}{Flags} & \multicolumn{3}{c}{Opcode} & & & M & T & \\
-Mnemonic & \multicolumn{1}{c}{Operation} & SF & ZF & YF & HF & XF & PF & NF & CF & 76 & 543 & 210 
-	& Hex & Bytes & Cycles & States & \multicolumn{2}{l}{Comments} \\ \hline
+	\setlength{\tabcolsep}{1mm}
+	\begin{tabular}{llcccccccccccccccl}
+		 
+	\instrheader
 
-IN A,(n) & A$\leftarrow$(n) & 
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 011 & 011 
-	& DB & 2 & 3 & 11 & r & Reg \\ \cline{18-19}
-	& &  \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & & & &  & 000 & B \\
+		& & & & & & & & & & & & & & & & &
+		\multirow{10}{*}{
+			\begin{tabular}{ll}
+				r & Reg \\
+				\hline
+				000 & B \\
+				001 & C \\
+				010 & D \\
+				011 & E \\
+				100 & H \\
+				101 & L \\
+				111 & A \\
+			\end{tabular}
+		}\\
 
-IN r,(C) & r$\leftarrow$(C) & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\bullet$ & 11 & 101 & 101 
-	& ED & 2 & 3 & 12 & 001 & C \\
-	& & \multicolumn{8}{c}{} & 01 & r & 000  & & & &  & 010 & D \\
+		IN A,(n)\instrt & 
+			A$\leftarrow$(n) & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 011 & 011 & 
+			DB & 2 & 
+			3 & 11 & \\
+			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
 
-IN F,(n) & $\leftarrow$(C) & 
-	$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\bullet$ & 11 & 101 & 101 
-	& ED & 2 & 3 & 12 & 011 & E \\
-	& & \multicolumn{8}{c}{} & 01 & 110 & 000 & 70 & & &  & 100 & H \\
+		IN r,(C)\instrt & 
+			r$\leftarrow$(C) & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			3 & 12 & \\
+			\multicolumn{10}{c}{} & 01 & r & 000 & .. & \instrb \\
 
-INI & (HL)$\leftarrow$(C) & 
-	$\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[3] & 
-	$\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[3] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[3] & 11 & 101 & 101 
-	& ED & 2 & 4 & 16 & 101 & L \\
-	& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 100 & 010 & A2 & & &  & 111 & A \\
-	& B$\leftarrow$B-1 \\
+		IN F,(n)\instrt & 
+			F$\leftarrow$(C) & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				0 & 
+				$\updownarrow$ & 
+				PF & 
+				0 & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			3 & 12 & \\
+			\multicolumn{10}{c}{} & 01 & 110 & 000 & 70 & \instrb \\
 
-INIR & (HL)$\leftarrow$(C) & 
-	0 & 1 & 0 & $\updownarrow$\footnotemark[3] & 0 & $\updownarrow$\footnotemark[3] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[3] & 11 & 101 & 101 
-	& ED & 2 & 5 & 21 & \multicolumn{2}{l}{if B$\not=$0} \\
-	& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 110 & 010 & B2 & 2 & 4 & 16 & \multicolumn{2}{l}{if B=0} \\
-	& B$\leftarrow$B-1 \\
-	& Repeat until \\
-	& B=0 \\
+		INI\instrt & 
+			(HL)$\leftarrow$(C) & 
+			$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[3] & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			4 & 16 & \\
+			& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 100 & 010 & A2 & \\
+			& B$\leftarrow$B-1 & \instrb \\
 
-IND & (HL)$\leftarrow$(C) & 
-	$\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[3] & 
-	$\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[3] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[4] & 11 & 101 & 101 
-	& ED & 2 & 4 & 16 & & \\
-	& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 101 & 010 & AA & & &  & & \\
-	& B$\leftarrow$B-1 \\
+		INIR\instrt & 
+			(HL)$\leftarrow$(C) & 
+			0 & 
+				1 & 
+				0 & 
+				$\updownarrow$\footnotemark[3] & 
+				0 & 
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[3] &
+			11 & 101 & 101 & 
+			ED & 2 & 
+			5 & 21 & {if B$\not=$0} \\
+			& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 110 & 010 & B2 & & 4 & 16 & {if B=0} \\
+			& B$\leftarrow$B-1 \\
+			& Repeat until \\
+			& B=0 & \instrb \\
 
-INDR & (HL)$\leftarrow$(C) & 
-	0 & 1 & 0 & $\updownarrow$\footnotemark[3] & 0 & $\updownarrow$\footnotemark[3] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[3] & 11 & 101 & 101 
-	& ED & 2 & 5 & 21 & \multicolumn{2}{l}{if B$\not=$0} \\
-	& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 111 & 010 & BA & 2 & 4 & 16 & \multicolumn{2}{l}{if B=0} \\
-	& B$\leftarrow$B-1 \\
-	& Repeat until \\
-	& B=0 \\
+		IND\instrt & 
+			(HL)$\leftarrow$(C) & 
+			$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[4] & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			4 & 16 & \\
+			& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 101 & 010 & AA & \\
+			& B$\leftarrow$B-1 & \instrb \\
 
-OUT (n),A & (n)$\leftarrow$A &
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 010 & 011 
-	& D3 & 2 & 3 & 11 & & \\
-	& &  \multicolumn{8}{c}{} & \multicolumn{3}{c}{$\leftarrow$ n $\rightarrow$} & & & &  & & \\
+		INDR\instrt & 
+			(HL)$\leftarrow$(C) & 
+			0 & 
+				1 & 
+				0 & 
+				$\updownarrow$\footnotemark[3] & 
+				0 & 
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[3] & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			5 & 21 & {if B$\not=$0} \\
+			& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 111 & 010 & BA &  & 4 & 16 & {if B=0} \\
+			& B$\leftarrow$B-1 \\
+			& Repeat until \\
+			& B=0 & \instrb \\
 
-OUT (C),r & (C)$\leftarrow$r &
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 3 & 12 & & \\
-	& &  \multicolumn{8}{c}{} & 01 & r & 001  & & & &  & & \\
+		OUT (n),A\instrt & 
+			(n)$\leftarrow$A &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 010 & 011 & 
+			D3 & 2 & 
+			3 & 11 & \\
+			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
 
-OUT (C),0 & (C)$\leftarrow$0 &
-	$\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & 11 & 101 & 101
-	& ED & 2 & 3 & 12 & & \\
-	& &  \multicolumn{8}{c}{} & 01 & 110 & 001 & 71 & & &  & & \\
+		OUT (C),r\instrt & 
+			(C)$\leftarrow$r &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			3 & 12 & \\
+			\multicolumn{10}{c}{} & 01 & r & 001 & .. & \instrb \\
 
-OUTI & (C)$\leftarrow$(HL) & 
-	$\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[3] & 
-	$\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[3] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[3] & 11 & 101 & 101 
-	& ED & 2 & 4 & 16 & & \\
-	& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 100 & 011 & A3 & & &  & & \\
-	& B$\leftarrow$B-1 \\
+		OUT (C),0\instrt & 
+			(C)$\leftarrow$0 &
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			3 & 12 & \\
+			\multicolumn{10}{c}{} & 01 & 110 & 001 & 71 & \instrb \\
 
-OTIR & (C)$\leftarrow$(HL) & 
-	0 & 1 & 0 & $\updownarrow$\footnotemark[3] & 0 & $\updownarrow$ & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[3] & 11 & 101 & 101 
-	& ED & 2 & 5 & 21 & \multicolumn{2}{l}{if B$\not=$0} \\
-	& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 110 & 011 & B3 & 2 & 4 & 16 & \multicolumn{2}{l}{if B=0} \\
-	& B$\leftarrow$B-1 \\
-	& Repeat until \\
-	& B=0 \\
+		OUTI\instrt & 
+			(C)$\leftarrow$(HL) & 
+			$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[3] & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			4 & 16 & \\
+			& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 100 & 011 & A3 & \\
+			& B$\leftarrow$B-1 & \instrb \\
 
-OUTD & (C)$\leftarrow$(HL) & 
-	$\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[3] & 
-	$\updownarrow$\footnotemark[1] & $\updownarrow$\footnotemark[3] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[3] & 11 & 101 & 101 
-	& ED & 2 & 4 & 16 & & \\
-	& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 101 & 011 & AB & & &  & & \\
-	& B$\leftarrow$B-1 \\
+		OTIR\instrt & 
+			(C)$\leftarrow$(HL) & 
+			0 & 
+				1 & 
+				0 & 
+				$\updownarrow$\footnotemark[3] & 
+				0 & 
+				$\updownarrow$ & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[3] & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			5 & 21 & {if B$\not=$0} \\
+			& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 110 & 011 & B3 & & 4 & 16 & {if B=0} \\
+			& B$\leftarrow$B-1 \\
+			& Repeat until \\
+			& B=0 & \instrb \\
 
-OTDR & (C)$\leftarrow$(HL) & 
-	0 & 1 & 0 & $\updownarrow$\footnotemark[3] & 0 & $\updownarrow$\footnotemark[3] & $\updownarrow$\footnotemark[2] & $\updownarrow$\footnotemark[5] & 11 & 101 & 101 
-	& ED & 2 & 5 & 21 & \multicolumn{2}{l}{if B$\not=$0} \\
-	& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 111 & 011 & BB & 2 & 4 & 16 & \multicolumn{2}{l}{if B=0} \\
-	& B$\leftarrow$B-1 \\
-	& Repeat until \\
-	& B=0 \\ \hline
+		OUTD\instrt & 
+			(C)$\leftarrow$(HL) & 
+			$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[1] & 
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[3] & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			4 & 16 & \\
+			& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 101 & 011 & AB & \\
+			& B$\leftarrow$B-1 & \instrb \\
 
-Note: & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[1] flag is affected by the result of B$\leftarrow$B-1 as in DEC B.}} \\
-      & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[2] NF is a copy of bit 7 of the transferred byte.}} \\
-      & \multicolumn{18}{l}{\parbox{12cm}{\footnotemark[3] This flag is bizarre, see section \ref{block_io}.}} \\ \hline
+		OTDR\instrt & 
+			(C)$\leftarrow$(HL) & 
+			0 & 
+				1 & 
+				0 & 
+				$\updownarrow$\footnotemark[3] & 
+				0 & 
+				$\updownarrow$\footnotemark[3] & 
+				$\updownarrow$\footnotemark[2] & 
+				$\updownarrow$\footnotemark[5] & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			5 & 21 & {if B$\not=$0} \\
+			& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 111 & 011 & BB & & 4 & 16 & {if B=0} \\
+			& B$\leftarrow$B-1 \\
+			& Repeat until \\
+			& B=0 & \instrb \\
+			
+		\hline
 
-\end{tabular}
+		Note:
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1] flag is affected by the result of B$\leftarrow$B-1 as in DEC B.}}\notet \\
+
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[2] NF is a copy of bit 7 of the transferred byte.}} \\
+
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[3] This flag is bizarre, see section \ref{block_io}.}}\noteb \\
+			
+		\hline
+
+	\end{tabular}
 }
 
 % we only want to list sections within this chapter; without stop, it would continue to include all subsequent ones as well
