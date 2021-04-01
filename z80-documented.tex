@@ -4525,6 +4525,534 @@ some are very confusing, so I'll mention the ones I have found here:
 	\end{tabular}
 }
 
+
+\section{ZX Spectrum Next Extended Group}
+
+{\tt \scriptsize \setlength{\fboxsep}{0.25mm}
+	\setlength{\tabcolsep}{1mm}
+	\begin{tabular}{llcccccccccccccccl}
+		 
+	\instrheader
+
+		& & & & & & & & & & & & & & & & & \\
+
+		ADD ss,A\instrt & 
+			ss$\leftarrow$ss+A & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 8 & 
+			\multirow{4}{*}{
+				\begin{tabular}{ll}
+					ss & Reg \\
+					\hline
+					01 & HL \\
+					10 & DE \\
+					11 & BC \\
+				\end{tabular}
+			}\\
+			\multicolumn{10}{c}{} & 00 & 110 & 0ss & .. & \instrb \\[6ex]
+			% note we need some extra vertical space to accomodate the whole of the comment table
+			
+		ADD pp,nm\instrt & 
+			pp$\leftarrow$pp+nm & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			4 & 16 & 
+			\multirow{4}{*}{
+				\begin{tabular}{ll}
+					pp & Reg \\
+					\hline
+					00 & HL \\
+					01 & DE \\
+					10 & BC \\
+				\end{tabular}
+			} \\
+			\multicolumn{10}{c}{} & 00 & 110 & 1pp & .. & \\
+			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & \\
+			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
+			
+		& & & & & & & & & & & & & & & & & \\
+
+		BSLA DE,B\instrt & 
+			DE$\leftarrow$DE<<(B$\wedge$1Fh)\footnotemark[1] & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 8 & \\
+			\multicolumn{10}{c}{} & 00 & 101 & 000 & 28 & \instrb \\
+
+		BSRA DE,B\instrt & 
+			DE$\leftarrow$s(DE)>>(B$\wedge$1Fh)\footnotemark[2] & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 8 & \\
+			\multicolumn{10}{c}{} & 00 & 101 & 001 & 29 & \instrb \\
+
+		BSRL DE,B\instrt & 
+			DE$\leftarrow$u(DE)>>(B$\wedge$1Fh)\footnotemark[3] & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 8 & \\
+			\multicolumn{10}{c}{} & 00 & 101 & 010 & 2A & \instrb \\
+
+		BSRF DE,B\instrt & 
+			DE$\leftarrow\sim$(u($\sim$DE)>>(B$\wedge$1Fh))\footnotemark[4] & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 8 & \\
+			\multicolumn{10}{c}{} & 00 & 101 & 011 & 2B & \instrb \\
+			
+		BRLC DE,B\instrt & 
+			DE$\leftarrow$DE<<(B$\wedge$0Fh)\footnotemark[5] or & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 8 & \\
+			& DE$\leftarrow$DE>>(16-B$\wedge$0Fh) & \multicolumn{8}{c}{} & 00 & 101 & 100 & 2C & \instrb \\
+
+		& & & & & & & & & & & & & & & & & \\
+	
+		LDDX\instrt & 
+			if (HL)$\neq$A$\Rightarrow$(DE)$\leftarrow$(HL) & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			4 & 16 & \\
+			& DE$\leftarrow$DE+1 & \multicolumn{8}{c}{} & 10 & 101 & 100 & AC & \\
+			& HL$\leftarrow$HL-1 & \\
+			& BC$\leftarrow$BC+1 & \instrb \\
+	
+		LDDRX\instrt & 
+			do LDDX & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			5 & 21 & if BC$\neq$0 \\
+			& while BC>0 & \multicolumn{8}{c}{} & 10 & 111 & 100 & BC & & 4 & 16 & if BC=0 \instrb \\
+	
+		LDIX\instrt & 
+			if (HL)$\neq$A$\Rightarrow$(DE)$\leftarrow$(HL) & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 &
+			4 & 16 & \\
+			& DE$\leftarrow$DE+1 & \multicolumn{8}{c}{} & 10 & 100 & 100 & A4 & \\
+			& HL$\leftarrow$HL+1 & \\
+			& BC$\leftarrow$BC-1 & \instrb \\
+	
+		LDDIX\instrt & 
+			do LDIX & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			5 & 21 & if BC$\neq$0 \\
+			& while BC>0 & \multicolumn{8}{c}{} & 10 & 110 & 100 & B4 & & 4 & 16 & if BC=0 \instrb \\
+	
+		LDPIRX\instrt & 
+			do & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 &
+			5 & 21 & if BC$\neq$0 \\
+			& ~~t$\leftarrow$(HL$\wedge$FFF8h+E$\wedge$7) & \multicolumn{8}{c}{} & 10 & 110 & 111 & B7 & & 4 & 16 & if BC=0 \\
+			& ~~if t$\neq$A$\Rightarrow$(DE)$\leftarrow$t & \\
+			& ~~DE$\leftarrow$DE+1 & \\
+			& ~~BC$\leftarrow$BC-1 & \\
+			& while BC>0 & \instrb \\
+	
+		LDWS\instrt & 
+			(DE)$\leftarrow$(HL) & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				0 & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 &
+			4 & 16 & \\
+			& INC L & \multicolumn{8}{c}{} & 10 & 100 & 101 & A5 & \\
+			& INC D & \instrb \\
+
+		& & & & & & & & & & & & & & & & & \\
+	
+		SWAPNIB\instrt & \multirow{3}{*}{
+			\setlength{\unitlength}{0.9mm}
+			\put(-1.5,1){\makebox(4,3){A}}
+			\begin{picture}(25,5.5)
+				\put(2,1){\framebox(6,3){7654}}
+				\put(8.2,1){\framebox(6,3){3210}}
+
+				\put(11.5,0.5){\line(0,-1){2}}
+				\put(11.5,-1.5){\line(-1,0){6.8}}
+				\put(4.7,-1.5){\vector(0,1){2}}
+
+				\put(4.7,6.5){\line(0,-1){2}}
+				\put(11.5,6.5){\line(-1,0){6.8}}
+				\put(11.5,6.5){\vector(0,-1){2}}
+			\end{picture}} & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 8 & \\
+			\multicolumn{10}{c}{} & 00 & 100 & 011 & 23 & \instrb \\[4ex]
+			% we need some extra spacing to accomodate the image
+				
+		MIRROR A\instrt & \multirow{3}{*}{
+			\setlength{\unitlength}{0.9mm}
+			\put(-1.5,-2){\makebox(4,3){A}}
+			\begin{picture}(25,5.5)
+				\put(2,-2){\framebox(6,3){7654}}
+				\put(8.2,-2){\framebox(6,3){3210}}
+
+				\put(13.5,-2.5){\line(0,-1){5}}
+				\put(13.5,-7.5){\line(-1,0){11}}
+				\put(2.5,-7.5){\vector(0,1){5}}
+
+				\put(12,-2.5){\line(0,-1){4}}
+				\put(12,-6.5){\line(-1,0){7.8}}
+				\put(4.2,-6.5){\vector(0,1){4}}
+
+				\put(10.5,-2.5){\line(0,-1){3}}
+				\put(10.5,-5.5){\line(-1,0){4.7}}
+				\put(5.8,-5.5){\vector(0,1){3}}
+
+				\put(9,-2.5){\line(0,-1){2}}
+				\put(9,-4.5){\line(-1,0){1.8}}
+				\put(7.3,-4.5){\vector(0,1){2}}
+
+				\put(2.5,6.5){\line(0,-1){5}}
+				\put(13.5,6.5){\line(-1,0){11}}
+				\put(13.5,6.5){\vector(0,-1){5}}
+
+				\put(4.2,5.5){\line(0,-1){4}}
+				\put(12,5.5){\line(-1,0){7.8}}
+				\put(12,5.5){\vector(0,-1){4}}
+
+				\put(5.8,4.5){\line(0,-1){3}}
+				\put(10.5,4.5){\line(-1,0){4.7}}
+				\put(10.5,4.5){\vector(0,-1){3}}
+
+				\put(7.3,3.5){\line(0,-1){2}}
+				\put(9,3.5){\line(-1,0){1.8}}
+				\put(9,3.5){\vector(0,-1){2}}
+			\end{picture}} & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			2 & 8 & \\
+			\multicolumn{10}{c}{} & 00 & 100 & 100 & 24 & \instrb \\[8ex]
+			% we need some extra spacing to accomodate the image
+
+		MUL D,E\instrt & 
+			DE$\leftarrow$D*E & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+			11 & 101 & 101 & 
+			ED & 2 &
+			2 & 8 & \\
+			\multicolumn{10}{c}{} & 00 & 110 & 000 & 30 & \instrb \\
+
+		\hline
+
+		Note:
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1] Shift only uses lower 4 bits of B}}\notet \\
+
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[2] DE$\leftarrow$signed(DE)>>(B$\wedge$1Fh), shift only uses lower 4 bits of B}} \\
+
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[3] DE$\leftarrow$unsigned(DE)>>(B$\wedge$1Fh), shift only uses lower 4 bits of B}} \\
+
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[4] DE$\leftarrow\sim$(unsigned($\sim$DE)>>(B$\wedge$1Fh))), shift only uses lower 4 bits of B}} \\
+
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[5] To shift right use (16-B$\wedge$0Fh), shift only uses lower 3 bits of B}}\noteb \\
+
+		\hline
+
+	\end{tabular}
+}
+
+(continued)\\
+
+{\tt \scriptsize \setlength{\fboxsep}{0.25mm}
+	\setlength{\tabcolsep}{1mm}
+	\begin{tabular}{llcccccccccccccccl}
+				 
+	\instrheader
+		
+	& & & & & & & & & & & & & & & & & \\
+
+		NEXTREG r,A\instrt & 
+			HwNextReg[r]$\leftarrow$A & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+			11 & 101 & 101 & 
+			ED & 3 &
+			4 & 17 & \\
+			\multicolumn{10}{c}{} & 10 & 010 & 010 & 92 & \\
+			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ r $\longrightarrow|$} & .. & \instrb \\
+
+		NEXTREG r,n\instrt & 
+			HwNextReg[r]$\leftarrow$n & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+			11 & 101 & 101 & 
+			ED & 3 &
+			5 & 20 & \\
+			\multicolumn{10}{c}{} & 10 & 010 & 001 & 91 & \\
+			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ r $\longrightarrow|$} & .. & \\
+			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
+
+		OUTINB\instrt & 
+			(C)$\leftarrow$(HL) & 
+			? & 
+				? & 
+				? & 
+				? & 
+				? & 
+				? & 
+				? & 
+				? & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			4 & 16 & \\
+			& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 010 & 000 & 90 & \instrb \\
+
+		PIXELAD\instrt & 
+			HL$\leftarrow$4000h & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+			11 & 101 & 101 & 
+			ED & 3 &
+			2 & 8 & \\
+			& ~~+((D$\wedge$C0h)<<5) & \multicolumn{8}{c}{} & 10 & 010 & 100 & 94 & \\
+			& ~~+((D$\wedge$07h)<<8) & \\
+			& ~~+((D$\wedge$38h)<<2) & \\
+			& ~~+(E>>3) & \instrb \\
+
+		PIXELDN\instrt & 
+			if HL$\wedge$700h$\neq$700h & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+			11 & 101 & 101 & 
+			ED & 3 &
+			2 & 8 & \\
+			& ~~$\Rightarrow$HL$\leftarrow$HL+256 & \multicolumn{8}{c}{} & 10 & 010 & 011 & 93 & \\
+			& else if HL$\wedge$E0h$\neq$E0h & \\
+			& ~~$\Rightarrow$HL$\leftarrow$HL$\wedge$F8FFh+20h & \\
+			& else & \\
+			& ~~$\Rightarrow$HL$\leftarrow$HL$\wedge$F81Fh+800h & \instrb \\
+
+		PUSH nm\instrt\footnotemark[1] & 
+			SP$\leftarrow$SP-2 & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+			11 & 101 & 101 & 
+			ED & 3 &
+			5 & 23 & \\
+			& (SP)$\leftarrow$nn & \multicolumn{8}{c}{} & 10 & 001 & 010 & 8A & \\
+			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \\
+			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & \instrb \\
+
+		SETAE\instrt & 
+			A$\leftarrow$u(80h)>>(E$\wedge$7)\footnotemark[2] & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+			11 & 101 & 101 & 
+			ED & 3 &
+			2 & 8 & \\
+			\multicolumn{10}{c}{} & 10 & 010 & 101 & 95 & \instrb \\
+
+		TEST n\footnotemark[3]\instrt & 
+			A$\wedge$n & 
+			$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				$\updownarrow$ & 
+				VF & 
+				? & 
+				$\updownarrow$ & 
+			11 & 101 & 101 & 
+			ED & 3 &
+			3 & 11 & \\
+			\multicolumn{10}{c}{} & 00 & 100 & 111 & 27 & \instrb \\
+
+		JP (C)\instrt & 
+			PC$\leftarrow$PC$\wedge$C000h+IN(C)<<6 & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+			11 & 101 & 101 & 
+			ED & 2 & 
+			3 & 13 & \\
+			\multicolumn{10}{c}{} & 10 & 011 & 000 & 98 & \instrb \\
+	
+		\hline
+
+		Note:
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1] PUSH nm operand is in fact encoded in big-endian}}\notet \\
+
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[2] A$\leftarrow$unsigned(80h)>>(E$\wedge$7)}} \\
+
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[3] Similar to CP but performs an AND instead of subtraction}}\noteb \\
+
+		\hline
+
+	\end{tabular}
+}
+
 % we only want to list sections within this chapter; without stop, it would continue to include all subsequent ones as well
 \stopcontents[intrstructionsections]
 
