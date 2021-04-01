@@ -1496,7 +1496,7 @@ some are very confusing, so I'll mention the ones I have found here:
 \printcontents[intrstructionsections]{}{1}{}
 
 
-\section{8-Bit Load Group}
+\section{8-Bit Load}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 	\setlength{\tabcolsep}{1mm}
@@ -1930,7 +1930,7 @@ some are very confusing, so I'll mention the ones I have found here:
 }
 
 
-\section{16-Bit Load Group}
+\section{16-Bit Load}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 	\setlength{\tabcolsep}{1mm}
@@ -2271,7 +2271,7 @@ some are very confusing, so I'll mention the ones I have found here:
 }
 
 
-\section{Exchange, Block Transfer, Search Group}
+\section{Exchange, Block Transfer, Search}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 	\setlength{\tabcolsep}{1mm}
@@ -2522,7 +2522,7 @@ some are very confusing, so I'll mention the ones I have found here:
 }
 
 
-\section{8-Bit Arithmetic and Logical Group}
+\section{8-Bit Arithmetic and Logical}
 
 \setlength{\textwidth}{18cm}
 
@@ -2890,7 +2890,7 @@ some are very confusing, so I'll mention the ones I have found here:
 }
 
 
-\section{16-Bit Arithmetic Group}
+\section{16-Bit Arithmetic}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 	\setlength{\tabcolsep}{1mm}
@@ -3104,7 +3104,7 @@ some are very confusing, so I'll mention the ones I have found here:
 }
 
 
-\section{General-Purpose Arithmetic and CPU Control Group}
+\section{General-Purpose Arithmetic and CPU Control}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 	\setlength{\tabcolsep}{1mm}
@@ -3294,7 +3294,7 @@ some are very confusing, so I'll mention the ones I have found here:
 }
 
 
-\section{Rotate and Shift Group}
+\section{Rotate and Shift}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 	\setlength{\tabcolsep}{1mm}
@@ -3694,7 +3694,7 @@ some are very confusing, so I'll mention the ones I have found here:
 	\end{tabular}
 }
 
-\section{Bit Set, Reset and Test Group}
+\section{Bit Set, Reset and Test}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 	\setlength{\tabcolsep}{1mm}
@@ -3921,7 +3921,7 @@ some are very confusing, so I'll mention the ones I have found here:
 	\end{tabular}
 }
 
-\section{Jump Group}
+\section{Jump}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 	\setlength{\tabcolsep}{1mm}
@@ -4091,7 +4091,7 @@ some are very confusing, so I'll mention the ones I have found here:
 }
 
 
-\section{Call and Return Group}
+\section{Call and Return}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 	\setlength{\tabcolsep}{1mm}
@@ -4262,7 +4262,7 @@ some are very confusing, so I'll mention the ones I have found here:
 }
 
 
-\section{Input and Output Group}
+\section{Input and Output}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 	\setlength{\tabcolsep}{1mm}
@@ -4526,7 +4526,7 @@ some are very confusing, so I'll mention the ones I have found here:
 }
 
 
-\section{ZX Spectrum Next Extended Group}
+\section{ZX Spectrum Next Extended}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 	\setlength{\tabcolsep}{1mm}
@@ -4665,6 +4665,7 @@ some are very confusing, so I'll mention the ones I have found here:
 			& DE$\leftarrow$DE>>(16-B$\wedge$0Fh) & \multicolumn{8}{c}{} & 00 & 101 & 100 & 2C & \instrb \\
 
 		& & & & & & & & & & & & & & & & & \\
+		& & & & & & & & & & & & & & & & & \\
 	
 		LDDX\instrt & 
 			if (HL)$\neq$A$\Rightarrow$(DE)$\leftarrow$(HL) & 
@@ -4766,6 +4767,7 @@ some are very confusing, so I'll mention the ones I have found here:
 			& INC D & \instrb \\
 
 		& & & & & & & & & & & & & & & & & \\
+		& & & & & & & & & & & & & & & & & \\
 	
 		SWAPNIB\instrt & \multirow{3}{*}{
 			\setlength{\unitlength}{0.9mm}
@@ -4849,21 +4851,6 @@ some are very confusing, so I'll mention the ones I have found here:
 			\multicolumn{10}{c}{} & 00 & 100 & 100 & 24 & \instrb \\[8ex]
 			% we need some extra spacing to accomodate the image
 
-		MUL D,E\instrt & 
-			DE$\leftarrow$D*E & 
-			$\bullet$ & 
-				$\bullet$ & 
-				$\bullet$ & 
-				$\bullet$ & 
-				$\bullet$ & 
-				$\bullet$ & 
-				$\bullet$ & 
-				$\bullet$ &
-			11 & 101 & 101 & 
-			ED & 2 &
-			2 & 8 & \\
-			\multicolumn{10}{c}{} & 00 & 110 & 000 & 30 & \instrb \\
-
 		\hline
 
 		Note:
@@ -4925,21 +4912,6 @@ some are very confusing, so I'll mention the ones I have found here:
 			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ r $\longrightarrow|$} & .. & \\
 			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
 
-		OUTINB\instrt & 
-			(C)$\leftarrow$(HL) & 
-			? & 
-				? & 
-				? & 
-				? & 
-				? & 
-				? & 
-				? & 
-				? & 
-			11 & 101 & 101 & 
-			ED & 2 & 
-			4 & 16 & \\
-			& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 010 & 000 & 90 & \instrb \\
-
 		PIXELAD\instrt & 
 			HL$\leftarrow$4000h & 
 			$\bullet$ & 
@@ -4977,25 +4949,8 @@ some are very confusing, so I'll mention the ones I have found here:
 			& else & \\
 			& ~~$\Rightarrow$HL$\leftarrow$HL$\wedge$F81Fh+800h & \instrb \\
 
-		PUSH nm\instrt\footnotemark[1] & 
-			SP$\leftarrow$SP-2 & 
-			$\bullet$ & 
-				$\bullet$ & 
-				$\bullet$ & 
-				$\bullet$ & 
-				$\bullet$ & 
-				$\bullet$ & 
-				$\bullet$ & 
-				$\bullet$ &
-			11 & 101 & 101 & 
-			ED & 3 &
-			5 & 23 & \\
-			& (SP)$\leftarrow$nn & \multicolumn{8}{c}{} & 10 & 001 & 010 & 8A & \\
-			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \\
-			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & \instrb \\
-
 		SETAE\instrt & 
-			A$\leftarrow$u(80h)>>(E$\wedge$7)\footnotemark[2] & 
+			A$\leftarrow$u(80h)>>(E$\wedge$7)\footnotemark[1] & 
 			$\bullet$ & 
 				$\bullet$ & 
 				$\bullet$ & 
@@ -5009,7 +4964,22 @@ some are very confusing, so I'll mention the ones I have found here:
 			2 & 8 & \\
 			\multicolumn{10}{c}{} & 10 & 010 & 101 & 95 & \instrb \\
 
-		TEST n\footnotemark[3]\instrt & 
+		MUL D,E\instrt & 
+			DE$\leftarrow$D*E & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+			11 & 101 & 101 & 
+			ED & 2 &
+			2 & 8 & \\
+			\multicolumn{10}{c}{} & 00 & 110 & 000 & 30 & \instrb \\
+
+		TEST n\instrt & 
 			A$\wedge$n & 
 			$\updownarrow$ & 
 				$\updownarrow$ & 
@@ -5038,15 +5008,46 @@ some are very confusing, so I'll mention the ones I have found here:
 			ED & 2 & 
 			3 & 13 & \\
 			\multicolumn{10}{c}{} & 10 & 011 & 000 & 98 & \instrb \\
+			
+		OUTINB\instrt & 
+			(C)$\leftarrow$(HL) & 
+			? & 
+				? & 
+				? & 
+				? & 
+				? & 
+				? & 
+				? & 
+				? & 
+			11 & 101 & 101 & 
+			ED & 2 & 
+			4 & 16 & \\
+			& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 010 & 000 & 90 & \instrb \\
+
+		PUSH nm\instrt\footnotemark[2] & 
+			SP$\leftarrow$SP-2 & 
+			$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ & 
+				$\bullet$ &
+			11 & 101 & 101 & 
+			ED & 3 &
+			5 & 23 & \\
+			& (SP)$\leftarrow$nn & \multicolumn{8}{c}{} & 10 & 001 & 010 & 8A & \\
+			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \\
+			\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & \instrb \\
 	
 		\hline
 
 		Note:
-			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1] PUSH nm operand is in fact encoded in big-endian}}\notet \\
+		
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1] A$\leftarrow$unsigned(80h)>>(E$\wedge$7)}} \\
 
-			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[2] A$\leftarrow$unsigned(80h)>>(E$\wedge$7)}} \\
-
-			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[3] Similar to CP but performs an AND instead of subtraction}}\noteb \\
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[2] PUSH nm operand is in fact encoded in big-endian}}\notet \\
 
 		\hline
 
@@ -6374,7 +6375,7 @@ FF\>RST 38H
 
 
 
-\chapter{Instructions Sorted by MNemonic}
+\chapter{Instructions Sorted by Mnemonic}
 
 Instructions marked with \textsuperscript{*} are undocumented.\\
 Instructions marked with \textsuperscript{ZX} are ZX Spectrum Next extended.
