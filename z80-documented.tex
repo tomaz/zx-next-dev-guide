@@ -1,9 +1,10 @@
 \documentclass[oneside,a4paper]{book}
 
 \usepackage{fancyhdr}
+\usepackage{fancyvrb}
 \usepackage{a4wide}
 \usepackage{url}
-\usepackage{arydshln}
+\usepackage{array}
 \usepackage{multicol}
 \usepackage{multirow}
 \usepackage{titletoc}
@@ -12,11 +13,6 @@
 
 % prevent title from bibliography; we want to use custom chapter so it will be handled as any other title in TOC
 \patchcmd{\thebibliography}{\section*{\refname}}{}{}{}
-
-% redefine dash line to be dotted line instead
-\setlength{\dashlinedash}{0.1pt}
-\setlength{\dashlinegap}{0.8pt}
-\setlength{\arrayrulewidth}{0.1pt}
 
 % redefine the default "plain" pagestyle (used by chapter pages)
 \fancypagestyle{plain}{
@@ -1207,6 +1203,449 @@ This chapter introduces and briefly describes each of the extended instructions.
 \end{description}
 
 
+\section{Ports}
+
+Information in this chapter was compiled from ZX Spectrum Next Official Developer Wiki\footnote{\url{https://wiki.specnext.dev/}} and User Manual as convenience. However including the whole would be far too much over the scope of this booklet, so only the most relevant or frequently used parts are included. Consult either Wiki or your Next manual for details.
+
+
+\subsection{Mapped Spectrum Ports}
+
+Most Spectrum peripherals did not actually decode all 16 bits of the address bus; they checked only for certain bits, and would respond if those bit values were set correctly, regardless of the other bits. The "bitmask" column for each port shows the bits that are tested for by the device. Traditionally all "unused" bits are set to 1 to avoid conflicts with other devices, which is the basis of the given port numbers; but alternate port numbers may be used in some cases. However, beware of creating clashes: in particular any port which does not intend to access the ULA should have the LSB set, as the ULA checks only for a reset LSB.
+
+The table below is a general list of ports and registers on Spectrum Next board. Some of the ports are described in more detail in their own sections, for the rest and for more details see \\
+{\tt \url{https://wiki.specnext.dev/Extended_Z80_instruction_set/}}
+
+\newcommand{\zxport}[4]{{\tt #1}\notet & {\tt \$#2} & {\tt \%#3} & #4}
+
+\begin{tabular}{lllp{7.5cm}}
+	{\tt RW} & Address & Mask & Description \\
+	
+	\hline
+	
+	\zxport{RW}{103B}{0001 0000 0011 1011}{Sets and reads the I2C SCL line} \\
+	\zxport{RW}{113B}{0001 0001 0011 1011}{Sets and reads the I2C SDA line} \\
+	\zxport{RW }{123B}{0001 0010 0011 1011}{Enables layer 2 and controls paging of layer 2 screen into lower memory} \\
+	\zxport{RW}{133B}{0001 0011 0011 1011}{Sends byte to serial port. If read, tells if data in RX buffer} \\
+	\zxport{RW}{143B}{0001 0100 0011 1011}{Reads data from serial port, write sets the baudrate} \\
+	\zxport{RW}{153B}{0001 0101 0011 1011}{Configuration of UART interfaces} \\
+	\zxport{-W}{1FFD}{0001 ---- ---- --0-}{Controls ROM paging and special paging options from the +2a/+3 (also see section \ref{zx_next_memorypaging})} \\
+	\zxport{RW}{243B}{0010 0100 0011 1011}{Selects active port for TBBlue/Next feature configuration} \\
+	\zxport{--}{253B}{0010 0101 0011 1011}{Reads and/or writes the selected TBBlue control register} \\
+	\zxport{RW}{303B}{0011 0000 0011 1011}{Sets active sprite-attribute index and pattern-slot index, reads sprite status} \\
+	\zxport{-W}{7FFD}{01-- ---- ---- --0-}{Selects active RAM, ROM, and displayed screen (also see section \ref{zx_next_memorypaging})} \\
+	\zxport{-W}{BFFD}{10-- ---- ---- --0-}{Writes to the selected register of the selected sound chip} \\
+	\zxport{-W}{DFFD}{1101 1111 1111 1101}{Provides additional bank select bits for extended memory (also see section \ref{zx_next_memorypaging})} \\
+	\zxport{R-}{FADF}{---- ---0 --0- ----}{Reads buttons on Kempston Mouse.} \\
+	\zxport{R-}{FBDF}{---- -0-1 --0- ----}{X coordinate of Kempston Mouse, 0-255} \\
+	\zxport{R-}{FFDF}{---- -1-1 --0- ----}{Y coordinate of Kempston Mouse, 0-192} \\
+	\zxport{-W}{FFFD}{11-- ---- ---- --0-}{Controls stereo channels and selects active sound chip and sound chip channel} \\
+	\zxport{--}{xx0B}{---- ---- 0000 1011}{Controls Z8410 DMA chip via MB02 standard} \\
+	\zxport{R-}{xx1F}{---- ---- 0001 1111}{Reads movement of joysticks using Kempston interface} \\
+	\zxport{RW}{xx37}{}{Kempston interface second joystick variant and controls joystick I/O} \\
+	\zxport{-W}{xx57}{---- ---- 0101 0111}{Uploads sprite positions, visibility, colour type and effect flags} \\
+	\zxport{-W}{xx5B}{---- ---- 0101 1011}{Used to upload the pattern of the selected sprite} \\
+	\zxport{RW}{xx6B}{---- ---- 0110 1011}{Controls zxnDMA chip} \\
+	\zxport{--}{xxDF}{---- ---- --01 1111}{Output to SpecDrum DAC} \\
+	\zxport{R-}{xxFE}{xxxx xxxx ---- ---0}{Keyboard status (see section \ref{zx_next_keyboard})} \\
+	\zxport{-W}{xxFE}{}{Controls border color and base Spectrum audio settings} \\
+	\zxport{-W}{xxFF}{}{Controls Timex Sinclair video modes and colours in hi-res mode} \\
+
+\end{tabular}
+
+
+\subsection{Next/TBBlue Feature Control Registers}
+
+Specific features of the Next are controlled via these register numbers, accessed via TBBlue Register Select\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Select}} (\$243B / 9275) and TBBlue Register Access\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Access}} (\$253B / 9531), or via the NEXTREG opcode.
+
+\newcommand{\nexttitle}{{\tt RW} & Port & Description \\ \hline}
+\newcommand{\nextport}[3]{{\tt #1}\notet & {\tt \$#2} & #3}
+
+\begin{tabular}{llp{12.1cm}}
+	\nexttitle
+
+	\nextport{-W}{0}{Identifies TBBlue board type. Should always be 10 on Next} \\
+	\nextport{-W}{1}{Identifies core (FPGA image) version} \\
+	\nextport{RW}{2}{Identifies type of last reset. Can be written to force reset} \\
+	\nextport{RW}{3}{Identifies timing and machine type} \\
+	\nextport{R-}{4}{In config mode, allows RAM to be mapped to ROM area} \\
+	\nextport{RW}{5}{Sets joystick mode, video frequency and Scandoubler} \\
+	\nextport{RW}{6}{Enables CPU Speed key, DivMMC, Multiface, Mouse and AY audio} \\
+	\nextport{RW}{7}{Sets CPU Speed, reads actual speed} \\
+	\nextport{RW}{8}{ABC/ACB Stereo, Internal Speaker, SpecDrum, Timex Video Modes, Turbo Sound Next, RAM contention and [un]lock 128k paging} \\
+	\nextport{RW}{9}{Sets scanlines, AY mono output, Sprite-id lockstep, reset DivMMC mapram and disable HDMI audio} \\
+	\nextport{RW}{0A}{Mouse buttons and DPI config} \\
+	\nextport{-W}{0E}{Identifies core (FPGA image) version (sub minor number)} \\
+	\nextport{RW}{10}{Used within the Anti-brick system} \\
+	\nextport{RW}{11}{Sets video output timing variant} \\
+	\nextport{RW}{12}{Sets the bank number where Layer 2 video memory begins} \\
+	\nextport{RW}{13}{Sets the bank number where the Layer 2 shadow screen begins} \\
+	\nextport{RW}{14}{Sets the "transparent" colour for Layer 2, ULA and LoRes pixel data} \\
+	\nextport{RW}{15}{Enables/disables Sprites and Lores Layer, and chooses priority of sprites and Layer 2} \\
+	\nextport{RW}{16}{Sets the pixel offset used for drawing Layer 2 graphics on the screen} \\
+	\nextport{RW}{17}{Sets the Y offset used when drawing Layer 2 graphics on the screen} \\
+	\nextport{RW}{18}{Sets and reads clip-window for Layer 2} \\
+	\nextport{RW}{19}{Sets and reads clip-window for Sprites} \\
+	\nextport{RW}{1A}{Sets and reads clip-window for ULA/LoRes layer} \\
+	\nextport{RW}{1B}{Sets and reads clip-window for Tilemap} \\
+	\nextport{RW}{1C}{Controls (resets) the clip-window registers indices} \\
+	\nextport{-W}{1E}{Holds the MSB (only, as bit 0) of the raster line currently being drawn} \\
+	\nextport{-W}{1F}{Holds the eight LSBs of the raster line currently being drawn} \\
+	\nextport{RW}{22}{Controls the timing of raster interrupts and the ULA frame interrupt} \\
+	\nextport{RW}{23}{Holds the eight LSBs of the line on which a raster interrupt should occur} \\
+	\nextport{RW}{26}{Pixel X offset (0..255) to use when drawing ULA Layer} \\
+	\nextport{RW}{27}{Pixel Y offset (0..191) to use when drawing ULA Layer} \\
+	\nextport{RW}{28}{PS/2 Keymap address MSB, read (pending) first byte of palette colour} \\
+	\nextport{R-}{29}{PS/2 Keymap address LSB} \\
+	
+	\hline
+\end{tabular}
+
+(continued)\\
+
+\begin{tabular}{llp{12.1cm}}
+	\nexttitle
+
+	\nextport{R-}{2A}{High data to PS/2 Keymap (MSB of data in bit 0)} \\
+	\nextport{R-}{2B}{Low eight LSBs of PS/2 Keymap data} \\
+	\nextport{RW}{2C}{DAC B mirror, read current I2S left MSB} \\
+	\nextport{RW}{2D}{SpecDrum port 0xDF / DAC A+D mirror, read current I2S LSB} \\
+	\nextport{RW}{2E}{DAC C mirror, read current I2S right MSB} \\
+	\nextport{RW}{2F}{Sets the pixel offset (two high bits) used for drawing Tilemap graphics on the screen} \\
+	\nextport{RW}{30}{Sets the pixel offset (eight low bits) used for drawing Tilemap graphics on the screen} \\
+	\nextport{RW}{31}{Sets the pixel offset used for drawing Tilemap graphics on the screen} \\
+	\nextport{RW}{32}{Pixel X offset (0..255) to use when drawing LoRes Layer} \\
+	\nextport{RW}{33}{Pixel Y offset (0..191) to use when drawing LoRes Layer} \\
+	\nextport{RW}{34}{Selects sprite index 0..127 to be affected by writes to other Sprite ports (and mirrors)} \\
+	\nextport{R-}{35}{Nextreg port-mirror to write directly into "byte 1" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)} \\
+	\nextport{R-}{36}{Nextreg port-mirror to write directly into "byte 2" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)} \\
+	\nextport{-W}{37}{Nextreg port-mirror to write directly into "byte 3" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)} \\
+	\nextport{-W}{38}{Nextreg port-mirror to write directly into "byte 4" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)} \\
+	\nextport{-W}{39}{Nextreg port-mirror to write directly into "byte 5" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)} \\
+	\nextport{RW}{40}{Chooses an palette element (index) to manipulate with} \\
+	\nextport{RW}{41}{Use to set/read 8-bit colours of the ULANext palette} \\
+	\nextport{RW}{42}{Specifies mask to extract ink colour from attribute cell value in ULANext mode} \\
+	\nextport{RW}{43}{Enables or disables Enhanced ULA interpretation of attribute values and toggles active palette} \\
+	\nextport{RW}{44}{Use to set 9-bit (2-byte) colours of the Enhanced ULA palette, or to read second byte of colour} \\
+	\nextport{RW}{4A}{8-bit colour to be used when all layers contain transparent pixel} \\
+	\nextport{RW}{4B}{Index into sprite palette (of "transparent" colour)} \\
+	\nextport{RW}{4C}{Index into Tilemap palette (of "transparent" colour)} \\
+	\nextport{RW}{50}{Selects the 8k-bank stored in 8k-slot 0 (see Memory map)} \\
+	\nextport{RW}{51}{Selects the 8k-bank stored in 8k-slot 1 (see Memory map)} \\
+	\nextport{RW}{52}{Selects the 8k-bank stored in 8k-slot 2 (see Memory map)} \\
+	\nextport{RW}{53}{Selects the 8k-bank stored in 8k-slot 3 (see Memory map)} \\
+	\nextport{RW}{54}{Selects the 8k-bank stored in 8k-slot 4 (see Memory map)} \\
+	\nextport{RW}{55}{Selects the 8k-bank stored in 8k-slot 5 (see Memory map)} \\
+	\nextport{RW}{56}{Selects the 8k-bank stored in 8k-slot 6 (see Memory map)} \\
+	\nextport{RW}{57}{Selects the 8k-bank stored in 8k-slot 7 (see Memory map)} \\
+	\nextport{R-}{60}{Used to upload code to the Copper} \\
+	
+	\hline
+\end{tabular}
+
+(continued)\\
+
+\begin{tabular}{llp{12.1cm}}
+	\nexttitle
+
+	\nextport{RW}{61}{Holds low byte of Copper control bits} \\
+	\nextport{RW}{62}{Holds high byte of Copper control flags} \\
+	\nextport{R-}{63}{Used to upload code to the Copper} \\
+	\nextport{RW}{64}{Offset numbering of raster lines in copper/interrupt/active register} \\
+	\nextport{RW}{68}{Disable ULA, controls ULA mixing/blending, enable ULA+} \\
+	\nextport{RW}{69}{Layer2, ULA shadow, Timex \$FF port} \\
+	\nextport{RW}{6A}{LoRes Radastan mode} \\
+	\nextport{RW}{6B}{Controls Tilemap mode} \\
+	\nextport{RW}{6C}{Default tile attribute for 8-bit only maps} \\
+	\nextport{RW}{6E}{Base address of the 40x32 or 80x32 tile map (similar to text-mode of other computers)} \\
+	\nextport{RW}{6F}{Base address of the tiles' graphics} \\
+	\nextport{RW}{70}{Layer 2 resolution, palette offset} \\
+	\nextport{RW}{71}{Sets the pixel offset used for drawing Layer 2 graphics on the screen} \\
+	\nextport{R-}{75}{Same as Sprite port-mirror Attribute 0 Register (\$35) (write first byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)} \\
+	\nextport{R-}{76}{Same as Sprite port-mirror Attribute 1 Register (\$36) (write second byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)} \\
+	\nextport{R-}{77}{Same as Sprite port-mirror Attribute 2 Register (\$37) (write third byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)} \\
+	\nextport{R-}{78}{Same as Sprite port-mirror Attribute 3 Register (\$38) (write fourth byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)} \\
+	\nextport{R-}{79}{The same as Sprite port-mirror Attribute 4 Register (\$39) (write fifth byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)} \\
+	\nextport{RW}{7F}{8-bit storage for user} \\
+	\nextport{RW}{80}{Expansion bus enable/config} \\
+	\nextport{RW}{81}{Expansion bus controls} \\
+	\nextport{RW}{82}{Enabling internal ports decoding b0-7 Register} \\
+	\nextport{RW}{83}{Enabling internal ports decoding b8-15 Register} \\
+	\nextport{RW}{84}{Enabling internal ports decoding b16-23 Register} \\
+	\nextport{RW}{85}{Enabling internal ports decoding b24-31 Register} \\
+	\nextport{RW}{86}{When expansion bus is enabled: Internal ports decoding mask b0-7 Register} \\
+	\nextport{RW}{87}{When expansion bus is enabled: Internal ports decoding mask b8-15 Register} \\
+	\nextport{RW}{88}{When expansion bus is enabled: Internal ports decoding mask b16-23 Register} \\
+	\nextport{RW}{89}{When expansion bus is enabled: Internal ports decoding mask b24-31 Register} \\
+	\nextport{RW}{8A}{Monitoring internal I/O or adding external keyboard} \\
+	\nextport{RW}{8C}{Enable alternate ROM or lock 48k ROM} \\
+	\nextport{RW}{8E}{Control classic Spectrum memory mapping} \\
+	\nextport{RW}{90-93}{Enables GPIO pins output} \\
+	\nextport{RW}{98-9B}{GPIO pins mapped to Next Register} \\
+	\nextport{RW}{A0}{Enable Pi peripherals: UART, Pi hats, I2C, SPI} \\
+	\nextport{RW}{A2}{Pi I2S controls} \\
+	\nextport{RW}{A3}{Pi I2S clock divide in master mode} \\
+	
+	\hline
+\end{tabular}
+
+(continued)\\
+
+\begin{tabular}{llp{12.1cm}}
+	\nexttitle
+
+	\nextport{RW}{A8}{ESP WiFi GPIO Output} \\
+	\nextport{RW}{A9}{ESP WiFi GPIO Read/Write} \\
+	\nextport{-W}{B0}{Read Next keyboard compound keys separately} \\
+	\nextport{-W}{B1}{Read Next keyboard compound keys separately} \\
+	\nextport{RW}{B2}{DivMMC trap configuration} \\
+	\nextport{RW}{B4}{DivMMC trap configuration} \\
+	\nextport{R-}{FF}{Turns debug LEDs on and off on TBBlue implementations that have them} \\
+
+\end{tabular}
+
+
+\section{Memory Map and Paging}
+\label{zx_next_memorypaging}
+
+\newcommand{\colnoline}[1]{\multicolumn{1}{c}{#1}}
+
+ZX Spectrum Next is 8-bit computer with 16-bit address bus. This means it can access up to 2\textsuperscript{16} = 65.536 bytes or 64K at any given time. This 64K portion of the memory is called "bank" and is further divided into 16K or 8K chunks called "slots".
+
+Unexpanded Next comes with 1024K while expanded with 2048K of memory. To get access to whole of available memory, paging is used. Next supports the following paging schemes:
+
+\subsection{128K and +3 Modes}
+
+Next inherits 128K and 3+ paging modes that divide 64K bank into 16K slots. Of these, bottom 16K is always occupied by ROM:
+
+\begingroup
+	\setlength{\tabcolsep}{1pt}
+	\begin{tabular}{|ccc|ccc|ccc|ccc|}
+		\hline
+		\multicolumn{3}{|c}{ROM}\notet\noteb &
+			\multicolumn{9}{|c|}{RAM} \\
+		\hline
+		\multicolumn{3}{|c}{16K}\notet\noteb &
+			\multicolumn{3}{|c}{16K} &
+			\multicolumn{3}{|c}{16K} &
+			\multicolumn{3}{|c|}{16K} \\
+		\hline
+		\colnoline{$\leftarrow$}\notet & \colnoline{\tt \$0000} & \colnoline{} &
+			\colnoline{$\leftarrow$} & \colnoline{\tt \$4000} & \colnoline{} &
+			\colnoline{$\leftarrow$} & \colnoline{\tt \$8000} & \colnoline{} &
+			\colnoline{$\leftarrow$} & \colnoline{\tt \$C000} & \colnoline{} \\
+		\colnoline{} & \colnoline{\tt \$3FFF} & \colnoline{$\rightarrow$} &
+			\colnoline{} & \colnoline{\tt \$7FFF} & \colnoline{$\rightarrow$} &
+			\colnoline{} & \colnoline{\tt \$BFFF} & \colnoline{$\rightarrow$} &
+			\colnoline{} & \colnoline{\tt \$FFFF} & \colnoline{$\rightarrow$} \\
+	\end{tabular}
+\endgroup
+
+\subsubsection{128K Mode}
+
+Selects 16K ROM to be visible in the bottom 16K slot and 16K RAM to be visible in top 16K slot (memory addresses {\tt \$C000}-{\tt \$FFFF}) as follows (see section \ref{zx_next_mappingregister} for details):
+
+\begin{itemize}
+	\item {\tt \$1FFD} \textbf{Plus 3 Memory Paging Control}: bit 0 of this register must be set to 0 to use standard 128K paging mode.
+	
+	\item {\tt \$7FFD} \textbf{Memory Paging Control}: bits 2-0 of this register contain 3 least significant bits of desired 16K bank number while bit 4 represents ROM selection.
+	
+	\item {\tt \$DFFD} \textbf{Next Memory Bank Select}: bits 3-0 of this register contain 4 MSBs of 16K bank number.
+\end{itemize}
+
+Together 4 bits from {\tt \$DFFD} and 3 from {\tt \$7FFD} form 7 bit bank number.
+
+If you are using the standard interrupt handler or OS routines, then any time you write to Memory Paging Control {\tt \$7FFD} you should also store the value at {\tt \$5B5C}. Any time you write to Plus 3 Memory Paging Control {\tt \$1FFD} you should also store the value at {\tt \$5B67}. There is no corresponding system variable for the Next-only Next Memory Bank Select {\tt \$DFFD} and standard OS routines may not support the extended banks properly.
+
+
+\subsubsection{+3 "AllRam" Mode}
+
+This mode was not widely used as programmers mainly targeted 128K models prior to +3.
+
+3+ mode allows selecting all 16K slots of 64K bank from limited selection of arrangements. On Next this allows to chose from 4 16K ROM slots and 48 16K RAM slots (112 on expanded machines with 2048K or memory). Note: remaining portion of memory is allocated to other uses, such as divMMC, firmware etc.
+
+The following registers control paging in this mode (see section \ref{zx_next_mappingregister} for details):
+
+\begin{itemize}
+	\item {\tt \$1FFD} \textbf{Plus 3 Memory Paging Control}: bit 0 of this register must be set to 1 to use enable 3+ paging mode, bit 1 is low bit of memory configuration number and bit 2 high bit of ROM selection.
+	
+	\item {\tt \$7FFD} \textbf{Memory Paging Control}: bit 4 represents low bit for ROM select.
+\end{itemize}
+
+Together low 3 bits of {\tt \$1FFD} register define memory configuration as follows:
+
+\begin{tabular}{ccccc}
+	Bit & \multicolumn{4}{c}{Memory Configuration} \\
+	{\tt 210} & Slot 1 & Slot 2 & Slot 3 & Slot 4 \\
+	\hline
+	{\tt 001}\notet & 0 & 1 & 2 & 3 \\
+	{\tt 011} & 4 & 5 & 6 & 7 \\
+	{\tt 101} & 4 & 5 & 6 & 3 \\
+	{\tt 111} & 4 & 7 & 6 & 3 \\
+\end{tabular}
+
+And bit 2 from {\tt \$1DDF} (hi) and bit 4 from {\tt \$7DDF} (low) together form the following ROM configuration:
+
+\begin{tabular}{cl}
+	Bit & ROM \\
+	\hline
+	{\tt 00}\notet & ROM0 = 128K editor and menu system \\
+	{\tt 01} & ROM1 = 128K syntax checker \\
+	{\tt 10} & ROM2 = +3DOS \\
+	{\tt 11} & ROM3 = 48K BASIC \\
+\end{tabular}
+
+
+\subsection{MMU-based Mode}
+
+Next unique \textbf{MMU-based Mode} is much more flexible in that it allows mapping 8K chunks into any 8K slot of memory available to CPU. In this mode, 64K memory bank accessible to CPU is divided into 8 slots called MMU0 through MMU7, as shown in diagram below. Physical memory is thus divided into 96 (or 224 in expanded) slots.
+
+\begingroup
+	\setlength{\tabcolsep}{1pt}
+	\begin{tabular}{|cccc|cccc|cccc|cccc|cccc|cccc|cccc|cccc|}
+		\hline
+		\multicolumn{4}{|c}{MMU0}\notet\noteb & 
+			\multicolumn{4}{|c}{MMU1} & 
+			\multicolumn{4}{|c}{MMU2} & 
+			\multicolumn{4}{|c}{MMU3} & 
+			\multicolumn{4}{|c}{MMU4} & 
+			\multicolumn{4}{|c}{MMU5} & 
+			\multicolumn{4}{|c}{MMU6} & 
+			\multicolumn{4}{|c|}{MMU7} \\
+		\hline
+		\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$0000} & \colnoline{} &
+			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$2000} & \colnoline{} &
+			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$4000} & \colnoline{} &
+			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$6000} & \colnoline{} &
+			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$8000} & \colnoline{} &
+			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$A000} & \colnoline{} &
+			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$C000} & \colnoline{} &
+			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$E000} & \colnoline{} \\
+		\colnoline{} & \multicolumn{2}{c}{\tt \$1FFF} & \colnoline{$\rightarrow$} &
+			\colnoline{} & \multicolumn{2}{c}{\tt \$3FFF} & \colnoline{$\rightarrow$} &
+			\colnoline{} & \multicolumn{2}{c}{\tt \$5FFF} & \colnoline{$\rightarrow$} &
+			\colnoline{} & \multicolumn{2}{c}{\tt \$7FFF} & \colnoline{$\rightarrow$} &
+			\colnoline{} & \multicolumn{2}{c}{\tt \$9FFF} & \colnoline{$\rightarrow$} &
+			\colnoline{} & \multicolumn{2}{c}{\tt \$BFFF} & \colnoline{$\rightarrow$} &
+			\colnoline{} & \multicolumn{2}{c}{\tt \$DFFF} & \colnoline{$\rightarrow$} &
+			\colnoline{} & \multicolumn{2}{c}{\tt \$FFFF} & \colnoline{$\rightarrow$} \\
+	\end{tabular}
+\endgroup
+
+MMU selection is set via Next registers (see section \ref{zx_next_mappingregister} for details):
+
+\begin{itemize}
+	\item {\tt \$50}: Selects 8K bank in 8K slot 0
+	\item {\tt \$51}: Selects 8K bank in 8K slot 1
+	\item {\tt \$52}: Selects 8K bank in 8K slot 2
+	\item {\tt \$53}: Selects 8K bank in 8K slot 3
+	\item {\tt \$54}: Selects 8K bank in 8K slot 4
+	\item {\tt \$55}: Selects 8K bank in 8K slot 5
+	\item {\tt \$56}: Selects 8K bank in 8K slot 6
+	\item {\tt \$57}: Selects 8K bank in 8K slot 7
+\end{itemize}
+
+
+\subsection{Interaction Between Paging Modes}
+
+In normal 128K mode, changes made in 128K and Next mode memory management are synchronized. The most recent change always has priority. This means that using 128K mode memory management to select a new 16K bank in 16K slot 4 will update the MMU registers for the two 8K slots with the corresponding 8K bank numbers.
+
+However, enabling 3+ "AllRam" mode will override the Next MMU. The bank selections from the 3+ mode will override pages in the Next registers. The MMU registers can still be changed, but they will have no effect until special paging mode is disabled.
+
+Since the 128K mode memory management ports are not readable, there is no synchronization applicable in the other direction.
+
+
+\subsection{Paging Out ROM}
+
+ROM can be paged out by using +3 "AllRam" or Next MMU-based mode. Beware though that some programs may expect to find ROM routines at fixed addresses between {\tt \$0000} and {\tt \$3FFF}. And if default interrupt mode (IM 1) is set, Z80 will jump PC to {\tt \$0038} expecting to find interrupt handler there.
+
+
+\subsection{Mapping Mode Registers}
+\label{zx_next_mappingregister}
+
+\subsubsection{+3 Memory Paging Control {\tt \$1FFD}}
+
+\begin{tabular}{cp{12cm}}
+	Bit & Effect \\
+	\hline
+	{\tt 7-3}\notet & Unused, use 0 \\
+	{\tt 2}\notet & High bit of ROM selection, together with low bit from bit 4 of {\tt \$7FFD}:
+		\begin{tabular}{ll}
+			{\tt 00}\notet & ROM0 = 128K editor and menu system \\
+			{\tt 01} & ROM1 = 128K syntax checker \\
+			{\tt 10} & ROM2 = +3DOS \\
+			{\tt 11} & ROM3 = 48K BASIC \\
+		\end{tabular}\\
+	{\tt 1}\notet & Low bit of memory configuration number (only in +3 mode) \\
+	{\tt 0}\notet & Paging mode: 0 = 128K, 1 = +3\\
+\end{tabular}
+
+\subsection{Memory Paging Control {\tt \$7FFD}}
+
+\begin{tabular}{cp{12cm}}
+	Bit & Effect \\
+	\hline
+	{\tt 7-6}\notet & 
+		Extra two bits for 16K RAM bank if in Pentagon 512K mode (see \textbf{Next Memory Bank Select} \$DFFD) \\
+	{\tt 5}\notet &
+		Lock memory paging (setting to 1 locks pages and cannot be unlocked until next reset on regular ZX128) \\
+	{\tt 4}\notet &
+		ROM select (0 = 128k editor, 1 = 48k basic) on 128K, low bit of ROM select on +2/+3 \\
+	{\tt 3}\notet &
+		ULA layer shadow screen toggle (0 = bank 5, 1 = bank 7) \\
+	{\tt 2-0}\notet &
+		Bank number for slot 4 (\$C000) \\
+\end{tabular}
+
+\subsection{Next Memory Bank Select {\tt \$DFFD}}
+
+\begin{tabular}{cp{12cm}}
+	Bit & Effect \\
+	\hline
+	{\tt 7}\notet & 
+		1 to set pentagon 512K mode \\
+	{\tt 3-0}\notet &
+		Most significant bits of the 16K RAM bank selected in \textbf{Memory Paging Control} \$7FFD  \\
+\end{tabular}
+
+\pagebreak
+\section{Keyboard}
+\label{zx_next_keyboard}
+
+Keyboard is read from port {\tt \$ssFE} where:
+
+{\tt 
+	\begin{tabular}{p{0.7cm}|cp{1cm}p{1cm}p{1cm}p{1.2cm}p{1.2cm}}
+
+		   & & \multicolumn{5}{c}{Result Bit} \\
+		~ss & & 4 & 3 & 2 & 1 & 0 \instrb \\
+		\hline
+		\$7F\instrt & & B & N & M & \fbox{Symb} & \fbox{Space} \\
+		\$BF\instrt & & H & J & K & L & \fbox{Enter} \\
+		\$DF\instrt & & Y & U & I & O & P \\
+		\$EF\instrt & & 6 & 7 & 8 & 9 & 0 \\
+		\$F7\instrt & & 5 & 4 & 3 & 2 & 1 \\
+		\$FB\instrt & & T & R & E & W & Q \\
+		\$FD\instrt & & G & F & D & S & A \\
+		\$FE\instrt\instrb & & V & C & X & Z & \fbox{Caps} \\
+
+	\end{tabular}
+}
+
+If key is pressed, corresponding bit is set to 0 and vice versa. Example for checking if P or I is pressed:
+
+\begin{Verbatim}
+	LD A, $DF      ; We want to read keys:   YUIOP
+	IN ($FE)       ; A holds values in bits: 43210
+checkP: BIT 0, A       ; test bit 0 of A (P key)
+	JR NZ checkI   ; if bit0=1, P not pressed
+	...            ; P is pressed
+checkI: BIT 2, A       ; test bit 2 of A (I key)
+	JR NZ continue ; if bit2=1, I not pressed
+	...            ; I is pressed
+continue:
+\end{Verbatim}
+
+
 
 
 \chapter{Instruction Tables}
@@ -1235,6 +1674,7 @@ This chapter introduces and briefly describes each of the extended instructions.
 }
 
 % Chapters have large gap on top so we'd have to wrap tables. Instead we show table of contents for all sections on chapter title page as filler and start actual tables on next page.
+\setcounter{tocdepth}{2}
 \startcontents[intrstructionsections]
 \printcontents[intrstructionsections]{}{1}{}
 
@@ -4270,6 +4710,7 @@ This chapter introduces and briefly describes each of the extended instructions.
 
 
 \section{ZX Spectrum Next Extended}
+\label{zx_next_instructions_table}
 
 {\tt \scriptsize \setlength{\fboxsep}{0.25mm}
 	\setlength{\tabcolsep}{1mm}
@@ -4788,7 +5229,7 @@ This chapter introduces and briefly describes each of the extended instructions.
 
 			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[1] A$\leftarrow$unsigned(\$80)>>(E$\wedge$7)}}\notet \\
 
-			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[2] PUSH nm operand is in fact encoded in big-endian}}\notet \\
+			& \multicolumn{17}{l}{\parbox{12cm}{\footnotemark[2] PUSH nm operand is in fact encoded in big-endian}}\noteb \\
 
 		\hline
 
