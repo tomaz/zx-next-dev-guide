@@ -19,7 +19,10 @@ For compiling LaTeX, I use https://miktex.org/
 
 Couple ideas for new content:
 
-- Description for each ZX Spectrum / Next port
+- Description for other relevant ZX Spectrum / Next port
+- ULA graphics
+- Layer 2
+- Sprites
 - Code examples demonstrating port usage
 - Short description of each instruction
 

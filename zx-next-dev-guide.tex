@@ -11,6 +11,8 @@
 \usepackage{etoolbox}
 \usepackage{mdwlist}
 \usepackage{minitoc}
+\usepackage{environ}
+\usepackage{tabularx}
 \usepackage[nottoc,numbib]{tocbibind}
 
 % redefine the default "plain" pagestyle (used by chapter pages)
@@ -36,6 +38,9 @@
 % don't stretch content into empty space vertically
 \raggedbottom
 
+% same as p{size} but centers text horizontally
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
 % empty pages before chapters should use empty style (aka nothing)
 \let\mtcleardoublepage\cleardoublepage
 \renewcommand{\cleardoublepage}{\clearpage{\pagestyle{empty}\mtcleardoublepage}}
@@ -47,6 +52,10 @@
 % top and bottom "struts" for note lines
 \newcommand{\notet}{\rule{0pt}{2.4ex}}
 \newcommand{\noteb}{\rule[-1.3ex]{0pt}{0pt}}
+
+% couple shorthands that can be used throughout the document
+\newcommand{\ddd}{\makebox[1em][c]{.\hfil.\hfil.}}
+\newcommand{\See}[1]{\textsuperscript{#1}}
 
 % we can use this for pages that are intentionally left blank
 \newcommand{\intentiallyempty}{
@@ -66,7 +75,6 @@
 	tabsize=4,
 	fontsize=\small
 }
-
 
 
 % use empty style for first couple pages, until defined otherwise
@@ -248,7 +256,7 @@ Many companies produced machines based around Zilog's improved chip during the 1
 
 Also Zilog has created a Z280, an enhanced version of the Zilog Z80 with a 16 bit architecture, introduced in July, 1987. It added an MMU to expand addressing to 16Mb, features for multitasking, a 256 byte cache, and a huge number of new opcodes (giving a total of over 2000!). Its internal clock runs at 2 or 4 times the external clock (e.g. a 16MHz CPU with a 4MHz bus
 
-The Z380 CPU incorporates advanced architectural while maintaining Z80/Z180 object code compatibility. The Z380 CPU is an enhanced version of the Z80 CPU. The Z80 instruction set has been retained, adding a full compliment of 16-bit arithmetic and logical operations, multiply and divide, a complete set of register-to-register loads and exchanges, plus 32-bit load and exchange, and 32-bit arithmetic operations for address calculations.
+The Z380 CPU incorporates advanced architectural while maintaining Z80/Z180 object code compatibility. The Z380 CPU is an enhanced version of the Z80 CPU. The Z80 instruction set has been retained, adding a full complement of 16-bit arithmetic and logical operations, multiply and divide, a complete set of register-to-register loads and exchanges, plus 32-bit load and exchange, and 32-bit arithmetic operations for address calculations.
 
 The addressing modes of the Z80 have been enhanced with Stack pointer relative loads and stores, 16-bit and 24-bit indexed offsets and more flexible indirect register addressing. All of the addressing modes allow access to the entire 32-bit addressing space.
 
@@ -308,7 +316,7 @@ The conventional way of denoting the flags is with one letter, `C' for the carry
 	A copy of bit 3 of the result.
 
 	\item[PF flag]
-	This flag can either be the parity of the result (PF), or the \\ 2-compliment signed overflow (VF): set if 2-compliment value doesn't fit in the register.
+	This flag can either be the parity of the result (PF), or the \\ 2-complement signed overflow (VF): set if 2-complement value doesn't fit in the register.
 
 	\item[NF flag]
 	Shows whether the last operation was an addition (0) or an subtraction (1). This information is needed for {\tt DAA}.\footnote{Wouldn't it be better to have separate instructions for {\tt DAA} after addition and subtraction, like the 80x86 has in stead of sacrificing a bit in the flag register?}
@@ -574,35 +582,35 @@ The complete list except for the block instructions:
 		{\qquad}ED41\>OUT (C),B\>ED61\>OUT (C),H\\ 
 		{\qquad}ED42\>SBC HL,BC\>ED62\>SBC HL,HL\\  
 		{\qquad}ED43\>LD (nn),BC\>ED63\>LD (nn),HL\\ 
-		{\qquad}ED44\>NEG\>ED64\>NEG{\footnotemark[7]}\\ 
-		{\qquad}ED45 \> RETN\> ED65\> RETN{\footnotemark[7]}\\
-		{\qquad}ED46\>IM 0\>ED66\>IM 0{\footnotemark[7]}\\
+		{\qquad}ED44\>NEG\>ED64\>NEG{\See{7}}\\ 
+		{\qquad}ED45 \> RETN\> ED65\> RETN{\See{7}}\\
+		{\qquad}ED46\>IM 0\>ED66\>IM 0{\See{7}}\\
 		{\qquad}ED47\>LD I,A\>ED67\>RRD\\
 		{\qquad}ED48\>IN C,(C)\>ED68\>IN L,(C)\\
 		{\qquad}ED49\>OUT (C),C\>ED69\>OUT (C),L\\
 		{\qquad}ED4A\>ADC HL,BC\>ED6A\>ADC HL,HL\\
 		{\qquad}ED4B\>LD BC,(nn)\>ED6B\>LD HL,(nn)\\
-		{\qquad}ED4C\>NEG{\footnotemark[7]}\>ED6C\>NEG{\footnotemark[7]}\\
-		{\qquad}ED4D\>RETI\>ED6D\>RETN\footnotemark[7]\\
-		{\qquad}ED4E\>IM 0{\footnotemark[7]}\>ED6E\>IM 0{\footnotemark[7]}\\
+		{\qquad}ED4C\>NEG{\See{7}}\>ED6C\>NEG{\See{7}}\\
+		{\qquad}ED4D\>RETI\>ED6D\>RETN\See{7}\\
+		{\qquad}ED4E\>IM 0{\See{7}}\>ED6E\>IM 0{\See{7}}\\
 		{\qquad}ED4F\>LD R,A\>ED6F\>RLD\\
 		{\qquad}\\
-		{\qquad}ED50\>IN D,(C)\>ED70\>IN (C) / IN F,(C){\footnotemark[7]}\\
-		{\qquad}ED51\>OUT (C),D\>ED71\>OUT (C),0{\footnotemark[7]}\\
+		{\qquad}ED50\>IN D,(C)\>ED70\>IN (C) / IN F,(C){\See{7}}\\
+		{\qquad}ED51\>OUT (C),D\>ED71\>OUT (C),0{\See{7}}\\
 		{\qquad}ED52\>SBC HL,DE\>ED72\>SBC HL,SP\\
 		{\qquad}ED53\>LD (nn),DE\>ED73\>LD (nn),SP\\
-		{\qquad}ED54\>NEG{\footnotemark[7]}\>ED74\>NEG{\footnotemark[7]}\\
-		{\qquad}ED55\>RETN{\footnotemark[7]}\>ED75\>RETN{\footnotemark[7]}\\
-		{\qquad}ED56\>IM 1\>ED76\>IM 1{\footnotemark[7]}\\
-		{\qquad}ED57\>LD A,I\>ED77\>NOP{\footnotemark[7]}\\
+		{\qquad}ED54\>NEG{\See{7}}\>ED74\>NEG{\See{7}}\\
+		{\qquad}ED55\>RETN{\See{7}}\>ED75\>RETN{\See{7}}\\
+		{\qquad}ED56\>IM 1\>ED76\>IM 1{\See{7}}\\
+		{\qquad}ED57\>LD A,I\>ED77\>NOP{\See{7}}\\
 		{\qquad}ED58\>IN E,(C)\>ED78\>IN A,(C)\\
 		{\qquad}ED59\>OUT (C),E\>ED79\>OUT (C),A\\
 		{\qquad}ED5A\>ADC HL,DE\>ED7A\>ADC HL,SP\\
 		{\qquad}ED5B\>LD DE,(nn)\>ED7B\>LD SP,(nn)\\
-		{\qquad}ED5C\>NEG{\footnotemark[7]}\>ED7C\>NEG{\footnotemark[7]}\\
-		{\qquad}ED5D\>RETN{\footnotemark[7]}\>ED7D\>RETN{\footnotemark[7]}\\
-		{\qquad}ED5E\>IM 2\>ED7E\>IM 2{\footnotemark[7]}\\
-		{\qquad}ED5F\>LD A,R\>ED7F\>NOP{\footnotemark[7]}\\
+		{\qquad}ED5C\>NEG{\See{7}}\>ED7C\>NEG{\See{7}}\\
+		{\qquad}ED5D\>RETN{\See{7}}\>ED7D\>RETN{\See{7}}\\
+		{\qquad}ED5E\>IM 2\>ED7E\>IM 2{\See{7}}\\
+		{\qquad}ED5F\>LD A,R\>ED7F\>NOP{\See{7}}\\
 	\end{tabbing}
 }
 \renewcommand{\thefootnote}{\arabic{footnote}}
@@ -1813,3602 +1821,3505 @@ First program is more understandable at a glance - port address is given as whol
 
 \chapter{Instruction Tables}
 
+This chapters presents all instructions at a glance for quick info and to easily compare them when choosing most optimal combination for task at hand. Instructions are grouped into logical sections based on area they operate on.
+
 \minitoc
 
-\newcommand{\instrtable}[1]{
-	{
-		\tt
-		\small 
-		\setlength{\fboxsep}{0.25mm}
-		\setlength{\tabcolsep}{1mm}
-		
-		\begin{tabular}{llcccccccccccccccl}
+\pagebreak
 
+% couple shorthands for keeping text more readable
+\newcommand{\FS}{$\updownarrow$}
+\newcommand{\FN}{$\bullet$}
+
+\subsubsection{Instruction Execution}
+
+\begin{tabular}{ll}
+	B & 
+		Number of bytes instruction uses \\
+	Mc\notet & 
+		Number of machine cycles instruction requires to execute \\
+	Ts\notet & 
+		Number of states instruction requires to execute \\
+\end{tabular}
+
+\subsubsection{Status Flags}
+
+\begin{tabular}{lp{13cm}}
+	SF & 
+		Set if the 2-complement value is negative.  It’s simply a copy of the most significant bit \\
+	ZF\notet & 
+		Set if the result is zero. \\
+	HY\notet & 
+		The half-carry of an addition/subtraction (from bit 3 to 4). Needed for BCD correctionwith {\tt DAA} \\
+	PF\notet & 
+		This flag can either be the parity of the result ({\tt PF}), or the 2-complement signed overflow ({\tt VF}): set if 2-complement value doesn’t fit in the register \\
+	NF\notet & 
+		Shows whether the last operation was an addition (0) or an subtraction  (1). This information is needed for {\tt DAA} \\
+	CF\notet & 
+		The carry flag, set if there was a carry after the most significant bit \\
+\end{tabular}
+
+(copied from section \ref{flags} as convenience; note {\tt YF} and {\tt XF} flags are not represented in the tables; they're irrelevant from programmer point of view; they simply contain a copy of bit 5 and 3 of Accumulator, but special cases are described)
+
+\subsubsection{Flag Values}
+
+\begin{tabular}{ll}
+	{\tt 0}/{\tt 1} & Flag is set to 0 or 1 \\
+	{\tt ?} & Effect on flag is unpredictable \\
+	{\tt VF} & P/V flag is used as overflow \\
+	{\tt PF} & P/V flag is used as parity \\
+	{\tt \FS} & Flag is set according to operation/value \\
+	{\tt \FN} & Flag is not affected \\
+\end{tabular}
+
+
+\pagebreak
+
+%------------------------------------------------------------------------------
+%
+% INSTRUCTION TABLE DECLARATIONS
+%
+%------------------------------------------------------------------------------
+
+% this is internal definition for instruction table that takes 2 arguments: first 2 column definitions and body. It should only be used by NewEnviron macros, not intended as general purpose macro by itself (it could be used, but then tables would not be defined with begin/end)
+\newcommand{\INSTRTABLEBODYDECL}[2]{
+	{
+		\small
+		\setlength{\fboxsep}{0.25mm}
+		\setlength{\tabcolsep}{0.75mm}
+		
+		\begin{tabularx}{\textwidth}{#1ccccccp{1pt}cccccp{1pt}ccp{1pt}l}
 			\hline
 			
 			% top header line
-			& 
+			\notet & 
 			Symbolic &
-			\multicolumn{8}{c}{Flags} & 
+			\multicolumn{6}{c}{Flags} & &
 			\multicolumn{3}{c}{Opcode} &
-			& & 
-			& & \\
-
+			& \\
+		
 			% bottom header line
 			Mnemonic & 
 			Operation &
-			SF & ZF & YF & HF & XF & PF & NF & CF &
-			76 & 543 & 210 & 
-			Hex & B & 
-			Mc & Ts & 
+			SF & ZF & HF & PF & NF & CF & &
+			{\tt 76} & {\tt 543} & {\tt 210} & 
+			Hex & B & & 
+			Mc & Ts & &
 			Comments \\
-
+		
+			\hline
+		
+			#2
+		
+			\\ % we need this newline in here otherwise \hline below will end in error; it's because hline can only be inserted after \\ - even though \\ will be present by the time table is generated with instruction macros, compiler requires it at this point as well. Consequently, the last instruction in table should use lastinstruction macro to compensate - so far I wasn't able to get better solution (interestingly, this similar approach works for notestable ¯\_(ツ)_/¯)
+		
 			\hline
 
-			% content
-			#1
-
-		\end{tabular}
+		\end{tabularx}
 	}
 }
 
+% declares instrtable environment that sets up everything for instruction tables; this should suffice for most tables, mnemonic and symbolic operation columns are same width
+\environbodyname\INSTRTABLEBODY
+\NewEnviron{instrtable}{\INSTRTABLEBODYDECL{XX}{\INSTRTABLEBODY}}
+% this table restricts mnemonic witdh and uses all remaining available width for symbolic opreation
+\NewEnviron{instrtablesymbol}{\INSTRTABLEBODYDECL{p{6em}X}{\INSTRTABLEBODY}}
+
+% defines instruction environment that embeds each instruction. Instruction mnemonic is taken as parameter, mainly to show it when environment is collapsed in editor. Note this needs to use \xdef and be an ugly mess of oneliner otherwise mnemonic will be right aligned...
+\environbodyname\INSTRBODY
+\NewEnviron{instruction}[1]{\xdef\instructionbody{\unexpanded{{\tt #1}\instrt&}\unexpanded\expandafter{\INSTRBODY}\unexpanded{\instrb\\}}
+\aftergroup\instructionbody
+}
+\environbodyname\INSTRBODY
+\NewEnviron{lastinstruction}[1]{\xdef\instructionbody{\unexpanded{{\tt #1}\instrt&}\unexpanded\expandafter{\INSTRBODY}\unexpanded{\instrb}}
+\aftergroup\instructionbody
+}
+
+% writes symbolic operation (for the moment nothing special, but we may change it in the future and it will automatically be applied for all items); variant with S with add 3 dots after argument and one with P will add them in front; for multiline expressions
+\newcommand{\Symbol}[1]{\footnotesize {\tt #1} &}
+\newcommand{\SymbolS}[1]{\footnotesize {\tt #1}\ddd &}
+\newcommand{\SymbolP}[1]{\footnotesize \ddd{\tt #1} &}
+
+% writes flags section + couple shorthands for symbolic flags
+\newcommand{\Flags}[6]{{\tt #1} & {\tt #2} & {\tt #3} & {\tt #4} & {\tt #5} & {\tt #6} & &}
+
+% writes bitwise opcodes section
+\newcommand{\OpCode}[3]{{\tt #1} & {\tt #2} & {\tt #3} &}
+
+% writes given text embedded into left and right arrows; use instead of OpCode
+\newcommand{\OpRange}[1]{\multicolumn{3}{c}{{\tt $|\longleftarrow$ #1 $\longrightarrow|$}} &}
+
+% writes hex opcode and number of bytes
+\newcommand{\Hex}[2]{{\tt #1} & {\tt #2} & &}
+
+% writes machine cycles and T states
+\newcommand{\Cycles}[2]{{\tt #1} & {\tt #2} & &}
+
+% writes a comment
+\newcommand{\Comment}[1]{\footnotesize #1}
+
+\newcommand{\SkipToSymbol}{\\ &}
+\newcommand{\FromSymbolToOpCode}{& \multicolumn{6}{l}{} &}
+
+% skips whole table up until the opcodes part. difference between the 2 is insertion of new line before; use StartWithOpCode variant for empty line, the other inside instruction block
+% note that compiler is not happy with StartWithOpCode without using something in front of \multiline hence given solution
+\newcommand{\SkipToOpCode}{\\ \multicolumn{9}{l}{} &}
+\newcommand{\StartWithOpCode}{& \multicolumn{8}{l}{} &}
+
 % writes an empty line with optional data in the last column
-\newcommand{\instrempty}[1]{
-	\multicolumn{17}{l}{} & #1 \\
-}
-
-% writes note title
-\newcommand{\instrnotetitle}{
-	\scriptsize
-	Notes:
-}
-
-% writes a note item
-\newcommand{\instrnoteitem}[1]{
-	\multicolumn{17}{l}{\scriptsize\parbox{12cm}{#1}}
-}
+% note again that we need to use some char before \multicolmn to keep compiler happy
+\newcommand{\Empty}[1]{& \multicolumn{16}{l}{} & \Comment{#1} \\}
 
 % writes a table break with vertical spacing so table starts at the same height as on previous page
-\newcommand{\instrtablelebreak}{
+\newcommand{\InstrTableBreak}{
 	(continued)
 	\pagebreak
 }
 
+%------------------------------------------------------------------------------
+%
+% NOTES TABLE DECLARATIONS
+%
+%------------------------------------------------------------------------------
+
+% defines table for notes; unfortunately I wasn't able to add notes to the same table created using above macros, so we need to use separate one. 
+% Note: you should embed both tables into minipage to keep them together; while we could create macro for that too, we'd lose ability to collapse in editor
+\environbodyname\NOTEBODY
+\NewEnviron{notestable}{
+	{
+		\scriptsize
+		\setlength{\fboxsep}{1pt}	% keep fboxes tight to keep notes vertically short
+		\renewcommand{\arraystretch}{1}
+		
+		\begin{tabularx}{\textwidth}{lX}
+			Notes:
+
+			\NOTEBODY
+
+			\hline
+
+		\end{tabularx}
+	}
+}
+
+% writes a note item
+\newcommand{\NoteItem}[1]{& #1 \\}
+
+
 \section{8-Bit Arithmetic and Logical}
 
-\instrtable{
-	\instrempty{
-		\multirow{9}{*}{
-			\begin{tabular}{ll}
-				r & Reg \\
-				\hline
-				000 & B \\
-				001 & C \\
-				010 & D \\
-				011 & E \\
-				100 & H \\
-				101 & L \\
-				111 & A \\
-			\end{tabular}
+\begin{minipage}{\textwidth}
+
+\begin{instrtable}
+
+	\begin{instruction}{ADD A,r}
+		\Symbol{A$\leftarrow$A+r}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\OpCode{10}{\fbox{000}}{r}
+			\Hex{..}{1}
+			\Cycles{1}{4}
+			\Comment{
+				\tt
+				\multirow{7}{*}{
+					\begin{tabular}{ll}
+						r & Reg \\
+						\hline
+						000 & B \\
+						001 & C \\
+						010 & D \\
+						011 & E \\
+						100 & H \\
+						101 & L \\
+						111 & A \\
+					\end{tabular}
+				}
+			}
+	\end{instruction}
+
+	\begin{instruction}{ADD A,p}
+		\Symbol{A$\leftarrow$A+p}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2} 
+			\Cycles{2}{8}
+		\SkipToOpCode
+			\OpCode{10}{\fbox{000}}{p}
+			\Hex{..}{}
+			\Cycles{}{}
+			\instrb
+	\end{instruction}
+
+	\begin{instruction}{ADD A,q} 
+		\Symbol{A$\leftarrow$A+q}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode
+			\OpCode{10}{\fbox{000}}{q}
+			\Hex{..}{}
+			\instrb
+	\end{instruction}
+
+	\begin{instruction}{ADD A,n}
+		\Symbol{A$\leftarrow$A+n}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\OpCode{11}{\fbox{000}}{110}
+			\Hex{C6}{2}
+			\Cycles{2}{7}
+		\SkipToOpCode
+			\OpRange{n}
+			\Hex{..}{}
+	\end{instruction}
+
+	\begin{instruction}{ADD A,(HL)}
+		\Symbol{A$\leftarrow$A+(HL)}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\OpCode{10}{\fbox{000}}{110}
+			\Hex{86}{1} 
+			\Hex{2}{7}
+			\Comment{
+				\multirow{8}{*}{
+					\tt
+					\begin{tabular}{ll}
+						p & Reg \\
+						\hline
+						000 & B \\
+						001 & C \\
+						010 & D \\
+						011 & E \\
+						100 & IXh \\
+						101 & IXl \\
+						111 & A \\
+					\end{tabular}
+				}
+			}
+	\end{instruction}
+
+	\begin{instruction}{ADD A,(IX+d)}
+		\Symbol{A$\leftarrow$A+(IX+d)}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{3}
+			\Cycles{5}{19}
+		\SkipToOpCode
+			\OpCode{10}{\fbox{000}}{110}
+			\Hex{68}{}
+		\SkipToOpCode
+			\OpRange{d}
+			\Hex{..}{}
+	\end{instruction}
+	
+	\begin{instruction}{ADD A,(IY+d)}
+		\Symbol{A$\leftarrow$A+(IY+d)}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{3}
+			\Cycles{5}{19}
+		\SkipToOpCode
+			\OpCode{10}{\fbox{000}}{110}
+			\Hex{68}{}
+		\SkipToOpCode
+			\OpRange{d}
+			\Hex{..}{}
+	\end{instruction}
+
+	\StartWithOpCode\OpCode{}{$\uparrow$}{}\\
+
+	\begin{instruction}{ADC A,s\See{2}}
+		\Symbol{A$\leftarrow$A+s+CF}
+		\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+		\OpCode{..}{\fbox{001}}{...} 
+		\Hex{}{}
+		\Cycles{}{}
+		\Comment{
+			\multirow{8}{*}{
+				\tt
+				\begin{tabular}{ll}
+					q & Reg \\
+					\hline
+					000 & B \\
+					001 & C \\
+					010 & D \\
+					011 & E \\
+					100 & IYh \\
+					101 & IYl \\
+					111 & A \\
+				\end{tabular}
+			}
 		}
-	}
+	\end{instruction}
 
-	ADD A,r\instrt & 
-		A$\leftarrow$A+r & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ &
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\updownarrow$ & 
-		10 & \fbox{000} & r & 
-		.. & 1 & 
-		1 & 4 & \instrb \\
+	\begin{instruction}{SUB s\See{2}}
+		\Symbol{A$\leftarrow$A-s}
+			\Flags{\FS}{\FS}{\FS}{VF}{1}{\FS}
+			\OpCode{..}{\fbox{010}}{...}
+	\end{instruction}
 
-	ADD A,p\instrt & 
-		A$\leftarrow$A+p & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\updownarrow$ & 
-		11 & 011 & 101 &
-		DD & 2 & 
-		2 & 8 \\
-	\multicolumn{10}{c}{} & 10 & \fbox{000} & p & .. & \instrb \\
+	\begin{instruction}{SBC A,s\See{2}}
+		\Symbol{A$\leftarrow$A-s-CF}
+			\Flags{\FS}{\FS}{\FS}{VF}{1}{\FS}
+			\OpCode{..}{\fbox{011}}{...}
+	\end{instruction}
 
-	ADD A,q\instrt & 
-		A$\leftarrow$A+q & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\updownarrow$ & 
-		11 & 111 & 101 &
-		FD & 2 & 
-		2 & 8 & \\
-	\multicolumn{10}{c}{} & 10 & \fbox{000} & q & .. & \instrb \\
+	\begin{instruction}{AND s\See{2}}
+		\Symbol{A$\leftarrow$A$\wedge$s}
+			\Flags{\FS}{\FS}{1}{PF}{0}{0}
+			\OpCode{..}{\fbox{100}}{...}
+	\end{instruction}
 
-	ADD A,n\instrt & 
-		A$\leftarrow$A+n & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\updownarrow$ &  
-		11 & \fbox{000} & 110 &
-		C6 & 2 & 
-		2 & 7 & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
+	\begin{instruction}{OR s\See{2}}	
+		\Symbol{A$\leftarrow$A$\vee$s}
+			\Flags{\FS}{\FS}{0}{PF}{0}{0}
+			\OpCode{..}{\fbox{110}}{...}
+	\end{instruction}
 
-	ADD A,(HL)\instrt & 
-		A$\leftarrow$A+(HL) & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\updownarrow$ & 
-		10 & \fbox{000} & 110 &
-		86 & 1 & 
-		2 & 7 & 
-		\multirow{8}{*}{
-			\begin{tabular}{ll}
-				p & Reg \\
-				\hline
-				000 & B \\
-				001 & C \\
-				010 & D \\
-				011 & E \\
-				100 & IXh \\
-				101 & IXl \\
-				111 & A \\
-			\end{tabular}
-		}\instrb \\
+	\begin{instruction}{XOR s\See{2}}
+		\Symbol{A$\leftarrow$A$\bullet$s}
+			\Flags{\FS}{\FS}{0}{PF}{0}{0}
+			\OpCode{..}{\fbox{101}}{...}
+	\end{instruction}
 
-	ADD A,(IX+d)\instrt & 
-		A$\leftarrow$A+(IX+d) & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\updownarrow$ & 
-		11 & 011 & 101 & 
-		DD & 3 & 
-		5 & 19 & \\
-	\multicolumn{10}{c}{} & 10 & \fbox{000} & 110 & 68 & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & \instrb \\
+	\begin{instruction}{CP s\See{1,2}}
+		\Symbol{A-s}
+			\Flags{\FS}{\FS}{\FS}{VF}{1}{\FS}
+			\OpCode{..}{\fbox{111}}{...}
+	\end{instruction}
 
-	ADD A,(IY+d)\instrt & 
-		A$\leftarrow$A+(IY+d) & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\updownarrow$ & 
-		11 & 111 & 101 & 
-		FD & 3 & 
-		5 & 19 & \\
-	\multicolumn{10}{c}{} & 10 & \fbox{000} & 110 & 68 \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & \instrb \\
+	\Empty{}
 
-	& & & & & & & & & & & $\uparrow$ & & & & & & \instrb \\
+	\begin{instruction}{INC r} 
+			\Symbol{r$\leftarrow$r+1}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\OpCode{00}{r}{\fbox{100}}
+			\Hex{..}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-	ADC A,s\instrt & 
-		A$\leftarrow$A+s+CF &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\updownarrow$ &
-		.. & \fbox{001} & ... & 
-		& & & &
-		\multirow{9}{*}{
-			\begin{tabular}{ll}
-				q & Reg \\
-				\hline
-				000 & B \\
-				001 & C \\
-				010 & D \\
-				011 & E \\
-				100 & IYh \\
-				101 & IYl \\
-				111 & A \\
-			\end{tabular}
-		}\instrb \\
+	\begin{instruction}{INC p}
+		\Symbol{p$\leftarrow$p+1}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode
+			\OpCode{00}{p}{\fbox{100}}
+			\Hex{..}{}
+	\end{instruction}
 
-	SUB s\instrt & 
-		A$\leftarrow$A-s &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			1 & 
-			$\updownarrow$ &
-		.. & \fbox{010} & ... & \instrb \\
+	\begin{instruction}{INC q}
+		\Symbol{q$\leftarrow$q+1}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Hex{2}{8}
+		\SkipToOpCode
+			\OpCode{00}{q}{\fbox{100}}
+			\Hex{..}{}
+	\end{instruction}
 
-	SBC A,s\instrt & 
-		A$\leftarrow$A-s-CF &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			1 & 
-			$\updownarrow$ &
-		.. & \fbox{011} & ... & \instrb \\
+	\begin{instruction}{INC (HL)}
+		\Symbol{(HL)$\leftarrow$(HL)+1}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\OpCode{00}{110}{\fbox{100}}
+			\Hex{34}{1}
+			\Cycles{3}{11}
+	\end{instruction}
 
-	AND s\instrt & 
-		A$\leftarrow$A$\wedge$s &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			1 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			0 &
-		.. & \fbox{100} & ... & \instrb \\
+	\begin{instruction}{INC (IX+d)}
+		\Symbol{(IX+d)$\leftarrow$}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{3}
+			\Cycles{6}{23}
+		\SkipToSymbol
+			\Symbol{~~(IX+d)+1}
+			\FromSymbolToOpCode
+			\OpCode{00}{110}{\fbox{100}}
+			\Hex{34}{}
+		\SkipToOpCode
+			\OpRange{d}
+	\end{instruction}
 
-	OR s\instrt & 
-		A$\leftarrow$A$\vee$s &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			0 &
-		.. & \fbox{110} & ... & \instrb \\
+	\begin{instruction}{INC (IY+d)}
+		\Symbol{(IY+d)$\leftarrow$}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{3}
+			\Cycles{6}{23}
+		\SkipToSymbol
+			\Symbol{~~(IY+d)+1}
+			\FromSymbolToOpCode
+			\OpCode{00}{110}{\fbox{100}}
+			\Hex{34}{}
+		\SkipToOpCode
+			\OpRange{d}
+	\end{instruction}
 
-	XOR s\instrt & 
-		A$\leftarrow$A$\bullet$s &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			0 &
-		.. & \fbox{101} & ... & \instrb \\
+	\StartWithOpCode\OpCode{}{}{$\uparrow$} \\
 
-	CP s\instrt & 
-		A-s &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$ & 
-			$\updownarrow$\footnotemark[1] & 
-			VF & 
-			1 & 
-			$\updownarrow$ &
-		.. & \fbox{111} & ... & \instrb \\
+	\begin{lastinstruction}{DEC m\See{3}}
+		\Symbol{m$\leftarrow$m-1}
+			\Flags{\FS}{\FS}{\FS}{VF}{1}{\FN}
+			\OpCode{..}{...}{\fbox{101}}
+	\end{lastinstruction}
 
-	\instrempty{}
-	\instrempty{}
+\end{instrtable}
+\begin{notestable}
+	\NoteItem{\See{1}YF and XF flags are copied from the operand {\tt s}, not the result {\tt A-s}}
 
-	INC r\instrt & 
-		r$\leftarrow$r+1 & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\bullet$ & 
-		00 & r & \fbox{100} & 
-		.. & 1 & 
-		1 & 4 & \instrb \\
+	\NoteItem{\See{2}{\tt s} is any of {\tt r}, {\tt p}, {\tt q}, {\tt n}, {\tt (HL)}, {\tt (IX+d)}, {\tt (IY+d)} as shown for {\tt ADD}. Replace \fbox{{\tt 000}} in the {\tt ADD} set above}
 
-	INC p\instrt & 
-		p$\leftarrow$p+1 & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 2 & 
-		2 & 8 & \\
-	\multicolumn{10}{c}{} & 00 & p & \fbox{100} & .. & \instrb \\
+	\NoteItem{\See{3}{\tt m} is any of {\tt r}, {\tt p}, {\tt q}, {\tt n}, {\tt (HL)}, {\tt (IX+d)}, {\tt (IY+d)} as shown for {\tt INC}. Replace \fbox{{\tt 100}} with \fbox{{\tt 101}} in opcode}
+\end{notestable}
 
-	INC q\instrt & 
-		q$\leftarrow$q+1 & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\bullet$ & 
-		11 & 111 & 101 & 
-		FD & 2 & 
-		2 & 8 & \\ 
-	\multicolumn{10}{c}{} & 00 & q & \fbox{100} & .. & \instrb \\
-
-	INC (HL)\instrt & 
-		(HL)$\leftarrow$(HL)+1 & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\bullet$ & 
-		00 & 110 & \fbox{100} & 
-		34 & 1 & 
-		3 & 11 & \instrb \\
-
-	INC (IX+d)\instrt & 
-		(IX+d)$\leftarrow$(IX+d)+1 & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 3 & 
-		6 & 23 & \\ 
-	\multicolumn{10}{c}{} & 00 & 110 & \fbox{100} & 34 & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & \instrb \\
-
-	INC (IY+d)\instrt & 
-		(IY+d)$\leftarrow$(IY+d)+1 & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\bullet$ & 
-		11 & 111 & 101 & 
-		FD & 3 & 
-		6 & 23 & \\ 
-	\multicolumn{10}{c}{} & 00 & 110 & \fbox{100} & 34 & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} &  \instrb \\
-
-	& & & & & & & & & & & & $\uparrow$ & & & & & \instrb \\
-
-	DEC m\instrt &
-		m$\leftarrow$m-1 & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			1 & 
-			$\bullet$ &
-		.. & ... & \fbox{101} &
-		.. & & 
-		& & \instrb \\
-
-	\hline
-
-	\instrnotetitle
-		& \instrnoteitem{\footnotemark[1]YF and XF flags are copied from the operand s, not the result A-s}\notet\noteb \\
-		& \instrnoteitem{s is any of r, p, q, n, (HL), (IX+d), (IY+d) as shown for ADD. The indicated bits replace the \fbox{000} in the ADD set above}\notet\noteb \\
-		& \instrnoteitem{m is any of r, p, q, (HL), (IX+d), (IY+d) as shown for INC. Replace \fbox{100} with \fbox{101} in opcode}\notet\noteb \\
-	
-	\hline
-}
-
-
-\section{8-Bit Load}
-
-\instrtable{
-	
-	\instrempty{
-		\multirow{10}{*}{
-			\begin{tabular}{ll}
-				r,r' & Reg \\
-				\hline
-				000 & B \\
-				001 & C \\
-				010 & D \\
-				011 & E \\
-				100 & H \\
-				101 & L \\
-				111 & A \\
-			\end{tabular}
-		}
-	}
-
-	LD r,r'\instrt & 
-		r$\leftarrow$r' & 
-		$\bullet$ & 
-			$\bullet$ &
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		01 & r & r' &
-		.. & 1 & 
-		1 & 4 & \instrb \\
-		
-	LD p,p'\instrt & 
-		p$\leftarrow$p' & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 2 & 
-		2 & 8 & \\
-	\multicolumn{10}{c}{} & 01 & p & p' & .. & & & \instrb \\
-
-	LD q,q'\instrt & 
-		q$\leftarrow$q' & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 111 & 101 & 
-		FD & 2 & 
-		2 & 8 & \\
-	\multicolumn{10}{c}{} & 01 & q & q' & .. & & & \instrb \\
-
-	LD r,n\instrt & 
-		r$\leftarrow$n & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & r & 110 & 
-		.. & 2 & 
-		2 & 7 & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$\longleftarrow $ n $\longrightarrow|$} & .. & & & \instrb \\
-
-	LD p,n\instrt& 
-		p$\leftarrow$n & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 3 & 
-		3 & 11 & \\
-	\multicolumn{10}{c}{} & 00 & p & 110 & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
-	
-	LD q,n\instrt &
-		q$\leftarrow$n & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 111 & 101 &
-		FD & 3 & 
-		3 & 11 & 
-		\multirow{8}{*}{
-			\begin{tabular}{ll}
-				p,p' & Reg \\
-				\hline
-				000 & B \\
-				001 & C \\
-				010 & D \\
-				011 & E \\
-				100 & IXh \\
-				101 & IXl \\
-				111 & A \\
-			\end{tabular}
-	}\\
-	\multicolumn{10}{c}{} & 00 & q & 110 & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & & \instrb \\
-
-	LD r,(HL)\instrt & 
-		r$\leftarrow$(HL) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		01 & r & 110 &
-		.. & 1 & 
-		2 & 7 & \instrb \\
-
-	LD r,(IX+d)\instrt & 
-		r$\leftarrow$(IX+d) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 3 & 
-		5 & 19 & \\
-	\multicolumn{10}{c}{} & 01 & r & 110 & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & & & \instrb \\
-
-	LD r,(IY+d)\instrt & 
-		r$\leftarrow$(IY+d) & 
-		$\bullet$ &
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 111 & 101 & 
-		FD & 3 & 
-		5 & 19 & \\
-	\multicolumn{10}{c}{} & 01 & r & 110 & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & & & \instrb \\
-
-	LD (HL),r \instrt& (HL)$\leftarrow$r & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		01 & 110 & r & 
-		.. & 1 & 
-		2 & 7 & \instrb \\
-
-	LD (IX+d),r\instrt & 
-		(IX+d)$\leftarrow$r & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 011 & 101 & 
-		DD & 3 & 
-		5 & 19 & 
-		\multirow{8}{*}{
-			\begin{tabular}{ll}
-				q,q' & Reg \\
-				\hline
-				000 & B \\
-				001 & C \\
-				010 & D \\
-				011 & E \\
-				100 & IYh \\
-				101 & IYl \\
-				111 & A \\
-			\end{tabular}
-		}\\
-	\multicolumn{10}{c}{} & 01 & 110 & r & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & & & \instrb \\
-
-	LD (IY+d),r\instrt &
-		(IY+d)$\leftarrow$r & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 111 & 101 & 
-		FD & 3 & 
-		5 & 19 & \\
-	\multicolumn{10}{c}{} & 01 & 110 & r & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & & & \instrb \\
-
-	LD (HL),n\instrt &
-		(HL)$\leftarrow$n & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & 110 & 110 & 
-		36 & 2 & 
-		3 & 10 & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
-
-	LD (IX+d),n\instrt & 
-		(IX+d)$\leftarrow$n & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 4 & 
-		5 & 19 & \\
-	\multicolumn{10}{c}{} & 00 & 110 & 110 &  36 & & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
-
-	LD (IY+d),n\instrt & 
-		(IY+d)$\leftarrow$n & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 111 & 101 & 
-		FD & 4 & 
-		5 & 19 & \\
-	\multicolumn{10}{c}{} & 00 & 110 & 110 & 36 & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
-
-	\hline
-}
-
-\instrtablelebreak
-\vspace*{1.8cm}
-
-\instrtable{
-
-	\instrempty{}
-
-	LD A,(BC)\instrt & 
-		A$\leftarrow$(BC) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & 001 & 010 & 
-		0A & 1 & 
-		2 & 7 & \instrb \\
-
-	LD A,(DE)\instrt & 
-		A$\leftarrow$(DE) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & 011 & 01 & 
-		1A & 1 & 
-		2 & 7 & \instrb \\
-
-	LD A,(nm)\instrt & 
-		A$\leftarrow$(nm) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & 111 & 010 & 
-		3A & 3 & 
-		4 & 13 & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
-	
-	LD (BC),A\instrt & 
-		(BC)$\leftarrow$A & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & 000 & 010 & 
-		02 & 1 & 
-		2 & 7 & \instrb \\
-
-	LD (DE),A\instrt & 
-		(DE)$\leftarrow$A & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & 010 & 010 & 
-		12 & 1 & 
-		2 & 7 & \instrb \\
-
-	LD (nn),A\instrt & 
-		(nn)$\leftarrow$A & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & 110 & 010 & 
-		32 & 3 & 
-		4 & 13 & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
-
-	LD A,I\instrt & 
-		A$\leftarrow$I & 
-		$\updownarrow$ & 
-			$\updownarrow$ &
-				$\updownarrow$ & 
-				0 & 
-				$\updownarrow$ & 
-				{\tiny FF2} & 
-				0 & 
-				$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 9 & \\ 
-	\multicolumn{10}{c}{} & 01 & 010 & 111 & 57 & & & & \instrb \\
-
-	LD A,R\instrt & 
-		A$\leftarrow$R & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			{\tiny IFF2} & 
-			0 & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 9 & \\ 
-	\multicolumn{10}{c}{} & 01 & 011 & 111 & 5F & & & & \instrb \\
-
-	LD I,A\instrt & 
-		I$\leftarrow$A & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 9 & \\ 
-	\multicolumn{10}{c}{} & 01 & 000 & 111 & 47 & & & & \instrb \\
-
-	LD R,A\instrt & 
-		R$\leftarrow$A & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 9 & \\ 
-	\multicolumn{10}{c}{} & 01 & 001 & 111 & 4F & & & & \instrb \\
-
-	\hline
-}
+\end{minipage}
 
 
 \section{16-Bit Arithmetic}
 
-\instrtable{
-	\instrempty{
-		\multirow{7}{*}{
-			\begin{tabular}{ll}
-				ss & Reg \\
-				\hline
-				00 & BC \\
-				01 & DE \\
-				10 & HL \\
-				11 & SP \\
-			\end{tabular}
-		}
-	}
+\begin{minipage}{\textwidth}
 
-	ADD HL,ss\instrt & 
-		HL$\leftarrow$HL+ss &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\bullet$ & 
-			0 & 
-			$\updownarrow$\footnotemark[1] & 
-		00 & ss1 & 001 & 
-		.. & 1 & 
-		3 & 11 & \instrb \\
+\begin{instrtable}
+	\begin{instruction}{ADD HL,ss} 
+		\Symbol{HL$\leftarrow$HL+ss}
+			\Flags{\FN}{\FN}{\FS\See{2}}{\FN}{0}{\FS\See{1}}
+			\OpCode{00}{ss1}{001}
+			\Hex{..}{1}
+			\Cycles{3}{11}
+			\Comment{
+				\tt
+				\multirow{4}{*}{
+					\begin{tabular}{ll}
+						ss & Reg \\
+						\hline
+						00 & BC \\
+						01 & DE \\
+						10 & HL \\
+						11 & SP \\
+					\end{tabular}
+				}
+			}
+	\end{instruction}
 
-	ADC HL,ss\instrt & 
-		HL$\leftarrow$HL+ss+CF &
-		$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			VF\footnotemark[1] & 
-			0 & 
-			$\updownarrow$\footnotemark[1] & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 15 & \\
-	\multicolumn{10}{c}{} & 01 & ss1 & 010 & .. & & \instrb \\
+	\begin{instruction}{ADC HL,ss} 
+		\Symbol{HL$\leftarrow$HL+ss+CF}
+			\Flags{\FS\See{1}}{\FS\See{1}}{\FS\See{2}}{VF\See{1}}{0}{\FS\See{1}}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{15}
+		\SkipToOpCode
+			\OpCode{01}{ss1}{010}
+			\Hex{..}{}
+	\end{instruction}
 
-	SBC HL,ss\instrt & 
-		HL$\leftarrow$HL-ss-CF &
-		$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			VF\footnotemark[1] & 
-			1 & 
-			$\updownarrow$\footnotemark[1] & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 15 & \\
-	\multicolumn{10}{c}{} & 01 & ss0 & 010 & .. & \instrb \\
+	\begin{instruction}{SBC HL,ss} 
+		\Symbol{HL$\leftarrow$HL-ss-CF}
+			\Flags{\FS\See{1}}{\FS\See{1}}{\FS\See{2}}{VF\See{1}}{1}{\FS\See{1}}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{15}
+		\SkipToOpCode
+			\OpCode{01}{ss0}{010}
+			\Hex{..}{}
+	\end{instruction}
 
-	ADD IX,pp\instrt & 
-		IX$\leftarrow$IX+pp &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\bullet$ & 
-			0 & 
-			$\updownarrow$\footnotemark[1] & 
-		11 & 011 & 110 & 
-		DD & 2 & 
-		4 & 15 & 
-		\multirow{5}{*}{
-			\begin{tabular}{ll}
-				pp & Reg \\
-				\hline
-				00 & BC \\
-				01 & DE \\
-				10 & IX \\
-				11 & SP \\
-			\end{tabular}
-		}\\
-	\multicolumn{10}{c}{} & 00 & pp1 & 001 & .. & \instrb \\
+	\begin{instruction}{ADD IX,pp} 
+		\Symbol{IX$\leftarrow$IX+pp}
+			\Flags{\FN}{\FN}{\FS\See{2}}{\FN}{0}{\FS\See{1}}
+			\OpCode{11}{011}{110}
+			\Hex{DD}{2}
+			\Cycles{4}{15}
+			\Comment{
+				\multirow{4}{*}{
+					\tt
+					\begin{tabular}{ll}
+						pp & Reg \\
+						\hline
+						00 & BC \\
+						01 & DE \\
+						10 & IX \\
+						11 & SP \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode
+			\OpCode{00}{pp1}{001}
+			\Hex{..}{}
+	\end{instruction}
 
-	ADD IY,qq\instrt & 
-		IY$\leftarrow$IY+qq &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\bullet$ & 
-			0 & 
-			$\updownarrow$\footnotemark[1] & 
-		11 & 111 & 110 & 
-		FD & 2 & 
-		4 & 15 & \\
-	\multicolumn{10}{c}{} & 00 & qq1 & 001 & .. & \instrb \\
+	\begin{instruction}{ADD IY,qq} 
+		\Symbol{IY$\leftarrow$IY+qq}
+			\Flags{\FN}{\FN}{\FS\See{2}}{\FN}{0}{\FS\See{1}}
+			\OpCode{11}{111}{110}
+			\Hex{FD}{2}
+			\Cycles{4}{15}
+		\SkipToOpCode
+			\OpCode{00}{qq1}{001}
+			\Hex{..}{}
+	\end{instruction}
 
-	INC ss\instrt & 
-		ss$\leftarrow$ss+1 &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		00 & ss0 & 011 & 
-		.. & 1 & 
-		1 & 6 & \instrb \\
+	\begin{instruction}{INC ss} 
+		\Symbol{ss$\leftarrow$ss+1}
+		\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+		\OpCode{00}{ss0}{011}
+		\Hex{..}{1}
+		\Cycles{1}{6}
+	\end{instruction}
 
-	INC IX\instrt & 
-		IX$\leftarrow$IX+1 &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 011 & 101 & 
-		DD & 2 & 
-		2 & 10 &
-		\multirow{5}{*}{
-			\begin{tabular}{ll}
-				qq & Reg \\
-				\hline
-				00 & BC \\
-				01 & DE \\
-				10 & IY \\
-				11 & SP \\
-			\end{tabular}
-		}\\
-	\multicolumn{10}{c}{} & 00 & 100 & 011 & 23 & \instrb \\
+	\begin{instruction}{INC IX} 
+		\Symbol{IX$\leftarrow$IX+1}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{2}{10}
+			\Comment{
+				\multirow{4}{*}{
+					\tt
+					\begin{tabular}{ll}
+						qq & Reg \\
+						\hline
+						00 & BC \\
+						01 & DE \\
+						10 & IY \\
+						11 & SP \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode
+			\OpCode{00}{100}{011}
+			\Hex{23}{}
+	\end{instruction}
 
-	INC IY\instrt & 
-		IY$\leftarrow$IY+1 &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 111 & 101 & 
-		FD & 2 & 
-		2 & 10 & \\
-	\multicolumn{10}{c}{} & 00 & 100 & 011 & 23 & \instrb \\
+	\begin{instruction}{INC IY} 
+		\Symbol{IY$\leftarrow$IY+1}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{2}{10}
+		\SkipToOpCode
+			\OpCode{00}{100}{011}
+			\Hex{23}{}
+	\end{instruction}
 
-	DEC ss\instrt & 
-		ss$\leftarrow$ss-1 &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		00 & ss1 & 011 & 
-		.. & 1 & 
-		1 & 6 & \instrb \\
+	\begin{instruction}{DEC ss} 
+		\Symbol{ss$\leftarrow$ss-1}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{ss1}{011}
+			\Hex{..}{1}
+			\Cycles{1}{6}
+	\end{instruction}
 
-	DEC IX\instrt & 
-		IX$\leftarrow$IX-1 &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 011 & 101 & 
-		DD & 2 & 
-		2 & 10 & \\
-	\multicolumn{10}{c}{} & 00 & 101 & 011 & 2B & \instrb \\
+	\begin{instruction}{DEC IX} 
+		\Symbol{IX$\leftarrow$IX-1}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{2}{10}
+		\SkipToOpCode
+			\OpCode{00}{101}{011}
+			\Hex{2B}{}
+	\end{instruction}
 
-	DEC IY\instrt & 
-		IY$\leftarrow$IY-1 &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 111 & 101 & 
-		FD & 2 & 
-		2 & 10 & \\
-	\multicolumn{10}{c}{} & 00 & 101 & 011 & 2B & \instrb \\
-	
-	\hline
+	\begin{lastinstruction}{DEC IY} 
+		\Symbol{IY$\leftarrow$IY-1}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{2}{10}
+		\SkipToOpCode
+			\OpCode{00}{101}{011}
+			\Hex{2B}{}
+	\end{lastinstruction}
 
-	\instrnotetitle
-		& \instrnoteitem{\footnotemark[1]Flag is affected by the 16 bit result.}\notet \\
-		& \instrnoteitem{\footnotemark[2]Flag is affected by the high-byte addition.}\noteb \\
+\end{instrtable}
+
+\begin{notestable}
+	\NoteItem{\See{1}Flag is affected by the 16 bit result.}
+	\NoteItem{\See{2}Flag is affected by the high-byte addition.}
+\end{notestable}
+
+\end{minipage}
+
+
+
+\section{8-Bit Load}
+
+\begin{instrtable}	
+	\begin{instruction}{LD r,r'}
+		\Symbol{r$\leftarrow$r'}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{01}{r}{r'}
+			\Hex{..}{1}
+			\Cycles{1}{4}
+			\Comment{
+				\tt
+				\multirow{7}{*}{
+					\begin{tabular}{ll}
+						r,r' & Reg \\
+						\hline
+						000 & B \\
+						001 & C \\
+						010 & D \\
+						011 & E \\
+						100 & H \\
+						101 & L \\
+						111 & A \\
+					\end{tabular}
+				}
+			}
+	\end{instruction}
+
+	\begin{instruction}{LD r,r'}
+		\Symbol{r$\leftarrow$r'}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{01}{r}{r'}
+			\Hex{..}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 		
-	\hline
-}
+	\begin{instruction}{LD p,p'}
+		\Symbol{p$\leftarrow$p'}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101} 
+			\Hex{DD}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode
+			\OpCode{01}{p}{p'}
+			\Hex{..}{}
+	\end{instruction}
+
+	\begin{instruction}{LD q,q'}
+		\Symbol{q$\leftarrow$q'}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2} 
+			\Cycles{2}{8}
+	\SkipToOpCode
+		\OpCode{01}{q}{q'}
+		\Hex{..}{}
+	\end{instruction}
+
+	\begin{instruction}{LD r,n}
+		\Symbol{r$\leftarrow$n}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{r}{110}
+			\Hex{..}{2} 
+			\Cycles{2}{7}
+		\SkipToOpCode
+			\OpRange{n}
+			\Hex{..}{}
+	\end{instruction}
+
+	\begin{instruction}{LD p,n}
+		\Symbol{p$\leftarrow$n}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{3} 
+			\Cycles{3}{11}
+		\SkipToOpCode
+			\OpCode{00}{p}{110}
+			\Hex{..}{}
+		\SkipToOpCode
+			\OpRange{n}
+			\Hex{..}{}
+	\end{instruction}
+	
+	\begin{instruction}{LD q,n}
+		\Symbol{q$\leftarrow$n} 
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{3}
+			\Cycles{3}{11}
+			\Comment{
+				\multirow{7}{*}{
+					\tt
+					\begin{tabular}{ll}
+						p,p' & Reg \\
+						\hline
+						000 & B \\
+						001 & C \\
+						010 & D \\
+						011 & E \\
+						100 & IXh \\
+						101 & IXl \\
+						111 & A \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode
+			\OpCode{00}{q}{110}
+			\Hex{..}{}
+		\SkipToOpCode
+			\OpRange{n}
+			\Hex{..}{}
+	\end{instruction}
+
+	\begin{instruction}{LD r,(HL)}
+		\Symbol{r$\leftarrow$(HL)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{01}{r}{110}
+			\Hex{..}{1}
+			\Cycles{2}{7}
+	\end{instruction}
+
+	\begin{instruction}{LD r,(IX+d)}
+		\Symbol{r$\leftarrow$(IX+d)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{3}
+			\Cycles{5}{19}
+		\SkipToOpCode
+			\OpCode{01}{r}{110}
+			\Hex{..}{}
+		\SkipToOpCode
+			\OpRange{d}
+			\Hex{..}{}
+	\end{instruction}
+
+	\begin{instruction}{LD r,(IY+d)}
+		\Symbol{r$\leftarrow$(IY+d)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{3}
+			\Cycles{5}{19}
+		\SkipToOpCode
+			\OpCode{01}{r}{110}
+			\Hex{..}{}
+		\SkipToOpCode
+			\OpRange{d}
+			\Hex{..}{}
+	\end{instruction}
+
+	\begin{instruction}{LD (HL),r}
+		\Symbol{(HL)$\leftarrow$r}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{01}{110}{r}
+			\Hex{..}{1} 
+			\Cycles{2}{7}
+	\end{instruction}
+
+	\begin{instruction}{LD (IX+d),r}
+		\Symbol{(IX+d)$\leftarrow$r}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{3}
+			\Cycles{5}{19}
+			\Comment{
+				\multirow{7}{*}{
+					\tt
+					\begin{tabular}{ll}
+						q,q' & Reg \\
+						\hline
+						000 & B \\
+						001 & C \\
+						010 & D \\
+						011 & E \\
+						100 & IYh \\
+						101 & IYl \\
+						111 & A \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode
+			\OpCode{01}{110}{r}
+			\Hex{..}{}
+		\SkipToOpCode
+			\OpRange{d}
+			\Hex{..}{}
+	\end{instruction}
+
+	\begin{instruction}{LD (IY+d),r}
+		\Symbol{(IY+d)$\leftarrow$r}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101} 
+			\Hex{FD}{3} 
+			\Cycles{5}{19}
+		\SkipToOpCode
+			\OpCode{01}{110}{r}
+			\Hex{..}{}
+		\SkipToOpCode
+			\OpRange{d}
+			\Hex{..}{}
+	\end{instruction}
+
+	\begin{instruction}{LD (HL),n}
+		\Symbol{(HL)$\leftarrow$n}
+		\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+		\OpCode{00}{110}{110}
+		\Hex{36}{2}
+		\Cycles{3}{10} \\
+	\SkipToOpCode
+		\OpRange{n}
+		\Hex{..}{}
+	\end{instruction}
+
+	\begin{instruction}{LD (IX+d),n} 
+		\Symbol{(IX+d)$\leftarrow$n}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{4}
+			\Cycles{5}{19}
+		\SkipToOpCode
+			\OpCode{00}{110}{110}
+			\Hex{36}{}
+		\SkipToOpCode
+			\OpRange{d}
+			\Hex{..}{}
+		\SkipToOpCode
+			\OpRange{n}
+			\Hex{..}{}
+	\end{instruction}
+
+	\begin{lastinstruction}{LD (IY+d),n} 
+		\Symbol{(IY+d)$\leftarrow$n}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{4}
+			\Cycles{5}{19}
+		\SkipToOpCode
+			\OpCode{00}{110}{110}
+			\Hex{36}{}
+		\SkipToOpCode
+			\OpRange{d}
+			\Hex{..}{}
+		\SkipToOpCode
+			\OpRange{n}
+			\Hex{..}{}
+	\end{lastinstruction}
+
+\end{instrtable}
+
+\InstrTableBreak
+\vspace*{0.4cm}
+
+\begin{instrtable}
+	\begin{instruction}{LD A,(BC)} 
+		\Symbol{A$\leftarrow$(BC)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{001}{010}
+			\Hex{0A}{1}
+			\Cycles{2}{7}
+	\end{instruction}
+
+	\begin{instruction}{LD A,(DE)} 
+		\Symbol{A$\leftarrow$(DE)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{011}{01}
+			\Hex{1A}{1}
+			\Cycles{2}{7}
+	\end{instruction}
+
+	\begin{instruction}{LD A,(nm)} 
+		\Symbol{A$\leftarrow$(nm)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{111}{010}
+			\Hex{3A}{3}
+			\Cycles{4}{13}
+		\SkipToOpCode
+			\OpRange{m}
+			\Hex{..}{}
+		\SkipToOpCode
+			\OpRange{n}
+			\Hex{..}{}
+	\end{instruction}
+	
+	\begin{instruction}{LD (BC),A} 
+		\Symbol{(BC)$\leftarrow$A}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{000}{010}
+			\Hex{02}{1}
+			\Cycles{2}{7}
+	\end{instruction}
+
+	\begin{instruction}{LD (DE),A} 
+		\Symbol{(DE)$\leftarrow$A}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{010}{010}
+			\Hex{12}{1}
+			\Cycles{2}{7}
+	\end{instruction}
+
+	\begin{instruction}{LD (nm),A} 
+		\Symbol{(nm)$\leftarrow$A}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{110}{010}
+			\Hex{32}{3}
+			\Cycles{4}{13}
+		\SkipToOpCode
+			\OpRange{m}
+			\Hex{..}{}
+		\SkipToOpCode
+			\OpRange{n}
+			\Hex{..}{}
+	\end{instruction}
+
+	\begin{instruction}{LD A,I} 
+		\Symbol{A$\leftarrow$I}
+			\Flags{\FS}{\FS}{0}{{\tiny FF2}}{0}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{9}
+		\SkipToOpCode
+			\OpCode{01}{010}{111}
+			\Hex{57}{}
+	\end{instruction}
+
+	\begin{instruction}{LD A,R} 
+		\Symbol{A$\leftarrow$R}
+			\Flags{\FS}{\FS}{0}{{\tiny IFF2}}{0}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{9}
+		\SkipToOpCode
+			\OpCode{01}{011}{111}
+			\Hex{5F}{}
+	\end{instruction}
+
+	\begin{instruction}{LD I,A} 
+		\Symbol{I$\leftarrow$A}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{9}
+		\SkipToOpCode
+			\OpCode{01}{000}{111}
+			\Hex{47}{}
+	\end{instruction}
+
+	\begin{lastinstruction}{LD R,A} 
+		\Symbol{R$\leftarrow$A}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{9}
+		\SkipToOpCode
+			\OpCode{01}{001}{111}
+			\Hex{4F}{}
+	\end{lastinstruction}
+
+\end{instrtable}
 
 
 \section{16-Bit Load}
 
-\instrtable{
-	\instrempty{
-		\multirow{7}{*}{
-			\begin{tabular}{ll}
-				dd & Reg \\
-				\hline
-				00 & BC \\
-				01 & DE \\
-				10 & HL \\
-				11 & SP \\
-			\end{tabular}
-		}
-	}
+\begin{instrtable}
 
-	LD dd,nm\instrt & 
-		dd$\leftarrow$nm & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & dd0 & 001 & 
-		.. & 3 & 
-		3 & 10 & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
+	\begin{instruction}{LD dd,nm} 
+		\Symbol{dd$\leftarrow$nm}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{dd0}{001} 
+			\Hex{..}{3} 
+			\Cycles{3}{10}
+			\Comment{
+				\tt
+				\multirow{4}{*}{
+					\begin{tabular}{ll}
+						dd & Reg \\
+						\hline
+						00 & BC \\
+						01 & DE \\
+						10 & HL \\
+						11 & SP \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-	LD IX,nm\instrt & 
-		IX$\leftarrow$nm & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 4 & 
-		4 & 14 & \\
-	\multicolumn{10}{c}{} & 00 & 100 & 001 & 21 & & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
+	\begin{instruction}{LD IX,nm} 
+		\Symbol{IX$\leftarrow$nm}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{4}
+			\Cycles{4}{14}
+		\SkipToOpCode 
+			\OpCode{00}{100}{001}
+			\Hex{21}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+	\end{instruction}
 
-	LD IY,nm\instrt & 
-		IX$\leftarrow$nm & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 111 & 101 
-		& FD & 4 & 
-		4 & 14 & \\
-	\multicolumn{10}{c}{} & 00 & 100 & 001 & 21 & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
+	\begin{instruction}{LD IY,nm} 
+		\Symbol{IX$\leftarrow$nm}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{4}
+			\Cycles{4}{14}
+		\SkipToOpCode 
+			\OpCode{00}{100}{001}
+			\Hex{21}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-	LD HL,(nm)\instrt & 
-		H$\leftarrow$(nm+1) &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & 101 & 010 & 
-		2A & 3 & 
-		5 & 16 & \\ 
-	& L$\leftarrow$(nm) & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
+	\begin{instruction}{LD HL,(nm)} 
+		\Symbol{H$\leftarrow$(nm+1)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{101}{010}
+			\Hex{2A}{3}
+			\Cycles{5}{16}
+		\SkipToSymbol
+			\Symbol{L$\leftarrow$(nm)}
+			\FromSymbolToOpCode
+			\OpRange{m}
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-	LD dd,(nm)\instrt & 
-		ddh$\leftarrow$(nm+1) &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 4 & 
-		6 & 20 & \\ 
-	& ddl$\leftarrow$(nm) & \multicolumn{8}{c}{} & 01 & dd1 & 011 & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
+	\begin{instruction}{LD dd,(nm)} 
+		\Symbol{ddh$\leftarrow$(nm+1)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{4}
+			\Cycles{6}{20}
+		\SkipToSymbol
+			\Symbol{ddl$\leftarrow$(nm)}
+			\FromSymbolToOpCode
+			\OpCode{01}{dd1}{011}
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-	LD IX,(nm)\instrt &
-		IXh$\leftarrow$(nm+1) &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 4 & 
-		6 & 20 & \\ 
-	& IXl$\leftarrow$(nm) & \multicolumn{8}{c}{} & 00 & 101 & 010 & 2A & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
+	\begin{instruction}{LD IX,(nm)}
+		\Symbol{IXh$\leftarrow$(nm+1)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{4}
+			\Cycles{6}{20}
+		\SkipToSymbol
+			\Symbol{IXl$\leftarrow$(nm)}
+			\FromSymbolToOpCode
+			\OpCode{00}{101}{010}
+			\Hex{2A}{}
+		\SkipToOpCode
+			\OpRange{m}
+			\Hex{..}{}
+		\SkipToOpCode
+			\OpRange{n}
+			\Hex{..}{}
+	\end{instruction}
 
-	LD IY,(nm)\instrt &
-		IYh$\leftarrow$(nm+1) &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 111 & 101 & 
-		FD & 4 & 
-		6 & 20 & \\ 
-	& IYl$\leftarrow$(nn) & \multicolumn{8}{c}{} & 00 & 101 & 010 & 2A & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
+	\begin{instruction}{LD IY,(nm)}
+		\Symbol{IYh$\leftarrow$(nm+1)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{4}
+			\Cycles{6}{20}
+		\SkipToSymbol
+			\Symbol{IYl$\leftarrow$(nn)}
+			\FromSymbolToOpCode
+			\OpCode{00}{101}{010}
+			\Hex{2A}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-	LD (nm),HL\instrt &
-		(nn+1)$\leftarrow$H &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & 100 & 010 & 
-		22 & 3 & 
-		5 & 16 & \\ 
-	& (nm)$\leftarrow$L & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
+	\begin{instruction}{LD (nm),HL}
+		\Symbol{(nn+1)$\leftarrow$H}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{100}{010}
+			\Hex{22}{3} 
+			\Cycles{5}{16}
+		\SkipToSymbol
+			\Symbol{(nm)$\leftarrow$L}
+			\FromSymbolToOpCode
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-	LD (nm),dd\instrt & 
-		(nm+1)$\leftarrow$ddh &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 4 & 
-		6 & 20 & \\ 
-	& (nm)$\leftarrow$ddl & \multicolumn{8}{c}{} & 01 & dd0 & 011 & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
+	\begin{instruction}{LD (nm),dd} 
+		\Symbol{(nm+1)$\leftarrow$ddh}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{4}
+			\Cycles{6}{20}
+		\SkipToSymbol
+			\Symbol{(nm)$\leftarrow$ddl}
+			\FromSymbolToOpCode
+			\OpCode{01}{dd0}{011}
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-	LD (nm),IX\instrt & 
-		(nm+1)$\leftarrow$IXh &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 4 & 
-		6 & 20 & \\ 
-	& (nm)$\leftarrow$IXl & \multicolumn{8}{c}{} & 00 & 100 & 010 & 22 & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
+	\begin{instruction}{LD (nm),IX} 
+		\Symbol{(nm+1)$\leftarrow$IXh}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{4}
+			\Cycles{6}{20}
+		\SkipToSymbol
+			\Symbol{(nm)$\leftarrow$IXl}
+			\FromSymbolToOpCode
+			\OpCode{00}{100}{010}
+			\Hex{22}{}
+		\SkipToOpCode 
+			\OpRange{m}
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n}
+			\Hex{..}{} 
+	\end{instruction}
 
-	LD (nm),IY\instrt & 
-		(nm+1)$\leftarrow$IYh &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 111 & 101 & 
-		FD & 4 & 
-		6 & 20 & \\ 
-	& (nm)$\leftarrow$IYl & \multicolumn{8}{c}{} & 00 & 100 & 010 & 22 & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & & & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & & & \instrb \\
+	\begin{instruction}{LD (nm),IY} 
+		\Symbol{(nm+1)$\leftarrow$IYh}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{4}
+			\Cycles{6}{20}
+		\SkipToSymbol
+			\Symbol{(nm)$\leftarrow$IYl}
+			\FromSymbolToOpCode
+			\OpCode{00}{100}{010}
+			\Hex{22}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-	LD SP,HL\instrt & 
-		SP$\leftarrow$HL & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 111 & 001 & 
-		F9 & 1 & 
-		1 & 6 & \instrb \\
+	\begin{instruction}{LD SP,HL} 
+		\Symbol{SP$\leftarrow$HL}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{001}
+			\Hex{F9}{1}
+			\Cycles{1}{6}
+	\end{instruction}
 
-	LD SP,IX\instrt & 
-		SP$\leftarrow$IX & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 2 & 
-		2 & 10 & \\ 
-	\multicolumn{10}{c}{} & 11 & 111 & 001 & F9 & & & \instrb \\
+	\begin{instruction}{LD SP,IX} 
+		\Symbol{SP$\leftarrow$IX}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{2}{10}
+		\SkipToOpCode 
+			\OpCode{11}{111}{001}
+			\Hex{F9}{}
+	\end{instruction}
 
-	LD SP,IY\instrt & 
-		SP$\leftarrow$IY & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 111 & 101 & 
-		FD & 2 & 
-		2 & 10 & \\ 
-	\multicolumn{10}{c}{} & 11 & 111 & 001 & F9 & & & \instrb \\
+	\begin{lastinstruction}{LD SP,IY} 
+		\Symbol{SP$\leftarrow$IY}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{2}{10}
+		\SkipToOpCode 
+			\OpCode{11}{111}{001}
+			\Hex{F9}{}
+	\end{lastinstruction}
 
-	\hline
-}
+\end{instrtable}
 
 
 \section{Bit Set, Reset and Test}
 
-\instrtable{
-	\instrempty{
-		\multirow{11}{*}{
-			\begin{tabular}{ll}
-				r & Reg \\
-				\hline
-				000 & B \\
-				001 & C \\
-				010 & D \\
-				011 & E \\
-				100 & H \\
-				101 & L \\
-				111 & A \\
-			\end{tabular}
-		}
-	}
+\begin{minipage}{\textwidth}
 
-	BIT b,r\instrt & 
-		ZF$\leftarrow\mathtt{\overline{r_b}}$ &
-		$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$ & 
-			$\updownarrow$\footnotemark[1] & 
-			1 & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			0 & 
-			$\bullet$ & 
-		11 & 001 & 011 & 
-		CB & 2 & 
-		2 & 8 & \\
-	\multicolumn{10}{c}{} & 01 & b & r & .. & \instrb \\
+\begin{instrtable}
 
-	BIT b,(HL)\instrt & 
-		\mbox{ZF$\leftarrow\mathtt{\overline{(HL)_b}}$} &
-		$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$ & 
-			$\updownarrow$\footnotemark[1] & 
-			1 & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			0 & 
-			$\bullet$ & 
-		11 & 001 & 011 & 
-		CB & 2 & 
-		3 & 12 & \\ 
-	\multicolumn{10}{c}{} & 01 & b & 110 & .. & \instrb \\
+	\begin{instruction}{BIT b,r} 
+		\Symbol{ZF$\leftarrow\mathtt{\overline{r_b}}$}
+			\Flags{\FS\See{1}}{\FS}{1}{\FS\See{1}}{0}{\FN}
+			\OpCode{11}{001}{011}
+			\Hex{CB}{2}
+			\Cycles{2}{8}
+			\Comment{
+				\multirow{6}{*}{
+					\tt
+					\begin{tabular}{ll}
+						r & Reg \\
+						\hline
+						000 & B \\
+						001 & C \\
+						010 & D \\
+						011 & E \\
+						100 & H \\
+						101 & L \\
+						111 & A \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode 
+			\OpCode{01}{b}{r}
+			\Hex{..}{}
+	\end{instruction}
 
-	BIT b,(IX+d)\footnotemark[2]\instrt & 
-		ZF$\leftarrow\mathtt{\overline{(IX+d)_b}}$ &
-		$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$ & 
-			$\updownarrow$\footnotemark[1] & 
-			1 & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			0 & 
-			$\bullet$ &
-		11 & 011 & 101 & 
-		DD & 4 & 
-		5 & 20 & \\ 
-	\multicolumn{10}{c}{} & 11 & 001 & 011 & CB & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. \\
-	\multicolumn{10}{c}{} & 01 & b  & 110 & .. & \instrb \\
+	\begin{instruction}{BIT b,(HL)} 
+		\Symbol{\mbox{ZF$\leftarrow\mathtt{\overline{(HL)_b}}$}}
+			\Flags{\FS\See{1}}{\FS}{1}{\FS\See{1}}{0}{\FN}
+			\OpCode{11}{001}{011}
+			\Hex{CB}{2}
+			\Cycles{3}{12}
+		\SkipToOpCode 
+			\OpCode{01}{b}{110}
+			\Hex{..}{}
+	\end{instruction}
 
-	BIT b,(IY+d)\footnotemark[2]\instrt & 
-		ZF$\leftarrow\mathtt{\overline{(IY+d)_b}}$ &
-		$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$ & 
-			$\updownarrow$\footnotemark[1] & 
-			1 & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			0 & 
-			$\bullet$ & 
-		11 & 111 & 101 & 
-		FD & 4 & 
-		5 & 20 & \\ 
-	\multicolumn{10}{c}{} & 11 & 001 & 011 & CB & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & \\
-	\multicolumn{10}{c}{} & 01 & b & 110 & .. & \instrb \\
+	\begin{instruction}{BIT b,(IX+d)\See{2}} 
+		\Symbol{ZF$\leftarrow\mathtt{\overline{(IX+d)_b}}$}
+			\Flags{\FS\See{1}}{\FS}{1}{\FS\See{1}}{0}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{4}
+			\Cycles{5}{20}
+		\SkipToOpCode 
+			\OpCode{11}{001}{011}
+			\Hex{CB}{}
+		\SkipToOpCode
+			\OpRange{d}
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpCode{01}{b}{110}
+			\Hex{..}{}
+	\end{instruction}
 
-	SET b,r\instrt & 
-		$\mathtt{r_b}\leftarrow$1 &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 001 & 011 & 
-		CB & 2 & 
-		2 & 8 & 
-		\multirow{7}{*}{
-			\begin{tabular}{ll}
-				b & Bit \\
-				\hline
-				000 & 0 \\
-				001 & 1 \\
-				010 & 2 \\
-				011 & 3 \\
-				100 & 4 \\
-				101 & 5 \\
-				110 & 6 \\
-				111 & 7 \\
-			\end{tabular}
-		}\\
-	\multicolumn{10}{c}{} & \fbox{11} & b & r & .. & \instrb \\
+	\begin{instruction}{BIT b,(IY+d)\See{2}} 
+		\Symbol{ZF$\leftarrow\mathtt{\overline{(IY+d)_b}}$}
+			\Flags{\FS\See{1}}{\FS}{1}{\FS\See{1}}{0}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{4}
+			\Cycles{5}{20}
+		\SkipToOpCode 
+			\OpCode{11}{001}{011}
+			\Hex{CB}{}
+		\SkipToOpCode 
+			\OpRange{d} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpCode{01}{b}{110}
+			\Hex{..}{}
+	\end{instruction}
 
-	SET b,(HL)\instrt & 
-		$\mathtt{(HL)_b}\leftarrow$1 &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 001 & 011 & 
-		CB & 2 & 
-		4 & 15 & \\ 
-	\multicolumn{10}{c}{} & \fbox{11} & b & 110 & .. & \instrb \\
+	\begin{instruction}{SET b,r} 
+		\Symbol{$\mathtt{r_b}\leftarrow$1}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{001}{011}
+			\Hex{CB}{2}
+			\Cycles{2}{8}
+			\Comment{
+				\multirow{7}{*}{
+					\tt
+					\begin{tabular}{ll}
+						b & Bit \\
+						\hline
+						000 & 0 \\
+						001 & 1 \\
+						010 & 2 \\
+						011 & 3 \\
+						100 & 4 \\
+						101 & 5 \\
+						110 & 6 \\
+						111 & 7 \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode 
+			\OpCode{\fbox{11}}{b}{r}
+			\Hex{..}{}
+	\end{instruction}
 
-	SET b,(IX+d)\instrt & 
-		$\mathtt{(IX+d)_b}\leftarrow$1 &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 4 & 
-		6 & 23 & \\ 
-	\multicolumn{10}{c}{} & 11 & 001 & 011 & CB & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & \\
-	\multicolumn{10}{c}{} & \fbox{11} & b & 110 & .. & \instrb \\
+	\begin{instruction}{SET b,(HL)} 
+		\Symbol{$\mathtt{(HL)_b}\leftarrow$1}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{001}{011}
+			\Hex{CB}{2}
+			\Cycles{4}{15}
+		\SkipToOpCode 
+			\OpCode{\fbox{11}}{b}{110}
+			\Hex{..}{}
+	\end{instruction}
 
-	SET b,(IY+d)\instrt & 
-		$\mathtt{(IY+d)_b}\leftarrow$1 &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 111 & 101 & 
-		FD & 4 & 
-		6 & 23 & \\ 
-	\multicolumn{10}{c}{} & 11 & 001 & 011 & CB & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & \\
-	\multicolumn{10}{c}{} & \fbox{11} & b & 110 & .. & \instrb \\
+	\begin{instruction}{SET b,(IX+d)} 
+		\Symbol{$\mathtt{(IX+d)_b}\leftarrow$1}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{4}
+			\Cycles{6}{23}
+		\SkipToOpCode 
+			\OpCode{11}{001}{011}
+			\Hex{CB}{}
+		\SkipToOpCode 
+			\OpRange{d} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpCode{\fbox{11}}{b}{110}
+			\Hex{..}{}
+	\end{instruction}
 
-	SET b,(IX+d),r\instrt & 
-		r$\leftarrow$(IX+d) &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 4 & 
-		6 & 23 & \\ 
-	& $\mathtt{r_b}\leftarrow$1 & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & \\
-	& (IX+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & \\
-	\multicolumn{10}{c}{} & \fbox{11} & b & r & .. & \instrb \\
+	\begin{instruction}{SET b,(IY+d)} 
+		\Symbol{$\mathtt{(IY+d)_b}\leftarrow$1}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{4}
+			\Cycles{6}{23}
+		\SkipToOpCode 
+			\OpCode{11}{001}{011}
+			\Hex{CB}{}
+		\SkipToOpCode 
+			\OpRange{d} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpCode{\fbox{11}}{b}{110}
+			\Hex{..}{}
+	\end{instruction}
 
-	SET b,(IY+d),r\instrt & 
-		r$\leftarrow$(IY+d) &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 111 & 101 & 
-		FD & 4 & 
-		6 & 23 & \\ 
-	& $\mathtt{r_b}\leftarrow$1 & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & \\
-	& (IY+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & \\
-	\multicolumn{10}{c}{} & \fbox{11} & b & r & .. & \instrb \\
+	\begin{instruction}{SET b,(IX+d),r} 
+		\Symbol{r$\leftarrow$(IX+d)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{4}
+			\Cycles{6}{23}
+		\SkipToSymbol
+			\Symbol{$\mathtt{r_b}\leftarrow$1}
+			\FromSymbolToOpCode
+			\OpCode{11}{001}{011}
+			\Hex{CB}{}
+		\SkipToSymbol
+			\Symbol{(IX+d)$\leftarrow$r}
+			\FromSymbolToOpCode
+			\OpRange{d} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpCode{\fbox{11}}{b}{r}
+			\Hex{..}{}
+	\end{instruction}
 
-	& & & & & & & & & & $\uparrow$ & & & & & & & \\
+	\begin{instruction}{SET b,(IY+d),r} 
+		\Symbol{r$\leftarrow$(IY+d)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{4}
+			\Cycles{6}{23}
+		\SkipToSymbol 
+			\Symbol{$\mathtt{r_b}\leftarrow$1}
+			\FromSymbolToOpCode
+			\OpCode{11}{001}{011}
+			\Hex{CB}{}
+		\SkipToSymbol
+			\Symbol{(IY+d)$\leftarrow$r}
+			\FromSymbolToOpCode
+			\OpRange{d} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpCode{\fbox{11}}{b}{r}
+			\Hex{..}{}
+	\end{instruction}
 
-	RES b,m\instrt & 
-		$\mathtt{m_b}\leftarrow$0 &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			\fbox{10} & ... & ... & \instrb \\ 
-		
-	\hline
+	\StartWithOpCode\OpCode{$\uparrow$}{}{} \\
 
-	\instrnotetitle
-		& \instrnoteitem{\footnotemark[1]See section \ref{bit_flags} for a complete description.}\notet\noteb \\
-		& \instrnoteitem{\footnotemark[2]Instruction has other undocumented opcodes.}\noteb \\
-		& \instrnoteitem{m is one of r, (HL), (IX+d), (IY+d). To form RES instruction, replace \fbox{11} with \fbox{10}.}\noteb \\ 
+	\begin{lastinstruction}{RES b,m\See{3}} 
+		\Symbol{$\mathtt{m_b}\leftarrow$0}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{\fbox{10}}{...}{...}
+	\end{lastinstruction} 
 						
-	\hline
-}
+\end{instrtable}
+
+\begin{notestable}
+	\NoteItem{\See{1}See section \ref{bit_flags} for a complete description.\noteb}
+	\NoteItem{\See{2}Instruction has other undocumented opcodes.\noteb}
+	\NoteItem{\See{3}{\tt m} is one of {\tt r}, {\tt (HL)}, {\tt (IX+d)}, {\tt (IY+d)}. To form RES instruction, replace \fbox{{\tt 11}} with \fbox{{\tt 10}}.}
+\end{notestable}
+
+\end{minipage}
+
 
 
 \section{Rotate and Shift}
 
-\instrtable{
-	\instrempty{
-		\multirow{11}{*}{
-			\begin{tabular}{ll}
-				r & Reg \\
-				\hline
-				000 & B \\
-				001 & C \\
-				010 & D \\
-				011 & E \\
-				100 & H \\
-				101 & L \\
-				111 & A \\
-			\end{tabular}
-		}
-	}
+\begin{minipage}{\textwidth}
+	
+\begin{instrtable}
 
-	RLCA & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,5)
-			\put(0,0){\framebox(4,3){CF}}
-			\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-			\put(8,1.5){\vector(-1,0){4}}
-			\put(6,1.5){\line(0,1){2.5}}
-			\put(6,4){\line(1,0){11}}
-			\put(17,4){\line(0,-1){2.5}}
-			\put(17,1.5){\vector(-1,0){2}}
-		\end{picture} &
-		$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 
-		00 & 000 & 111 & 
-		07 & 1 & 
-		1 & 4 & \instrb \\
+	\begin{instruction}{RLCA}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,5)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(8,1.5){\vector(-1,0){4}}
+				\put(6,1.5){\line(0,1){2.5}}
+				\put(6,4){\line(1,0){11}}
+				\put(17,4){\line(0,-1){2.5}}
+				\put(17,1.5){\vector(-1,0){2}}
+			\end{picture}}
+			\Flags{\FN}{\FN}{0}{\FN}{0}{\FS}
+			\OpCode{00}{000}{111}
+			\Hex{07}{1}
+			\Cycles{1}{4}
+			\Comment{
+				\multirow{7}{*}{
+					\tt
+					\begin{tabular}{ll}
+						r & Reg \\
+						\hline
+						000 & B \\
+						001 & C \\
+						010 & D \\
+						011 & E \\
+						100 & H \\
+						101 & L \\
+						111 & A \\
+					\end{tabular}
+				}
+			}
+	\end{instruction}
 
-	RLA & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,4)
-			\put(2,0){\framebox(4,3){CF}}
-			\put(9,0){\framebox(7,3){7$\leftarrow$0}}
-			\put(9,1.5){\vector(-1,0){3}}
-			\put(2,1.5){\line(-1,0){2}}
-			\put(0,1.5){\line(0,1){2.5}}
-			\put(0,4){\line(1,0){17.5}}
-			\put(17.5,4){\line(0,-1){2.5}}
-			\put(17.5,1.5){\vector(-1,0){1.5}}
-		\end{picture} &
-		$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 
-		00 & 010 & 111 & 
-		17 & 1 & 
-		1 & 4 & \instrb \\
+	\begin{instruction}{RLA}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(2,0){\framebox(4,3){CF}}
+				\put(9,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(9,1.5){\vector(-1,0){3}}
+				\put(2,1.5){\line(-1,0){2}}
+				\put(0,1.5){\line(0,1){2.5}}
+				\put(0,4){\line(1,0){17.5}}
+				\put(17.5,4){\line(0,-1){2.5}}
+				\put(17.5,1.5){\vector(-1,0){1.5}}
+			\end{picture}}
+			\Flags{\FN}{\FN}{0}{\FN}{0}{\FS}
+			\OpCode{00}{010}{111}
+			\Hex{17}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-	RRCA & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,4)
-			\put(13,0){\framebox(4,3){CF}}
-			\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-			\put(0,1.5){\vector(1,0){2}}
-			\put(9,1.5){\vector(1,0){4}}
-			\put(0,1.5){\line(0,1){2.5}}
-			\put(0,4){\line(1,0){11}}
-			\put(11,4){\line(0,-1){2.5}}
-		\end{picture} &
-		$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 
-		00 & 001 & 111 & 
-		0F & 1 & 
-		1 & 4 & \instrb \\
+	\begin{instruction}{RRCA}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(13,0){\framebox(4,3){CF}}
+				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(0,1.5){\vector(1,0){2}}
+				\put(9,1.5){\vector(1,0){4}}
+				\put(0,1.5){\line(0,1){2.5}}
+				\put(0,4){\line(1,0){11}}
+				\put(11,4){\line(0,-1){2.5}}
+			\end{picture}}
+			\Flags{\FN}{\FN}{0}{\FN}{0l}{\FS}
+			\OpCode{00}{001}{111}
+			\Hex{0F}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-	RRA & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,4)
-			\put(12,0){\framebox(4,3){CF}}
-			\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-			\put(0,1.5){\vector(1,0){2}}
-			\put(9,1.5){\vector(1,0){3}}
-			\put(0,1.5){\line(0,1){2.5}}
-			\put(0,4){\line(1,0){17.5}}
-			\put(17.5,4){\line(0,-1){2.5}}
-			\put(16,1.5){\line(1,0){1.5}}
-		\end{picture} &
-		$\bullet$ & $\bullet$ & $\updownarrow$ & 0 & $\updownarrow$ & $\bullet$ & 0 & $\updownarrow$ & 
-		00 & 011 & 111 & 
-		1F & 1 & 
-		1 & 4 & \instrb \\
+	\begin{instruction}{RRA}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(12,0){\framebox(4,3){CF}}
+				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(0,1.5){\vector(1,0){2}}
+				\put(9,1.5){\vector(1,0){3}}
+				\put(0,1.5){\line(0,1){2.5}}
+				\put(0,4){\line(1,0){17.5}}
+				\put(17.5,4){\line(0,-1){2.5}}
+				\put(16,1.5){\line(1,0){1.5}}
+			\end{picture}}
+			\Flags{\FN}{\FN}{0}{\FN}{0}{\FS}
+			\OpCode{00}{011}{111}
+			\Hex{1F}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-	RLC r & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,5)
-			\put(0,0){\framebox(4,3){CF}}
-			\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-			\put(8,1.5){\vector(-1,0){4}}
-			\put(6,1.5){\line(0,1){2.5}}
-			\put(6,4){\line(1,0){11}}
-			\put(17,4){\line(0,-1){2.5}}
-			\put(17,1.5){\vector(-1,0){2}}
-		\end{picture} &
-		$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
-		11 & 001 & 011 & 
-		CB & 2 & 
-		2 & 8 & \\
-	\multicolumn{10}{c}{} & 00 & \fbox{000} & r & .. & \instrb \\
+	\begin{instruction}{RLC r}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,5)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(8,1.5){\vector(-1,0){4}}
+				\put(6,1.5){\line(0,1){2.5}}
+				\put(6,4){\line(1,0){11}}
+				\put(17,4){\line(0,-1){2.5}}
+				\put(17,1.5){\vector(-1,0){2}}
+			\end{picture}}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\OpCode{11}{001}{011}
+			\Hex{CB}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{00}{\fbox{000}}{r}
+			\Hex{..}{}
+	\end{instruction}
 
-	RLC (HL) & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,5)
-			\put(0,0){\framebox(4,3){CF}}
-			\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-			\put(8,1.5){\vector(-1,0){4}}
-			\put(6,1.5){\line(0,1){2.5}}
-			\put(6,4){\line(1,0){11}}
-			\put(17,4){\line(0,-1){2.5}}
-			\put(17,1.5){\vector(-1,0){2}}
-		\end{picture} &
-		$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
-		11 & 001 & 011 & 
-		CB & 2 & 
-		4 & 15 & \\ 
-	\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & 06 & \instrb \\
+	\begin{instruction}{RLC (HL)}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,5)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(8,1.5){\vector(-1,0){4}}
+				\put(6,1.5){\line(0,1){2.5}}
+				\put(6,4){\line(1,0){11}}
+				\put(17,4){\line(0,-1){2.5}}
+				\put(17,1.5){\vector(-1,0){2}}
+			\end{picture}}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\OpCode{11}{001}{011}
+			\Hex{CB}{2}
+			\Cycles{4}{15}
+		\SkipToOpCode 
+			\OpCode{00}{\fbox{000}}{110}
+			\Hex{06}{}
+	\end{instruction}
 
-	RLC (IX+d) & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,5)
-			\put(0,0){\framebox(4,3){CF}}
-			\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-			\put(8,1.5){\vector(-1,0){4}}
-			\put(6,1.5){\line(0,1){2.5}}
-			\put(6,4){\line(1,0){11}}
-			\put(17,4){\line(0,-1){2.5}}
-			\put(17,1.5){\vector(-1,0){2}}
-		\end{picture} &
-		$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
-		11 & 011 & 101 & 
-		DD & 4 & 
-		6 & 23 & \\ 
-	\multicolumn{10}{c}{} & 11 & 001 & 011 & CB & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & \\
-	\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & 06 & \instrb \\
+	\begin{instruction}{RLC (IX+d)}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,5)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(8,1.5){\vector(-1,0){4}}
+				\put(6,1.5){\line(0,1){2.5}}
+				\put(6,4){\line(1,0){11}}
+				\put(17,4){\line(0,-1){2.5}}
+				\put(17,1.5){\vector(-1,0){2}}
+			\end{picture}}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{4}
+			\Cycles{6}{23}
+		\SkipToOpCode 
+			\OpCode{11}{001}{011}
+			\Hex{CB}{}
+		\SkipToOpCode 
+			\OpRange{d} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpCode{00}{\fbox{000}}{110}
+			\Hex{06}{}
+	\end{instruction}
 
-	RLC (IY+d) & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,5)
-			\put(0,0){\framebox(4,3){CF}}
-			\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-			\put(8,1.5){\vector(-1,0){4}}
-			\put(6,1.5){\line(0,1){2.5}}
-			\put(6,4){\line(1,0){11}}
-			\put(17,4){\line(0,-1){2.5}}
-			\put(17,1.5){\vector(-1,0){2}}
-		\end{picture} &
-		$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ &
-		11 & 111 & 101 & 
-		FD & 4 & 
-		6 & 23 & \\ 
-	\multicolumn{10}{c}{} & 11 & 001 & 011 & CB & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & \\
-	\multicolumn{10}{c}{} & 00 & \fbox{000} & 110 & 06 & \instrb \\
+	\begin{instruction}{RLC (IY+d)}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,5)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(8,1.5){\vector(-1,0){4}}
+				\put(6,1.5){\line(0,1){2.5}}
+				\put(6,4){\line(1,0){11}}
+				\put(17,4){\line(0,-1){2.5}}
+				\put(17,1.5){\vector(-1,0){2}}
+			\end{picture}}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{4}
+			\Cycles{6}{23}
+		\SkipToOpCode 
+			\OpCode{11}{001}{011}
+			\Hex{CB}{}
+		\SkipToOpCode 
+			\OpRange{d} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpCode{00}{\fbox{000}}{110}
+			\Hex{06}{}
+	\end{instruction}
 
-	RLC r,(IX+d) & r$\leftarrow$(IX+d) &
-		$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
-		11 & 011 & 101 & 
-		DD & 4 & 
-		6 & 23 & \\ 
-		& RLC r & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & \\
-		& (IX+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & \\
-		\multicolumn{10}{c}{} & 00 & \fbox{000} & r & .. & \instrb \\
+	\begin{instruction}{RLC r,(IX+d)}
+		\Symbol{r$\leftarrow$(IX+d)}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{4}
+			\Cycles{6}{23}
+		\SkipToSymbol
+			\Symbol{RLC r}
+			\FromSymbolToOpCode
+			\OpCode{11}{001}{011}
+			\Hex{CB}{}
+		\SkipToSymbol
+			\Symbol{(IX+d)$\leftarrow$r}
+			\FromSymbolToOpCode
+			\OpRange{d} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpCode{00}{\fbox{000}}{r}
+			\Hex{..}{}
+	\end{instruction}
 
-	RLC r,(IY+d) & r$\leftarrow$(IY+d) &
-		$\updownarrow$ & $\updownarrow$ & $\updownarrow$ & 0 & $\updownarrow$ & PF & 0 & $\updownarrow$ & 
-		11 & 111 & 101 & 
-		FD & 4 & 
-		6 & 23 & \\ 
-		& RLC r & \multicolumn{8}{c}{} & 11 & 001 & 011 & CB & & \\
-		& (IY+d)$\leftarrow$r & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ d $\longrightarrow|$} & .. & \\
-		& & \multicolumn{8}{c}{} & 00 & \fbox{000} & r & .. & \instrb \\
+	\begin{instruction}{RLC r,(IY+d)}
+		\Symbol{r$\leftarrow$(IY+d)}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{4}
+			\Cycles{6}{23}
+		\SkipToSymbol
+			\Symbol{RLC r}
+			\FromSymbolToOpCode
+			\OpCode{11}{001}{011}
+			\Hex{CB}{}
+		\SkipToSymbol
+			\Symbol{(IY+d)$\leftarrow$r}
+			\FromSymbolToOpCode
+			\OpRange{d} 
+			\Hex{..}{}
+		\SkipToOpCode
+			\OpCode{00}{\fbox{000}}{r}
+			\Hex{..}{}
+	\end{instruction}
 
-	& & & & & & & & & & & $\uparrow$ & & & & & & \\
+	\StartWithOpCode\OpCode{}{$\uparrow$}{} \\
 
-	RL m\instrt & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,4)
-			\put(2,0){\framebox(4,3){CF}}
-			\put(9,0){\framebox(7,3){7$\leftarrow$0}}
-			\put(9,1.5){\vector(-1,0){3}}
-			\put(2,1.5){\line(-1,0){2}}
-			\put(0,1.5){\line(0,1){2.5}}
-			\put(0,4){\line(1,0){17.5}}
-			\put(17.5,4){\line(0,-1){2.5}}
-			\put(17.5,1.5){\vector(-1,0){1.5}}
-		\end{picture} &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			$\updownarrow$ & 
-		.. &\fbox{010} & ... & \instrb \\
+	\begin{instruction}{RL m\See{1}}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(2,0){\framebox(4,3){CF}}
+				\put(9,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(9,1.5){\vector(-1,0){3}}
+				\put(2,1.5){\line(-1,0){2}}
+				\put(0,1.5){\line(0,1){2.5}}
+				\put(0,4){\line(1,0){17.5}}
+				\put(17.5,4){\line(0,-1){2.5}}
+				\put(17.5,1.5){\vector(-1,0){1.5}}
+			\end{picture}}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\OpCode{..}{\fbox{010}}{...}
+	\end{instruction}
 
-	RRC m\instrt & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,4)
-			\put(13,0){\framebox(4,3){CF}}
-			\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-			\put(0,1.5){\vector(1,0){2}}
-			\put(9,1.5){\vector(1,0){4}}
-			\put(0,1.5){\line(0,1){2.5}}
-			\put(0,4){\line(1,0){11}}
-			\put(11,4){\line(0,-1){2.5}}
-		\end{picture} &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			$\updownarrow$ & 
-		.. &\fbox{001} & ... & \instrb \\
+	\begin{instruction}{RRC m\See{1}}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(13,0){\framebox(4,3){CF}}
+				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(0,1.5){\vector(1,0){2}}
+				\put(9,1.5){\vector(1,0){4}}
+				\put(0,1.5){\line(0,1){2.5}}
+				\put(0,4){\line(1,0){11}}
+				\put(11,4){\line(0,-1){2.5}}
+			\end{picture}}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\OpCode{..}{\fbox{001}}{...}
+	\end{instruction}
 
-	RR m\instrt & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,4)
-			\put(12,0){\framebox(4,3){CF}}
-			\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-			\put(0,1.5){\vector(1,0){2}}
-			\put(9,1.5){\vector(1,0){3}}
-			\put(0,1.5){\line(0,1){2.5}}
-			\put(0,4){\line(1,0){17.5}}
-			\put(17.5,4){\line(0,-1){2.5}}
-			\put(16,1.5){\line(1,0){1.5}}
-		\end{picture} &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			$\updownarrow$ & 
-		.. &\fbox{011} & ... & \instrb \\
+	\begin{instruction}{RR m\See{1}}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(12,0){\framebox(4,3){CF}}
+				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(0,1.5){\vector(1,0){2}}
+				\put(9,1.5){\vector(1,0){3}}
+				\put(0,1.5){\line(0,1){2.5}}
+				\put(0,4){\line(1,0){17.5}}
+				\put(17.5,4){\line(0,-1){2.5}}
+				\put(16,1.5){\line(1,0){1.5}}
+			\end{picture}}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\OpCode{..}{\fbox{011}}{...}
+	\end{instruction}
 
-	SLA m\instrt & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,4)
-			\put(0,0){\framebox(4,3){CF}}
-			\put(7,0){\framebox(7,3){7$\leftarrow$0}}
-			\put(7,1.5){\vector(-1,0){3}}
-			\put(17,1.5){\vector(-1,0){3}}
-			\put(16,0){\makebox(4,3){0}}
-		\end{picture} &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			$\updownarrow$ & 
-		.. &\fbox{100} & ... & \instrb \\
+	\begin{instruction}{SLA m\See{1}}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(7,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(7,1.5){\vector(-1,0){3}}
+				\put(17,1.5){\vector(-1,0){3}}
+				\put(16,0){\makebox(4,3){0}}
+			\end{picture}}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\OpCode{..}{\fbox{100}}{...}
+	\end{instruction}
 
-	SLL m\instrt & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,4)
-			\put(0,0){\framebox(4,3){CF}}
-			\put(7,0){\framebox(7,3){7$\leftarrow$0}}
-			\put(7,1.5){\vector(-1,0){3}}
-			\put(17,1.5){\vector(-1,0){3}}
-			\put(16,0){\makebox(4,3){1}}
-		\end{picture} &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			$\updownarrow$ & 
-		.. &\fbox{110} & ... & \instrb \\
+	\begin{instruction}{SLL m\See{1}}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(0,0){\framebox(4,3){CF}}
+				\put(7,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(7,1.5){\vector(-1,0){3}}
+				\put(17,1.5){\vector(-1,0){3}}
+				\put(16,0){\makebox(4,3){1}}
+			\end{picture}}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\OpCode{..}{\fbox{110}}{...}
+	\end{instruction}
 
-	SRA m\instrt & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,4)
-			\put(13,0){\framebox(4,3){CF}}
-			\put(3,0){\framebox(7,3){7$\rightarrow$0}}
-			\put(10,1.5){\vector(1,0){3}}
-			\put(1,1.5){\vector(1,0){2}}
-			\put(1,-1.5){\line(0,1){3}}
-			\put(1,-1.5){\line(1,0){2.5}}
-			\put(3.5,-1.5){\line(0,1){1.5}}
-		\end{picture} &
-		$\updownarrow$ &
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			$\updownarrow$ & 
-		.. &\fbox{101} & ... & \instrb \\
+	\begin{instruction}{SRA m\See{1}}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(13,0){\framebox(4,3){CF}}
+				\put(3,0){\framebox(7,3){7$\rightarrow$0}}
+				\put(10,1.5){\vector(1,0){3}}
+				\put(1,1.5){\vector(1,0){2}}
+				\put(1,-1.5){\line(0,1){3}}
+				\put(1,-1.5){\line(1,0){2.5}}
+				\put(3.5,-1.5){\line(0,1){1.5}}
+			\end{picture}}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\OpCode{..}{\fbox{101}}{...}
+	\end{instruction}
 
-	SRL m\instrt & 
-		\setlength{\unitlength}{0.9mm}
-		\begin{picture}(17,4)
-			\put(-0.5,0){\makebox(1,3){0}}
-			\put(13,0){\framebox(4,3){CF}}
-			\put(3,0){\framebox(7,3){7$\rightarrow$0}}
-			\put(10,1.5){\vector(1,0){3}}
-			\put(1,1.5){\vector(1,0){2}}
-		\end{picture} &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			$\updownarrow$ & 
-		.. &\fbox{111} & ... & \instrb \\
+	\begin{instruction}{SRL m\See{1}}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(-0.5,0){\makebox(1,3){0}}
+				\put(13,0){\framebox(4,3){CF}}
+				\put(3,0){\framebox(7,3){7$\rightarrow$0}}
+				\put(10,1.5){\vector(1,0){3}}
+				\put(1,1.5){\vector(1,0){2}}
+			\end{picture}}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\OpCode{..}{\fbox{111}}{...}
+	\end{instruction}
 
-	\instrempty{}
+	\Empty{}
 
-	RLD\instrt &
-		\setlength{\unitlength}{0.9mm}
-		\put(-7,0){\makebox(4,3){A}}
-		\put(20,0){\makebox(4,3){(HL)}}
-		\begin{picture}(25,5.5)
-			\put(-2,0){\framebox(4.5,3){7-4}}
-			\put(2.65,0){\framebox(4.5,3){3-0}}
-			\put(9,0){\framebox(4.5,3){7-4}}
-			\put(13.65,0){\framebox(4.5,3){3-0}}
-			\put(5,4.45){\line(0,-1){1.45}}
-			\put(5,4.45){\line(1,0){11.5}}
-			\put(16.5,4.45){\vector(0,-1){1.45}}
-			\put(12,-1.45){\vector(0,1){1.45}}
-			\put(12,-1.45){\line(1,0){3.75}}
-			\put(15.75,-1.45){\line(0,1){1.45}}
-			\put(5,-1.45){\vector(0,1){1.45}}
-			\put(10.5,-1.45){\line(-1,0){5.5}}
-			\put(10.5,-1.45){\line(0,1){1.45}}
-		\end{picture} &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		5 & 18 & \\
-	\multicolumn{10}{c}{} & 01 & 101 & 111 & 6F & \instrb \\
+	\begin{instruction}{RLD}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(25,5.5)
+				\put(-7,0){\makebox(4,3){A}}
+				\put(20,0){\makebox(4,3){(HL)}}
+				\put(-2,0){\framebox(4.5,3){7-4}}
+				\put(2.65,0){\framebox(4.5,3){3-0}}
+				\put(9,0){\framebox(4.5,3){7-4}}
+				\put(13.65,0){\framebox(4.5,3){3-0}}
+				\put(5,4.45){\line(0,-1){1.45}}
+				\put(5,4.45){\line(1,0){11.5}}
+				\put(16.5,4.45){\vector(0,-1){1.45}}
+				\put(12,-1.45){\vector(0,1){1.45}}
+				\put(12,-1.45){\line(1,0){3.75}}
+				\put(15.75,-1.45){\line(0,1){1.45}}
+				\put(5,-1.45){\vector(0,1){1.45}}
+				\put(10.5,-1.45){\line(-1,0){5.5}}
+				\put(10.5,-1.45){\line(0,1){1.45}}
+			\end{picture}}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FN} 
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{18}
+		\SkipToOpCode 
+			\OpCode{01}{101}{111}
+			\Hex{6F}
+	\end{instruction}
 		
-	RRD\instrt &
-		\setlength{\unitlength}{0.9mm}
-		\put(-7,0){\makebox(4,3){A}}
-		\put(20,0){\makebox(4,3){(HL)}}
-		\begin{picture}(25,5.5)
-			\put(-2,0){\framebox(4.5,3){7-4}}
-			\put(2.65,0){\framebox(4.5,3){3-0}}
-			\put(9,0){\framebox(4.5,3){7-4}}
-			\put(13.65,0){\framebox(4.5,3){3-0}}
-			\put(16.5,-1.45){\line(0,1){1.45}}
-			\put(5,-1.45){\line(1,0){11.5}}
-			\put(5,-1.45){\vector(0,1){1.45}}
-			\put(15.75,4.45){\vector(0,-1){1.45}}
-			\put(12,4.45){\line(1,0){3.75}}
-			\put(12,4.45){\line(0,-1){1.45}}
-			\put(10.5,4.45){\vector(0,-1){1.45}}
-			\put(10.5,4.45){\line(-1,0){5.5}}
-			\put(5,4.45){\line(0,-1){1.45}}
-		\end{picture} &
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		5 & 18 & \\
-	\multicolumn{10}{c}{} & 01 & 100 & 111 & 67 & \instrb \\
+	\begin{lastinstruction}{RRD}
+		\Symbol{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(25,5.5)
+				\put(-7,0){\makebox(4,3){A}}
+				\put(20,0){\makebox(4,3){(HL)}}
+				\put(-2,0){\framebox(4.5,3){7-4}}
+				\put(2.65,0){\framebox(4.5,3){3-0}}
+				\put(9,0){\framebox(4.5,3){7-4}}
+				\put(13.65,0){\framebox(4.5,3){3-0}}
+				\put(16.5,-1.45){\line(0,1){1.45}}
+				\put(5,-1.45){\line(1,0){11.5}}
+				\put(5,-1.45){\vector(0,1){1.45}}
+				\put(15.75,4.45){\vector(0,-1){1.45}}
+				\put(12,4.45){\line(1,0){3.75}}
+				\put(12,4.45){\line(0,-1){1.45}}
+				\put(10.5,4.45){\vector(0,-1){1.45}}
+				\put(10.5,4.45){\line(-1,0){5.5}}
+				\put(5,4.45){\line(0,-1){1.45}}
+			\end{picture}}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{18}
+		\SkipToOpCode 
+			\OpCode{01}{100}{111}
+			\Hex{67}{}
+	\end{lastinstruction}
 	
-	\hline
+\end{instrtable}
 
-	\instrnotetitle
-		& \instrnoteitem{m is one of r,(HL),(IX+d),(IY+d). To form new opcode replace \fbox{000} of RLCs with shown code.}\notet\noteb \\
-	
-	\hline
-}
+\begin{notestable}
+	\NoteItem{\See{1}{\tt m} is one of {\tt r}, {\tt (HL)}, {\tt (IX+d)}, {\tt (IY+d)}. To form new opcode replace \fbox{000} of {\tt RLC}s with shown code.}
+\end{notestable}
+
+\end{minipage}
 
 
 \section{Jump}
 
-\instrtable{
-	\instrempty{
-		\multirow{11}{*}{
-			\begin{tabular}{ll}
-				cc & Condition \\
-				\hline
-				000 & NZ \\
-				001 & Z \\
-				010 & NC \\
-				011 & C \\
-				100 & PO \\
-				101 & PE \\
-				110 & P \\
-				111 & M \\
-			\end{tabular}
-		}
-	}
+\begin{minipage}{\textwidth}
+	
+\begin{instrtable}
 
-	JP nm\instrt & 
-		PC$\leftarrow$nm &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 000 & 011 & 
-		C3 & 3 & 
-		3 & 10 & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
+	\begin{instruction}{JP nm} 
+		\Symbol{PC$\leftarrow$nm}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{000}{011}
+			\Hex{C3}{3}
+			\Cycles{3}{10}
+			\Comment{
+				\multirow{8}{*}{
+					\tt
+					\begin{tabular}{ll}
+						cc & Condition \\
+						\hline
+						000 & NZ \\
+						001 & Z \\
+						010 & NC \\
+						011 & C \\
+						100 & PO \\
+						101 & PE \\
+						110 & P \\
+						111 & M \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+	\end{instruction}
 
-	JP cc,nm\instrt & 
-		if cc &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & cc & 010 &
-		.. & 3 & 
-		3 & 10 & \\ 
-	& PC$\leftarrow$nm & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
+	\begin{instruction}{JP cc,nm} 
+		\Symbol{if cc}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{cc}{010}
+			\Hex{..}{3}
+			\Cycles{3}{10}
+		\SkipToSymbol
+			\Symbol{PC$\leftarrow$nm}
+			\FromSymbolToOpCode
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+	\end{instruction}
 
-	JR e\instrt & 
-		PC$\leftarrow$PC+e &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & 011 & 000 & 
-		18 & 2 & 
-		3 & 12 & \\
-	\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\leftarrow$ e-2 $\rightarrow|$} & .. & \instrb \\
+	\begin{instruction}{JR e} 
+		\Symbol{PC$\leftarrow$PC+e}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{011}{000}
+			\Hex{18}{2}
+			\Cycles{3}{12}
+		\SkipToOpCode 
+			\OpCode{$|\leftarrow$}{e-2}{$\rightarrow|$}
+			\Hex{..}{}
+	\end{instruction}
 
-	JR ss,e\instrt & 
-		if ss &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & 1ss & 000 &
-		.. & 2 & 
-		3 & 12 & {if ss is true} \\
-	& PC$\leftarrow$PC+e & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\leftarrow$ e-2 $\rightarrow|$} & .. & 2 & 2 & 7 & {if ss is false} \instrb \\
+	\begin{instruction}{JR ss,e} 
+		\Symbol{if ss}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{1ss}{000}
+			\Hex{..}{2}
+			\Cycles{3}{12}
+			\Comment{if {\tt ss} is true}
+		\SkipToSymbol
+			\Symbol{PC$\leftarrow$PC+e}
+			\FromSymbolToOpCode
+			\OpCode{$|\leftarrow$}{e-2}{$\rightarrow|$}
+			\Hex{..}{}
+			\Cycles{2}{7}
+			\Comment{if {\tt ss} is false}
+	\end{instruction}
 
-	JP (HL)\instrt & 
-		PC$\leftarrow$HL &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 001 & 
-		E9 & 1 & 
-		1 & 4 & \instrb 
-		\multirow{6}{*}{
-			\begin{tabular}{ll}
-				ss & Condition \\
-				\hline
-				00 & NZ \\
-				01 & Z \\
-				10 & NC \\
-				11 & C \\
-			\end{tabular}
-		}\\
+	\begin{instruction}{JP (HL)}
+		\Symbol{PC$\leftarrow$HL}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{001}
+			\Hex{E9}{1}
+			\Cycles{1}{4}
+			\Comment{
+				\multirow{6}{*}{
+					\tt
+					\begin{tabular}{ll}
+						ss & Condition \\
+						\hline
+						00 & NZ \\
+						01 & Z \\
+						10 & NC \\
+						11 & C \\
+					\end{tabular}
+				}
+			}
+	\end{instruction}
 
-	JP (IX)\instrt & 
-		PC$\leftarrow$IX &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 2 & 
-		2 & 8 & \\
-	\multicolumn{10}{c}{} & 11 & 101 & 001 & E9 & \instrb \\
+	\begin{instruction}{JP (IX)} 
+		\Symbol{PC$\leftarrow$IX}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{11}{101}{001}
+			\Hex{E9}{}
+	\end{instruction}
 
-	JP (IY)\instrt & 
-		PC$\leftarrow$IY &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 111 & 101 & 
-		FD & 2 & 
-		2 & 8 & \\
-	\multicolumn{10}{c}{} & 11 & 101 & 001 & E9 & \instrb \\
+	\begin{instruction}{JP (IY)} 
+		\Symbol{PC$\leftarrow$IY}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{11}{101}{001}
+			\Hex{E9}{}
+	\end{instruction}
 
-	DJNZ e\instrt & 
-		B$\leftarrow$B-1 &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		00 & 010 & 000 & 
-		10 & 2 & 
-		2 & 8 & {if B=0} \\
-	& if B$\not=$0 & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\leftarrow$ e-2 $\rightarrow|$} & ..  & & 3 & 13 & {if B$\not=$0} \\
-	& PC$\leftarrow$PC+e & \instrb \\ 
+	\begin{lastinstruction}{DJNZ e} 
+		\Symbol{B$\leftarrow$B-1}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{010}{000}
+			\Hex{10}{2}
+			\Cycles{2}{8}
+			\Comment{if {\tt B}=0}
+		\SkipToSymbol
+			\Symbol{if B$\not=$0}
+			\FromSymbolToOpCode
+			\OpCode{$|\leftarrow$}{e-2}{$\rightarrow|$}
+			\Hex{..}{}
+			\Cycles{3}{13}
+			\Comment{if {\tt B}$\not=$0}
+		\SkipToSymbol
+			\Symbol{PC$\leftarrow$PC+e}
+	\end{lastinstruction} 
 		
-	\hline
+\end{instrtable}
 
-	\instrnotetitle
-		& \instrnoteitem{e is a signed two-compliment in the range -127, 129.}\notet\noteb \\
-		& \instrnoteitem{e-2 in the opcode provides an effective number of PC+e as PC is incremented by two prior to the addition of e.}\noteb \\[5pt]
-		% note: \noteb was not enough to create a gap here, so some manual spacing was added to make it look better...
-		
-	\hline
-}
+\begin{notestable}
+	\NoteItem{{\tt e} is a signed two-complement in the range -127, 129.}
+	\NoteItem{{\tt e-2} in the opcode provides an effective number of {\tt PC+e} as {\tt PC} is incremented by two prior to the addition of {\tt e}.}
+\end{notestable}
+
+\end{minipage}
 
 
 \section{Call and Return}
 
-\instrtable{
-	\instrempty{}
-
-	CALL nm\instrt & 
-		(SP-1)$\leftarrow$PCh &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 001 & 101 & 
-		CD & 3 & 
-		5 & 17 & \\
-		& (SP-2)$\leftarrow$PCl & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & \\
-		& SP$\leftarrow$SP-2 & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \\
-		& PC$\leftarrow$nm & \instrb \\
-
-	CALL c,nm\instrt & 
-		if c is true &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & tt & 100 & 
-		.. & 3 & 
-		3 & 10 & {if c=false} \\
-		& (SP-1)$\leftarrow$PCh & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & 3 & 5 & 17 & {if c=true} \\
-		& (SP-2)$\leftarrow$PCl & \multicolumn{8}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \\
-		& SP$\leftarrow$SP-2 & \multicolumn{8}{c}{} & \\
-		& PC$\leftarrow$nn & \multicolumn{8}{c}{} & \instrb \\
-
-	RET\instrt & 
-		PCl$\leftarrow$(SP) &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 001 & 001 & 
-		C9 & 1 & 
-		3 & 10 & \\
-		& PCh$\leftarrow$(SP+1) & \\
-		& SP$\leftarrow$SP+2 & \instrb \\
-
-	RET c\instrt & 
-		if c is true &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & tt & 000 & 
-		.. & 1 & 
-		1 & 5 & {if c=false} \\
-		& PCl$\leftarrow$(SP) & \multicolumn{8}{c}{} & \multicolumn{3}{c}{} & & 1 & 3 & 11 & {if c=true} \\ 
-		& PCh$\leftarrow$(SP+1) & \\
-		& SP$\leftarrow$SP+2 & \instrb \\
-
-	RETI\footnotemark[1]\instrt & 
-		PCl$\leftarrow$(SP) &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 14 &
-		\multirow{9}{*}{
-			\begin{tabular}{ll}
-				tt & c \\
-				\hline
-				000 & NZ \\
-				001 & Z \\
-				010 & NC \\
-				011 & C \\
-				100 & PO \\
-				101 & PE \\
-				110 & P \\
-				111 & M \\
-			\end{tabular}
-		} \\
-		& PCh$\leftarrow$(SP+1) & \multicolumn{8}{c}{} & 01 & 001 & 101 & 4D & \\
-		& SP$\leftarrow$SP+2 & \\
-		& IFF1$\leftarrow$IFF2 & \instrb \\
-
-	RETN\footnotemark[2]\instrt & 
-		PCl$\leftarrow$(SP) &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 14 & \\
-		& PCh$\leftarrow$(SP+1) & \multicolumn{8}{c}{} & 01 & 000 & 101 & 45 & \\
-		& SP$\leftarrow$SP+2 & \\
-		& IFF1$\leftarrow$IFF2 & \instrb \\
-
-	RST p\instrt & 
-		(SP-1)$\leftarrow$PCh &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & tt & 111 & 
-		.. & 1 & 
-		3 & 11 & 
-		\multirow{9}{*}{
-			\begin{tabular}{ll}
-				tt & p \\
-				\hline
-				000 & \$0 \\
-				001 & \$8 \\
-				010 & \$10 \\
-				011 & \$18 \\
-				100 & \$20 \\
-				101 & \$28 \\
-				110 & \$30 \\
-				111 & \$38 \\
-			\end{tabular}
-		}\\
-		& (SP-2)$\leftarrow$PCl & \\
-		& SP$\leftarrow$SP-2 &  \\
-		& PC$\leftarrow$p & \instrb \\[14ex]
-		% note we need to add some manual spacing after this instruction so that t/p table is visible in full (we don't have enough rows for multirow command)
+\begin{minipage}{\textwidth}
 	
-	\hline
+\begin{instrtable}
 
-	\instrnotetitle
-		& \instrnoteitem{\footnotemark[1] RETI also copies IFF2 into IFF1, like RETN.}\notet \\
-		& \instrnoteitem{\footnotemark[2] This instruction has other undocumented opcodes.}\noteb \\ 
-	
-	\hline
-}
+	\begin{instruction}{CALL nm} 
+		\Symbol{(SP-1)$\leftarrow$PCh}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{001}{101}
+			\Hex{CD}{3}
+			\Cycles{5}{17}
+		\SkipToSymbol
+			\Symbol{(SP-2)$\leftarrow$PCl}
+			\FromSymbolToOpCode
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToSymbol
+			\Symbol{SP$\leftarrow$SP-2}
+			\FromSymbolToOpCode
+			\OpRange{n} 
+			\Hex{..}{}
+		\SkipToSymbol
+			\Symbol{PC$\leftarrow$nm}
+	\end{instruction}
+
+	\begin{instruction}{CALL c,nm} 
+		\Symbol{if c is true}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{tt}{100}
+			\Hex{..}{3}
+			\Cycles{3}{10}
+			\Comment{if {\tt c}=false}
+		\SkipToSymbol
+			\Symbol{(SP-1)$\leftarrow$PCh}
+			\FromSymbolToOpCode
+			\OpRange{m} 
+			\Hex{..}{}
+			\Cycles{5}{17}
+			\Comment{if {\tt c}=true}
+		\SkipToSymbol
+			\Symbol{(SP-2)$\leftarrow$PCl}
+			\FromSymbolToOpCode
+			\OpRange{n} 
+			\Hex{..}{}
+		\SkipToSymbol
+			\Symbol{SP$\leftarrow$SP-2}
+		\SkipToSymbol
+			\Symbol{PC$\leftarrow$nn}
+	\end{instruction}
+
+	\begin{instruction}{RET} 
+		\Symbol{PCl$\leftarrow$(SP)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{001}{001}
+			\Hex{C9}{1}
+			\Cycles{3}{10}
+		\SkipToSymbol
+			\Symbol{PCh$\leftarrow$(SP+1)}
+		\SkipToSymbol
+			\Symbol{SP$\leftarrow$SP+2}
+	\end{instruction}
+
+	\begin{instruction}{RET c} 
+		\Symbol{if c is true}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{tt}{000}
+			\Hex{..}{1}
+			\Cycles{1}{5}
+			\Comment{if {\tt c}=false}
+		\SkipToSymbol
+			\Symbol{PCl$\leftarrow$(SP)}
+			\FromSymbolToOpCode
+			\OpCode{}{}{}
+			\Hex{}{}
+			\Cycles{3}{11}
+			\Comment{if {\tt c}=true}
+		\SkipToSymbol
+			\Symbol{PCh$\leftarrow$(SP+1)}
+		\SkipToSymbol
+			\Symbol{SP$\leftarrow$SP+2}
+	\end{instruction}
+
+	\begin{instruction}{RETI\See{1}} 
+		\Symbol{PCl$\leftarrow$(SP)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{14}
+			\Comment{
+				\multirow{9}{*}{
+					\tt
+					\begin{tabular}{ll}
+						tt & c \\
+						\hline
+						000 & NZ \\
+						001 & Z \\
+						010 & NC \\
+						011 & C \\
+						100 & PO \\
+						101 & PE \\
+						110 & P \\
+						111 & M \\
+					\end{tabular}
+				}
+			}
+			\SkipToSymbol
+				\Symbol{PCh$\leftarrow$(SP+1)}
+				\FromSymbolToOpCode
+				\OpCode{01}{001}{101}
+				\Hex{4D}{}
+			\SkipToSymbol
+				\Symbol{SP$\leftarrow$SP+2}
+			\SkipToSymbol
+				\Symbol{IFF1$\leftarrow$IFF2}
+	\end{instruction}
+
+	\begin{instruction}{RETN\See{2}} 
+		\Symbol{PCl$\leftarrow$(SP)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{14}
+		\SkipToSymbol
+			\Symbol{PCh$\leftarrow$(SP+1)}
+			\FromSymbolToOpCode
+			\OpCode{01}{000}{101}
+			\Hex{45}{}
+		\SkipToSymbol
+			\Symbol{SP$\leftarrow$SP+2}
+		\SkipToSymbol
+			\Symbol{IFF1$\leftarrow$IFF2}
+	\end{instruction}
+
+	\begin{lastinstruction}{RST p} 
+		\Symbol{(SP-1)$\leftarrow$PCh}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{tt}{111}
+			\Hex{..}{1}
+			\Cycles{3}{11}
+			\Comment{
+				\multirow{9}{*}{
+					\tt
+					\begin{tabular}{ll}
+						tt & p \\
+						\hline
+						000 & \$0 \\
+						001 & \$8 \\
+						010 & \$10 \\
+						011 & \$18 \\
+						100 & \$20 \\
+						101 & \$28 \\
+						110 & \$30 \\
+						111 & \$38 \\
+					\end{tabular}
+				}
+			}
+		\SkipToSymbol
+			\Symbol{(SP-2)$\leftarrow$PCl}
+		\SkipToSymbol
+			\Symbol{SP$\leftarrow$SP-2}
+		\SkipToSymbol
+			\Symbol{PC$\leftarrow$p}
+	\end{lastinstruction}
+
+	\\[11ex] % note we need to add some manual spacing after this instruction so that tt/p comment table is visible in full (we don't have enough rows for multirow command)
+
+\end{instrtable}
+
+\begin{notestable}
+	\NoteItem{\See{1} RETI also copies IFF2 into IFF1, like RETN.}
+	\NoteItem{\See{2} This instruction has other undocumented opcodes.}
+\end{notestable}
+
+\end{minipage}
+
 
 \section{Stack}
 	
-\instrtable{
-	\instrempty{}
+\begin{instrtable}
 
-	PUSH qq\instrt & 
-		(SP-2)$\leftarrow$qql &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & qq0 & 101 & 
-		.. & 1 & 
-		3 & 11 &
-		\multirow{5}{*}{
-			\begin{tabular}{ll}
-				qq & Reg \\
-				\hline
-				00 & BC \\
-				01 & DE \\
-				10 & HL \\
-				11 & AF \\
-			\end{tabular}
-		}\\
-	& (SP-1)$\leftarrow$qqh & \\
-	& SP$\leftarrow$SP-2 & \instrb \\
+	\begin{instruction}{PUSH qq} 
+		\Symbol{(SP-2)$\leftarrow$qql}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{qq0}{101}
+			\Hex{..}{1}
+			\Cycles{3}{11}
+			\Comment{
+				\multirow{4}{*}{
+					\tt
+					\begin{tabular}{ll}
+						qq & Reg \\
+						\hline
+						00 & BC \\
+						01 & DE \\
+						10 & HL \\
+						11 & AF \\
+					\end{tabular}
+				}
+			}
+		\SkipToSymbol
+			\Symbol{(SP-1)$\leftarrow$qqh}
+		\SkipToSymbol
+			\Symbol{SP$\leftarrow$SP-2}
+	\end{instruction}
 
-	PUSH IX\instrt & 
-		(SP-2)$\leftarrow$IXl &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 2 & 
-		4 & 15 & \\ 
-	& (SP-1)$\leftarrow$IXh & \multicolumn{8}{c}{} & 11 & 100 & 101 & E5 & & & \\
-	& SP$\leftarrow$SP-2 & \instrb \\
+	\begin{instruction}{PUSH IX} 
+		\Symbol{(SP-2)$\leftarrow$IXl}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{4}{15}
+		\SkipToSymbol
+			\Symbol{(SP-1)$\leftarrow$IXh}
+			\FromSymbolToOpCode
+			\OpCode{11}{100}{101}
+			\Hex{E5}{}
+		\SkipToSymbol
+			\Symbol{SP$\leftarrow$SP-2}
+	\end{instruction}
 
-	PUSH IY\instrt & 
-		(SP-2)$\leftarrow$IYl &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 111 & 101 & 
-		FD & 2 & 
-		4 & 15 & \\ 
-	& (SP-1)$\leftarrow$IYh & \multicolumn{8}{c}{} & 11 & 100 & 101 & E5 & & & \\
-	& SP$\leftarrow$SP-2 & \instrb \\
+	\begin{instruction}{PUSH IY} 
+		\Symbol{(SP-2)$\leftarrow$IYl}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{4}{15}
+		\SkipToSymbol
+			\Symbol{(SP-1)$\leftarrow$IYh}
+			\FromSymbolToOpCode
+			\OpCode{11}{100}{101}
+			\Hex{E5}{}
+		\SkipToSymbol
+			\Symbol{SP$\leftarrow$SP-2}
+	\end{instruction}
 
-	POP qq\instrt & 
-		qqh$\leftarrow$(SP+1) &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & qq0 & 001 & 
-		.. & 1 & 
-		3 & 10 & \\
-	& qql$\leftarrow$(SP) & \\
-	& SP$\leftarrow$SP+2 & \instrb \\
+	\begin{instruction}{POP qq} 
+		\Symbol{qqh$\leftarrow$(SP+1)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{qq0}{001}
+			\Hex{..}{1}
+			\Cycles{3}{10}
+		\SkipToSymbol
+			\Symbol{qql$\leftarrow$(SP)}
+		\SkipToSymbol
+			\Symbol{SP$\leftarrow$SP+2}
+	\end{instruction}
 
-	POP IX\instrt & 
-		IXh$\leftarrow$(SP+1) &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 2 & 
-		4 & 14 & \\ 
-	& IXl$\leftarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 001 & E1 & & & \\
-	& SP$\leftarrow$SP+2 & \instrb \\
+	\begin{instruction}{POP IX} 
+		\Symbol{IXh$\leftarrow$(SP+1)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{4}{14}
+		\SkipToSymbol
+			\Symbol{IXl$\leftarrow$(SP)}
+			\FromSymbolToOpCode
+			\OpCode{11}{100}{001}
+			\Hex{E1}{}
+		\SkipToSymbol
+			\Symbol{SP$\leftarrow$SP+2}
+	\end{instruction}
 
-	POP IY\instrt &
-		IYh$\leftarrow$(SP+1) &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 111 & 101 & 
-		FD & 2 & 
-		4 & 14 & \\ 
-	& IYl$\leftarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 001 & E1 & & & \\
-	& SP$\leftarrow$SP+2 & \instrb \\
+	\begin{lastinstruction}{POP IY}
+		\Symbol{IYh$\leftarrow$(SP+1)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{4}{14}
+		\SkipToSymbol
+			\Symbol{IYl$\leftarrow$(SP)}
+			\FromSymbolToOpCode
+			\OpCode{11}{100}{001}
+			\Hex{E1}{}
+		\SkipToSymbol
+			\Symbol{SP$\leftarrow$SP+2}
+	\end{lastinstruction}
 
-	\hline
-}
+\end{instrtable}
 
 
 \section{Exchange}
 
-\instrtable{
-	\instrempty{}
+\begin{instrtable}	
 
-	EX DE,HL\instrt & 
-		DE$\leftrightarrow$HL & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 011 & 
-		EB & 1 & 
-		1 & 4 & \instrb \\
+	\begin{instruction}{EX DE,HL} 
+		\Symbol{DE$\leftrightarrow$HL}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{011}
+			\Hex{EB}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-	EX AF,AF'\instrt & 
-		AF$\leftrightarrow$AF' & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 	
-		00 & 001 & 000
-		& 08 & 1 & 1 & 4 & \instrb \\
+	\begin{instruction}{EX AF,AF'} 
+		\Symbol{AF$\leftrightarrow$AF'}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{001}{000}
+			\Hex{08}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-	EXX\instrt & 
-		BC$\leftrightarrow$BC' & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 001 & 
-		D9 & 1 & 1 & 4 & \\ 
-	& DE$\leftrightarrow$DE' & \\ 
-	& HL$\leftrightarrow$HL' & \instrb \\
+	\begin{instruction}{EXX} 
+		\Symbol{BC$\leftrightarrow$BC'}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{001}
+			\Hex{D9}{1}
+			\Cycles{1}{4}
+		\SkipToSymbol
+			\Symbol{DE$\leftrightarrow$DE'}
+		\SkipToSymbol
+			\Symbol{HL$\leftrightarrow$HL'}
+	\end{instruction}
 
-	EX (SP),HL\instrt & 
-		H$\leftrightarrow$(SP+1) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 100 & 011 & 
-		E3 & 1 & 
-		5 & 19 & \\ 
-	& L$\leftrightarrow$(SP) & \instrb \\
+	\begin{instruction}{EX (SP),HL} 
+		\Symbol{H$\leftrightarrow$(SP+1)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{100}{011}
+			\Hex{E3}{1}
+			\Cycles{5}{19}
+		\SkipToSymbol 
+			\Symbol{L$\leftrightarrow$(SP)}
+	\end{instruction}
 
-	EX (SP),IX\instrt & 
-		IXh$\leftrightarrow$(SP+1) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 101 & 
-		DD & 2 & 
-		6 & 23 & \\ 
-	& IXl$\leftrightarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 011 & E3 & & \instrb \\
+	\begin{instruction}{EX (SP),IX} 
+		\Symbol{IXh$\leftrightarrow$(SP+1)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{6}{2}
+		\SkipToSymbol
+			\Symbol{IXl$\leftrightarrow$(SP)}
+			\FromSymbolToOpCode
+			\OpCode{11}{100}{011}
+			\Hex{E3}{}
+	\end{instruction}
 
-	EX (SP),IY\instrt & 
-		IYh$\leftrightarrow$(SP+1) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 111 & 101 & 
-		FD & 2 & 
-		6 & 23 & \\
-	& IYl$\leftrightarrow$(SP) & \multicolumn{8}{c}{} & 11 & 100 & 011 & E3 & & \instrb \\
+	\begin{lastinstruction}{EX (SP),IY} 
+		\Symbol{IYh$\leftrightarrow$(SP+1)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{6}{23}
+		\SkipToSymbol
+			\Symbol{IYl$\leftrightarrow$(SP)}
+			\FromSymbolToOpCode
+			\OpCode{11}{100}{011}
+			\Hex{E3}{}
+	\end{lastinstruction}
 
-	\hline
-}
+\end{instrtable}
 
 
 \section{Block Transfer, Search}
 
-\instrtable{
-	\instrempty{}
-
-	LDI\instrt & 
-		(DE)$\leftarrow$(HL) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\updownarrow$\footnotemark[4] & 
-			0 & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[1] & 
-			0 & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 16 \\ 
-	& DE$\leftarrow$DE+1 & \multicolumn{8}{c}{} & 10 & 100 & 000 & A0 & & & \\ 
-	& HL$\leftarrow$HL+1 & \\
-	& BC$\leftarrow$BC-1 & \\ [4pt]
-
-	LDIR\instrt & 
-		(DE)$\leftarrow$(HL) & 
-		$\bullet$ & 
-			$\bullet$ &
-			$\updownarrow$\footnotemark[4] & 
-			0 & 
-			$\updownarrow$\footnotemark[4] & 
-			0\footnotemark[2] & 
-			0 & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		5 & 21 & {if BC$\not=$0} \\
-	& DE$\leftarrow$DE+1 & \multicolumn{8}{c}{} & 10 & 110 & 000 & B0 & & 4 & 16 & {if BC=0} \\
-	& HL$\leftarrow$HL+1 & \\
-	& BC$\leftarrow$BC-1 & \\ 
-	& Repeat until & \\ 
-	& BC=0 & \instrb \\
-
-	LDD\instrt & 
-		(DE)$\leftarrow$(HL) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\updownarrow$\footnotemark[4] & 
-			0 & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[1] & 
-			0 & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 16 & \\ 
-	& DE$\leftarrow$DE-1 & \multicolumn{8}{c}{} & 10 & 101 & 000 & A8 & & \\ 
-	& HL$\leftarrow$HL-1 & \\
-	& BC$\leftarrow$BC-1 & \instrb \\
-
-	LDDR\instrt & 
-		(DE)$\leftarrow$(HL) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\updownarrow$\footnotemark[4] & 
-			0 & 
-			$\updownarrow$\footnotemark[4] & 
-			0\footnotemark[2] & 
-			0 & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		5 & 21 & {if BC$\not=$0} \\ 
-	& DE$\leftarrow$DE-1 & \multicolumn{8}{c}{} & 10 & 111 & 000 & B8 & & 4 & 16 & {if BC=0} \\
-	& HL$\leftarrow$HL-1 & \\
-	& BC$\leftarrow$BC-1 & \\ 
-	& Repeat until & \\ 
-	& BC=0 & \instrb \\
-
-	CPI\instrt & 
-		A-(HL) &
-		$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[1] & 
-			1 & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 16 & \\ 
-	& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 100 & 001 & A1 & \\ 
-	& BC$\leftarrow$BC-1 & \instrb \\
-
-	CPIR\instrt & 
-		A-(HL) &
-		$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[1] & 1 & $\bullet$ &
-		11 & 101 & 101 & 
-		ED & 2 & 
-		5 & 21 & {if BC$\not=$0} \\
-	& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 110 & 001 & B1 & & & & {and A$\not=$(HL)} \\
-	& BC$\leftarrow$BC-1 & \multicolumn{12}{c}{} & & 4 & 16 & {if BC=0} \\
-	& Repeat until & \multicolumn{15}{c}{} & {or A=(HL)} \\ 
-	& A=(HL) or & \\ 
-	& BC=0 & \instrb \\
-
-	CPD\instrt & 
-		A-(HL) &
-		$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[1] & 
-			1 & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 16 & \\ 
-		& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 101 & 001 & A9 & & & \\ 
-		& BC$\leftarrow$BC-1 & \instrb \\
-
-	CPDR\instrt & 
-		A-(HL) &
-		$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[1] & 
-			1 & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 2 & 
-		5 & 21 & {if BC$\not=$0} \\
-	& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 111 & 001 & B9 & & & & {and A$\not=$(HL)} \\
-	& BC$\leftarrow$BC-1 & \multicolumn{12}{c}{} & & 4 & 16 & {if BC=0} \\
-	& Repeat until & \multicolumn{15}{c}{} & {or A=(HL)} \\ 
-	& A=(HL) or & \\ 
-	& BC=0 & \instrb \\
-
-	\hline
-
-	\instrnotetitle
-		& \instrnoteitem{\footnotemark[1]PF is 0 the result of BC-1=0, otherwise PF is set.}\notet \\
-		& \instrnoteitem{\footnotemark[2]PF is 0 only at completion of the instruction.} \\
-		& \instrnoteitem{\footnotemark[3]ZF is set if A=(HL), otherwise ZF is reset.} \\
-		& \instrnoteitem{\footnotemark[4]See section \ref{block_mem} for a description.}\noteb \\
+\begin{minipage}{\textwidth}
 	
-	\hline
-}
+\begin{instrtable}	
+
+	\begin{instruction}{LDI}
+		\Symbol{(DE)$\leftarrow$(HL)}
+			\Flags{\FN}{\FN}{0}{\FS\See{1}}{0}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{DE$\leftarrow$DE+1}
+			\FromSymbolToOpCode
+			\OpCode{10}{100}{000}
+			\Hex{A0}{}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL+1}
+		\SkipToSymbol
+			\Symbol{BC$\leftarrow$BC-1}
+	\end{instruction}
+
+	\begin{instruction}{LDIR} 
+		\Symbol{(DE)$\leftarrow$(HL)}
+			\Flags{\FN}{\FN}{0}{0\See{2}}{0}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{21}
+			\Comment{if {\tt BC}$\not=$0}
+		\SkipToSymbol
+			\Symbol{DE$\leftarrow$DE+1}
+			\FromSymbolToOpCode
+			\OpCode{10}{110}{000}
+			\Hex{B0}{}
+			\Cycles{4}{16}
+			\Comment{if {\tt BC}=0}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL+1}
+		\SkipToSymbol
+			\Symbol{BC$\leftarrow$BC-1}
+		\SkipToSymbol
+			\Symbol{Repeat until}
+		\SkipToSymbol
+			\Symbol{BC=0}
+	\end{instruction}
+
+	\begin{instruction}{LDD} 
+		\Symbol{(DE)$\leftarrow$(HL)}
+			\Flags{\FN}{\FN}{0}{\FS\See{1}}{0}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{DE$\leftarrow$DE-1}
+			\FromSymbolToOpCode
+			\OpCode{10}{101}{000}
+			\Hex{A8}{}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL-1}
+		\SkipToSymbol
+			\Symbol{BC$\leftarrow$BC-1}
+	\end{instruction}
+
+	\begin{instruction}{LDDR} 
+		\Symbol{(DE)$\leftarrow$(HL)}
+			\Flags{\FN}{\FN}{0}{0\See{2}}{0}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{21}
+			\Comment{if {\tt C}$\not=$0}
+		\SkipToSymbol
+			\Symbol{DE$\leftarrow$DE-1}
+			\FromSymbolToOpCode
+			\OpCode{10}{111}{000}
+			\Hex{B8}{}
+			\Cycles{4}{16}
+			\Comment{if {\tt BC}=0}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL-1}
+		\SkipToSymbol
+			\Symbol{BC$\leftarrow$BC-1}
+		\SkipToSymbol
+			\Symbol{Repeat until}
+		\SkipToSymbol
+			\Symbol{BC=0}
+	\end{instruction}
+
+	\begin{instruction}{CPI} 
+		\Symbol{A-(HL)}
+			\Flags{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}{\FS\See{1}}{1}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL+1}
+			\FromSymbolToOpCode
+			\OpCode{10}{100}{001}
+			\Hex{A1}{}
+		\SkipToSymbol
+			\Symbol{BC$\leftarrow$BC-1}
+	\end{instruction}
+
+	\begin{instruction}{CPIR} 
+		\Symbol{A-(HL)}
+			\Flags{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}{\FS\See{1}}{1}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{21}
+			\Comment{if {\tt BC}$\not=$0}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL+1}
+			\FromSymbolToOpCode
+			\OpCode{10}{110}{001}
+			\Hex{B1}{}
+			\Cycles{}{}
+			\Comment{and {\tt A}$\not=$(HL)}
+		\SkipToSymbol
+			\Symbol{BC$\leftarrow$BC-1}
+			\FromSymbolToOpCode
+			\OpCode{}{}{}
+			\Hex{}{}
+			\Cycles{4}{16}
+			\Comment{if {\tt BC}=0}
+		\SkipToSymbol
+			\Symbol{Repeat until}
+			\FromSymbolToOpCode
+			\OpCode{}{}{}
+			\Hex{}{}
+			\Cycles{}{}
+			\Comment{or {\tt A}=(HL)}
+		\SkipToSymbol
+			\Symbol{A=(HL) or}
+		\SkipToSymbol
+			\Symbol{BC=0}
+	\end{instruction}
+
+	\begin{instruction}{CPD} 
+		\Symbol{A-(HL)}
+			\Flags{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}{\FS\See{1}}{1}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL-1}
+			\FromSymbolToOpCode
+			\OpCode{10}{101}{001}
+			\Hex{A9}{}
+		\SkipToSymbol
+			\Symbol{BC$\leftarrow$BC-1}
+	\end{instruction}
+
+	\begin{lastinstruction}{CPDR} 
+		\Symbol{A-(HL)}
+			\Flags{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}{\FS\See{1}}{1}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{21}
+			\Comment{if {\tt BC}$\not=$0}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL-1}
+			\FromSymbolToOpCode
+			\OpCode{10}{111}{001}
+			\Hex{B9}{}
+			\Cycles{}{}
+			\Comment{and {\tt A}$\not=$(HL)}
+		\SkipToSymbol
+			\Symbol{BC$\leftarrow$BC-1}
+			\FromSymbolToOpCode
+			\OpCode{}{}{}
+			\Hex{}{}
+			\Cycles{4}{16}
+			\Comment{if {\tt BC}=0}
+		\SkipToSymbol
+			\Symbol{Repeat until}
+			\FromSymbolToOpCode
+			\OpCode{}{}{}
+			\Hex{}{}
+			\Cycles{}{}
+			\Comment{or {\tt A}=({\tt HL})}
+		\SkipToSymbol
+			\Symbol{A=(HL) or}	
+		\SkipToSymbol
+			\Symbol{BC=0} 
+	\end{lastinstruction}
+
+\end{instrtable}
+
+\begin{notestable}	
+	\NoteItem{\See{1}PF is 0 the result of BC-1=0, otherwise PF is set.}
+	\NoteItem{\See{2}PF is 0 only at completion of the instruction.}
+	\NoteItem{\See{3}ZF is set if {\tt A=(HL)}, otherwise ZF is reset.}
+	\NoteItem{\See{4}See section \ref{block_mem} for a description.}
+\end{notestable}
+
+\end{minipage}
 
 
 \section{Input}
 
-\instrtable{
+\begin{minipage}{\textwidth}
 
-	\instrempty{
-		\multirow{10}{*}{
-			\begin{tabular}{ll}
-				r & Reg \\
-				\hline
-				000 & B \\
-				001 & C \\
-				010 & D \\
-				011 & E \\
-				100 & H \\
-				101 & L \\
-				111 & A \\
-			\end{tabular}
-		}
-	}
+\begin{instrtable}
 
-	IN A,(n)\footnotemark[1]\instrt & 
-		A$\leftarrow$(n) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 011 & 011 & 
-		DB & 2 & 
-		3 & 11 & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
+	\begin{instruction}{IN A,(n)\See{1}} 
+		\Symbol{A$\leftarrow$(n)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{011}{011}
+			\Hex{DB}{2}
+			\Cycles{3}{11}
+			\Comment{
+				\multirow{7}{*}{
+					\tt
+					\begin{tabular}{ll}
+						r & Reg \\
+						\hline
+						000 & B \\
+						001 & C \\
+						010 & D \\
+						011 & E \\
+						100 & H \\
+						101 & L \\
+						111 & A \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode	
+			\OpRange{n} 
+			\Hex{..}
+	\end{instruction}
 
-	IN r,(C)\instrt & 
-		r$\leftarrow$(C) & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		3 & 12 & \\
-		\multicolumn{10}{c}{} & 01 & r & 000 & .. & \instrb \\
+	\begin{instruction}{IN r,(C)} 
+		\Symbol{r$\leftarrow$(C)}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{3}{12}
+		\SkipToOpCode 
+			\OpCode{01}{r}{000}
+			\Hex{..}{}
+	\end{instruction}
 
-	IN F,(n)\instrt & 
-		F$\leftarrow$(C) & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			0 & 
-			$\updownarrow$ & 
-			PF & 
-			0 & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		3 & 12 & \\
-		\multicolumn{10}{c}{} & 01 & 110 & 000 & 70 & \instrb \\
+	\begin{instruction}{IN F,(n)} 
+		\Symbol{F$\leftarrow$(C)}
+			\Flags{\FS}{\FS}{0}{PF}{0}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{3}{12}
+		\SkipToOpCode 
+			\OpCode{01}{110}{000}
+			\Hex{70}{}
+	\end{instruction}
 
-	INI\instrt & 
-		(HL)$\leftarrow$(C) & 
-		$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[4] & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 16 & \\
-		& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 100 & 010 & A2 & \\
-		& B$\leftarrow$B-1 & \instrb \\
+	\begin{instruction}{INI} 
+		\Symbol{(HL)$\leftarrow$(C)}
+			\Flags{\FS\See{2}}{\FS\See{2}}{\FS\See{4}}{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}
+			\OpCode{11}{101}{101} 
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL+1}
+			\FromSymbolToOpCode
+			\OpCode{10}{100}{010}
+			\Hex{A2}{}
+		\SkipToSymbol
+			\Symbol{B$\leftarrow$B-1}
+	\end{instruction}
 
-	INIR\instrt & 
-		(HL)$\leftarrow$(C) & 
-		0 & 
-			1 & 
-			0 & 
-			$\updownarrow$\footnotemark[4] & 
-			0 & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[4] &
-		11 & 101 & 101 & 
-		ED & 2 & 
-		5 & 21 & {if B$\not=$0} \\
-		& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 110 & 010 & B2 & & 4 & 16 & {if B=0} \\
-		& B$\leftarrow$B-1 \\
-		& Repeat until \\
-		& B=0 & \instrb \\
+	\begin{instruction}{INIR} 
+		\Symbol{(HL)$\leftarrow$(C)}
+			\Flags{0}{1}{\FS\See{4}}{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{21}
+			\Comment{if {\tt B}$\not=$0}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL+1}
+			\FromSymbolToOpCode
+			\OpCode{10}{110}{010}
+			\Hex{B2}{}
+			\Cycles{4}{16}
+			\Comment{if {\tt B}=0}
+		\SkipToSymbol
+			\Symbol{B$\leftarrow$B-1}
+		\SkipToSymbol
+			\Symbol{Repeat until}
+		\SkipToSymbol
+			\Symbol{B=0}
+	\end{instruction}
 
-	IND\instrt & 
-		(HL)$\leftarrow$(C) & 
-		$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[4] & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 16 & \\
-		& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 101 & 010 & AA & \\
-		& B$\leftarrow$B-1 & \instrb \\
+	\begin{instruction}{IND} 
+		\Symbol{(HL)$\leftarrow$(C)}
+			\Flags{\FS\See{2}}{\FS\See{2}}{\FS\See{4}}{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL-1}
+			\FromSymbolToOpCode
+			\OpCode{10}{101}{010}
+			\Hex{AA}{}
+		\SkipToSymbol
+			\Symbol{B$\leftarrow$B-1}
+	\end{instruction}
 
-	INDR\instrt & 
-		(HL)$\leftarrow$(C) & 
-		0 & 
-			1 & 
-			0 & 
-			$\updownarrow$\footnotemark[4] & 
-			0 & 
-			$\updownarrow$\footnotemark[4] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[4] & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		5 & 21 & {if B$\not=$0} \\
-		& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 111 & 010 & BA &  & 4 & 16 & {if B=0} \\
-		& B$\leftarrow$B-1 \\
-		& Repeat until \\
-		& B=0 & \instrb \\
+	\begin{lastinstruction}{INDR} 
+		\Symbol{(HL)$\leftarrow$(C)}
+			\Flags{0}{1}{\FS\See{4}}{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{21}
+			\Comment{if {\tt B}$\not=$0}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL-1}
+			\FromSymbolToOpCode
+			\OpCode{10}{111}{010}
+			\Hex{BA}{}
+			\Cycles{4}{16}
+			\Comment{if {\tt B}=0}
+		\SkipToSymbol
+			\Symbol{B$\leftarrow$B-1}
+		\SkipToSymbol
+			\Symbol{Repeat until}
+		\SkipToSymbol
+			\Symbol{B=0}
+	\end{lastinstruction}
 		
-	\hline
+\end{instrtable}
 
-	\instrnotetitle
-		& \instrnoteitem{\footnotemark[1] LD (n) is interpretted as LD A,(n)}\notet \\
-		& \instrnoteitem{\footnotemark[2] flag is affected by the result of B$\leftarrow$B-1 as in DEC B.} \\
-		& \instrnoteitem{\footnotemark[3] NF is a copy of bit 7 of the transferred byte.} \\
-		& \instrnoteitem{\footnotemark[4] This flag is bizarre, see section \ref{block_io}.}\noteb \\
-		
-	\hline
-}
+\begin{notestable}
+	\NoteItem{\See{1} {\tt LD (n)} is interpretted as {\tt LD A,(n)}}
+	\NoteItem{\See{2} flag is affected by the result of {\tt B$\leftarrow$B-1} as in {\tt DEC B}.}
+	\NoteItem{\See{3} NF is a copy of bit 7 of the transferred byte.}
+	\NoteItem{\See{4} This flag is bizarre, see section \ref{block_io}.}
+\end{notestable}
+	
+\end{minipage}
+
 
 
 \section{Output}
 
-\instrtable{
-	\instrempty{
-		\multirow{10}{*}{
-			\begin{tabular}{ll}
-				r & Reg \\
-				\hline
-				000 & B \\
-				001 & C \\
-				010 & D \\
-				011 & E \\
-				100 & H \\
-				101 & L \\
-				111 & A \\
-			\end{tabular}
-		}
-	}
+\begin{minipage}{\textwidth}
 
-	OUT (n),A\instrt & 
-		(n)$\leftarrow$A &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 010 & 011 & 
-		D3 & 2 & 
-		3 & 11 & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
+\begin{instrtable}
 
-	OUT (C),r\instrt & 
-		(C)$\leftarrow$r &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		3 & 12 & \\
-		\multicolumn{10}{c}{} & 01 & r & 001 & .. & \instrb \\
+	\begin{instruction}{OUT (n),A} 
+		\Symbol{(n)$\leftarrow$A}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{010}{011}
+			\Hex{D3}{2}
+			\Cycles{3}{11}
+			\Comment{
+				\multirow{7}{*}{
+					\tt
+					\begin{tabular}{ll}
+						r & Reg \\
+						\hline
+						000 & B \\
+						001 & C \\
+						010 & D \\
+						011 & E \\
+						100 & H \\
+						101 & L \\
+						111 & A \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+	\end{instruction}
 
-	OUT (C),0\instrt & 
-		(C)$\leftarrow$0 &
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		3 & 12 & \\
-		\multicolumn{10}{c}{} & 01 & 110 & 001 & 71 & \instrb \\
+	\begin{instruction}{OUT (C),r} 
+		\Symbol{(C)$\leftarrow$r}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{3}{12}
+		\SkipToOpCode 
+			\OpCode{01}{r}{001}
+			\Hex{..}{}
+	\end{instruction}
 
-	OUTI\instrt & 
-		(C)$\leftarrow$(HL) & 
-		$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[3] & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 16 & \\
-		& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 100 & 011 & A3 & \\
-		& B$\leftarrow$B-1 & \instrb \\
+	\begin{instruction}{OUT (C),0} 
+		\Symbol{(C)$\leftarrow$0}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{3}{12}
+		\SkipToOpCode 
+			\OpCode{01}{110}{001}
+			\Hex{71}{}
+	\end{instruction}
 
-	OTIR\instrt & 
-		(C)$\leftarrow$(HL) & 
-		0 & 
-			1 & 
-			0 & 
-			$\updownarrow$\footnotemark[3] & 
-			0 & 
-			$\updownarrow$ & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[3] & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		5 & 21 & {if B$\not=$0} \\
-		& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 110 & 011 & B3 & & 4 & 16 & {if B=0} \\
-		& B$\leftarrow$B-1 \\
-		& Repeat until \\
-		& B=0 & \instrb \\
+	\begin{instruction}{OUTI} 
+		\Symbol{(C)$\leftarrow$(HL)}
+			\Flags{\FS\See{1}}{\FS\See{1}}{\FS\See{3}}{\FS\See{3}}{\FS\See{2}}{\FS\See{3}}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL+1}
+			\FromSymbolToOpCode
+			\OpCode{10}{100}{011}
+			\Hex{A3}{}
+		\SkipToSymbol
+			\Symbol{B$\leftarrow$B-1}
+	\end{instruction}
 
-	OUTD\instrt & 
-		(C)$\leftarrow$(HL) & 
-		$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[3] & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 16 & \\
-		& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 101 & 011 & AB & \\
-		& B$\leftarrow$B-1 & \instrb \\
+	\begin{instruction}{OTIR} 
+		\Symbol{(C)$\leftarrow$(HL)}
+			\Flags{0}{1}{\FS\See{3}}{\FS}{\FS\See{2}}{\FS\See{3}}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{21}
+			\Comment{if {\tt B}$\not=$0}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL+1}
+			\FromSymbolToOpCode
+			\OpCode{10}{110}{011}
+			\Hex{B3}{}
+			\Cycles{4}{16}
+			\Comment{if {\tt B}=0}
+		\SkipToSymbol
+			\Symbol{B$\leftarrow$B-1}
+		\SkipToSymbol
+			\Symbol{Repeat until}
+		\SkipToSymbol
+			\Symbol{B=0}
+	\end{instruction}
 
-	OTDR\instrt & 
-		(C)$\leftarrow$(HL) & 
-		0 & 
-			1 & 
-			0 & 
-			$\updownarrow$\footnotemark[3] & 
-			0 & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[5] & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		5 & 21 & {if B$\not=$0} \\
-		& HL$\leftarrow$HL-1 & \multicolumn{8}{c}{} & 10 & 111 & 011 & BB & & 4 & 16 & {if B=0} \\
-		& B$\leftarrow$B-1 \\
-		& Repeat until \\
-		& B=0 & \instrb \\
-		
-	\hline
+	\begin{instruction}{OUTD} 
+		\Symbol{(C)$\leftarrow$(HL)}
+			\Flags{\FS\See{1}}{\FS\See{1}}{\FS\See{3}}{\FS\See{3}}{\FS\See{2}}{\FS\See{3}}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL-1}
+			\FromSymbolToOpCode
+			\OpCode{10}{101}{011}
+			\Hex{AB}{}
+		\SkipToSymbol
+			\Symbol{B$\leftarrow$B-1}
+	\end{instruction}
 
-	\instrnotetitle
-		& \instrnoteitem{\footnotemark[1] flag is affected by the result of B$\leftarrow$B-1 as in DEC B.}\notet \\
-		& \instrnoteitem{\footnotemark[2] NF is a copy of bit 7 of the transferred byte.} \\
-		& \instrnoteitem{\footnotemark[3] This flag is bizarre, see section \ref{block_io}.}\noteb \\
-		
-	\hline
-}
+	\begin{lastinstruction}{OTDR} 
+		\Symbol{(C)$\leftarrow$(HL)}
+			\Flags{0}{1}{\FS\See{3}}{\FS\See{3}}{\FS\See{2}}{\FS}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{21}
+			\Comment{if {\tt B}$\not=$0}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL-1}
+			\FromSymbolToOpCode
+			\OpCode{10}{111}{011}
+			\Hex{BB}{}
+			\Cycles{4}{16}
+			\Comment{if {\tt B}=0}
+		\SkipToSymbol
+			\Symbol{B$\leftarrow$B-1}
+		\SkipToSymbol
+			\Symbol{Repeat until}
+		\SkipToSymbol
+			\Symbol{B=0}
+	\end{lastinstruction}
+
+\end{instrtable}
+
+\begin{notestable}
+	\NoteItem{\See{1} Flag is affected by the result of {\tt B$\leftarrow$B-1} as in {\tt DEC B}.}
+	\NoteItem{\See{2} NF is a copy of bit 7 of the transferred byte.}
+	\NoteItem{\See{3} This flag is bizarre, see section \ref{block_io}.}
+\end{notestable}
+	
+\end{minipage}
+
 
 
 \section{General-Purpose Arithmetic and CPU Control}
 
-\instrtable{
-	\instrempty{}
+\begin{minipage}{\textwidth}
 
-	DAA\instrt & & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			PF & 
-			$\bullet$ & 
-			$\updownarrow$ &
-		00 & 100 & 111 & 
-		27 & 1 & 
-		1 & 4 & \instrb \\
+\begin{instrtable}
 
-	CPL\instrt & 
-		A$\leftarrow\mathtt{\overline{A}}$ & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\updownarrow$ & 
-			1 & 
-			$\updownarrow$ & 
-			$\bullet$ & 
-			1 & 
-			$\bullet$ & 
-		00 & 101 & 111 & 
-		2F & 1 & 
-		1 & 4 & \instrb \\
+	\begin{instruction}{DAA}
+		\Comment{(see section \ref{instruction_details}) &}
+		\Flags{\FS}{\FS}{\FS}{PF}{\FN}{\FS}
+		\OpCode{00}{100}{111}
+		\Hex{27}{1}
+		\Cycles{1}{4}
+	\end{instruction}
 
-	NEG\instrt & 
-		A$\leftarrow$0-A & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			1 & 
-			$\updownarrow$ &
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 8 & \\
-	\multicolumn{10}{c}{} & 01 & 000 & 100 & 44 & \instrb \\
+	\begin{instruction}{CPL} 
+		\Symbol{A$\leftarrow\mathtt{\overline{A}}$}
+			\Flags{\FN}{\FN}{1}{\FN}{1}{\FN}
+			\OpCode{00}{101}{111}
+			\Hex{2F}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-	CCF\instrt & 
-		CF$\leftarrow\mathtt{\overline{CF}}$ & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\bullet$ & 
-			0 & 
-			$\updownarrow$ & 
-		00 & 111 & 111 & 
-		3F & 1 & 
-		1 & 4 & \instrb \\
+	\begin{instruction}{NEG} 
+		\Symbol{A$\leftarrow$0-A}
+			\Flags{\FS}{\FS}{\FS}{VF}{1}{\FS}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{01}{000}{100}
+			\Hex{44}{}
+	\end{instruction}
 
-	SCF\instrt & 
-		CF$\leftarrow$1 & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\updownarrow$\footnotemark[1] & 
-			0 & 
-			$\updownarrow$\footnotemark[1] &
-				$\bullet$ & 
-				0 & 
-				1 & 
-		00 & 110 & 111 & 
-		37 & 1 & 
-		1 & 4 & \instrb \\
+	\begin{instruction}{CCF\See{1}} 
+		\Symbol{CF$\leftarrow\mathtt{\overline{CF}}$}
+			\Flags{\FN}{\FN}{\FS\See{3}}{\FN}{0}{\FS}
+			\OpCode{00}{111}{111}
+			\Hex{3F}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-	NOP\instrt & & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		00 & 000 & 000 & 
-		00 & 1 & 
-		1 & 4 & \instrb \\
+	\begin{instruction}{SCF\See{1}} 
+		\Symbol{CF$\leftarrow$1}
+			\Flags{\FN}{\FN}{0}{\FN}{0}{1}
+			\OpCode{00}{110}{111}
+			\Hex{37}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-	HALT\instrt & & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		01 & 110 & 110 & 
-		76 & 1 & 
-		1 & 4 & \instrb \\
+	\begin{instruction}{NOP}
+		\Symbol{}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{000}{000}
+			\Hex{00}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-	DI\footnotemark[3]\instrt & 
-		IFF1,2$\leftarrow$0 & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 110 & 011 & 
-		F3 & 1 & 
-		1 & 4 & \instrb \\
+	\begin{instruction}{HALT}
+		\Comment{(see section \ref{instruction_details}) &}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{01}{110}{110}
+			\Hex{76}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-	EI\footnotemark[3]\instrt & 
-		IFF1,2$\leftarrow$1 & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 111 & 011 & 
-		FB & 1 & 
-		1 & 4 & \instrb \\
+	\begin{instruction}{DI\See{3}} 
+		\Symbol{IFF1,2$\leftarrow$0}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{110}{011}
+			\Hex{F3}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-	IM 0\footnotemark[4]\instrt & & 
-		$\bullet$ & $
-			\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 8 & \\
-	\multicolumn{10}{c}{} & 01 & 000 & 110 & 46 & \instrb \\
+	\begin{instruction}{EI\See{3}} 
+		\Symbol{IFF1,2$\leftarrow$1}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{011}
+			\Hex{FB}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-	IM 1\footnotemark[4]\instrt & & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 8 & \\
-	\multicolumn{10}{c}{} & 01 & 010 & 110 & 56 & \instrb \\
+	\begin{instruction}{IM 0\See{4}}
+		\Comment{(see section \ref{instruction_details}) &}
+			\Flags{\FN}{$\bullet$}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{01}{000}{110}
+			\Hex{46}{}
+	\end{instruction}
 
-	IM 2\footnotemark[4]\instrt & & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 8 & \\
-	\multicolumn{10}{c}{} & 01 & 011 & 110 & 5E & \instrb \\
+	\begin{instruction}{IM 1\See{4}}
+		\Comment{(see section \ref{instruction_details}) &}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{01}{010}{110}
+			\Hex{56}{}
+	\end{instruction}
+
+	\begin{lastinstruction}{IM 2\See{4}}
+		\Comment{(see section \ref{instruction_details}) &}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{01}{011}{110}
+			\Hex{5E}{}
+	\end{lastinstruction}
 	
-	\hline
+\end{instrtable}
 
-	\instrnotetitle
-		& \instrnoteitem{\footnotemark[1]YF and XF are copied from register A.}\notet \\
-		& \instrnoteitem{\footnotemark[2]HF is like CF before the instruction.} \\
-		& \instrnoteitem{\footnotemark[3]No interrupts are accepted directly after EI or DI.} \\
-		& \instrnoteitem{\footnotemark[4]This instruction has other undocumented opcodes.}\noteb \\ 
-	  
-	\hline
-}
+\begin{notestable}
+	\NoteItem{\See{1}YF and XF are copied from register A.}
+	\NoteItem{\See{2}HF is like CF before the instruction.}
+	\NoteItem{\See{3}No interrupts are accepted directly after EI or DI.}
+	\NoteItem{\See{4}This instruction has other undocumented opcodes.}
+\end{notestable}
+	
+\end{minipage}
 
-% we want ZX next instruction set to be visible fully on the same page without flipping
-\pagebreak
-\intentiallyempty
-\pagebreak
+
+% % we want ZX next instruction set to be visible fully on the same page without flipping
+% \pagebreak
+% \intentiallyempty
+% \pagebreak
 
 \section{ZX Spectrum Next Extended}
 \label{zx_next_instructions_table}
 
-\instrtable{
-	\instrempty{}
+\begin{minipage}{\textwidth}
 
-	ADD ss,A\instrt & 
-		ss$\leftarrow$ss+A & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 8 & 
-		\multirow{4}{*}{
-			\begin{tabular}{ll}
-				ss & Reg \\
-				\hline
-				01 & HL \\
-				10 & DE \\
-				11 & BC \\
-			\end{tabular}
-		}\\
-		\multicolumn{10}{c}{} & 00 & 110 & 0ss & .. & \instrb \\[6ex]
-		% note we need some extra vertical space to accomodate the whole of the comment table
+\begin{instrtablesymbol}
+
+	\begin{instruction}{ADD ss,A} 
+		\Symbol{ss$\leftarrow$ss+A}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+			\Comment{
+				\multirow{3}{*}{
+					\tt
+					\begin{tabular}{ll}
+						ss & Reg \\
+						\hline
+						01 & HL \\
+						10 & DE \\
+						11 & BC \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode 
+			\OpCode{00}{110}{0ss}
+			\Hex{..}{}
+	\end{instruction}
 		
-	ADD pp,nm\instrt & 
-		pp$\leftarrow$pp+nm & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 16 & 
-		\multirow{4}{*}{
-			\begin{tabular}{ll}
-				pp & Reg \\
-				\hline
-				00 & HL \\
-				01 & DE \\
-				10 & BC \\
-			\end{tabular}
-		} \\
-		\multicolumn{10}{c}{} & 00 & 110 & 1pp & .. & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
+	% we need some vertical spacing so ss/Reg table fits vertically
+	\\[1em]
 
-	BSLA DE,B\footnotemark[1]\instrt & 
-		DE$\leftarrow$DE<<(B$\wedge$\$1F) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 8 & \\
-		\multicolumn{10}{c}{} & 00 & 101 & 000 & 28 & \instrb \\
+	\begin{instruction}{ADD pp,nm} 
+		\Symbol{pp$\leftarrow$pp+nm}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+			\Comment{
+				\multirow{3}{*}{
+					\tt
+					\begin{tabular}{ll}
+						pp & Reg \\
+						\hline
+						00 & HL \\
+						01 & DE \\
+						10 & BC \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode 
+			\OpCode{00}{110}{1pp}
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-	BSRA DE,B\footnotemark[1]\instrt & 
-		DE$\leftarrow$s(DE)>>(B$\wedge$\$1F)\footnotemark[2] & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 8 & \\
-		\multicolumn{10}{c}{} & 00 & 101 & 001 & 29 & \instrb \\
+	\begin{instruction}{BSLA DE,B\See{1}} 
+		\Symbol{DE$\leftarrow$DE<<(B$\wedge$\$1F)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{00}{101}{000}
+			\Hex{28}
+	\end{instruction}
 
-	BSRL DE,B\footnotemark[1]\instrt & 
-		DE$\leftarrow$u(DE)>>(B$\wedge$\$1F)\footnotemark[3] & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 8 & \\
-		\multicolumn{10}{c}{} & 00 & 101 & 010 & 2A & \instrb \\
+	\begin{instruction}{BSRA DE,B\See{1}} 
+		\SymbolS{DE$\leftarrow$signed(DE)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToSymbol
+			\SymbolP{>>(B$\wedge$\$1F)\See{2}}
+			\FromSymbolToOpCode
+			\OpCode{00}{101}{001}
+			\Hex{29}{}
+	\end{instruction}
 
-	BSRF DE,B\footnotemark[1]\instrt & 
-		DE$\leftarrow\sim$(u($\sim$DE)>>(B$\wedge$\$1F))\footnotemark[4] & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 8 & \\
-		\multicolumn{10}{c}{} & 00 & 101 & 011 & 2B & \instrb \\
+	\begin{instruction}{BSRL DE,B\See{1}} 
+		\SymbolS{DE$\leftarrow$u(DE)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToSymbol
+			\SymbolP{>>(B$\wedge$\$1F)\See{3}}
+			\FromSymbolToOpCode
+			\OpCode{00}{101}{010}
+			\Hex{2A}{}
+	\end{instruction}
+
+	\begin{instruction}{BSRF DE,B\See{1}} 
+		\SymbolS{DE$\leftarrow\sim$(u($\sim$DE)}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToSymbol
+			\SymbolP{>>(B$\wedge$\$1F))\See{4}}
+			\FromSymbolToOpCode
+			\OpCode{00}{101}{011}
+			\Hex{2B}
+	\end{instruction}
 		
-	BRLC DE,B\footnotemark[1]\instrt & 
-		DE$\leftarrow$DE<<(B$\wedge$\$0F) or & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 8 & \\
-		& DE$\leftarrow$DE>>(16-B$\wedge$\$0F) & \multicolumn{8}{c}{} & 00 & 101 & 100 & 2C & \instrb \\
+	\begin{instruction}{BRLC DE,B\See{1}} 
+		\SymbolS{DE$\leftarrow$DE}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToSymbol
+			\SymbolP{<<(B$\wedge$\$0F)}
+			\FromSymbolToOpCode
+			\OpCode{00}{101}{100}
+			\Hex{2C}{}
+		\SkipToSymbol
+			\SymbolP{$\vee$(DE>>(16-B$\wedge$\$0F))\See{5}}
+	\end{instruction}
 
-	LDDX\instrt & 
-		if (HL)$\neq$A$\Rightarrow$(DE)$\leftarrow$(HL) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 16 & \\
-		& DE$\leftarrow$DE+1 & \multicolumn{8}{c}{} & 10 & 101 & 100 & AC & \\
-		& HL$\leftarrow$HL-1 & \\
-		& BC$\leftarrow$BC+1 & \instrb \\
+	\begin{instruction}{LDDX} 
+		\Symbol{if (HL)$\neq$A:}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{~~(DE)$\leftarrow$(HL)}
+			\FromSymbolToOpCode
+			\OpCode{10}{101}{100}
+			\Hex{AC}{}
+		\SkipToSymbol
+			\Symbol{DE$\leftarrow$DE+1}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL-1}
+		\SkipToSymbol
+			\Symbol{BC$\leftarrow$BC+1}
+	\end{instruction}
 
-	LDDRX\instrt & 
-		do LDDX & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		5 & 21 & if BC$\neq$0 \\
-		& while BC>0 & \multicolumn{8}{c}{} & 10 & 111 & 100 & BC & & 4 & 16 & if BC=0 \instrb \\
+	\begin{instruction}{LDDRX} 
+		\Symbol{do LDDX}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{21}
+			\Comment{if {\tt BC}$\neq$0}
+		\SkipToSymbol
+			\Symbol{while BC>0}
+			\FromSymbolToOpCode
+			\OpCode{10}{111}{100}
+			\Hex{BC}{}
+			\Cycles{4}{16}
+			\Comment{if {\tt BC}=0}
+	\end{instruction}
 
-	LDIX\instrt & 
-		if (HL)$\neq$A$\Rightarrow$(DE)$\leftarrow$(HL) & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 &
-		4 & 16 & \\
-		& DE$\leftarrow$DE+1 & \multicolumn{8}{c}{} & 10 & 100 & 100 & A4 & \\
-		& HL$\leftarrow$HL+1 & \\
-		& BC$\leftarrow$BC-1 & \instrb \\
+	\begin{instruction}{LDIX} 
+		\Symbol{if (HL)$\neq$A:}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{~~(DE)$\leftarrow$(HL)}
+			\FromSymbolToOpCode
+			\OpCode{10}{100}{100}
+			\Hex{A4}{}
+		\SkipToSymbol
+			\Symbol{DE$\leftarrow$DE+1}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL+1}
+		\SkipToSymbol
+			\Symbol{BC$\leftarrow$BC-1}
+	\end{instruction}
 
-	LDDIX\instrt & 
-		do LDIX & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		5 & 21 & if BC$\neq$0 \\
-		& while BC>0 & \multicolumn{8}{c}{} & 10 & 110 & 100 & B4 & & 4 & 16 & if BC=0 \instrb \\
+	\begin{instruction}{LDDIX} 
+		\Symbol{do LDIX}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{21}
+			\Comment{if {\tt BC}$\neq$0}
+		\SkipToSymbol
+			\Symbol{while BC>0}
+			\FromSymbolToOpCode
+			\OpCode{10}{110}{100}
+			\Hex{B4}{}
+			\Cycles{4}{16}
+			\Comment{if {\tt BC}=0}
+	\end{instruction}
 
-	LDPIRX\instrt & 
-		do & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 &
-		5 & 21 & if BC$\neq$0 \\
-		& ~~t$\leftarrow$(HL$\wedge$\$FFF8+E$\wedge$7) & \multicolumn{8}{c}{} & 10 & 110 & 111 & B7 & & 4 & 16 & if BC=0 \\
-		& ~~if t$\neq$A$\Rightarrow$(DE)$\leftarrow$t & \\
-		& ~~DE$\leftarrow$DE+1 & \\
-		& ~~BC$\leftarrow$BC-1 & \\
-		& while BC>0 & \instrb \\
+	\begin{instruction}{LDPIRX} 
+		\Symbol{do}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{21}
+			\Comment{if {\tt BC}$\neq$0}
+		\SkipToSymbol
+			\Symbol{~~t$\leftarrow$(HL$\wedge$\$FFF8+E$\wedge$7)}
+			\FromSymbolToOpCode
+			\OpCode{10}{110}{111}
+			\Hex{B7}{}
+			\Cycles{4}{16}
+			\Comment{if {\tt BC}=0}
+		\SkipToSymbol
+			\Symbol{~~if~t$\neq$A:~(DE)$\leftarrow$t}
+		\SkipToSymbol
+			\Symbol{~~DE$\leftarrow$DE+1}
+		\SkipToSymbol
+			\Symbol{~~BC$\leftarrow$BC-1}
+		\SkipToSymbol
+			\Symbol{while BC>0}
+	\end{instruction}
 
-	LDWS\instrt & 
-		(DE)$\leftarrow$(HL) & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			0 & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 &
-		4 & 16 & \\
-		& INC L & \multicolumn{8}{c}{} & 10 & 100 & 101 & A5 & \\
-		& INC D & \instrb \\
+	\begin{lastinstruction}{LDWS} 
+		\Symbol{(DE)$\leftarrow$(HL)}
+			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{INC L}
+			\FromSymbolToOpCode
+			\OpCode{10}{100}{101}
+			\Hex{A5}{}
+		\SkipToSymbol
+			\Symbol{INC D}
+	\end{lastinstruction}
 
-	\hline
+\end{instrtablesymbol}
 
-	\instrnotetitle
-		& \instrnoteitem{\footnotemark[1] Core v2+ only!}\notet \\
-		& \instrnoteitem{\footnotemark[2] DE$\leftarrow$signed(DE)>>(B$\wedge$\$1F)} \\
-		& \instrnoteitem{\footnotemark[3] DE$\leftarrow$unsigned(DE)>>(B$\wedge$\$1F)} \\
-		& \instrnoteitem{\footnotemark[4] DE$\leftarrow\sim$(unsigned($\sim$DE)>>(B$\wedge$\$1F)))}\noteb \\
+\begin{notestable}
+	\NoteItem{\See{1} Core v2+ only!}
+	\NoteItem{\See{2} {\tt DE$\leftarrow$signed(DE) >> (B$\wedge$\$1F)}}
+	\NoteItem{\See{3} {\tt DE$\leftarrow$unsigned(DE) >> (B$\wedge$\$1F)}}
+	\NoteItem{\See{4} {\tt DE$\leftarrow\sim$(unsigned($\sim$DE) >> (B$\wedge$\$1F)))}}
+	\NoteItem{\See{5} {\tt DE$\leftarrow$DE << ((B$\wedge$\$0F) $\vee$ (DE >> (16-B$\wedge$\$0F)))}}
+\end{notestable}
 
-	\hline
-}
+% we can't use \InstrPageBreak here because we need continue inside minipage and pagebreak after...
+(continued)
+	
+\end{minipage}
 
-\instrtablelebreak
+\pagebreak
 \vspace*{0.45cm}
 
-\instrtable{
-	\instrempty{}
+\begin{minipage}{\textwidth}
 
-	SWAPNIB\instrt & \multirow{3}{*}{
-		\setlength{\unitlength}{0.9mm}
-		\put(-1.5,1){\makebox(4,3){A}}
-		\begin{picture}(25,5.5)
-			\put(2,1){\framebox(6,3){7654}}
-			\put(8.2,1){\framebox(6,3){3210}}
+\begin{instrtablesymbol}	
 
-			\put(11.5,0.5){\line(0,-1){2}}
-			\put(11.5,-1.5){\line(-1,0){6.8}}
-			\put(4.7,-1.5){\vector(0,1){2}}
+	\begin{instruction}{SWAPNIB}
+		\Symbol{
+			\scriptsize
+			\multirow{3}{*}{
+				\setlength{\unitlength}{0.9mm}
+				\put(-1.5,1){\makebox(4,3){A}}
+				\begin{picture}(25,5.5)
+					\put(2,1){\framebox(6,3){7654}}
+					\put(8.2,1){\framebox(6,3){3210}}
 
-			\put(4.7,6.5){\line(0,-1){2}}
-			\put(11.5,6.5){\line(-1,0){6.8}}
-			\put(11.5,6.5){\vector(0,-1){2}}
-		\end{picture}} & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 8 & \\
-		\multicolumn{10}{c}{} & 00 & 100 & 011 & 23 & \instrb \\[4ex]
-		% we need some extra spacing to accomodate the image
+					\put(11.5,0.5){\line(0,-1){2}}
+					\put(11.5,-1.5){\line(-1,0){6.8}}
+					\put(4.7,-1.5){\vector(0,1){2}}
+
+					\put(4.7,6.5){\line(0,-1){2}}
+					\put(11.5,6.5){\line(-1,0){6.8}}
+					\put(11.5,6.5){\vector(0,-1){2}}
+				\end{picture}
+			}
+		}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{00}{100}{011}
+			\Hex{23}
+	\end{instruction}
+	
+	% we need some extra spacing to accomodate the image
+	\\[0.1em]
 			
-	MIRROR A\instrt & \multirow{3}{*}{
-		\setlength{\unitlength}{0.9mm}
-		\put(-1.5,-2){\makebox(4,3){A}}
-		\begin{picture}(25,5.5)
-			\put(2,-2){\framebox(6,3){7654}}
-			\put(8.2,-2){\framebox(6,3){3210}}
+	\begin{instruction}{MIRROR A}
+		\Symbol{
+			\scriptsize
+			\multirow{3}{*}{
+				\setlength{\unitlength}{0.9mm}
+				\put(-1.5,-2){\makebox(4,3){A}}
+				\begin{picture}(25,5.5)
+					\put(2,-2){\framebox(6,3){7654}}
+					\put(8.2,-2){\framebox(6,3){3210}}
 
-			\put(13.5,-2.5){\line(0,-1){5}}
-			\put(13.5,-7.5){\line(-1,0){11}}
-			\put(2.5,-7.5){\vector(0,1){5}}
+					\put(13.5,-2.5){\line(0,-1){5}}
+					\put(13.5,-7.5){\line(-1,0){11}}
+					\put(2.5,-7.5){\vector(0,1){5}}
 
-			\put(12,-2.5){\line(0,-1){4}}
-			\put(12,-6.5){\line(-1,0){7.8}}
-			\put(4.2,-6.5){\vector(0,1){4}}
+					\put(12,-2.5){\line(0,-1){4}}
+					\put(12,-6.5){\line(-1,0){7.8}}
+					\put(4.2,-6.5){\vector(0,1){4}}
 
-			\put(10.5,-2.5){\line(0,-1){3}}
-			\put(10.5,-5.5){\line(-1,0){4.7}}
-			\put(5.8,-5.5){\vector(0,1){3}}
+					\put(10.5,-2.5){\line(0,-1){3}}
+					\put(10.5,-5.5){\line(-1,0){4.7}}
+					\put(5.8,-5.5){\vector(0,1){3}}
 
-			\put(9,-2.5){\line(0,-1){2}}
-			\put(9,-4.5){\line(-1,0){1.8}}
-			\put(7.3,-4.5){\vector(0,1){2}}
+					\put(9,-2.5){\line(0,-1){2}}
+					\put(9,-4.5){\line(-1,0){1.8}}
+					\put(7.3,-4.5){\vector(0,1){2}}
 
-			\put(2.5,6.5){\line(0,-1){5}}
-			\put(13.5,6.5){\line(-1,0){11}}
-			\put(13.5,6.5){\vector(0,-1){5}}
+					\put(2.5,6.5){\line(0,-1){5}}
+					\put(13.5,6.5){\line(-1,0){11}}
+					\put(13.5,6.5){\vector(0,-1){5}}
 
-			\put(4.2,5.5){\line(0,-1){4}}
-			\put(12,5.5){\line(-1,0){7.8}}
-			\put(12,5.5){\vector(0,-1){4}}
+					\put(4.2,5.5){\line(0,-1){4}}
+					\put(12,5.5){\line(-1,0){7.8}}
+					\put(12,5.5){\vector(0,-1){4}}
 
-			\put(5.8,4.5){\line(0,-1){3}}
-			\put(10.5,4.5){\line(-1,0){4.7}}
-			\put(10.5,4.5){\vector(0,-1){3}}
+					\put(5.8,4.5){\line(0,-1){3}}
+					\put(10.5,4.5){\line(-1,0){4.7}}
+					\put(10.5,4.5){\vector(0,-1){3}}
 
-			\put(7.3,3.5){\line(0,-1){2}}
-			\put(9,3.5){\line(-1,0){1.8}}
-			\put(9,3.5){\vector(0,-1){2}}
-		\end{picture}} & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		2 & 8 & \\
-		\multicolumn{10}{c}{} & 00 & 100 & 100 & 24 & \instrb \\[8ex]
-		% we need some extra spacing to accomodate the image
+					\put(7.3,3.5){\line(0,-1){2}}
+					\put(9,3.5){\line(-1,0){1.8}}
+					\put(9,3.5){\vector(0,-1){2}}
+				\end{picture}
+			}
+		}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{00}{100}{100}
+			\Hex{24}
+	\end{instruction}
+	
+	% we need some extra spacing to accomodate the image
+	\\[1em]
 
-	NEXTREG r,A\instrt & 
-		HwNextReg[r]$\leftarrow$A & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 3 &
-		4 & 17 & \\
-		\multicolumn{10}{c}{} & 10 & 010 & 010 & 92 & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ r $\longrightarrow|$} & .. & \instrb \\
+	\begin{instruction}{NEXTREG r,A} 
+		\Symbol{HwNextReg[r]$\leftarrow$A}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101} 
+			\Hex{ED}{3}
+			\Cycles{4}{17}
+		\SkipToOpCode 
+			\OpCode{10}{010}{010}
+			\Hex{92}{}
+		\SkipToOpCode 
+			\OpRange{r} 
+			\Hex{..}{}
+	\end{instruction}
 
-	NEXTREG r,n\instrt & 
-		HwNextReg[r]$\leftarrow$n & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 3 &
-		5 & 20 & \\
-		\multicolumn{10}{c}{} & 10 & 010 & 001 & 91 & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ r $\longrightarrow|$} & .. & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \instrb \\
+	\begin{instruction}{NEXTREG r,n}
+		\Symbol{HwNextReg[r]$\leftarrow$n}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{3}
+			\Cycles{5}{20}
+		\SkipToOpCode 
+			\OpCode{10}{010}{001}
+			\Hex{91}{}
+		\SkipToOpCode 
+			\OpRange{r} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+	\end{instruction}
 
-	PIXELAD\instrt & 
-		HL$\leftarrow$\$4000 & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 3 &
-		2 & 8 & \\
-		& ~~+((D$\wedge$\$C0)<<5) & \multicolumn{8}{c}{} & 10 & 010 & 100 & 94 & \\
-		& ~~+((D$\wedge$\$07)<<8) & \\
-		& ~~+((D$\wedge$\$38)<<2) & \\
-		& ~~+(E>>3) & \instrb \\
+	\begin{instruction}{PIXELAD} 
+		\Symbol{HL$\leftarrow$\$4000}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{3}
+			\Cycles{2}{8}
+		\SkipToSymbol
+			\Symbol{~~+((D$\wedge$\$C0)<<5)}
+			\FromSymbolToOpCode
+			\OpCode{10}{010}{100}
+			\Hex{94}{}
+		\SkipToSymbol
+			\Symbol{~~+((D$\wedge$\$07)<<8)}
+		\SkipToSymbol
+			\Symbol{~~+((D$\wedge$\$38)<<2)}
+		\SkipToSymbol
+			\Symbol{~~+(E>>3)\See{1}}
+	\end{instruction}
 
-	PIXELDN\instrt & 
-		if HL$\wedge$\$700$\neq$\$700 & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 3 &
-		2 & 8 & \\
-		& ~~$\Rightarrow$HL$\leftarrow$HL+256 & \multicolumn{8}{c}{} & 10 & 010 & 011 & 93 & \\
-		& else if HL$\wedge$\$E0$\neq$\$E0 & \\
-		& ~~$\Rightarrow$HL$\leftarrow$HL$\wedge$\$F8FF+\$20 & \\
-		& else & \\
-		& ~~$\Rightarrow$HL$\leftarrow$HL$\wedge$\$F81F+\$800 & \instrb \\
+	\begin{instruction}{PIXELDN} 
+		\Symbol{if~HL$\wedge$\$700$\neq$\$700}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{3}
+			\Cycles{2}{8}
+		\SkipToSymbol
+			\Symbol{$\Rightarrow$HL$\leftarrow$HL+256}
+			\FromSymbolToOpCode
+			\OpCode{10}{010}{011}
+			\Hex{93}{}
+		\SkipToSymbol
+			\Symbol{else~if~HL$\wedge$\$E0$\neq$\$E0}
+		\SkipToSymbol
+			\Symbol{$\Rightarrow$HL$\leftarrow$HL$\wedge$\$F8FF+\$20}
+		\SkipToSymbol
+			\Symbol{else}
+		\SkipToSymbol
+			\Symbol{$\Rightarrow$HL$\leftarrow$HL$\wedge$\$F81F+\$800}
+	\end{instruction}
 
-	SETAE\instrt & 
-		A$\leftarrow$u(\$80)>>(E$\wedge$7)\footnotemark[1] & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 3 &
-		2 & 8 & \\
-		\multicolumn{10}{c}{} & 10 & 010 & 101 & 95 & \instrb \\
+	\begin{instruction}{SETAE} 
+		\Symbol{\footnotesize A$\leftarrow$u(\$80)>>(E$\wedge$7)\See{2}}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{3}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{10}{010}{101}
+			\Hex{95}{}
+	\end{instruction}
 
-	MUL D,E\instrt & 
-		DE$\leftarrow$D*E & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 2 &
-		2 & 8 & \\
-		\multicolumn{10}{c}{} & 00 & 110 & 000 & 30 & \instrb \\
+	\begin{instruction}{MUL D,E} 
+		\Symbol{DE$\leftarrow$D*E}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{00}{110}{000}
+			\Hex{30}
+	\end{instruction}
 
-	TEST n\instrt & 
-		A$\wedge$n & 
-		$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			$\updownarrow$ & 
-			VF & 
-			? & 
-			$\updownarrow$ & 
-		11 & 101 & 101 & 
-		ED & 3 &
-		3 & 11 & \\
-		\multicolumn{10}{c}{} & 00 & 100 & 111 & 27 & \instrb \\
+	\begin{instruction}{TEST n} 
+		\Symbol{A$\wedge$n}
+			\Flags{\FS}{\FS}{\FS}{VF}{?}{\FS}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{3}
+			\Cycles{3}{11}
+		\SkipToOpCode 
+			\OpCode{00}{100}{111}
+			\Hex{27}{}
+	\end{instruction}
 
-	JP (C)\instrt & 
-		PC$\leftarrow$PC$\wedge$\$C000+IN(C)<<6 & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 2 & 
-		3 & 13 & \\
-		\multicolumn{10}{c}{} & 10 & 011 & 000 & 98 & \instrb \\
+	\begin{instruction}{JP (C)} 
+		\SymbolS{PC$\leftarrow$PC$\wedge$\$C000}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{3}{13}
+		\SkipToSymbol
+			\SymbolP{+IN(C)<<6}
+			\OpCode{10}{011}{000}
+			\Hex{98}{}
+	\end{instruction}
 		
-	OUTINB\instrt & 
-		(C)$\leftarrow$(HL) & 
-		? & 
-			? & 
-			? & 
-			? & 
-			? & 
-			? & 
-			? & 
-			? & 
-		11 & 101 & 101 & 
-		ED & 2 & 
-		4 & 16 & \\
-		& HL$\leftarrow$HL+1 & \multicolumn{8}{c}{} & 10 & 010 & 000 & 90 & \instrb \\
+	\begin{instruction}{OUTINB} 
+		\Symbol{(C)$\leftarrow$(HL)}
+			\Flags{?}{?}{?}{?}{?}{?}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{HL$\leftarrow$HL+1}
+			\FromSymbolToOpCode
+			\OpCode{10}{010}{000}
+			\Hex{90}{}
+	\end{instruction}
 
-	PUSH nm\instrt\footnotemark[2] & 
-		SP$\leftarrow$SP-2 & 
-		$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ & 
-			$\bullet$ &
-		11 & 101 & 101 & 
-		ED & 3 &
-		5 & 23 & \\
-		& (SP)$\leftarrow$nn & \multicolumn{8}{c}{} & 10 & 001 & 010 & 8A & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ n $\longrightarrow|$} & .. & \\
-		\multicolumn{10}{c}{} & \multicolumn{3}{c}{$|\longleftarrow$ m $\longrightarrow|$} & .. & \instrb \\
+	\begin{instruction}{PUSH nm\See{4}}
+		\Symbol{SP$\leftarrow$SP-2}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{3}
+			\Cycles{5}{23}
+		\SkipToSymbol
+			\Symbol{(SP)$\leftarrow$nn}
+			\FromSymbolToOpCode
+			\OpCode{10}{001}{010}
+			\Hex{8A}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+	\end{instruction}
 
-	\hline
+\end{instrtablesymbol}
 
-	\instrnotetitle
-		& \instrnoteitem{\footnotemark[1] A$\leftarrow$unsigned(\$80)>>(E$\wedge$7)}\notet \\
-		& \instrnoteitem{\footnotemark[2] PUSH nm operand is in fact encoded in big-endian}\noteb \\
+\begin{notestable}
+	\NoteItem{{\tt HL$\leftarrow$\$4000 + ((D$\wedge$\$C0)<<5) + ((D$\wedge$\$07)<<8) + ((D$\wedge$\$38)<<2) + (E>>3)}}
 
-	\hline
-}
+	\NoteItem{\See{2} {\tt A$\leftarrow$unsigned(\$80)>>(E$\wedge$7)}}
+
+	\NoteItem{\See{3} {\tt PC$\leftarrow$(PC$\wedge$\$C000) + (IN(C)<<6})}
+
+	\NoteItem{\See{4} This is not mistake, {\tt PUSH nm} operand is in fact encoded in big-endian}
+\end{notestable}
+
+\end{minipage}
+
+
+
+
+
+\chapter{Instructions Up Close}
+\label{instruction_details}
+
+Herein you will find all instructions listed alphabetically by their mnemonic with additional description that wouldn't fit inside instruction tables.
+
 
 
 \chapter{Instructions Sorted by Opcode}
