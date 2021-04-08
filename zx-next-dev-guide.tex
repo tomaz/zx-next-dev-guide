@@ -59,6 +59,14 @@
 	\mbox{}
 }
 
+% customize Verbatim environment wiht default settings
+\RecustomVerbatimEnvironment{Verbatim}{Verbatim}{
+	numbers=left,
+	xleftmargin=5mm,
+	tabsize=4,
+	fontsize=\small
+}
+
 
 
 % use empty style for first couple pages, until defined otherwise
@@ -1519,59 +1527,123 @@ Next inherits 128K and 3+ paging modes that divide 64K bank into 16K slots. Of t
 
 \subsubsection{128K Mode}
 
-Selects 16K ROM to be visible in the bottom 16K slot and 16K RAM to be visible in top 16K slot (memory addresses {\tt \$C000}-{\tt \$FFFF}) as follows (see section \ref{zx_next_mappingregister} for details):
+Selects 16K ROM to be visible in the bottom 16K slot (memory addresses {\tt \$0000}-{\tt \$3FFF} from 2 possible banks) and 16K RAM to be visible in top 16K slot (memory addresses {\tt \$C000}-{\tt \$FFFF} from 8 possible banks). In other words:
+
+\begin{tabular}{ccccl}
+	{\tt \$0000} & {\tt \$4000} & {\tt \$8000} & {\tt \$C000} & \\
+	\hline
+	$\uparrow$ & & & $\uparrow$ & \\
+	\multicolumn{2}{l}{\tt ROM 0-1} & & \multicolumn{2}{l}{{\tt BANK 0-7} on 128K} \\
+	& & & \multicolumn{2}{l}{{\tt BANK 0-127} on Next} \\
+\end{tabular}
+
+Registers involved are (see section \ref{zx_next_mappingregister} for details):
 
 \begin{itemize}
-	\item {\tt \$1FFD} \textbf{Plus 3 Memory Paging Control}: bit 0 of this register must be set to 0 to use standard 128K paging mode.
-	
-	\item {\tt \$7FFD} \textbf{Memory Paging Control}: bits 2-0 of this register contain 3 least significant bits of desired 16K bank number while bit 4 represents ROM selection.
-	
-	\item {\tt \$DFFD} \textbf{Next Memory Bank Select}: bits 3-0 of this register contain 4 MSBs of 16K bank number.
+	\item {\tt \$7FFD} \textbf{Memory Paging Control}
+	\item {\tt \$DFFD} \textbf{Next Memory Bank Select}
 \end{itemize}
 
 Together 4 bits from {\tt \$DFFD} and 3 from {\tt \$7FFD} form 7 bit bank number.
 
-If you are using the standard interrupt handler or OS routines, then any time you write to Memory Paging Control {\tt \$7FFD} you should also store the value at {\tt \$5B5C}. Any time you write to Plus 3 Memory Paging Control {\tt \$1FFD} you should also store the value at {\tt \$5B67}. There is no corresponding system variable for the Next-only Next Memory Bank Select {\tt \$DFFD} and standard OS routines may not support the extended banks properly.
+If you are using the standard interrupt handler or OS routines, then any time you write to Memory Paging Control {\tt \$7FFD} you should also store the value at {\tt \$5B5C}.
+
+Example routine for selecting any of 128 pages on Next (supports standard interrupt handler and OS routines). Routine takes bank number 0-127 as argument in A (on next page):
+
+\pagebreak
+\begin{Verbatim}
+switchBank:           ; A = xHHHHLLL
+	LD H, A           ; temporarily store A to H
+	AND %00000111     ; 00000LLL
+	LD L, A           ; L now holds lower 3 bits of A
+
+	LD A, H           ; xHHHHxxx
+	RRCA              ; xxHHHHxx
+	RRCA              ; xxxHHHHx
+	RRCA              ; xxxxHHHH
+	AND %00001111     ; 0000HHHH
+	LD H, A           ; H now holds high 4 bits of A
+
+	LD A, ($5B5C)     ; get existing value from port
+	AND %11111000     ; clear bottom 3 bits
+	OR L              ; A now holds final value for $7FFD and $5B5C
+
+	DI                ; interrupts must be disabled
+
+	OUT (C), A        ; write low 3 bits into $7FFD
+	LD BC, $7FFD
+	LD ($5B5C), A     ; write same value into $5B5C
+
+	LD A, H
+	LC BC, $DFFD
+	OUT (C), A        ; write high 4 bits into $DFFD
+
+	EI                ; enable interrupts
+	RET
+\end{Verbatim}
+
+Alternatively we could replace lines 7-9 with:
+
+\begin{Verbatim}[firstnumber=7]
+	RLCA              ; HHHHxxxx
+	SWAPNIB           ; xxxxHHHH
+\end{Verbatim}
+
+Performance wise, it's exactly the same - 12 states both, but it's one less line of code, so boils down to personal preference. Either way, to call the routine use:
+
+\begin{Verbatim}
+	LD A, 10
+	CALL switchBank
+\end{Verbatim}
 
 
-\subsubsection{+3 "AllRam" Mode}
+\pagebreak
+\subsubsection{+3 ``AllRam'' Mode}
 
-This mode was not widely used as programmers mainly targeted 128K models prior to +3.
+3+ mode allows selecting all 16K slots of 64K bank from limited selection of arrangements. In normal mode, everything works as in 128K Mode, except that we can select from 4 instead of just 2 ROMs:
 
-3+ mode allows selecting all 16K slots of 64K bank from limited selection of arrangements. On Next this allows to chose from 4 16K ROM slots and 48 16K RAM slots (112 on expanded machines with 2048K or memory). Note: remaining portion of memory is allocated to other uses, such as divMMC, firmware etc.
+\begin{tabular}{ccccl}
+	{\tt \$0000} & {\tt \$4000} & {\tt \$8000} & {\tt \$C000} & \\
+	\hline
+	\multirow{2}{*}{$\Big\uparrow$} & & & $\uparrow$ & \\
+	& & & {\tt BANK 0-7} \\
+	\multicolumn{5}{l}{
+		\begin{tabular}{cl}
+			{\tt 00} & 0 = 128K editor and menu system \\
+			{\tt 01} & 1 = 128K syntax checker \\
+			{\tt 10} & 2 = +3 DOS \\
+			{\tt 11} & 3 = 48K BASIC \\
+			\multicolumn{2}{l}{Hi bit = bit 4 from {\tt \$7FFD}} \\
+			\multicolumn{2}{l}{Lo bit = bit 2 from {\tt \$1DDF}} \\
+		\end{tabular}
+	} \\
+\end{tabular}
+
+However, this changes when special mode is enabled by setting bit 0 of {\tt \$1DDF}. In special mode all 4 banks can be changed in the following arrangement:
+
+\begin{tabular}{ccccc}
+	& {\tt \$0000} & {\tt \$4000} & {\tt \$8000} & {\tt \$C000} \\
+	\hline
+	& $\uparrow$ & $\uparrow$ & $\uparrow$ & $\uparrow$\\
+	{\tt 00} = & {\tt BANK 0} & {\tt BANK 1} & {\tt BANK 2} & {\tt BANK 3} \\
+	{\tt 01} = & {\tt BANK 4} & {\tt BANK 5} & {\tt BANK 6} & {\tt BANK 7} \\
+	{\tt 10} = & {\tt BANK 4} & {\tt BANK 5} & {\tt BANK 6} & {\tt BANK 3} \\
+	{\tt 11} = & {\tt BANK 4} & {\tt BANK 7} & {\tt BANK 6} & {\tt BANK 3} \\
+	\multicolumn{5}{l}{Hi bit = bit 2 from {\tt \$1DDF}} \\
+	\multicolumn{5}{l}{Lo bit = bit 1 from {\tt \$1DDF}} \\
+\end{tabular}
 
 The following registers control paging in this mode (see section \ref{zx_next_mappingregister} for details):
 
 \begin{itemize}
-	\item {\tt \$1FFD} \textbf{Plus 3 Memory Paging Control}: bit 0 of this register must be set to 1 to use enable 3+ paging mode, bit 1 is low bit of memory configuration number and bit 2 high bit of ROM selection.
-	
-	\item {\tt \$7FFD} \textbf{Memory Paging Control}: bit 4 represents low bit for ROM select.
+	\item {\tt \$1FFD} \textbf{Plus 3 Memory Paging Control}
+	\item {\tt \$7FFD} \textbf{Memory Paging Control}
+	\item {\tt \$DFFD} \textbf{Next Memory Bank Select}
 \end{itemize}
 
-Together low 3 bits of {\tt \$1FFD} register define memory configuration as follows:
+Any time you write to Plus 3 Memory Paging Control {\tt \$1FFD} you should also store the value at {\tt \$5B67}.
 
-\begin{tabular}{ccccc}
-	Bit & \multicolumn{4}{c}{Memory Configuration} \\
-	{\tt 210} & Slot 1 & Slot 2 & Slot 3 & Slot 4 \\
-	\hline
-	{\tt 001}\notet & 0 & 1 & 2 & 3 \\
-	{\tt 011} & 4 & 5 & 6 & 7 \\
-	{\tt 101} & 4 & 5 & 6 & 3 \\
-	{\tt 111} & 4 & 7 & 6 & 3 \\
-\end{tabular}
-
-And bit 2 from {\tt \$1DDF} (hi) and bit 4 from {\tt \$7DDF} (low) together form the following ROM configuration:
-
-\begin{tabular}{cl}
-	Bit & ROM \\
-	\hline
-	{\tt 00}\notet & ROM0 = 128K editor and menu system \\
-	{\tt 01} & ROM1 = 128K syntax checker \\
-	{\tt 10} & ROM2 = +3DOS \\
-	{\tt 11} & ROM3 = 48K BASIC \\
-\end{tabular}
-
-
+\pagebreak
 \subsection{MMU-based Mode}
 
 Next unique \textbf{MMU-based Mode} is much more flexible in that it allows mapping 8K chunks into any 8K slot of memory available to CPU. In this mode, 64K memory bank accessible to CPU is divided into 8 slots called MMU0 through MMU7, as shown in diagram below. Physical memory is thus divided into 96 (or 224 in expanded) slots.
@@ -1645,18 +1717,20 @@ ROM can be paged out by using +3 "AllRam" or Next MMU-based mode. Beware though 
 	Bit & Effect \\
 	\hline
 	{\tt 7-3}\notet & Unused, use 0 \\
-	{\tt 2}\notet & High bit of ROM selection, together with low bit from bit 4 of {\tt \$7FFD}:
+	{\tt 2}\notet & In normal mode high bit of ROM selection, with low bit from bit 4 of {\tt \$7FFD}: \\
+	& 
 		\begin{tabular}{ll}
-			{\tt 00}\notet & ROM0 = 128K editor and menu system \\
+			{\tt 00} & ROM0 = 128K editor and menu system \\
 			{\tt 01} & ROM1 = 128K syntax checker \\
 			{\tt 10} & ROM2 = +3DOS \\
 			{\tt 11} & ROM3 = 48K BASIC \\
 		\end{tabular}\\
-	{\tt 1}\notet & Low bit of memory configuration number (only in +3 mode) \\
-	{\tt 0}\notet & Paging mode: 0 = 128K, 1 = +3\\
+	& In special mode: high bit of memory configuration number \\
+	{\tt 1}\notet & In special mode: low bit of memory configuration number \\
+	{\tt 0}\notet & Paging mode: 0 = normal, 1 = special \\
 \end{tabular}
 
-\subsection{Memory Paging Control {\tt \$7FFD}}
+\subsubsection{Memory Paging Control {\tt \$7FFD}}
 
 \begin{tabular}{cp{12cm}}
 	Bit & Effect \\
@@ -1673,7 +1747,7 @@ ROM can be paged out by using +3 "AllRam" or Next MMU-based mode. Beware though 
 		Bank number for slot 4 (\$C000) \\
 \end{tabular}
 
-\subsection{Next Memory Bank Select {\tt \$DFFD}}
+\subsubsection{Next Memory Bank Select {\tt \$DFFD}}
 
 \begin{tabular}{cp{12cm}}
 	Bit & Effect \\
@@ -1685,6 +1759,7 @@ ROM can be paged out by using +3 "AllRam" or Next MMU-based mode. Beware though 
 \end{tabular}
 
 
+\pagebreak
 \section{Keyboard}
 \label{zx_next_keyboard}
 
@@ -1709,20 +1784,31 @@ Keyboard is read from port {\tt \$ssFE} where:
 }
 
 If key is pressed, corresponding bit is set to 0 and vice versa. Example for checking if P or I is pressed:
-
+	
 \begin{Verbatim}
-	LD A, $DF      ; We want to read keys:   YUIOP
-	IN ($FE)       ; A holds values in bits: 43210
-checkP: BIT 0, A       ; test bit 0 of A (P key)
+	LD BC, $DFFE   ; We want to read keys:   YUIOP
+	IN A, (C)      ; A holds values in bits: 43210
+checkP:
+	BIT 0, A       ; test bit 0 of A (P key)
 	JR NZ checkI   ; if bit0=1, P not pressed
 	...            ; P is pressed
-checkI: BIT 2, A       ; test bit 2 of A (I key)
+checkI:
+	BIT 2, A       ; test bit 2 of A (I key)
 	JR NZ continue ; if bit2=1, I not pressed
 	...            ; I is pressed
 continue:
 \end{Verbatim}
 
+We can slightly improve performance if we replace first two lines with:
 
+\begin{Verbatim}
+	LD A, $DF
+	IN ($FE)
+\end{Verbatim}
+
+Using 16-bit load requires 10 T states for ``{\tt LD BC,nn}'' + 12 for ``{\tt IN A,(C)}'' whereas later variant requires 7 T states for ``{\tt LD A,nn}'' + 11 for ``{\tt IN (nn)}''. So 22 vs 18. The difference is small, but it can add up as typically keyboard is read multiple times per frame.
+
+First program is more understandable at a glance - port address is given as whole 16-bit value, as usually provided in documentation. The second program splits it into 2 8-bit values, so intent may not be immediately apparent. Of course, one learns the patterns with experience, but it nonetheless demonstrates the compromise between readability and speed.
 
 
 \chapter{Instruction Tables}
@@ -4368,7 +4454,7 @@ continue:
 		}
 	}
 
-	IN A,(n)\instrt & 
+	IN A,(n)\footnotemark[1]\instrt & 
 		A$\leftarrow$(n) & 
 		$\bullet$ & 
 			$\bullet$ & 
@@ -4415,14 +4501,14 @@ continue:
 
 	INI\instrt & 
 		(HL)$\leftarrow$(C) & 
-		$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[3] & 
+		$\updownarrow$\footnotemark[2] & 
 			$\updownarrow$\footnotemark[2] & 
+			$\updownarrow$\footnotemark[2] & 
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[2] & 
+			$\updownarrow$\footnotemark[4] & 
 			$\updownarrow$\footnotemark[3] & 
+			$\updownarrow$\footnotemark[4] & 
 		11 & 101 & 101 & 
 		ED & 2 & 
 		4 & 16 & \\
@@ -4434,11 +4520,11 @@ continue:
 		0 & 
 			1 & 
 			0 & 
-			$\updownarrow$\footnotemark[3] & 
+			$\updownarrow$\footnotemark[4] & 
 			0 & 
+			$\updownarrow$\footnotemark[4] & 
 			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[3] &
+			$\updownarrow$\footnotemark[4] &
 		11 & 101 & 101 & 
 		ED & 2 & 
 		5 & 21 & {if B$\not=$0} \\
@@ -4449,13 +4535,13 @@ continue:
 
 	IND\instrt & 
 		(HL)$\leftarrow$(C) & 
-		$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[1] & 
-			$\updownarrow$\footnotemark[3] & 
+		$\updownarrow$\footnotemark[2] & 
 			$\updownarrow$\footnotemark[2] & 
+			$\updownarrow$\footnotemark[2] & 
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[2] & 
+			$\updownarrow$\footnotemark[4] & 
+			$\updownarrow$\footnotemark[3] & 
 			$\updownarrow$\footnotemark[4] & 
 		11 & 101 & 101 & 
 		ED & 2 & 
@@ -4468,11 +4554,11 @@ continue:
 		0 & 
 			1 & 
 			0 & 
-			$\updownarrow$\footnotemark[3] & 
+			$\updownarrow$\footnotemark[4] & 
 			0 & 
+			$\updownarrow$\footnotemark[4] & 
 			$\updownarrow$\footnotemark[3] & 
-			$\updownarrow$\footnotemark[2] & 
-			$\updownarrow$\footnotemark[3] & 
+			$\updownarrow$\footnotemark[4] & 
 		11 & 101 & 101 & 
 		ED & 2 & 
 		5 & 21 & {if B$\not=$0} \\
@@ -4484,9 +4570,10 @@ continue:
 	\hline
 
 	\instrnotetitle
-		& \instrnoteitem{\footnotemark[1] flag is affected by the result of B$\leftarrow$B-1 as in DEC B.}\notet \\
-		& \instrnoteitem{\footnotemark[2] NF is a copy of bit 7 of the transferred byte.} \\
-		& \instrnoteitem{\footnotemark[3] This flag is bizarre, see section \ref{block_io}.}\noteb \\
+		& \instrnoteitem{\footnotemark[1] LD (n) is interpretted as LD A,(n)}\notet \\
+		& \instrnoteitem{\footnotemark[2] flag is affected by the result of B$\leftarrow$B-1 as in DEC B.} \\
+		& \instrnoteitem{\footnotemark[3] NF is a copy of bit 7 of the transferred byte.} \\
+		& \instrnoteitem{\footnotemark[4] This flag is bizarre, see section \ref{block_io}.}\noteb \\
 		
 	\hline
 }
