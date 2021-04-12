@@ -20,12 +20,12 @@ For compiling LaTeX, I use https://miktex.org/
 Couple ideas for new content:
 
 - Description for other relevant ZX Spectrum / Next port
+- Code examples demonstrating port usage
+- Example of bank switching in MMU mode
 - ULA graphics
 - Layer 2
 - Sprites
-- Code examples demonstrating port usage
-- Short description of each instruction
-
+- Addressing modes?
 
 # License
 
