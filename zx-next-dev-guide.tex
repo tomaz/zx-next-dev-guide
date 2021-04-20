@@ -16,6 +16,7 @@
 \usepackage{amssymb}
 \usepackage{xfp}
 \usepackage{numprint}
+\usepackage{xstring}
 \usepackage[table]{xcolor}
 \usepackage[nottoc,numbib]{tocbibind}
 
@@ -1748,8 +1749,12 @@ This chapters presents all instructions at a glance for quick info and to easily
 \pagebreak
 
 % couple shorthands for keeping text more readable
-\newcommand{\FS}{$\updownarrow$}
-\newcommand{\FN}{$\bullet$}
+\newcommand{\FS}{$\updownarrow$} % standard effect
+\newcommand{\FN}{-} % no effect
+\newcommand{\FU}{?} % unknown effect
+\newcommand{\FX}{$\times$}
+\newcommand{\FPV}{VF} % Overflow
+\newcommand{\FPP}{PF} % Parity
 
 \subsubsection{Instruction Execution}
 
@@ -1781,15 +1786,16 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 (copied from section \ref{flags} as convenience; note {\tt YF} and {\tt XF} flags are not represented in the tables; they're irrelevant from programmer point of view; they simply contain a copy of bit 5 and 3 of Accumulator, but special cases are described)
 
-\subsubsection{Flag Values}
+\subsubsection{Effects}
 
-\begin{tabular}{ll}
-	{\tt 0}/{\tt 1} & Flag is set to 0 or 1 \\
-	{\tt ?} & Effect on flag is unpredictable \\
-	{\tt VF} & P/V flag is used as overflow \\
-	{\tt PF} & P/V flag is used as parity \\
+\begin{tabular}{cl}
+	{\tt 0}/{\tt 1} & Flag is set to {\tt 0} or {\tt 1} \\
 	{\tt \FS} & Flag is modified according to operation \\
 	{\tt \FN} & Flag is not affected \\
+	{\tt \FU} & Effect on flag is unpredictable \\
+	{\tt VF} & P/V flag is used as overflow \\
+	{\tt PF} & P/V flag is used as parity \\
+	{\tt \FX} & Special case, described in \ref{instruction_details}
 \end{tabular}
 
 
@@ -1821,7 +1827,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 			% bottom header line
 			Mnemonic & 
 			Operation &
-			SF & ZF & HF & PF & NF & CF & &
+			SF & ZF & HF & PV & NF & CF & &
 			{\tt 76} & {\tt 543} & {\tt 210} & 
 			Hex & B & & 
 			Mc & Ts & &
@@ -1934,7 +1940,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{ADD A,r}
 		\Symbol{A$\leftarrow$A+r}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FS}
 			\OpCode{10}{\fbox{000}}{r}
 			\Hex{..}{1}
 			\Cycles{1}{4}
@@ -1958,7 +1964,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{ADD A,p}
 		\Symbol{A$\leftarrow$A+p}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FS}
 			\OpCode{11}{011}{101}
 			\Hex{DD}{2} 
 			\Cycles{2}{8}
@@ -1971,7 +1977,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{ADD A,q} 
 		\Symbol{A$\leftarrow$A+q}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FS}
 			\OpCode{11}{111}{101}
 			\Hex{FD}{2}
 			\Cycles{2}{8}
@@ -1983,7 +1989,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{ADD A,n}
 		\Symbol{A$\leftarrow$A+n}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FS}
 			\OpCode{11}{\fbox{000}}{110}
 			\Hex{C6}{2}
 			\Cycles{2}{7}
@@ -1994,7 +2000,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{ADD A,(HL)}
 		\Symbol{A$\leftarrow$A+(HL)}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FS}
 			\OpCode{10}{\fbox{000}}{110}
 			\Hex{86}{1} 
 			\Hex{2}{7}
@@ -2018,7 +2024,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{ADD A,(IX+d)}
 		\Symbol{A$\leftarrow$A+(IX+d)}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FS}
 			\OpCode{11}{011}{101}
 			\Hex{DD}{3}
 			\Cycles{5}{19}
@@ -2032,7 +2038,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 	
 	\begin{instruction}{ADD A,(IY+d)}
 		\Symbol{A$\leftarrow$A+(IY+d)}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FS}
 			\OpCode{11}{111}{101}
 			\Hex{FD}{3}
 			\Cycles{5}{19}
@@ -2048,7 +2054,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{ADC A,s\See{2}}
 		\Symbol{A$\leftarrow$A+s+CF}
-		\Flags{\FS}{\FS}{\FS}{VF}{0}{\FS}
+		\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FS}
 		\OpCode{..}{\fbox{001}}{...} 
 		\Hex{}{}
 		\Cycles{}{}
@@ -2072,37 +2078,37 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{SUB s\See{2}}
 		\Symbol{}
-			\Flags{\FS}{\FS}{\FS}{VF}{1}{\FS}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{1}{\FS}
 			\OpCode{..}{\fbox{010}}{...}
 	\end{instruction}
 
 	\begin{instruction}{SBC A,s\See{2}}
 		\Symbol{A$\leftarrow$A-s-CF}
-			\Flags{\FS}{\FS}{\FS}{VF}{1}{\FS}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{1}{\FS}
 			\OpCode{..}{\fbox{011}}{...}
 	\end{instruction}
 
 	\begin{instruction}{AND s\See{2}}
 		\Symbol{A$\leftarrow$A$\wedge$s}
-			\Flags{\FS}{\FS}{1}{PF}{0}{0}
+			\Flags{\FS}{\FS}{1}{\FPP}{0}{0}
 			\OpCode{..}{\fbox{100}}{...}
 	\end{instruction}
 
 	\begin{instruction}{OR s\See{2}}	
 		\Symbol{A$\leftarrow$A$\vee$s}
-			\Flags{\FS}{\FS}{0}{PF}{0}{0}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{0}
 			\OpCode{..}{\fbox{110}}{...}
 	\end{instruction}
 
 	\begin{instruction}{XOR s\See{2}}
 		\Symbol{A$\leftarrow$A$\bullet$s}
-			\Flags{\FS}{\FS}{0}{PF}{0}{0}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{0}
 			\OpCode{..}{\fbox{101}}{...}
 	\end{instruction}
 
 	\begin{instruction}{CP s\See{1,2}}
 		\Symbol{A-s}
-			\Flags{\FS}{\FS}{\FS}{VF}{1}{\FS}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{1}{\FS}
 			\OpCode{..}{\fbox{111}}{...}
 	\end{instruction}
 
@@ -2110,7 +2116,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{INC r} 
 			\Symbol{r$\leftarrow$r+1}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FN}
 			\OpCode{00}{r}{\fbox{100}}
 			\Hex{..}{1}
 			\Cycles{1}{4}
@@ -2118,7 +2124,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{INC p}
 		\Symbol{p$\leftarrow$p+1}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FN}
 			\OpCode{11}{011}{101}
 			\Hex{DD}{2}
 			\Cycles{2}{8}
@@ -2129,7 +2135,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{INC q}
 		\Symbol{q$\leftarrow$q+1}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FN}
 			\OpCode{11}{111}{101}
 			\Hex{FD}{2}
 			\Hex{2}{8}
@@ -2140,7 +2146,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{INC (HL)}
 		\Symbol{(HL)$\leftarrow$(HL)+1}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FN}
 			\OpCode{00}{110}{\fbox{100}}
 			\Hex{34}{1}
 			\Cycles{3}{11}
@@ -2148,7 +2154,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{INC (IX+d)}
 		\Symbol{(IX+d)$\leftarrow$}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FN}
 			\OpCode{11}{011}{101}
 			\Hex{DD}{3}
 			\Cycles{6}{23}
@@ -2163,7 +2169,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{INC (IY+d)}
 		\Symbol{(IY+d)$\leftarrow$}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FN}
 			\OpCode{11}{111}{101}
 			\Hex{FD}{3}
 			\Cycles{6}{23}
@@ -2180,7 +2186,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{lastinstruction}{DEC m\See{3}}
 		\Symbol{m$\leftarrow$m-1}
-			\Flags{\FS}{\FS}{\FS}{VF}{1}{\FN}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{1}{\FN}
 			\OpCode{..}{...}{\fbox{101}}
 	\end{lastinstruction}
 
@@ -2203,7 +2209,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 \begin{instrtable}
 	\begin{instruction}{ADD HL,ss} 
 		\Symbol{HL$\leftarrow$HL+ss}
-			\Flags{\FN}{\FN}{\FS\See{2}}{\FN}{0}{\FS\See{1}}
+			\Flags{\FN}{\FN}{\FU\See{2}}{\FN}{0}{\FS\See{1}}
 			\OpCode{00}{ss1}{001}
 			\Hex{..}{1}
 			\Cycles{3}{11}
@@ -2224,7 +2230,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{ADC HL,ss} 
 		\Symbol{HL$\leftarrow$HL+ss+CF}
-			\Flags{\FS\See{1}}{\FS\See{1}}{\FS\See{2}}{VF\See{1}}{0}{\FS\See{1}}
+			\Flags{\FS\See{1}}{\FS\See{1}}{\FU\See{2}}{\FPV\See{1}}{0}{\FS\See{1}}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{15}
@@ -2235,7 +2241,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{SBC HL,ss} 
 		\Symbol{HL$\leftarrow$HL-ss-CF}
-			\Flags{\FS\See{1}}{\FS\See{1}}{\FS\See{2}}{VF\See{1}}{1}{\FS\See{1}}
+			\Flags{\FS\See{1}}{\FS\See{1}}{\FU\See{2}}{\FPV\See{1}}{1}{\FS\See{1}}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{15}
@@ -2366,6 +2372,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 \section{8-Bit Load}
 
 \begin{instrtable}	
+
 	\begin{instruction}{LD r,r'}
 		\Symbol{r$\leftarrow$r'}
 			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
@@ -2614,6 +2621,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 \vspace*{0.4cm}
 
 \begin{instrtable}
+
 	\begin{instruction}{LD A,(BC)} 
 		\Symbol{A$\leftarrow$(BC)}
 			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
@@ -2973,7 +2981,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{BIT b,r} 
 		\Symbol{ZF$\leftarrow\mathtt{\overline{r_b}}$}
-			\Flags{\FS\See{1}}{\FS}{1}{\FS\See{1}}{0}{\FN}
+			\Flags{\FU\See{1}}{\FS}{1}{\FU\See{1}}{0}{\FN}
 			\OpCode{11}{001}{011}
 			\Hex{CB}{2}
 			\Cycles{2}{8}
@@ -3000,7 +3008,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{BIT b,(HL)} 
 		\Symbol{\mbox{ZF$\leftarrow\mathtt{\overline{(HL)_b}}$}}
-			\Flags{\FS\See{1}}{\FS}{1}{\FS\See{1}}{0}{\FN}
+			\Flags{\FU\See{1}}{\FS}{1}{\FU\See{1}}{0}{\FN}
 			\OpCode{11}{001}{011}
 			\Hex{CB}{2}
 			\Cycles{3}{12}
@@ -3011,7 +3019,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{BIT b,(IX+d)\See{2}} 
 		\Symbol{ZF$\leftarrow\mathtt{\overline{(IX+d)_b}}$}
-			\Flags{\FS\See{1}}{\FS}{1}{\FS\See{1}}{0}{\FN}
+			\Flags{\FU\See{1}}{\FS}{1}{\FU\See{1}}{0}{\FN}
 			\OpCode{11}{011}{101}
 			\Hex{DD}{4}
 			\Cycles{5}{20}
@@ -3028,7 +3036,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{BIT b,(IY+d)\See{2}} 
 		\Symbol{ZF$\leftarrow\mathtt{\overline{(IY+d)_b}}$}
-			\Flags{\FS\See{1}}{\FS}{1}{\FS\See{1}}{0}{\FN}
+			\Flags{\FU\See{1}}{\FS}{1}{\FU\See{1}}{0}{\FN}
 			\OpCode{11}{111}{101}
 			\Hex{FD}{4}
 			\Cycles{5}{20}
@@ -3197,7 +3205,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(17,4){\line(0,-1){2.5}}
 				\put(17,1.5){\vector(-1,0){2}}
 			\end{picture}}
-			\Flags{\FN}{\FN}{0}{\FN}{0}{\FS}
+			\Flags{\FN}{\FN}{0}{\FN}{0}{\FX}
 			\OpCode{00}{000}{111}
 			\Hex{07}{1}
 			\Cycles{1}{4}
@@ -3233,7 +3241,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(17.5,4){\line(0,-1){2.5}}
 				\put(17.5,1.5){\vector(-1,0){1.5}}
 			\end{picture}}
-			\Flags{\FN}{\FN}{0}{\FN}{0}{\FS}
+			\Flags{\FN}{\FN}{0}{\FN}{0}{\FX}
 			\OpCode{00}{010}{111}
 			\Hex{17}{1}
 			\Cycles{1}{4}
@@ -3252,7 +3260,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(0,4){\line(1,0){11}}
 				\put(11,4){\line(0,-1){2.5}}
 			\end{picture}}
-			\Flags{\FN}{\FN}{0}{\FN}{0l}{\FS}
+			\Flags{\FN}{\FN}{0}{\FN}{0}{\FX}
 			\OpCode{00}{001}{111}
 			\Hex{0F}{1}
 			\Cycles{1}{4}
@@ -3272,7 +3280,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(17.5,4){\line(0,-1){2.5}}
 				\put(16,1.5){\line(1,0){1.5}}
 			\end{picture}}
-			\Flags{\FN}{\FN}{0}{\FN}{0}{\FS}
+			\Flags{\FN}{\FN}{0}{\FN}{0}{\FX}
 			\OpCode{00}{011}{111}
 			\Hex{1F}{1}
 			\Cycles{1}{4}
@@ -3291,7 +3299,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(17,4){\line(0,-1){2.5}}
 				\put(17,1.5){\vector(-1,0){2}}
 			\end{picture}}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FX}
 			\OpCode{11}{001}{011}
 			\Hex{CB}{2}
 			\Cycles{2}{8}
@@ -3313,7 +3321,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(17,4){\line(0,-1){2.5}}
 				\put(17,1.5){\vector(-1,0){2}}
 			\end{picture}}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FX}
 			\OpCode{11}{001}{011}
 			\Hex{CB}{2}
 			\Cycles{4}{15}
@@ -3335,7 +3343,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(17,4){\line(0,-1){2.5}}
 				\put(17,1.5){\vector(-1,0){2}}
 			\end{picture}}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FX}
 			\OpCode{11}{011}{101}
 			\Hex{DD}{4}
 			\Cycles{6}{23}
@@ -3363,7 +3371,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(17,4){\line(0,-1){2.5}}
 				\put(17,1.5){\vector(-1,0){2}}
 			\end{picture}}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FX}
 			\OpCode{11}{111}{101}
 			\Hex{FD}{4}
 			\Cycles{6}{23}
@@ -3380,7 +3388,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{RLC r,(IX+d)}
 		\Symbol{r$\leftarrow$(IX+d)}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FX}
 			\OpCode{11}{011}{101}
 			\Hex{DD}{4}
 			\Cycles{6}{23}
@@ -3401,7 +3409,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{RLC r,(IY+d)}
 		\Symbol{r$\leftarrow$(IY+d)}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FX}
 			\OpCode{11}{111}{101}
 			\Hex{FD}{4}
 			\Cycles{6}{23}
@@ -3436,7 +3444,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(17.5,4){\line(0,-1){2.5}}
 				\put(17.5,1.5){\vector(-1,0){1.5}}
 			\end{picture}}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FX}
 			\OpCode{..}{\fbox{010}}{...}
 	\end{instruction}
 
@@ -3453,7 +3461,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(0,4){\line(1,0){11}}
 				\put(11,4){\line(0,-1){2.5}}
 			\end{picture}}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FX}
 			\OpCode{..}{\fbox{001}}{...}
 	\end{instruction}
 
@@ -3471,7 +3479,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(17.5,4){\line(0,-1){2.5}}
 				\put(16,1.5){\line(1,0){1.5}}
 			\end{picture}}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FX}
 			\OpCode{..}{\fbox{011}}{...}
 	\end{instruction}
 
@@ -3486,7 +3494,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(17,1.5){\vector(-1,0){3}}
 				\put(16,0){\makebox(4,3){0}}
 			\end{picture}}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FX}
 			\OpCode{..}{\fbox{100}}{...}
 	\end{instruction}
 
@@ -3501,7 +3509,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(17,1.5){\vector(-1,0){3}}
 				\put(16,0){\makebox(4,3){1}}
 			\end{picture}}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FX}
 			\OpCode{..}{\fbox{110}}{...}
 	\end{instruction}
 
@@ -3518,7 +3526,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(1,-1.5){\line(1,0){2.5}}
 				\put(3.5,-1.5){\line(0,1){1.5}}
 			\end{picture}}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FX}
 			\OpCode{..}{\fbox{101}}{...}
 	\end{instruction}
 
@@ -3533,7 +3541,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(10,1.5){\vector(1,0){3}}
 				\put(1,1.5){\vector(1,0){2}}
 			\end{picture}}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FS}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FX}
 			\OpCode{..}{\fbox{111}}{...}
 	\end{instruction}
 
@@ -3560,7 +3568,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(10.5,-1.45){\line(-1,0){5.5}}
 				\put(10.5,-1.45){\line(0,1){1.45}}
 			\end{picture}}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FN} 
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FN} 
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{5}{18}
@@ -3590,7 +3598,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 				\put(10.5,4.45){\line(-1,0){5.5}}
 				\put(5,4.45){\line(0,-1){1.45}}
 			\end{picture}}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FN}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{5}{18}
@@ -4117,7 +4125,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{LDI}
 		\Symbol{(DE)$\leftarrow$(HL)}
-			\Flags{\FN}{\FN}{0}{\FS\See{1}}{0}{\FN}
+			\Flags{\FN}{\FN}{0}{\FX\See{1}}{0}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
@@ -4158,7 +4166,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{LDD} 
 		\Symbol{(DE)$\leftarrow$(HL)}
-			\Flags{\FN}{\FN}{0}{\FS\See{1}}{0}{\FN}
+			\Flags{\FN}{\FN}{0}{\FX\See{1}}{0}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
@@ -4199,7 +4207,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{CPI} 
 		\Symbol{A-(HL)}
-			\Flags{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}{\FS\See{1}}{1}{\FN}
+			\Flags{\FS\See{4}}{\FX\See{3}}{\FS\See{4}}{\FX\See{1}}{1}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
@@ -4214,7 +4222,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{CPIR} 
 		\Symbol{A-(HL)}
-			\Flags{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}{\FS\See{1}}{1}{\FN}
+			\Flags{\FS\See{4}}{\FX\See{3}}{\FS\See{4}}{\FX\See{1}}{1}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{5}{21}
@@ -4248,7 +4256,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{CPD} 
 		\Symbol{A-(HL)}
-			\Flags{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}{\FS\See{1}}{1}{\FN}
+			\Flags{\FS\See{4}}{\FX\See{3}}{\FS\See{4}}{\FX\See{1}}{1}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
@@ -4263,7 +4271,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{lastinstruction}{CPDR} 
 		\Symbol{A-(HL)}
-			\Flags{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}{\FS\See{1}}{1}{\FN}
+			\Flags{\FS\See{4}}{\FX\See{3}}{\FS\See{4}}{\FX\See{1}}{1}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{5}{21}
@@ -4316,7 +4324,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{DAA}
 		\Comment{(see section \ref{instruction_details}) &}
-		\Flags{\FS}{\FS}{\FS}{PF}{\FN}{\FS}
+		\Flags{\FS}{\FS}{\FS}{\FPP}{\FN}{\FS}
 		\OpCode{00}{100}{111}
 		\Hex{27}{1}
 		\Cycles{1}{4}
@@ -4332,7 +4340,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{NEG} 
 		\Symbol{A$\leftarrow$0-A}
-			\Flags{\FS}{\FS}{\FS}{VF}{1}{\FS}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{1}{\FS}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{2}{8}
@@ -4343,7 +4351,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{CCF\See{1}} 
 		\Symbol{CF$\leftarrow\mathtt{\overline{CF}}$}
-			\Flags{\FN}{\FN}{\FS\See{2}}{\FN}{0}{\FS}
+			\Flags{\FN}{\FN}{\FU\See{2}}{\FN}{0}{\FS}
 			\OpCode{00}{111}{111}
 			\Hex{3F}{1}
 			\Cycles{1}{4}
@@ -4470,7 +4478,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{IN r,(C)} 
 		\Symbol{r$\leftarrow$(C)}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FN}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{3}{12}
@@ -4481,7 +4489,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{IN F,(n)} 
 		\Symbol{F$\leftarrow$(C)}
-			\Flags{\FS}{\FS}{0}{PF}{0}{\FN}
+			\Flags{\FS}{\FS}{0}{\FPP}{0}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{3}{12}
@@ -4492,7 +4500,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{INI} 
 		\Symbol{(HL)$\leftarrow$(C)}
-			\Flags{\FS\See{2}}{\FS\See{2}}{\FS\See{4}}{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}
+			\Flags{\FU}{\FX\See{2}}{\FU\See{3}}{\FU\See{3}}{1}{\FN\See{3}}
 			\OpCode{11}{101}{101} 
 			\Hex{ED}{2}
 			\Cycles{4}{16}
@@ -4507,7 +4515,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{INIR} 
 		\Symbol{(HL)$\leftarrow$(C)}
-			\Flags{0}{1}{\FS\See{4}}{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}
+			\Flags{\FU}{1}{\FU\See{3}}{\FU\See{3}}{1}{\FN\See{3}}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{5}{21}
@@ -4529,7 +4537,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{IND} 
 		\Symbol{(HL)$\leftarrow$(C)}
-			\Flags{\FS\See{2}}{\FS\See{2}}{\FS\See{4}}{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}
+			\Flags{\FU}{\FX\See{2}}{\FU\See{3}}{\FU\See{3}}{1}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
@@ -4544,7 +4552,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{lastinstruction}{INDR} 
 		\Symbol{(HL)$\leftarrow$(C)}
-			\Flags{0}{1}{\FS\See{4}}{\FS\See{4}}{\FS\See{3}}{\FS\See{4}}
+			\Flags{\FU}{1}{\FU\See{3}}{\FU\See{3}}{1}{\FN\See{3}}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{5}{21}
@@ -4569,8 +4577,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 \begin{notestable}
 	\NoteItem{\See{1} {\tt LD (n)} is interpretted as {\tt LD A,(n)}}
 	\NoteItem{\See{2} flag is affected by the result of {\tt B$\leftarrow$B-1} as in {\tt DEC B}.}
-	\NoteItem{\See{3} NF is a copy of bit 7 of the transferred byte.}
-	\NoteItem{\See{4} This flag is bizarre, see section \ref{block_io}.}
+	\NoteItem{\See{3} This flag is bizarre, see section \ref{block_io}.}
 \end{notestable}
 	
 \end{minipage}
@@ -4634,7 +4641,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{OUTI} 
 		\Symbol{(C)$\leftarrow$(HL)}
-			\Flags{\FS\See{1}}{\FS\See{1}}{\FS\See{3}}{\FS\See{3}}{\FS\See{2}}{\FS\See{3}}
+			\Flags{\FU}{\FX\See{1}}{\FU\See{3}}{\FU\See{3}}{1\See{2}}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
@@ -4649,7 +4656,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{OTIR} 
 		\Symbol{(C)$\leftarrow$(HL)}
-			\Flags{0}{1}{\FS\See{3}}{\FS}{\FS\See{2}}{\FS\See{3}}
+			\Flags{\FU}{1}{\FU\See{3}}{\FU\See{3}}{1\See{2}}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{5}{21}
@@ -4671,7 +4678,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{OUTD} 
 		\Symbol{(C)$\leftarrow$(HL)}
-			\Flags{\FS\See{1}}{\FS\See{1}}{\FS\See{3}}{\FS\See{3}}{\FS\See{2}}{\FS\See{3}}
+			\Flags{\FU}{\FX\See{1}}{\FU\See{3}}{\FU\See{3}}{1\See{2}}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
@@ -4686,7 +4693,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{lastinstruction}{OTDR} 
 		\Symbol{(C)$\leftarrow$(HL)}
-			\Flags{0}{1}{\FS\See{3}}{\FS\See{3}}{\FS\See{2}}{\FS}
+			\Flags{\FU}{1}{\FU\See{3}}{\FU\See{3}}{1\See{2}}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{5}{21}
@@ -4709,7 +4716,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 \end{instrtable}
 
 \begin{notestable}
-	\NoteItem{\See{1} Flag is affected by the result of {\tt B$\leftarrow$B-1} as in {\tt DEC B}.}
+	\NoteItem{\See{1} Flag is affected by the result of {\tt B$\leftarrow$B-1}.}
 	\NoteItem{\See{2} NF is a copy of bit 7 of the transferred byte.}
 	\NoteItem{\See{3} This flag is bizarre, see section \ref{block_io}.}
 \end{notestable}
@@ -4939,7 +4946,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{lastinstruction}{LDWS} 
 		\Symbol{(DE)$\leftarrow$(HL)}
-			\Flags{\FS}{\FS}{\FS}{VF}{0}{\FN}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{0}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
@@ -5156,7 +5163,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 	\begin{instruction}{TEST n} 
 		\Symbol{A$\wedge$n}
-			\Flags{\FS}{\FS}{\FS}{VF}{?}{\FS}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{\FU}{\FS}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{3}
 			\Cycles{3}{11}
@@ -5179,7 +5186,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 		
 	\begin{instruction}{OUTINB} 
 		\Symbol{(C)$\leftarrow$(HL)}
-			\Flags{?}{?}{?}{?}{?}{?}
+			\Flags{\FU}{\FU}{\FU}{\FU}{\FU}{\FU}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
@@ -5232,12 +5239,14 @@ This chapters presents all instructions at a glance for quick info and to easily
 The following pages describe all instructions. Alphabetical order is used as much as possible, but some deviations were made to better fit instructions to pages. Where possible, multiple variants are grouped together. Each instruction includes:
 
 \begin{itemize}
+	\setlength\itemsep{-1pt}
 	\item mnemonic
 	\item symbolic operation or function
 	\item all variants (where applicable)
 	\item short description
 	\item effects on flags
 	\item timing table
+	\vspace*{-\baselineskip}
 \end{itemize}
 
 Where multiple timings are possible, timing table is sorted from shortest to longest.
@@ -5262,6 +5271,17 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		If instruction takes 2 operands, {\tt d} indicates destination and {\tt s} source \\
 \end{tabularx}
 
+\subsubsection{Effects}
+
+\begin{tabular}{cl}
+	{\tt 0}/{\tt 1} & Flag is set to {\tt 0} or {\tt 1} \\
+	{\tt \FS} & Flag is modified according to operation \\
+	{\tt \FN} & Flag is not affected \\
+	{\tt \FU} & Effect on flag is unpredictable \\
+	{\tt VF} & P/V flag is used as overflow \\
+	{\tt PF} & P/V flag is used as parity \\
+	{\tt \FX} & Special case, see notes below effects table
+\end{tabular}
 
 \begin{basedescript}{
 	% setup basedescript styling for labels
@@ -5273,10 +5293,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\newcommand{\DetailItem}[1]{\item[{\tt \large \textbf{#1}}]}
 	\newcommand{\DetailSymbol}[1]{{\tt #1}}
-	\newcommand{\DetailSubsection}[1]{\vspace{-1.2em}\subsubsection{#1}\vspace{-1ex}} % less spacing for subsubsection
-	\newcommand{\DetailEffectsTitle}{\DetailSubsection{Effects}}
-	\newcommand{\DetailNoEffect}{\DetailSubsection{No effect on flags}}
-	\newcommand{\DetailUndefinedEffects}{\DetailSubsection{Effect on flags undefined}}
 
 	\newenvironment{detailitem}[2]{
 		\DetailItem{#1}
@@ -5299,40 +5315,97 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		}
 	}
 
-	\environbodyname\DetailEffectsTitleBODY
-	\NewEnviron{DetailEffects}[1][]{
-		\DetailEffectsTitle
+	\environbodyname\DetailCompactListBODY
+	\NewEnviron{DetailCompactList}[1][]{
 		#1
+		\vspace{-6pt}
+		\setlist{leftmargin=1em}
 		\begin{itemize}
-			\setlength\itemsep{-2pt}
-			\DetailEffectsTitleBODY
-		\end{itemize}
-	}
-	\NewEnviron{DetailEffectsNoTitle}[1][]{
-		#1
-		\begin{itemize}
-			\setlength\itemsep{-2pt}
-			\DetailEffectsTitleBODY
+			\setlength\itemsep{-1pt}
+			\DetailCompactListBODY
 		\end{itemize}
 	}
 
+	\environbodyname\DetailEffectsBODY
+	\NewEnviron{DetailEffects}[1][]{
+		\vspace{3pt}
+		\begin{tabularx}{0.767\textwidth}{@{}lXc|c|p{2.5ex}|c|p{2.5ex}|c|c|c|}
+			\cline{3-10}
+			\multicolumn{2}{@{}X}{\textbf{Effects}} & 
+				\multicolumn{1}{|c|}{SF} & 
+				ZF & 
+				& 
+				HF & 
+				&
+				\IfEqCase{#1}{
+					{p}{
+						\small
+						\setlength{\unitlength}{0.2mm}
+						\begin{picture}(20,10)
+							\put(-6,6){\circle{20}}
+							\put(-11,0){P}
+							\put(4,0){V}
+						\end{picture}
+					}
+					{v}{
+						\small
+						\setlength{\unitlength}{0.2mm}
+						\begin{picture}(20,10)
+							\put(10,6){\circle{20}}
+							\put(-11,0){P}
+							\put(4,0){V}
+						\end{picture}
+					}
+					{}{PV}
+				}
+				& 
+				NF & 
+				CF \notet\noteb\\[1pt]\cline{3-10}
+
+			\DetailEffectsBODY
+
+		\end{tabularx}
+		\vspace{2pt}
+	}
+	\newcommand{\DetailFlags}[7][]{
+		& 
+			#1 & 
+			\multicolumn{1}{|c|}{\tt #2} & 
+			{\tt #3} & 
+			& 
+			{\tt #4} & 
+			& 
+			{\tt #5} & 
+			{\tt #6} & 
+			{\tt #7} \notet\noteb \\\cline{3-10}
+	}
+	\newcommand{\DetailFlagsComments}[1]{ 
+		& & \multicolumn{8}{p{6.6cm}}{
+			\vspace{-6pt}
+			\setlist{leftmargin=1em}
+			\begin{itemize}
+				\setlength\itemsep{-1pt}
+				#1
+				\vspace*{-\baselineskip}
+			\end{itemize}	
+		} \\[0pt]
+	}
+	\newcommand{\DetailNoEffect}{
+		\begin{DetailEffects}
+			\DetailFlags[No effect on flags]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+		\end{DetailEffects}
+	}
+	
 	\environbodyname\DetailTimingBODY
-	\NewEnviron{DetailTiming}{
+	\NewEnviron{DetailTiming}[1][Timing]{
 		\vspace{1pt}
-		\begin{tabularx}{0.8\textwidth}{@{}Xccrrrr}
-			\textbf{Timing} & 
-				Mc & 
-				Ts & 
-				3.5MHz & 
-				7MHz & 
-				14MHz & 
-				28MHz \\[1pt]
+		\begin{tabularx}{0.78\textwidth}{@{}lXccrrrr}
+			\multicolumn{2}{@{}X}{\textbf{#1}} & Mc & Ts & 3.5MHz & 7MHz & 14MHz & 28MHz \\[1pt]
 			\DetailTimingBODY
 		\end{tabularx}
 	}
-
 	\newcommand{\DetailTime}[3]{
-		{\tt #1} & #2 & #3 & 
+		& {\tt #1} & #2 & #3 & 
 			\nprounddigits{1}
 			{\footnotesize {\tt \numprint{\fpeval{#3/3.5}}}$\mu$s} & 
 			\nprounddigits{2}
@@ -5359,32 +5432,28 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			ADC A,n
 
 			\columnbreak
-
 			\textnormal{8 bit}\\
+			ADC A,(HL)\\
+			ADC A,(IX+d)\\
+			ADC A,(IY+d)\\
 			ADC A,IXH\UNDOC\\
 			ADC A,IXL\UNDOC\\
 			ADC A,IYH\UNDOC\\
-			ADC A,IYL\UNDOC\\
-			ADC A,(HL)\\
-			ADC A,(IX+d)\\
-			ADC A,(IY+d)
+			ADC A,IYL\UNDOC
 
 			\columnbreak
-
 			\textnormal{16 bit}\\
 			ADC HL,BC\\
 			ADC HL,DE\\
 			ADC HL,HL\\
-			ADC HL,SP\\
+			ADC HL,SP
 		\end{DetailVariants}
 		
 		Source operand {\tt s} or contents of the memory location addressed by {\tt s} and carry flag are added to destination {\tt d}. Result is then stored to destination {\tt d}.
 
-		\begin{DetailEffects}
-			\item {\tt NF} is reset
-			\item {\tt PF} indicates overflow
-			\item Other flags modified according to operation
-			\item For 16-bit addition {\tt HF} value is undefined
+		\begin{DetailEffects}[v]
+			\DetailFlags[8-bit]{\FS}{\FS}{\FS}{\FS}{0}{\FS}
+			\DetailFlags[16-bit]{\FS}{\FS}{\FU}{\FS}{0}{\FS}
 		\end{DetailEffects}
 
 		\begin{DetailTiming}
@@ -5412,22 +5481,22 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			AND n
 			
 			\columnbreak
+			AND (HL)\\
+			AND (IX+d)\\
+			AND (IY+d)\\		
 			AND IXH\UNDOC\\
 			AND IXL\UNDOC\\
 			AND IYH\UNDOC\\
-			AND IYL\UNDOC\\
-			AND (HL)\\
-			AND (IX+d)\\
-			AND (IY+d)\\
-			\\ % by including additional line we force balance columns
+			AND IYL\UNDOC
+
+			\columnbreak
+			~\\
 		\end{DetailVariants}
 
 		Performs logical AND between accumulator and given operand. Result is then stored back to accumulator.
 
-		\begin{DetailEffects}
-			\item {\tt CF} and {\tt NF} cleared
-			\item {\tt PF} represents parity
-			\item Other flags modified according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{1}{\FS}{0}{0}
 		\end{DetailEffects}
 
 		\begin{DetailTiming}
@@ -5448,39 +5517,42 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			\tt
 			\begin{tabularx}{0.8\textwidth}{@{}p{1.5cm}Xp{2cm}p{2cm}p{2.2cm}}
 				\textnormal{8-bit} & \textnormal{8-bit} & \textnormal{16-bit} & \textnormal{16-bit} & \textnormal{ZX Next} \\
-				ADD A,B & 
-					ADD A,IXH\UNDOC & 
-					ADD HL,BC & 
-					ADD IX,SP & 
-					ADD BC,A\ZXN \\
-				ADD A,C & 
-					ADD A,IXL\UNDOC & 
-					ADD HL,DE & 
-					ADD IY,BC & 
-					ADD DE,A\ZXN \\
-				ADD A,D & 
-					ADD A,IYH\UNDOC & 
-					ADD HL,HL & 
-					ADD IY,DE & 
-					ADD HL,A\ZXN \\
-				ADD A,E & 
-					ADD A,IXL\UNDOC & 
-					ADD HL,SP & 
-					ADD IY,IY & 
-					ADD BE,nn\ZXN \\ 
-				ADD A,H & 
+				ADD A,A & 
 					ADD A,(HL) & 
 					ADD IX,BC & 
-					ADD IY,SP & 
-					ADD DE,nn\ZXN \\
-				ADD A,L & 
+					ADD HL,BC & 
+					ADD BC,A\ZXN \\
+				ADD A,B & 
 					ADD A,(IX+d) & 
 					ADD IX,DE & 
+					ADD HL,DE &
+					ADD DE,A\ZXN \\
+				ADD A,C & 
+					ADD A,(IY+d) & 
+					ADD IX,IX & 
+					ADD HL,HL & 
+					ADD HL,A\ZXN \\
+				ADD A,D & 
+					ADD A,IXH\UNDOC & 
+					ADD IX,SP & 
+					ADD HL,SP & 
+					ADD BE,nn\ZXN \\ 
+				ADD A,E & 
+					ADD A,IXL\UNDOC & 
+					ADD IY,BC & 
+					& 
+					ADD DE,nn\ZXN \\
+				ADD A,H & 
+					ADD A,IYH\UNDOC & 
+					ADD IY,DE & 
 					& 
 					ADD HL,nn\ZXN \\
-				ADD A,n & 
-					ADD A,(IY+d) & 
-					ADD IX,IX & \\
+				ADD A,L & 
+					ADD A,IYL\UNDOC & 
+					ADD IY,IY \\
+				ADD A,n &
+					&
+					ADD IY,SP \\
 			\end{tabularx}
 		}
 		
@@ -5488,20 +5560,10 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		In case of ZX Next Extended instructions for adding {\tt A} to 16-bit register pair, {\tt A} is zero extended to 16-bits.
 
-		\DetailEffectsTitle
-		\begin{multicols}{2}
-			\begin{DetailEffectsNoTitle}[8-bit]
-				\item {\tt NF} reset
-				\item {\tt PF} indicates overflow
-				\item Other flags modified according to operation
-			\end{DetailEffectsNoTitle}
-
-			\begin{DetailEffectsNoTitle}[16-bit]
-				\item {\tt SF}, {\tt ZF} and {\tt PF} preserved
-				\item {\tt HF} is undefined
-				\item Other flags modified according to operation
-			\end{DetailEffectsNoTitle}
-		\end{multicols}
+		\begin{DetailEffects}[v]
+			\DetailFlags[8-bit]{\FS}{\FS}{\FS}{\FS}{0}{\FS}
+			\DetailFlags[16-bit]{\FN}{\FN}{\FU}{\FN}{0}{\FS}
+		\end{DetailEffects}
 
 		\begin{DetailTiming}
 			\DetailTime{A,r}{1}{4}
@@ -5525,7 +5587,9 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			BIT b,A\\
 			BIT b,B\\
 			BIT b,C\\
-			BIT b,D\\
+			BIT b,D
+
+			\columnbreak
 			BIT b,E\\
 			BIT b,H\\
 			BIT b,L
@@ -5533,22 +5597,15 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			\columnbreak
 			BIT b,(HL)\\
 			BIT b,(IX+d)\\
-			BIT b,(IY+d)\\
-			\\
-			\\
-			\\
+			BIT b,(IY+d)
 		\end{DetailVariants}
 
 		{\tt b} is a value between {\tt 0} and {\tt 7}.
 
-		Tests specified bit {\tt b} of the given register {\tt s} or contents of memory addressed by {\tt s} and sets zero flag according to result.
+		Tests specified bit {\tt b} of the given register {\tt s} or contents of memory addressed by {\tt s} and sets zero flag according to result; if bit was 1, {\tt ZF} is 0 and vice versa.
 
 		\begin{DetailEffects}
-			\item {\tt ZF} flag contains the opposite value from tested bit (if bit was 1, {\tt ZF} is 0 and vice versa)
-			\item {\tt CF} is preserved
-			\item {\tt NF} reset
-			\item {\tt HF} set
-			\item {\tt SF} and {\tt PF} are undefined
+			\DetailFlags{\FU}{\FS}{1}{\FU}{0}{\FN}
 		\end{DetailEffects}
 
 		\begin{DetailTiming}
@@ -5613,8 +5670,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak	% the purpose of this break is to stick "no effect" title and timing from previous item to previous page
-
+	\pagebreak
 	\begin{detailitem}{BSRL DE,B\ZXN}
 		{DE$\leftarrow$unsigned(DE)>>(B$\wedge$\$1F)}
 
@@ -5673,12 +5729,10 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 	\begin{detailitem}{CCF}
 		{CF$\leftarrow\mathtt{\overline{CF}}$}
 
-		Complements (inverts) carry flag.
+		Complements (inverts) carry flag; if {\tt CF} was {\tt 0} it's now {\tt 1} and vice versa. Previous value of {\tt CF} is copied to {\tt HF}.
 
 		\begin{DetailEffects}
-			\item {\tt CF} is complemented (inverted; if {\tt CF} was 0, it's now 1 and vice versa)
-			\item {\tt HF} also complemented
-			\item {\tt NF} reset
+			\DetailFlags{\FN}{\FN}{\FU}{\FN}{0}{\FS}
 		\end{DetailEffects}
 		
 		\begin{DetailTiming}
@@ -5687,7 +5741,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 	
-	\pagebreak
 	\begin{detailitem}{CP s}
 		{A-s}
 
@@ -5698,35 +5751,42 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			CP D\\
 			CP E\\
 			CP H\\
-			CP L\\
+			CP L
+
+			\columnbreak
 			CP n\\
 			CP (IX+d)\\
-			CP (IY+d)\\
+			CP (IY+d)
+
+			\columnbreak
 			CP IXH\UNDOC\\
 			CP IXL\UNDOC\\
 			CP IYH\UNDOC\\
-			CP IYL\UNDOC\\
+			CP IYL\UNDOC
 		\end{DetailVariants}
 
-		Operand {\tt s} or content of the memory location addressed by {\tt s} is subtracted from {\tt A}. Status flags are updated according to result, but result is then discarded (aka, value of {\tt A} is not changed).
+		Operand {\tt s} or content of the memory location addressed by {\tt s} is subtracted from {\tt A}. Status flags are updated according to result, but result is then discarded (value of {\tt A} is not changed). Some general rules:
 
-		\DetailEffectsTitle
 		\begin{multicols}{2}
-			\begin{DetailEffectsNoTitle}[Signed]
-				\item {\tt A=s}: {\tt ZF} flag set
-				\item {\tt A$\not$=s}: {\tt ZF} flag reset
-				\item {\tt A<s}: {\tt CF} flag set
-				\item {\tt A$\geqslant$s}: {\tt CF} flag reset				
-			\end{DetailEffectsNoTitle}
+			\begin{DetailCompactList}[Signed]
+				\item {\tt A=s}: {\tt ZF} set
+				\item {\tt A$\not$=s}: {\tt ZF} reset
+				\item {\tt A<s}: {\tt CF} set
+				\item {\tt A$\geqslant$s}: {\tt CF} reset	
+			\end{DetailCompactList}
 
 			\columnbreak
-			\begin{DetailEffectsNoTitle}[Unsigned]
-				\item {\tt A=s}: {\tt ZF} flag set
-				\item {\tt A$\not$=s}: {\tt ZF} flag reset
-				\item {\tt A<s}: {\tt SF} and {\tt PF} flags different
-				\item {\tt A$\geqslant$s}: {\tt SF} and {\tt PF} flags the same				
-			\end{DetailEffectsNoTitle}
+			\begin{DetailCompactList}[Unsigned]
+				\item {\tt A=s}: {\tt ZF} set
+				\item {\tt A$\not$=s}: {\tt ZF} reset
+				\item {\tt A<s}: {\tt SF} and {\tt PF} different
+				\item {\tt A$\geqslant$s}: {\tt SF} and {\tt PF} the same				
+			\end{DetailCompactList}
 		\end{multicols}
+
+		\begin{DetailEffects}[v]
+			\DetailFlags{\FS}{\FS}{\FS}{\FS}{1}{\FS}
+		\end{DetailEffects}
 		
 		\begin{DetailTiming}
 			\DetailTime{r}{1}{4}
@@ -5752,20 +5812,21 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			DEC HL
 			DEC BC
 		\end{Verbatim}
-	
+
 		\begin{DetailEffects}
-			\item {\tt ZF} is set if {\tt A=(HL)}, before {\tt HL} is decremented, reset otherwise
-			\item {\tt PF} indicates {\tt BC} overflow
-			\item {\tt NF} set
+			\DetailFlags{\FS}{\FX}{\FS}{\FX}{1}{\FN}
+			\DetailFlagsComments{
+				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is decremented, reset otherwise
+				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
+			}
 		\end{DetailEffects}
-		
+
 		\begin{DetailTiming}
 			\DetailTime{}{4}{16}
 		\end{DetailTiming}
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{CPDR}
 		{A-(HL)\\
 		HL$\leftarrow$HL-1\\
@@ -5775,14 +5836,16 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Repeats {\tt CPD} until either {\tt A=(HL)} or {\tt BC=0}. See {\tt CPIR} for example.
 
 		\begin{DetailEffects}
-			\item {\tt ZF} is set if {\tt A=(HL)}, before {\tt HL} is decremented, reset otherwise
-			\item {\tt PF} indicates {\tt BC} overflow
-			\item {\tt NF} set
+			\DetailFlags{\FS}{\FX}{\FS}{\FX}{1}{\FN}
+			\DetailFlagsComments{
+				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is decremented, reset otherwise
+				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
+			}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{BC=0$\wedge$A=(HL)}{4}{16}
-			\DetailTime{BC$\not=$0$\vee$A$\not=$(HL)}{5}{21}
+			\DetailTime{BC=0 or A=(HL)}{4}{16}
+			\DetailTime{BC$\not=$0 and A$\not=$(HL)}{5}{21}
 		\end{DetailTiming}
 
 	\end{detailitem}
@@ -5801,11 +5864,13 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			INC HL
 			DEC BC
 		\end{Verbatim}
-	
+
 		\begin{DetailEffects}
-			\item {\tt ZF} is set if {\tt A=(HL)}, before {\tt HL} is incremented, reset otherwise
-			\item {\tt PF} indicates {\tt BC} overflow
-			\item {\tt NF} set
+			\DetailFlags{\FS}{\FX}{\FS}{\FX}{1}{\FN}
+			\DetailFlagsComments{
+				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is incremented, reset otherwise
+				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
+			}
 		\end{DetailEffects}
 		
 		\begin{DetailTiming}
@@ -5822,7 +5887,8 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Repeats {\tt CPI} until either {\tt A=(HL)} or {\tt BC=0}.
 
-		Example; searching for {\tt \$AB} in memory from {\tt \$0000-\$999}:
+		\pagebreak
+		Example, searching for {\tt \$AB} in memory from {\tt \$0000-\$999}:
 
 		\begin{multicols}{2}
 			{\tt CPIR} = finding first occurrence:
@@ -5843,14 +5909,16 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		\end{multicols}
 
 		\begin{DetailEffects}
-			\item {\tt ZF} is set if {\tt A=(HL)}, before {\tt HL} is decremented, reset otherwise
-			\item {\tt PF} indicates {\tt BC} overflow
-			\item {\tt NF} set
+			\DetailFlags{\FS}{\FX}{\FS}{\FX}{1}{\FN}
+			\DetailFlagsComments{
+				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is incremented, reset otherwise
+				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
+			}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{BC=0$\wedge$A=(HL)}{4}{16}
-			\DetailTime{BC$\not=$0$\vee$A$\not=$(HL)}{5}{21}
+			\DetailTime{BC=0 or A=(HL)}{4}{16}
+			\DetailTime{BC$\not=$0 and A$\not=$(HL)}{5}{21}
 		\end{DetailTiming}
 
 	\end{detailitem}
@@ -5861,9 +5929,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Complements (inverts) all bits of {\tt A} and stores result in {\tt A}.
 
 		\begin{DetailEffects}
-			\item {\tt HF} set
-			\item {\tt NF} set
-			\item Other flags preserved
+			\DetailFlags{\FN}{\FN}{1}{\FN}{1}{\FN}
 		\end{DetailEffects}
 		
 		\begin{DetailTiming}
@@ -5881,12 +5947,12 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			\item If least significant 4 bits of {\tt A} (low nibble) contain invalid BCD number (greater than 9), or {\tt HF} is set, {\tt \$06} is added to {\tt A}
 			\item Then 4 most significant bits (high nibble) of {\tt A} are checked; if they contain invalid BCD number, or {\tt CF} is set, {\tt \$60} is added to {\tt A}
 		\end{enumerate}
-
-		\begin{DetailEffects}
-			\item {\tt CF} set if second addition was required
-			\item {\tt PF} is used for parity
-			\item {\tt NF} is preserved
-			\item Other flags updated according to operation
+		
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{\FS}{\FS}{\FN}{\FS}
+			\DetailFlagsComments{
+				\item {\tt CF} set if second addition was required
+			}
 		\end{DetailEffects}
 		
 		\begin{DetailTiming}
@@ -5909,13 +5975,13 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			DEC H\\
 			DEC L\\
 			\textnormal{8-bit}\\
+			DEC (HL)\\
+			DEC (IX+d)\\
+			DEC (IY+d)\\
 			DEC IXH\UNDOC\\
 			DEC IXL\UNDOC\\
 			DEC IYH\UNDOC\\
 			DEC IYL\UNDOC\\
-			DEC (HL)\\
-			DEC (IX+d)\\
-			DEC (IY+d)\\
 			\textnormal{16-bit}\\
 			DEC BC\\
 			DEC DE\\
@@ -5927,19 +5993,10 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Decrements the operand {\tt s} or memory addressed by the operand {\tt s} by 1.
 
-		\DetailEffectsTitle
-		\begin{multicols}{2}
-			\begin{DetailEffectsNoTitle}[8-bit]
-				\item {\tt CF} preserved
-				\item {\tt PF} indicates overflow
-				\item Other flags updated accoring to operation				
-			\end{DetailEffectsNoTitle}
-		
-			\columnbreak
-			\begin{DetailEffectsNoTitle}[16-bit]
-				\item All flags preserved				
-			\end{DetailEffectsNoTitle}
-		\end{multicols}
+		\begin{DetailEffects}[v]
+			\DetailFlags[8-bit]{\FS}{\FS}{\FS}{\FS}{1}{\FN}
+			\DetailFlags[16-bit (no effect)]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+		\end{DetailEffects}
 		
 		\begin{DetailTiming}
 			\DetailTime{r}{1}{4}
@@ -6048,7 +6105,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{HALT}
 		{}
 
@@ -6121,13 +6177,11 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			\end{Verbatim}
 		\end{multicols}
 
-		Note: {\tt IN (C)} variant performs an input, but does not store the result, only sets the flags.
+		Note: {\tt IN (C)} (or its alternative form {\tt IN F,(C)}) variant performs an input, but does not store the result, only sets the flags.
 
-		\begin{DetailEffects}[{\tt IN A,(n)} variant has no effect on flags, others:]
-			\item {\tt NF} reset 
-			\item {\tt PF} represents parity
-			\item {\tt CF} preserved 
-			\item Other flags updated according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags[\tt IN r,(C)]{\FS}{\FS}{0}{\FS}{0}{\FN}
+			\DetailFlags[{\tt IN A,(n)} (no effect)]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -6137,7 +6191,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{INC s}
 		{s$\leftarrow$s+1}
 
@@ -6152,13 +6205,13 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			INC L
 
 			\textnormal{8-bit}\\
+			INC (HL)\\
+			INC (IX+d)\\
+			INC (IY+d)\\
 			INC IXh\UNDOC\\
 			INC IXl\UNDOC\\
 			INC IYh\UNDOC\\
-			INC IYl\UNDOC\\
-			INC (HL)\\
-			INC (IX+d)\\
-			INC (IY+d)
+			INC IYl\UNDOC
 
 			\textnormal{16-bit}\\
 			INC BC\\
@@ -6171,11 +6224,12 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Increments the operand or memory addressed by the operand by 1.
 
-		\begin{DetailEffects}[16-bit variants have no effects on flags, 8-bit:]
-			\item {\tt CF} preserved
-			\item {\tt NF} reset
-			\item {\tt PF} indicates overflow
-			\item Other flags updated according to operation
+		\begin{DetailEffects}[v]
+			\DetailFlags[8-bit]{\FS}{\FS}{\FS}{\FX}{0}{\FN}
+			\DetailFlags[16-bit (no effect)]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\DetailFlagsComments{
+				\item {\tt PV} is set if value was {\tt \$7F}
+			}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6195,13 +6249,13 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		HL$\leftarrow$HL-1\\
 		B$\leftarrow$B-1}
 
-		Reads peripheral device addressed by {\tt BC} and stores result in {\tt A} register. Then the value of {\tt HL} and {\tt B} are decremented.
+		Reads peripheral device addressed by {\tt BC} and stores result in memory addressed by {\tt HL} register pair. Then the values of {\tt HL} and {\tt B} are decremented.
 
 		\begin{DetailEffects}
-			\item {\tt CF} preserved 
-			\item {\tt NF} set
-			\item {\tt ZF} set if {\tt B} becomes zero after decrementing, otherwise reset
-			\item Other flags undefined
+			\DetailFlags{\FU}{\FX}{\FU}{\FU}{1}{\FN}
+			\DetailFlagsComments{
+				\item {\tt ZF} set if {\tt B} becomes zero after decrementing, otherwise reset
+			}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6212,18 +6266,13 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\pagebreak
 	\begin{detailitem}{INDR}
-		{(HL)$\leftarrow$(C)\\
-		HL$\leftarrow$HL-1\\
-		B$\leftarrow$B-1\\
+		{do IND\\
 		Repeat until B=0}
 
 		Repeats {\tt IND} until {\tt B=0}.
 
 		\begin{DetailEffects}
-			\item {\tt ZF} set
-			\item {\tt CF} preserved
-			\item {\tt NF} set
-			\item Other flags undefined
+			\DetailFlags{\FU}{1}{\FU}{\FU}{1}{\FN}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6238,13 +6287,13 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		HL$\leftarrow$HL+1\\
 		B$\leftarrow$B-1}
 
-		Reads peripheral device addressed by {\tt BC} and stores result in {\tt A} register. Then the value of {\tt HL} is incremented and {\tt B} decremented.
+		Reads peripheral device addressed by {\tt BC} and stores result in memory addressed by {\tt HL} register pair. Then the value of {\tt HL} is incremented and {\tt B} decremented.
 
 		\begin{DetailEffects}
-			\item {\tt CF} preserved 
-			\item {\tt NF} reset
-			\item {\tt ZF} set if {\tt B} becomes zero after decrementing, otherwise reset
-			\item Other flags undefined
+			\DetailFlags{\FU}{\FX}{\FU}{\FU}{1}{\FN}
+			\DetailFlagsComments{
+				\item {\tt ZF} set if {\tt B} becomes zero after decrementing, otherwise reset
+			}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6254,18 +6303,13 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 	\end{detailitem}
 
 	\begin{detailitem}{INIR}
-		{(HL)$\leftarrow$(C)\\
-		HL$\leftarrow$HL+1\\
-		B$\leftarrow$B-1\\
+		{do INI\\
 		Repeat until B=0}
 
 		Repeats {\tt INI} until {\tt B=0}.
 
 		\begin{DetailEffects}
-			\item {\tt ZF} set
-			\item {\tt CF} reset
-			\item {\tt NF} reset
-			\item Other flags undefined
+			\DetailFlags{\FU}{1}{\FU}{\FU}{1}{\FN}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6275,7 +6319,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{JP n}
 		{PC$\leftarrow$nm}
 
@@ -6319,7 +6362,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 				{\tt JP PO,nn} & jumps if {\tt PF} is reset\\
 		\end{tabular}
 
-		Conditionally jumps to given absolute address.
+		Conditionally jumps to given absolute address. See {\tt CP} above for more details.
 
 		\DetailNoEffect
 				
@@ -6342,7 +6385,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{JR e}
 		{PC$\leftarrow$PC+e}
 		
@@ -6367,7 +6409,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			{\tt JR NZ,e} & jumps if {\tt ZF} is reset\\
 		\end{tabular}
 		
-		Conditionally performs relative jump. Note: in contrast to {\tt JP}, {\tt JR} only supports above 4 conditions.
+		Conditionally performs relative jump. Note: in contrast to {\tt JP}, {\tt JR} only supports above 4 conditions. See {\tt CP} above for more details.
 
 		\DetailNoEffect
 						
@@ -6387,11 +6429,11 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			\scriptsize
 			\definecolor{llgray}{rgb}{0.9, 0.9, 0.9}
 			\setlength{\tabcolsep}{1pt}
-			\arrayrulecolor{lightgray}
 			\newcommand{\X}{$\bullet$}
 			\newcommand{\n}{\cellcolor{llgray}}
 
 			\begin{tabular}{@{}|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+				\arrayrulecolor{lightgray}
 				\hline
 				& {\tt A} & {\tt B} & {\tt C} & {\tt D} & {\tt E} & {\tt H} & {\tt L} & {\tt I} & {\tt R} & {\tt IXH} & {\tt IXL} & {\tt IYH} & {\tt IYL} & {\tt BC} & {\tt DE} & {\tt HL} & {\tt SP} & {\tt IX} & {\tt IY} & {\tt (BC)} & {\tt (DE)} & {\tt (HL)} & {\tt (IX+d)} & {\tt (IY+d)} & {\tt n} & {\tt nn} & {\tt (nn)} \\
 				\hline
@@ -6424,14 +6466,12 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			\end{tabular}
 		}
 
-		\pagebreak
-		\begin{DetailEffects}[Has no effect on flags, except for {\tt LD A,I} and {\tt LD A,R} where:]
-			\item {\tt SF} and {\tt ZF} set according to operation
-			\item {\tt HF} and {\tt NF} reset
-			\item {\tt PV} set to contents of {\tt IFF2}
-			\item Other flags preserved
+		\begin{DetailEffects}
+			\DetailFlags[{\tt LD A,I} and {\tt LD A,R}]{\FS}{\FS}{0}{\tt IFF2}{0}{\FN}
+			\DetailFlags[Other variants]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
 		\end{DetailEffects}
 						
+		% this table is too big to fit to single page, so we split it to 2
 		\begin{DetailTiming}
 			\DetailTime{r,r}{1}{4}
 			\DetailTime{SP,HL}{1}{6}
@@ -6440,19 +6480,31 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			\DetailTime{A,(rr)}{2}{7}
 			\DetailTime{r,(HL)}{2}{7}
 			\DetailTime{(HL),r}{2}{7}
-			\DetailTime{A,I/R}{2}{9}
-			\DetailTime{I/R,A}{2}{9}
-			\DetailTime{SP,IX/IY}{2}{10}
+			\DetailTime{A,I}{2}{9}
+			\DetailTime{A,R}{2}{9}
+		\end{DetailTiming}
+
+		\begin{DetailTiming}[Timing Continued]
+			\DetailTime{I,A}{2}{9}
+			\DetailTime{R,A}{2}{9}
+			\DetailTime{SP,IX}{2}{10}
+			\DetailTime{SP,IY}{2}{10}
 			\DetailTime{(HL),n}{3}{10}
 			\DetailTime{rr,nn}{3}{10}
 			\DetailTime{A,(nn)}{4}{13}
-			\DetailTime{IX/IY,nn}{4}{14}
-			\DetailTime{(HL),nn}{5}{16}
 			\DetailTime{(nn),A}{4}{13}
+			\DetailTime{IX,nn}{4}{14}
+			\DetailTime{IY,nn}{4}{14}
+			\DetailTime{(HL),nn}{5}{16}
 			\DetailTime{(nn),HL}{5}{16}
-			\DetailTime{r,(IX+d)/(IY+d)}{5}{19}
-			\DetailTime{(IX+d)/(IY+d),n/r}{5}{19}
-			\DetailTime{(IX)/(IY),nn}{6}{20}
+			\DetailTime{r,(IX+d)}{5}{19}
+			\DetailTime{r,(IY+d)}{5}{19}
+			\DetailTime{(IX+d),r}{5}{19}
+			\DetailTime{(IX+d),n}{5}{19}
+			\DetailTime{(IY+d),r}{5}{19}
+			\DetailTime{(IY+d),n}{5}{19}
+			\DetailTime{(IX),nn}{6}{20}
+			\DetailTime{(IY),nn}{6}{20}
 			\DetailTime{rr,(nn)}{6}{20}
 			\DetailTime{(nn),rr}{6}{20}
 		\end{DetailTiming}
@@ -6468,10 +6520,10 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Loads contents of memory location addressed by {\tt HL} to memory location addressed by {\tt DE}. Then decrements {\tt DE}, {\tt HL} and {\tt BC} register pairs.
 
 		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
-			\item {\tt NF} reset
-			\item Other flags are preserved
+			\DetailFlags{\FN}{\FN}{0}{\FX}{0}{\FN}
+			\DetailFlagsComments{
+				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
+			}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6480,25 +6532,14 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{LDDR}
-		{do LDD
+		{do LDD\\
 		Repeat until BC=0}
 
-		Repeats {\tt LDD} until {\tt BC=0}. {\tt LDDR} can be used for block transfer; for example: to copy 100 bytes from {\tt source} to {\tt destination}:
-
-		\begin{Verbatim}[gobble=3]
-			LD HL, source+99
-			LD DE, destination+99
-			LD BC, 100
-			LDDR
-		\end{Verbatim}
+		Repeats {\tt LDD} until {\tt BC=0}. {\tt LDDR} can be used for block transfer. See {\tt LDIR} below for an example and comparison of both instructions.
 
 		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt PF} reset
-			\item {\tt NF} reset
-			\item Other flags are preserved
+			\DetailFlags{\FN}{\FN}{0}{0}{0}{\FN}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6515,11 +6556,11 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		BC$\leftarrow$BC+1}
 
 		Works similar to {\tt LDD} except:
-		\begin{itemize}
-			\item byte is only copied if it's different from {\tt A}
+		\begin{DetailCompactList}
+			\item Byte is only copied if it's different from {\tt A}
 			\item {\tt DE} is incremented instead of decremented
-			\item doesn't change flags.
-		\end{itemize}
+			\item Doesn't change flags
+		\end{DetailCompactList}
 
 		\DetailNoEffect
 				
@@ -6553,10 +6594,10 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Same as {\tt LDD}, except it increments {\tt DE} and {\tt HL}.
 
 		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
-			\item {\tt NF} reset
-			\item Other flags are preserved
+			\DetailFlags{\FN}{\FN}{0}{\FX}{0}{\FN}
+			\DetailFlagsComments{
+				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
+			}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6569,20 +6610,28 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		{do LDI\\
 		Repeat until BC=0}
 
-		Repeats {\tt LDI} until {\tt BC=0}. The same example from {\tt LDDR}, copying 100 bytes from {\tt source} to {\tt destination}:
+		Repeats {\tt LDI} until {\tt BC=0}. Example and comparison between {\tt LDIR} and {\tt LDDR} for copying 100 bytes from {\tt source} to {\tt destination}; both have the same results:
 
-		\begin{Verbatim}[gobble=3]
-			LD HL, source
-			LD DE, destination
-			LD BC, 100
-			LDDR
-		\end{Verbatim}
+		\begin{multicols}{2}
+			{\tt LDIR}
+			\begin{Verbatim}[gobble=4]
+				LD HL, source
+				LD DE, destination
+				LD BC, 100
+				LDIR
+			\end{Verbatim}
+			
+			{\tt LDDR}
+			\begin{Verbatim}[gobble=4]
+				LD HL, source+99
+				LD DE, destination+99
+				LD BC, 100
+				LDDR
+			\end{Verbatim}
+		\end{multicols}
 
 		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt PF} reset
-			\item {\tt NF} reset
-			\item Other flags are preserved
+			\DetailFlags{\FN}{\FN}{0}{0}{0}{\FN}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6599,10 +6648,10 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		BC$\leftarrow$BC-1}
 
 		Works similar to {\tt LDI} except:
-		\begin{itemize}
+		\begin{DetailCompactList}
 			\item byte is only copied if it's different from {\tt A}
 			\item doesn't change flags.
-		\end{itemize}
+		\end{DetailCompactList}
 
 		\DetailNoEffect
 				
@@ -6612,7 +6661,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{LDIRX\ZXN}
 		{do LDIX\\
 		Repeat until BC=0}
@@ -6628,12 +6676,13 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{LDPIRX\ZXN}
 		{do\\
-		t$\leftarrow$(HL$\wedge$\$FFF8+E$\wedge$7)\\
-		~~if t$\neq$A: (DE)$\leftarrow$t\\
-		~~DE$\leftarrow$DE+1\\
-		~~BC$\leftarrow$BC-1\\
+		\phantom{>>}t$\leftarrow$(HL$\wedge$\$FFF8+E$\wedge$7)\\
+		\phantom{>>}if t$\neq$A: (DE)$\leftarrow$t\\
+		\phantom{>>}DE$\leftarrow$DE+1\\
+		\phantom{>>}BC$\leftarrow$BC-1\\
 		Repeat until BC=0}
 
 		Similar to {\tt LDIRX} except the source byte address is not just {\tt HL}, but is obtained by using the top 13 bits of {\tt HL} and lower 3 bits of {\tt DE}. Furthermore {\tt HL} is not incremented during loop; it serves as base address of aligned 8 byte lookup table. {\tt DE} works as destination and also wrapping index 0..7 into table. This instruction is intended for ``pattern fill'' functionality.
@@ -6653,16 +6702,15 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		INC D}
 
 		Copies the byte pointed to by {\tt HL} to the address pointed to by {\tt DE}. Then increments {\tt L} and {\tt D}. This is used for vertically copying bytes to the Layer 2 display.
-		
-		The flags are identical to what the {\tt INC D} instruction would produce.
 			
 		Note the source data are read only from single 256B (aligned) block of memory, because only {\tt L} is incremented, not {\tt HL} pair.
 
-		\begin{DetailEffects}
-			\item {\tt CF} preserved
-			\item {\tt NF} reset
-			\item {\tt PF} indicates overflow
-			\item Other flags updated according to operation
+		\begin{DetailEffects}[v]
+			\DetailFlags{\FS}{\FS}{\FS}{\FX}{0}{\FN}
+			\DetailFlagsComments{
+				\item {\tt PV} is set if value was {\tt \$7F}
+				\item Flags are identical to what {\tt INC D} would produce
+			}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6745,9 +6793,8 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Negates contents of accumulator and stores result back to {\tt A}.
 
-		\begin{DetailEffects}
-			\item {\tt NF} set 
-			\item Other flags updated according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{\FS}{\FS}{1}{\FS}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6756,12 +6803,12 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\begin{detailitem}{NEXTREG r,n\ZXN}
-		{HwNextReg[r]$\leftarrow$n}
+	\begin{detailitem}{NEXTREG r,s\ZXN}
+		{HwNextReg[r]$\leftarrow$s}
 
 		\begin{DetailVariants}
 			NEXTREG r,n\\
-			NEXTREG r,A\\
+			NEXTREG r,A
 		\end{DetailVariants}
 
 		Directly sets the Next Feature Control Registers without going through ports TBBlue Register Select. See section \ref{zx_next_tbblue_registers} for ports list.
@@ -6775,7 +6822,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{NOP}
 		{}
 
@@ -6789,6 +6835,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{OR s}
 		{A$\leftarrow$A$\vee$s}
 
@@ -6799,27 +6846,25 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			OR D\\
 			OR E\\
 			OR H\\
-			OR L\\
+			OR L
+
+			\columnbreak
 			OR n\\
 			OR (HL)\\
 			OR (IX+d)\\
-			OR (IY+d)\\
-			\\
-			\\
-			\\
+			OR (IY+d)
+
+			\columnbreak
 			OR IXH\UNDOC\\
 			OR IXL\UNDOC\\
 			OR IYH\UNDOC\\
-			OR IYL\UNDOC\\
-			\\
-			\\
+			OR IYL\UNDOC
 		\end{DetailVariants}
 
-		Performs logical or between accumulator and operand {\tt s} or contents of memory addressed by {\tt s}. Then stores the result into accumulator.
+		Performs logical or between accumulator and operand {\tt s} or contents of memory addressed by {\tt s}. Then stores the result back to {\tt A}.
 
-		\begin{DetailEffects}
-			\item {\tt HF}, {\tt NF} and {\tt CF} reset
-			\item Other flags updated according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{0}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6841,9 +6886,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Reads from memory location addressed by {\tt HL} and writes to port at {\tt BC}. Afterwards {\tt HL} and {\tt B} are decremented. This is repeated until {\tt B=0}.
 
 		\begin{DetailEffects}
-			\item {\tt ZF} and {\tt NF} set
-			\item {\tt CF} preserved
-			\item Other flags are undefined
+			\DetailFlags{\FU}{1}{\FU}{\FU}{1}{\FN}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6853,7 +6896,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{OTIR}
 		{(C)$\leftarrow$(HL)\\
 		HL$\leftarrow$HL+1\\
@@ -6863,9 +6905,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Similar to {\tt OTDR} except {\tt HL} is incremented instead of decremented.
 
 		\begin{DetailEffects}
-			\item {\tt ZF} and {\tt NF} set
-			\item {\tt CF} preserved
-			\item Other flags are undefined
+			\DetailFlags{\FU}{1}{\FU}{\FU}{1}{\FN}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6920,10 +6960,10 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Outputs the value from contents of memory addressed by {\tt HL} to port addressed by {\tt BC}. Then decrements both, {\tt HL} and {\tt B}.
 
 		\begin{DetailEffects}
-			\item {\tt ZF} set if {\tt B=0} after decrement, reset otherwise
-			\item {\tt NF} set
-			\item {\tt CF} preserved
-			\item Other flags undefined
+			\DetailFlags{\FU}{\FX}{\FU}{\FU}{1}{\FN}
+			\DetailFlagsComments{
+				\item {\tt ZF} set if {\tt B=0} after decrement, reset otherwise
+			}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6931,8 +6971,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		\end{DetailTiming}
 
 	\end{detailitem}
-	
-	\pagebreak	% this break allows effects and/or timing from previous item to stick on previous page, not be needed otherwise
 
 	\begin{detailitem}{OUTI}
 		{(C)$\leftarrow$(HL)\\
@@ -6942,10 +6980,10 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Similar to {\tt OUTD} except {\tt HL} is incremented.
 		
 		\begin{DetailEffects}
-			\item {\tt ZF} set if {\tt B=0} after decrement, reset otherwise
-			\item {\tt NF} set
-			\item {\tt CF} preserved
-			\item Other flags undefined
+			\DetailFlags{\FU}{\FX}{\FU}{\FU}{1}{\FN}
+			\DetailFlagsComments{
+				\item {\tt ZF} set if {\tt B=0} after decrement, reset otherwise
+			}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
@@ -6960,7 +6998,9 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Similar to {\tt OUTI} except it doesn't decrement {\tt B}.
 
-		\DetailUndefinedEffects
+		\begin{DetailEffects}
+			\DetailFlags{\FU}{\FU}{\FU}{\FU}{\FU}{\FU}
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
 			\DetailTime{}{4}{16}
@@ -7096,6 +7136,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{RET}
 		{PCl$\leftarrow$(SP)\\
 		PCh$\leftarrow$(SP+1)\\
@@ -7219,10 +7260,11 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Performs 9-bit left rotation of the contens of the operand {\tt s} or memory addressed by {\tt s} through carry {\tt CF} so that contents of {\tt CF} are moved to bit {\tt 0} and bit {\tt 7} to {\tt CF}. Result is then stored back to {\tt s}.
 
-		\begin{DetailEffects}
-			\item {\tt HF} and {\tt NF} reset
-			\item {\tt CF} set to value of bit {\tt 7} of {\tt s} before operation
-			\item Other flags updated according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{\FX}
+			\DetailFlagsComments{
+				\item {\tt CF} set to bit {\tt 7} of {\tt s} before operation
+			}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7253,9 +7295,10 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Performs {\tt RL A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
 
 		\begin{DetailEffects}
-			\item {\tt HF} and {\tt NF} reset
-			\item {\tt CF} set to value of bit {\tt 7} of {\tt s} before operation
-			\item {\tt SF}, {\tt ZF}, {\tt PF} not affected
+			\DetailFlags{\FN}{\FN}{0}{\FN}{0}{\FX}
+			\DetailFlagsComments{
+				\item {\tt CF} set to bit {\tt 7} of {\tt s} before operation
+			}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7313,10 +7356,11 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Performs 8-bit rotation to the left. Bit {\tt 7} is moved to {\tt CF} as well as to bit {\tt 0}. Result is then stored back to {\tt s}.
 
-		\begin{DetailEffects}
-			\item {\tt HF} and {\tt NF} reset
-			\item {\tt CF} set to value of bit {\tt 7} of {\tt s} before operation
-			\item Other flags updated according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{\FX}
+			\DetailFlagsComments{
+				\item {\tt CF} set to bit {\tt 7} of {\tt s} before operation
+			}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7346,9 +7390,10 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Performs {\tt RLC A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
 
 		\begin{DetailEffects}
-			\item {\tt HF} and {\tt NF} reset
-			\item {\tt CF} set to value of bit {\tt 7} of {\tt s} before operation
-			\item {\tt SF}, {\tt ZF}, {\tt PF} not affected
+			\DetailFlags{\FN}{\FN}{0}{\FN}{0}{\FX}
+			\DetailFlagsComments{
+				\item {\tt CF} set to bit {\tt 7} of {\tt s} before operation
+			}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7400,10 +7445,8 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Note: instruction doesn't assume any format of the data; it simply rotates nibbles. So while it's most frequently associated with BCD numbers, it can be used for shifting hexadecimal values (in which case it would represent multiplication by {\tt 16}), or any other content.
 
-		\begin{DetailEffects}
-			\item {\tt HF} and {\tt NF} reset
-			\item {\tt CF} undefined
-			\item Other flags updated according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{\FN}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7461,10 +7504,11 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Performs 9-bit right rotation of the contens of the operand {\tt s} or memory addressed by {\tt s} through carry {\tt CF} so that contents of {\tt CF} are moved to bit {\tt 7} and bit {\tt 0} to {\tt CF}. Result is then stored back to {\tt s}.
 
-		\begin{DetailEffects}
-			\item {\tt HF} and {\tt NF} reset
-			\item {\tt CF} set to value of bit {\tt 0} of {\tt s} before operation
-			\item Other flags updated according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{\FX}
+			\DetailFlagsComments{
+				\item {\tt CF} set to bit {\tt 0} of {\tt s} before operation
+			}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7476,6 +7520,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{RRA}
 		{
 			\scriptsize
@@ -7495,10 +7540,10 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Performs {\tt RR A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
 
 		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt NF} reset
-			\item {\tt CF} set to value of bit {\tt 7} of {\tt s} before operation
-			\item {\tt SF}, {\tt ZF}, {\tt PF} not affected
+			\DetailFlags{\FN}{\FN}{0}{\FN}{0}{\FX}
+			\DetailFlagsComments{
+				\item {\tt CF} set to bit {\tt 0} of {\tt s} before operation
+			}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7555,11 +7600,11 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Performs 8-bit rotation to the right. Bit {\tt 0} is moved to {\tt CF} as well as to bit {\tt 7}. Result is then stored back to {\tt s}.
 
-		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt NF} reset
-			\item {\tt CF} set to value of bit {\tt 0} of {\tt s} before operation
-			\item Other flags updated according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{\FX}
+			\DetailFlagsComments{
+				\item {\tt CF} set to bit {\tt 0} of {\tt s} before operation
+			}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7589,10 +7634,10 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Performs {\tt RRC A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
 
 		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt NF} reset
-			\item {\tt CF} set to value of bit {\tt 0} of {\tt s} before operation
-			\item {\tt SF}, {\tt ZF}, {\tt PF} not affected
+			\DetailFlags{\FN}{\FN}{0}{\FN}{0}{\FX}
+			\DetailFlagsComments{
+				\item {\tt CF} set to bit {\tt 0} of {\tt s} before operation
+			}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7628,10 +7673,8 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		
 		Similar to {\tt RLD} except rotation is to the right. If used with BCD values, this operation effectively divides 3-digit BCD number by {\tt 10} and stores remainder in {\tt A}.
 
-		\begin{DetailEffects}
-			\item {\tt HF} and {\tt NF} reset
-			\item {\tt CF} undefined
-			\item Other flags updated according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{\FN}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7685,7 +7728,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			SBC A,n
 
 			\columnbreak
-
 			\textnormal{8 bit}\\
 			SBC A,IXH\UNDOC\\
 			SBC A,IXL\UNDOC\\
@@ -7696,21 +7738,18 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			SBC A,(IY+d)
 
 			\columnbreak
-
 			\textnormal{16 bit}\\
 			SBC HL,BC\\
 			SBC HL,DE\\
 			SBC HL,HL\\
-			SBC HL,SP\\
+			SBC HL,SP
 		\end{DetailVariants}
 		
 		Source operand {\tt s} or contents of the memory location addressed by {\tt s} and carry flag are subtracted from destination {\tt d}. Result is then stored to destination {\tt d}.
 
-		\begin{DetailEffects}
-			\item {\tt NF} is set
-			\item {\tt PF} indicates overflow
-			\item Other flags modified according to operation
-			\item For 16-bit addition {\tt HF} value is undefined
+		\begin{DetailEffects}[v]
+			\DetailFlags[8-bit]{\FS}{\FS}{\FS}{\FS}{1}{\FS}
+			\DetailFlags[16-bit]{\FS}{\FS}{\FU}{\FS}{1}{\FS}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7730,9 +7769,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Sets carry flag {\tt CF}.
 
 		\begin{DetailEffects}
-			\item {\tt HF} and {\tt NF} reset
-			\item {\tt CF} set
-			\item Other flags undefined
+			\DetailFlags{\FN}{\FN}{0}{\FN}{0}{1}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7853,11 +7890,11 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Performs arithmetic shift left of the operand {\tt s} or memory location addressed by {\tt s}. Bit {\tt 0} is forced to {\tt 0} and bit {\tt 7} is moved to {\tt CF}.
 
-		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt NF} reset
-			\item {\tt PF} indicates parity and is modified according to operation
-			\item Other flags modified according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{\FX}
+			\DetailFlagsComments{
+				\item {\tt CF} set to bit {\tt 7} of {\tt s} before operation
+			}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7913,13 +7950,13 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			SLL (IY+d),L\UNDOC
 		\end{DetailVariants}
 
-		Similar to {\tt SLA} except {\tt 1} is moved to bit {\tt 0}.
+		Undocumented instruction. Similar to {\tt SLA} except {\tt 1} is moved to bit {\tt 0}.
 
-		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt NF} reset
-			\item {\tt PF} indicates parity and is modified according to operation
-			\item Other flags modified according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{\FX}
+			\DetailFlagsComments{
+				\item {\tt CF} set to bit {\tt 7} of {\tt s} before operation
+			}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7979,11 +8016,11 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Performs arithmetic shift right of the operand {\tt s} or memory location addressed by {\tt s}. Bit {\tt 0} is moved to {\tt CF} while bit {\tt 7} remains unchanged.
 
-		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt NF} reset
-			\item {\tt PF} indicates parity and is modified according to operation
-			\item Other flags modified according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{\FX}
+			\DetailFlagsComments{
+				\item {\tt CF} set to bit {\tt 0} of {\tt s} before operation
+			}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -7995,6 +8032,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{SRL s}
 		{
 			\scriptsize
@@ -8041,11 +8079,11 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Performs logical shift right of the operand {\tt s} or memory location addressed by {\tt s}. Bit {\tt 0} is moved to {\tt CF} while {\tt 0} is moved to bit {\tt 7}.
 
-		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt NF} reset
-			\item {\tt PF} indicates parity and is modified according to operation
-			\item Other flags modified according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{\FX}
+			\DetailFlagsComments{
+				\item {\tt CF} set to bit {\tt 0} of {\tt s} before operation
+			}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -8067,25 +8105,25 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			SUB D\\
 			SUB E\\
 			SUB H\\
-			SUB L\\
-			SUB n
+			SUB L
 
 			\columnbreak
+			SUB n\\
 			SUB (HL)\\
 			SUB (IX+d)\\
-			SUB (IY+d)\\
+			SUB (IY+d)
+
+			\columnbreak
 			SUB IXh\UNDOC\\
 			SUB IXl\UNDOC\\
 			SUB IYh\UNDOC\\
-			SUB IYl\UNDOC\\
+			SUB IYl\UNDOC
 		\end{DetailVariants}
 
 		Subtracts 8-bit immediate value, operand {\tt s} or memory location addressed by {\tt c} from accumulator {\tt A}. Then stores result back to {\tt A}.
 
-		\begin{DetailEffects}
-			\item {\tt NF} set
-			\item {\tt PF} indicates overflow and is modified according to operation
-			\item Other flags modified according to operation
+		\begin{DetailEffects}[v]
+			\DetailFlags{\FS}{\FS}{\FS}{\FS}{1}{\FS}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -8098,6 +8136,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{SWAPNIB\ZXN}
 		{
 			\scriptsize
@@ -8136,10 +8175,8 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Similar to {\tt CP}, but performs an {\tt AND} instead of a subtraction.
 
-		\begin{DetailEffects}
-			\item {\tt NF} undefined
-			\item {\tt PF} indicates overflow
-			\item Other flags modified according to operation
+		\begin{DetailEffects}[v]
+			\DetailFlags{\FS}{\FS}{\FS}{\FS}{\FU}{\FS}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
@@ -8159,26 +8196,24 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			XOR E\\
 			XOR H\\
 			XOR L\\
-			XOR n
 
 			\columnbreak
+			XOR n\\
 			XOR (HL)\\
 			XOR (IX+d)\\
-			XOR (IY+d)\\
+			XOR (IY+d)
+
+			\columnbreak
 			XOR IXh\UNDOC\\
 			XOR IXl\UNDOC\\
 			XOR IYh\UNDOC\\
-			XOR IYl\UNDOC\\
+			XOR IYl\UNDOC
 		\end{DetailVariants}
 
 		Performs exclusive or between accumulator and 8-bit immediate value, operand {\tt s} or memory location addressed by {\tt s}. Result is then stored back to {\tt A}
 
-		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt NF} reset
-			\item {\tt CF} reset
-			\item {\tt PF} indicates parity and is modified according to operation
-			\item Other flags modified according to operation
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{0}
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
