@@ -5398,6 +5398,48 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		
 	\end{detailitem}
 
+	\begin{detailitem}{AND s}
+		{A$\leftarrow$A$\wedge$s}
+
+		\begin{DetailVariants}
+			AND A\\
+			AND B\\
+			AND C\\
+			AND D\\
+			AND E\\
+			AND H\\
+			AND L\\
+			AND n
+			
+			\columnbreak
+			AND IXH\UNDOC\\
+			AND IXL\UNDOC\\
+			AND IYH\UNDOC\\
+			AND IYL\UNDOC\\
+			AND (HL)\\
+			AND (IX+d)\\
+			AND (IY+d)\\
+			\\ % by including additional line we force balance columns
+		\end{DetailVariants}
+
+		Performs logical AND between accumulator and given operand. Result is then stored back to accumulator.
+
+		\begin{DetailEffects}
+			\item {\tt CF} and {\tt NF} cleared
+			\item {\tt PF} represents parity
+			\item Other flags modified according to operation
+		\end{DetailEffects}
+
+		\begin{DetailTiming}
+			\DetailTime{r}{1}{4}
+			\DetailTime{n}{2}{7}
+			\DetailTime{(HL)}{2}{7}
+			\DetailTime{(IX+d)}{5}{19}
+			\DetailTime{(IY+d)}{5}{19}
+		\end{DetailTiming}
+
+	\end{detailitem}
+
 	\pagebreak
 	\begin{detailitem}{ADD d,s}
 		{d$\leftarrow$d+s}
@@ -5472,49 +5514,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			\DetailTime{rr,nn\ZXN}{4}{16}
 			\DetailTime{A,(IX+d)}{5}{19}
 			\DetailTime{A,(IY+d)}{5}{19}
-		\end{DetailTiming}
-
-	\end{detailitem}
-
-	\begin{detailitem}{AND s}
-		{A$\leftarrow$A$\wedge$s}
-
-		\begin{DetailVariants}
-			AND A\\
-			AND B\\
-			AND C\\
-			AND D\\
-			AND E\\
-			AND H\\
-			AND L\\
-			AND n
-			
-			\columnbreak
-			AND IXH\UNDOC\\
-			AND IXL\UNDOC\\
-			AND IYH\UNDOC\\
-			AND IYL\UNDOC\\
-			AND (HL)\\
-			AND (IX+d)\\
-			AND (IY+d)\\
-			\\ % by including additional line we force balance columns
-		\end{DetailVariants}
-
-		Performs logical AND between accumulator and given operand. Result is then stored back to accumulator.
-
-		\pagebreak
-		\begin{DetailEffects}
-			\item {\tt CF} and {\tt NF} cleared
-			\item {\tt PF} represents parity
-			\item Other flags modified according to operation
-		\end{DetailEffects}
-
-		\begin{DetailTiming}
-			\DetailTime{r}{1}{4}
-			\DetailTime{n}{2}{7}
-			\DetailTime{(HL)}{2}{7}
-			\DetailTime{(IX+d)}{5}{19}
-			\DetailTime{(IY+d)}{5}{19}
 		\end{DetailTiming}
 
 	\end{detailitem}
@@ -5614,6 +5613,8 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak	% the purpose of this break is to stick "no effect" title and timing from previous item to previous page
+
 	\begin{detailitem}{BSRL DE,B\ZXN}
 		{DE$\leftarrow$unsigned(DE)>>(B$\wedge$\$1F)}
 
@@ -5685,7 +5686,8 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		\end{DetailTiming}
 
 	\end{detailitem}
-
+	
+	\pagebreak
 	\begin{detailitem}{CP s}
 		{A-s}
 
@@ -5763,6 +5765,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{CPDR}
 		{A-(HL)\\
 		HL$\leftarrow$HL-1\\
@@ -5869,7 +5872,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{DAA}
 		{}
 
@@ -5893,6 +5895,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{DEC s}
 		{s$\leftarrow$s-1}
 
@@ -6045,6 +6048,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{HALT}
 		{}
 
@@ -6133,6 +6137,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{INC s}
 		{s$\leftarrow$s+1}
 
@@ -6185,7 +6190,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
  	\begin{detailitem}{IND}
 		{(HL)$\leftarrow$(C)\\
 		HL$\leftarrow$HL-1\\
@@ -6206,6 +6210,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{INDR}
 		{(HL)$\leftarrow$(C)\\
 		HL$\leftarrow$HL-1\\
@@ -6270,6 +6275,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{JP n}
 		{PC$\leftarrow$nm}
 
@@ -6323,7 +6329,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{JP (C)\ZXN}
 		{PC$\leftarrow$PC$\wedge$\$C000+IN(C)<<6}
 
@@ -6337,6 +6342,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{JR e}
 		{PC$\leftarrow$PC+e}
 		
@@ -6372,7 +6378,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 	
-	\pagebreak
 	\begin{detailitem}{LD d,s}
 		{d$\leftarrow$s}
 
@@ -6419,6 +6424,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			\end{tabular}
 		}
 
+		\pagebreak
 		\begin{DetailEffects}[Has no effect on flags, except for {\tt LD A,I} and {\tt LD A,R} where:]
 			\item {\tt SF} and {\tt ZF} set according to operation
 			\item {\tt HF} and {\tt NF} reset
@@ -6474,6 +6480,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{LDDR}
 		{do LDD
 		Repeat until BC=0}
@@ -6521,8 +6528,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		\end{DetailTiming}
 
 	\end{detailitem}
-
-	\pagebreak	% this break allows "no effect" title and timing from previous item to stick on previous page, not be needed otherwise
 
 	\begin{detailitem}{LDDRX\ZXN}
 		{do LDDX\\
@@ -6587,7 +6592,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{LDIX\ZXN}
 		{if (HL)$\neq$A: (DE)$\leftarrow$(HL)\\
 		DE$\leftarrow$DE+1\\
@@ -6608,6 +6612,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{LDIRX\ZXN}
 		{do LDIX\\
 		Repeat until BC=0}
@@ -6751,7 +6756,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{NEXTREG r,n\ZXN}
 		{HwNextReg[r]$\leftarrow$n}
 
@@ -6771,6 +6775,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{NOP}
 		{}
 
@@ -6836,8 +6841,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Reads from memory location addressed by {\tt HL} and writes to port at {\tt BC}. Afterwards {\tt HL} and {\tt B} are decremented. This is repeated until {\tt B=0}.
 
 		\begin{DetailEffects}
-			\item {\tt ZF} set
-			\item {\tt NF} set
+			\item {\tt ZF} and {\tt NF} set
 			\item {\tt CF} preserved
 			\item Other flags are undefined
 		\end{DetailEffects}
@@ -6849,6 +6853,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{OTIR}
 		{(C)$\leftarrow$(HL)\\
 		HL$\leftarrow$HL+1\\
@@ -6858,8 +6863,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Similar to {\tt OTDR} except {\tt HL} is incremented instead of decremented.
 
 		\begin{DetailEffects}
-			\item {\tt ZF} set
-			\item {\tt NF} set
+			\item {\tt ZF} and {\tt NF} set
 			\item {\tt CF} preserved
 			\item Other flags are undefined
 		\end{DetailEffects}
@@ -6908,7 +6912,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{OUTD}
 		{(C)$\leftarrow$(HL)\\
 		HL$\leftarrow$HL-1\\
@@ -6928,6 +6931,8 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		\end{DetailTiming}
 
 	\end{detailitem}
+	
+	\pagebreak	% this break allows effects and/or timing from previous item to stick on previous page, not be needed otherwise
 
 	\begin{detailitem}{OUTI}
 		{(C)$\leftarrow$(HL)\\
@@ -7047,7 +7052,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{RES b,s}
 		{$\mathtt{s_b}\leftarrow$0}
 
@@ -7216,8 +7220,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Performs 9-bit left rotation of the contens of the operand {\tt s} or memory addressed by {\tt s} through carry {\tt CF} so that contents of {\tt CF} are moved to bit {\tt 0} and bit {\tt 7} to {\tt CF}. Result is then stored back to {\tt s}.
 
 		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt NF} reset
+			\item {\tt HF} and {\tt NF} reset
 			\item {\tt CF} set to value of bit {\tt 7} of {\tt s} before operation
 			\item Other flags updated according to operation
 		\end{DetailEffects}
@@ -7231,7 +7234,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{RLA}
 		{
 			\scriptsize
@@ -7251,8 +7253,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Performs {\tt RL A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
 
 		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt NF} reset
+			\item {\tt HF} and {\tt NF} reset
 			\item {\tt CF} set to value of bit {\tt 7} of {\tt s} before operation
 			\item {\tt SF}, {\tt ZF}, {\tt PF} not affected
 		\end{DetailEffects}
@@ -7262,7 +7263,8 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		\end{DetailTiming}
 
 	\end{detailitem}
-
+	
+	\pagebreak
 	\begin{detailitem}{RLC s}
 		{
 			\scriptsize
@@ -7312,8 +7314,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Performs 8-bit rotation to the left. Bit {\tt 7} is moved to {\tt CF} as well as to bit {\tt 0}. Result is then stored back to {\tt s}.
 
 		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt NF} reset
+			\item {\tt HF} and {\tt NF} reset
 			\item {\tt CF} set to value of bit {\tt 7} of {\tt s} before operation
 			\item Other flags updated according to operation
 		\end{DetailEffects}
@@ -7383,6 +7384,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		
 		If used with BCD numbers: as shift happens by 1 digit to the left, this effectively results in multiplication with {\tt 10}. {\tt A} acts as a sort of decimal carry in the operation. Example of multiplying BCD encoded number of any length by {\tt 10}:
 
+		\pagebreak
 		\begin{Verbatim}[gobble=2]
 			LD HL, number  ; number to multiply        | progress:
 			LD B, digits   ; number of repeats         | B A number+HL
@@ -7410,38 +7412,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\begin{detailitem}{RRA}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(12,0){\framebox(4,3){CF}}
-				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(0,1.5){\vector(1,0){2}}
-				\put(9,1.5){\vector(1,0){3}}
-				\put(0,1.5){\line(0,1){2.5}}
-				\put(0,4){\line(1,0){17.5}}
-				\put(17.5,4){\line(0,-1){2.5}}
-				\put(16,1.5){\line(1,0){1.5}}
-			\end{picture}
-		}
-
-		Performs {\tt RR A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
-
-		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt NF} reset
-			\item {\tt CF} set to value of bit {\tt 7} of {\tt s} before operation
-			\item {\tt SF}, {\tt ZF}, {\tt PF} not affected
-		\end{DetailEffects}
-						
-		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
-		\end{DetailTiming}
-
-	\end{detailitem}
-
-	\pagebreak
 	\begin{detailitem}{RR s}
 		{
 			\scriptsize
@@ -7502,6 +7472,37 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			\DetailTime{(HL)}{4}{15}
 			\DetailTime{(IX+d)}{6}{23}
 			\DetailTime{(IY+d)}{6}{23}
+		\end{DetailTiming}
+
+	\end{detailitem}
+
+	\begin{detailitem}{RRA}
+		{
+			\scriptsize
+			\setlength{\unitlength}{0.9mm}
+			\begin{picture}(17,4)
+				\put(12,0){\framebox(4,3){CF}}
+				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
+				\put(0,1.5){\vector(1,0){2}}
+				\put(9,1.5){\vector(1,0){3}}
+				\put(0,1.5){\line(0,1){2.5}}
+				\put(0,4){\line(1,0){17.5}}
+				\put(17.5,4){\line(0,-1){2.5}}
+				\put(16,1.5){\line(1,0){1.5}}
+			\end{picture}
+		}
+
+		Performs {\tt RR A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
+
+		\begin{DetailEffects}
+			\item {\tt HF} reset
+			\item {\tt NF} reset
+			\item {\tt CF} set to value of bit {\tt 7} of {\tt s} before operation
+			\item {\tt SF}, {\tt ZF}, {\tt PF} not affected
+		\end{DetailEffects}
+						
+		\begin{DetailTiming}
+			\DetailTime{}{1}{4}
 		\end{DetailTiming}
 
 	\end{detailitem}
@@ -7600,6 +7601,8 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak	% this break allows effects and/or timing from previous item to stick on previous page, not be needed otherwise
+
 	\begin{detailitem}{RRD}
 		{
 			\scriptsize
@@ -7626,8 +7629,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Similar to {\tt RLD} except rotation is to the right. If used with BCD values, this operation effectively divides 3-digit BCD number by {\tt 10} and stores remainder in {\tt A}.
 
 		\begin{DetailEffects}
-			\item {\tt HF} reset
-			\item {\tt NF} reset
+			\item {\tt HF} and {\tt NF} reset
 			\item {\tt CF} undefined
 			\item Other flags updated according to operation
 		\end{DetailEffects}
