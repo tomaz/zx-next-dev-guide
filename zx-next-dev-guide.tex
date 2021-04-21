@@ -1608,7 +1608,7 @@ Next unique \textbf{MMU-based Mode} is much more flexible in that it allows mapp
 	\end{tabular}
 \endgroup
 
-MMU selection is set via Next registers (see section \ref{zx_next_mappingregister} for details):
+MMU selection is set via Next registers:
 
 \begin{itemize}
 	\item {\tt \$50}: Selects 8K bank in 8K slot 0
@@ -1620,6 +1620,12 @@ MMU selection is set via Next registers (see section \ref{zx_next_mappingregiste
 	\item {\tt \$56}: Selects 8K bank in 8K slot 6
 	\item {\tt \$57}: Selects 8K bank in 8K slot 7
 \end{itemize}
+
+Each register takes 8-bit page number it should use on memory address it represents. Swapping in 8K bank 10 to address {\tt \$6000-\$7FFF}, can be as simple as:
+
+\begin{Verbatim}[gobble=1]
+	NEXTREG $53, 10
+\end{Verbatim}
 
 
 \subsection{Interaction Between Paging Modes}
