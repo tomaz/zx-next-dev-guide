@@ -1,4 +1,4 @@
-\documentclass[twoside,openright,a4paper]{book}
+\documentclass[12pt,twoside,openright,a4paper]{book}
 
 \usepackage{fancyhdr}
 \usepackage{fancyvrb}
@@ -51,8 +51,8 @@
 \renewcommand{\cleardoublepage}{\clearpage{\pagestyle{empty}\mtcleardoublepage}}
 
 % top and bottom "struts" for instruction lines
-\newcommand{\instrt}{\rule{0pt}{2.7ex}}
-\newcommand{\instrb}{\rule[-1.7ex]{0pt}{0pt}}
+\newcommand{\instrt}{\rule{0pt}{2.5ex}}
+\newcommand{\instrb}{\rule[-1.4ex]{0pt}{0pt}}
 
 % top and bottom "struts" for note lines
 \newcommand{\notet}{\rule{0pt}{2.4ex}}
@@ -248,6 +248,7 @@ and HF flags for {\tt OTIR} and friends (section \ref{block_io}).
 
 \minitoc
 
+\pagebreak
 \section{Overview}
 \subsection{History of the Z80}
 
@@ -297,6 +298,7 @@ For interrupts, there are two interrupt flop-flops, IFF1 and IFF2, and the inter
 
 The conventional way of denoting the flags is with one letter, `C' for the carry flag for example. It could be confused with the C register, so I've chosen to use the `CF' notation for flags. Also in previous things I've written I called the two undocumented flags 5 and 3, but now I've changed to the same notation used in MAME\footnote{http://www.mame.net/}, which is YF and XF, respectively. Note that in mnemonics the original way is still maintained.
 
+\pagebreak
 \begin{tabular}{|l|c|c|c|c|c|c|c|c|} 
 	\hline
 	bit & 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \instrt\instrb \\
@@ -333,7 +335,7 @@ The conventional way of denoting the flags is with one letter, `C' for the carry
 
 \end{description}
 
-Note that the only way to read the XF, YF and NF can only be read using
+Note that the only way to read the XF, YF and NF can be read using
 {\tt PUSH AF}.
 
 
@@ -771,7 +773,7 @@ Things get more bizarre with the {\tt BIT n,(HL)} instruction. Again, except for
 	\item[{\tt JR d}]
 	Use high byte target address of the jump.
 
-	\item[{LD r,r'}]
+	\item[{\tt LD r,r'}]
 	Doesn't change this register.
 
 \end{description}
@@ -845,15 +847,17 @@ First of all, all instructions affect the following flags:
 
 \end{description}
 
+\pagebreak	% this break allows above list to be fully included on preceeding page
+
 And now the for {\tt OUTI/OTIR/OUTD/OTDR} instructions. Take state of the L after the increment or decrement of HL; add the value written to the I/O port to; call that k for now. If k $>$ 255, then the CF and HF flags are set. The PF flags is set like the parity of k bitwise and'ed with 7, bitwise xor'ed with B.
 
 \begin{description}
 
 	\item[HF and CF]
-	Both set if ((HL) + L  $>$ 255)
+	Both set if {\tt ((HL) + L  $>$ 255)}
 
 	\item[PF]
-	The parity of ((((HL) + L) \& 7) xor B)
+	The parity of {\tt ((((HL) + L) \& 7) xor B)}
 
 \end{description}
 
@@ -862,10 +866,10 @@ And now the for {\tt OUTI/OTIR/OUTD/OTDR} instructions. Take state of the L afte
 \begin{description}
 
 	\item[HF and CF]
-	Both set if ((HL) + ((C + 1) \& 255)  $>$ 255)
+	Both set if {\tt ((HL) + ((C + 1) \& 255)  $>$ 255)}
 
 	\item[PF]
-	The parity of (((HL) + ((C + 1) \& 255)) \& 7) xor B)
+	The parity of {\tt (((HL) + ((C + 1) \& 255)) \& 7) xor B)}
 
 \end{description}
 
@@ -874,10 +878,10 @@ And last {\tt IND/INDR}:
 \begin{description}
 
 	\item[HF and CF]
-	Both set if ((HL) + ((C - 1) \& 255) $>$ 255)
+	Both set if {\tt ((HL) + ((C - 1) \& 255) $>$ 255)}
 
 	\item[PF]
-	The parity of (((HL) + ((C - 1) \& 255)) \& 7) xor B)
+	The parity of {\tt (((HL) + ((C - 1) \& 255)) \& 7) xor B)}
 
 \end{description}
 
@@ -886,12 +890,12 @@ And last {\tt IND/INDR}:
 
 Officially the Z80 has an 8 bit I/O port address space. When using the I/O ports, the 16 address lines are used. And in fact, the high 8 bit do actually have some value, so you can use 65536 ports after all. {\tt IN r,(C)}, {\tt OUT (C),r}, and the Block I/O instructions  actually place the entire BC register on the address bus. Similarly {\tt IN A,(n)} and {\tt OUT (n),A} put A $\times$ 256 + n on the address bus.
 
-The {\tt INI}/{\tt INIR}/{\tt IND}/{\tt INDR} instructions use BC after decrementing B, and the {\tt OUTI}/{\tt OTIR}/{\tt OUTD}/{\tt OTDR} instructions before.
+The {\tt INI}, {\tt INIR}, {\tt IND} and {\tt INDR} instructions use {\tt BC} after decrementing {\tt B}, and the {\tt OUTI}, {\tt OTIR}, {\tt OUTD} and {\tt OTDR} instructions before.
 
 
 \subsection{Block Instructions}
 
-The repeated block instructions simply decrease the PC by two so the instruction is simply re-executed. So interrupts can occur during block instructions. So, {\tt LDIR} is simply {\tt LDI} + if BC is not 0, decrease PC by 2.
+The repeated block instructions simply decrease the {\tt PC} by two so the instruction is simply re-executed. So interrupts can occur during block instructions. So, {\tt LDIR} is simply {\tt LDI} + if {\tt BC} is not {\tt 0}, decrease {\tt PC} by {\tt 2}.
 
 
 \subsection{16 Bit Additions}
@@ -906,104 +910,120 @@ This instruction is useful when you're using BCD values. After an addition or su
 
 Stefano Donati from Ramsoft\footnote{http://www.ramsoft.bbk.org/} has found the tables which describe the {\tt DAA} operation. The input is the A register and the CF, NF, HF flags. Result is as follows:
 
-Depending on the NF flag, the `diff' from this table must be added (NF is reset) or subtracted (NF is set) to A.
+{
+	\footnotesize
 
-% ----------------------------------
-% | NF | CF |  hi | HF |  lo | add |
-% |----|----|-----|----|-----|-----|
-% |  0 |  0 | 0-9 |  0 | 0-9 |  00 |
-% |  0 |  0 | 0-9 |  1 | 0-9 |  06 |
-% |  0 |  0 | 0-8 |  * | a-f |  06 |
-% |  0 |  0 | a-f |  0 | 0-9 |  60 |
-% |  0 |  1 |  *  |  0 | 0-9 |  60 |
-% |  0 |  1 |  *  |  1 | 0-9 |  66 |
-% |  0 |  1 |  *  |  * | a-f |  66 |
-% |  0 |  0 | 9-f |  * | a-f |  66 |
-% |  0 |  0 | a-f |  1 | 0-9 |  66 |
-% ----------------------------------
-% |  1 |  0 | 0-9 |  0 | 0-9 |  00 |
-% |  1 |  0 | 0-9 |  1 | 0-9 |  fa |
-% |  1 |  0 | 0-8 |  * | a-f |  fa |
-% |  1 |  0 | a-f |  0 | 0-9 |  a0 |
-% |  1 |  1 |  *  |  0 | 0-9 |  a0 |
-% |  1 |  1 |  *  |  1 | 0-9 |  9a |
-% |  1 |  1 |  *  |  * | a-f |  9a |
-% |  1 |  0 | 9-f |  * | a-f |  9a |
-% |  1 |  0 | a-f |  1 | 0-9 |  9a |
-% ----------------------------------
- 
-\begin{tabular}{c|c|c|c|c}
-	CF &  high   & HF & low    & diff \\
-	&  nibble &    & nibble &      \\
-	\hline
-	0 & 0-9     &  0 & 0-9    &  00  \\
-	0 & 0-9     &  1 & 0-9    &  06  \\
-	0 & 0-8     &  * & a-f    &  06  \\
-	0 & a-f     &  0 & 0-9    &  60  \\
-	1 &  *      &  0 & 0-9    &  60  \\
-	1 &  *      &  1 & 0-9    &  66  \\
-	1 &  *      &  * & a-f    &  66  \\
-	0 & 9-f     &  * & a-f    &  66  \\
-	0 & a-f     &  1 & 0-9    &  66  \\
-	\hline
-\end{tabular}\\[1ex]
+	\begin{tabular}{b{5.8cm}b{4.8cm}b{4.8cm}}
+		Depending on the NF flag, the `diff' from this table must be added (NF is reset) or subtracted (NF is set) to {\tt A}:
+		&
+		CF flag is affected:
+		&
+		NF flags is affected: \\
+	\end{tabular}
+
+	\begin{tabular}{p{5.8cm}p{4.8cm}p{4.8cm}}
+
+		% ----------------------------------
+		% | NF | CF |  hi | HF |  lo | add |
+		% |----|----|-----|----|-----|-----|
+		% |  0 |  0 | 0-9 |  0 | 0-9 |  00 |
+		% |  0 |  0 | 0-9 |  1 | 0-9 |  06 |
+		% |  0 |  0 | 0-8 |  * | a-f |  06 |
+		% |  0 |  0 | a-f |  0 | 0-9 |  60 |
+		% |  0 |  1 |  *  |  0 | 0-9 |  60 |
+		% |  0 |  1 |  *  |  1 | 0-9 |  66 |
+		% |  0 |  1 |  *  |  * | a-f |  66 |
+		% |  0 |  0 | 9-f |  * | a-f |  66 |
+		% |  0 |  0 | a-f |  1 | 0-9 |  66 |
+		% ----------------------------------
+		% |  1 |  0 | 0-9 |  0 | 0-9 |  00 |
+		% |  1 |  0 | 0-9 |  1 | 0-9 |  fa |
+		% |  1 |  0 | 0-8 |  * | a-f |  fa |
+		% |  1 |  0 | a-f |  0 | 0-9 |  a0 |
+		% |  1 |  1 |  *  |  0 | 0-9 |  a0 |
+		% |  1 |  1 |  *  |  1 | 0-9 |  9a |
+		% |  1 |  1 |  *  |  * | a-f |  9a |
+		% |  1 |  0 | 9-f |  * | a-f |  9a |
+		% |  1 |  0 | a-f |  1 | 0-9 |  9a |
+		% ----------------------------------
+		{\tt
+			\begin{tabular}[t]{c|c|c|c|c}
+				   &  high   &    & low    &  \\
+				CF &  nibble & HF & nibble & diff \\
+				\hline
+				0 & 0-9     &  0 & 0-9    &  00  \\
+				0 & 0-9     &  1 & 0-9    &  06  \\
+				0 & 0-8     &  * & A-F    &  06  \\
+				0 & A-F     &  0 & 0-9    &  60  \\
+				1 &  *      &  0 & 0-9    &  60  \\
+				1 &  *      &  1 & 0-9    &  66  \\
+				1 &  *      &  * & A-F    &  66  \\
+				0 & 9-F     &  * & A-F    &  66  \\
+				0 & A-F     &  1 & 0-9    &  66  \\
+				\hline
+			\end{tabular}
+		}
+
+		&
+
+		% ------------------------
+		% | CF |  hi |  lo | CF' |
+		% |----|-----|-----|-----|
+		% |  0 | 0-9 | 0-9 |  0  |
+		% |  0 | 0-8 | a-f |  0  |
+		% |  0 | 9-f | a-f |  1  |
+		% |  0 | a-f | 0-9 |  1  |
+		% |  1 |  *  |  *  |  1  |
+		% ------------------------
+		{\tt
+			\begin{tabular}[t]{c|c|c|c}
+				   & high   & low    & \\
+				CF & nibble & nibble & CF' \\ 	
+				\hline
+				0 & 0-9    & 0-9    &  0  \\
+				0 & 0-8    & A-F    &  0  \\
+				0 & 9-F    & A-F    &  1  \\
+				0 & A-F    & 0-9    &  1  \\
+				1 &  *     &  *     &  1  \\ 
+				\hline
+			\end{tabular}
+		}
+
+		&
+		
+		% -----------------------
+		% | NF | HF |  lo | HF' |
+		% |----|----|-----|-----|
+		% |  0 |  * | 0-9 |  0  |
+		% |  0 |  * | a-f |  1  |
+		% -----------------------
+		% |  1 |  0 |  *  |  0  |
+		% |  1 |  1 | 6-f |  0  |
+		% |  1 |  1 | 0-5 |  1  |
+		% -----------------------
+		{\tt
+			\begin{tabular}[t]{c|c|c|c}
+				   &    & low    & \\
+				NF & HF & nibble & HF' \\ 
+				\hline
+				0 &  * & 0-9    &  0  \\
+				0 &  * & A-F    &  1  \\
+				1 &  0 &  *     &  0  \\
+				1 &  1 & 6-F    &  0  \\
+				1 &  1 & 0-5    &  1  \\ 
+				\hline
+			\end{tabular}
+		}
+		
+		\\
+
+	\end{tabular}
+}
+
+SF, YF, XF are copies of bit 7, 5, 3 of the result respectively; ZF is set according to the result and NF is always unchanged.
 
 
-% ------------------------
-% | CF |  hi |  lo | CF' |
-% |----|-----|-----|-----|
-% |  0 | 0-9 | 0-9 |  0  |
-% |  0 | 0-8 | a-f |  0  |
-% |  0 | 9-f | a-f |  1  |
-% |  0 | a-f | 0-9 |  1  |
-% |  1 |  *  |  *  |  1  |
-% ------------------------
-
-The CF flag is affected as follows:
-
-\begin{tabular}{c|c|c|c}
-	CF & high   & low    & CF' \\
-	& nibble & nibble &     \\ 	
-	\hline
-	0 & 0-9    & 0-9    &  0  \\
-	0 & 0-8    & a-f    &  0  \\
-	0 & 9-f    & a-f    &  1  \\
-	0 & a-f    & 0-9    &  1  \\
-	1 &  *     &  *     &  1  \\ 
-	\hline
-\end{tabular}\\[1ex]
-
-
-The NF flags is affected as follows:
-% -----------------------
-% | NF | HF |  lo | HF' |
-% |----|----|-----|-----|
-% |  0 |  * | 0-9 |  0  |
-% |  0 |  * | a-f |  1  |
-% -----------------------
-% |  1 |  0 |  *  |  0  |
-% |  1 |  1 | 6-f |  0  |
-% |  1 |  1 | 0-5 |  1  |
-% -----------------------
- 
-\begin{tabular}{c|c|c|c}
-	NF & HF & low    & HF' \\
-	&    & nibble &     \\ 
-	\hline
-	0 &  * & 0-9    &  0  \\
-	0 &  * & a-f    &  1  \\
-	1 &  0 &  *     &  0  \\
-	1 &  1 & 6-f    &  0  \\
-	1 &  1 & 0-5    &  1  \\ 
-	\hline
-\end{tabular}\\[1ex]
-
-
-SF, YF, XF are copies of bit 7,5,3 of the result respectively; ZF is set according to the result and NF is always unchanged.
-
-
-
-
+\pagebreak
 \section{Interrupts}
 \label{interrupts}
 
@@ -1241,46 +1261,61 @@ Most Spectrum peripherals did not actually decode all 16 bits of the address bus
 The table on next page is a general list of ports and registers on Spectrum Next board. Some of the ports are described in more detail in their own sections, for the rest and for more details see\footnote{
 \url{https://wiki.specnext.dev/Extended_Z80_instruction_set/}}
 
-\newcommand{\zxport}[4]{\tt {#1}\notet & {\tt \$#2} & {\tt \%#3} & #4}
+{
+	\newcommand{\zxport}[4]{
+		\tt {#1} & 
+		{\tt \$#2} & 
+		\IfEq{#3}{}{}{\tt \%#3} &
+		#4\\
+	}
 
-\begin{tabular}{lllp{7.5cm}}
-	{\tt RW} & Address & Mask & Description \\
-	
-	\hline
-	
-	\zxport{RW}{103B}{0001 0000 0011 1011}{Sets and reads the I2C SCL line} \\
-	\zxport{RW}{113B}{0001 0001 0011 1011}{Sets and reads the I2C SDA line} \\
-	\zxport{RW }{123B}{0001 0010 0011 1011}{Enables layer 2 and controls paging of layer 2 screen into lower memory} \\
-	\zxport{RW}{133B}{0001 0011 0011 1011}{Sends byte to serial port. If read, tells if data in RX buffer} \\
-	\zxport{RW}{143B}{0001 0100 0011 1011}{Reads data from serial port, write sets the baudrate} \\
-	\zxport{RW}{153B}{0001 0101 0011 1011}{Configuration of UART interfaces} \\
-	\zxport{-W}{1FFD}{0001 ---- ---- --0-}{Controls ROM paging and special paging options from the +2a/+3 (also see section \ref{zx_next_memorypaging})} \\
-	\zxport{RW}{243B}{0010 0100 0011 1011}{Selects active port for TBBlue/Next feature configuration} \\
-	\zxport{--}{253B}{0010 0101 0011 1011}{Reads and/or writes the selected TBBlue control register} \\
-	\zxport{RW}{303B}{0011 0000 0011 1011}{Sets active sprite-attribute index and pattern-slot index, reads sprite status} \\
-	\zxport{-W}{7FFD}{01-- ---- ---- --0-}{Selects active RAM, ROM, and displayed screen (also see section \ref{zx_next_memorypaging})} \\
-	\zxport{-W}{BFFD}{10-- ---- ---- --0-}{Writes to the selected register of the selected sound chip} \\
-	\zxport{-W}{DFFD}{1101 1111 1111 1101}{Provides additional bank select bits for extended memory (also see section \ref{zx_next_memorypaging})} \\
-	\zxport{R-}{FADF}{---- ---0 --0- ----}{Reads buttons on Kempston Mouse.} \\
-	\zxport{R-}{FBDF}{---- -0-1 --0- ----}{X coordinate of Kempston Mouse, 0-255} \\
-	\zxport{R-}{FFDF}{---- -1-1 --0- ----}{Y coordinate of Kempston Mouse, 0-192} \\
-	\zxport{-W}{FFFD}{11-- ---- ---- --0-}{Controls stereo channels and selects active sound chip and sound chip channel} \\
-	\zxport{--}{xx0B}{---- ---- 0000 1011}{Controls Z8410 DMA chip via MB02 standard} \\
-	\zxport{R-}{xx1F}{---- ---- 0001 1111}{Reads movement of joysticks using Kempston interface} \\
-	\zxport{RW}{xx37}{}{Kempston interface second joystick variant and controls joystick I/O} \\
-	\zxport{-W}{xx57}{---- ---- 0101 0111}{Uploads sprite positions, visibility, colour type and effect flags} \\
-	\zxport{-W}{xx5B}{---- ---- 0101 1011}{Used to upload the pattern of the selected sprite} \\
-	\zxport{RW}{xx6B}{---- ---- 0110 1011}{Controls zxnDMA chip} \\
-	\zxport{--}{xxDF}{---- ---- --01 1111}{Output to SpecDrum DAC} \\
-	\zxport{R-}{xxFE}{xxxx xxxx ---- ---0}{Keyboard status (see section \ref{zx_next_keyboard})} \\
-	\zxport{-W}{xxFE}{}{Controls border color and base Spectrum audio settings} \\
-	\zxport{-W}{xxFF}{}{Controls Timex Sinclair video modes and colours in hi-res mode} \\
+	\setlength{\extrarowheight}{5pt}
 
-\end{tabular}
+	\begin{tabularx}{\textwidth}{lllX}
+		{\tt RW} & Addr & Mask & Description \\
+		
+		\hline
+		
+		\zxport{RW}{103B}{0001 0000 0011 1011}{Sets and reads the I2C SCL line}
+		\zxport{RW}{113B}{0001 0001 0011 1011}{Sets and reads the I2C SDA line}
+		\zxport{RW }{123B}{0001 0010 0011 1011}{Enables layer 2 and controls paging of layer 2 screen into lower memory}
+		\zxport{RW}{133B}{0001 0011 0011 1011}{Sends byte to serial port. If read, tells if data in RX buffer}
+		\zxport{RW}{143B}{0001 0100 0011 1011}{Reads data from serial port, write sets the baudrate}
+		\zxport{RW}{153B}{0001 0101 0011 1011}{Configuration of UART interfaces}
+		\zxport{-W}{1FFD}{0001 ---- ---- --0-}{Controls ROM paging and special paging options from the +2a/+3 (also see section \ref{zx_next_memorypaging})}
+		\zxport{RW}{243B}{0010 0100 0011 1011}{Selects active port for TBBlue/Next feature configuration}
+		\zxport{--}{253B}{0010 0101 0011 1011}{Reads and/or writes the selected TBBlue control register}
+		\zxport{RW}{303B}{0011 0000 0011 1011}{Sets active sprite-attribute index and pattern-slot index, reads sprite status}
+		\zxport{-W}{7FFD}{01-- ---- ---- --0-}{Selects active RAM, ROM, and displayed screen (also see section \ref{zx_next_memorypaging})}
+		\zxport{-W}{BFFD}{10-- ---- ---- --0-}{Writes to the selected register of the selected sound chip}
+		\zxport{-W}{DFFD}{1101 1111 1111 1101}{Provides additional bank select bits for extended memory (also see section \ref{zx_next_memorypaging})}
+		\zxport{R-}{FADF}{---- ---0 --0- ----}{Reads buttons on Kempston Mouse.}
+		\zxport{R-}{FBDF}{---- -0-1 --0- ----}{X coordinate of Kempston Mouse, 0-255}
+		\zxport{R-}{FFDF}{---- -1-1 --0- ----}{Y coordinate of Kempston Mouse, 0-192}
+		\zxport{-W}{FFFD}{11-- ---- ---- --0-}{Controls stereo channels and selects active sound chip and sound chip channel}
+
+	\end{tabularx}
+
+	\begin{tabularx}{\textwidth}{lllX}
+		{\tt RW} & Addr & Mask & Description \\
+		
+		\hline
+
+		\zxport{--}{xx0B}{---- ---- 0000 1011}{Controls Z8410 DMA chip via MB02 standard}
+		\zxport{R-}{xx1F}{---- ---- 0001 1111}{Reads movement of joysticks using Kempston interface}
+		\zxport{RW}{xx37}{}{Kempston interface second joystick variant and controls joystick I/O}
+		\zxport{-W}{xx57}{---- ---- 0101 0111}{Uploads sprite positions, visibility, colour type and effect flags}
+		\zxport{-W}{xx5B}{---- ---- 0101 1011}{Used to upload the pattern of the selected sprite}
+		\zxport{RW}{xx6B}{---- ---- 0110 1011}{Controls zxnDMA chip}
+		\zxport{--}{xxDF}{---- ---- --01 1111}{Output to SpecDrum DAC}
+		\zxport{R-}{xxFE}{xxxx xxxx ---- ---0}{Keyboard status (see section \ref{zx_next_keyboard})}
+		\zxport{-W}{xxFE}{}{Controls border color and base Spectrum audio settings}
+		\zxport{-W}{xxFF}{}{Controls Timex Sinclair video modes and colours in hi-res mode}
+
+	\end{tabularx}
+}
 
 
-\pagebreak
-\intentiallyempty
 \pagebreak
 
 \subsection{Next/TBBlue Feature Control Registers}
@@ -1288,152 +1323,164 @@ The table on next page is a general list of ports and registers on Spectrum Next
 
 Specific features of the Next are controlled via these register numbers, accessed via TBBlue Register Select\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Select}} (\$243B / 9275) and TBBlue Register Access\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Access}} (\$253B / 9531), or via the NEXTREG opcode.
 
-\newcommand{\nexttitle}{\tt {RW} & Port & Description \\ \hline}
-\newcommand{\nextport}[3]{\tt {#1}\notet & {\tt \$#2} & #3}
+{
+	\environbodyname\TBBlueBODY
+	\NewEnviron{tbbluereg}{
+		\begin{tabularx}{\textwidth}{llX}
+			{\tt RW} & Port & Description \\
+			\hline
+			\TBBlueBODY
+		\end{tabularx}
+	}
 
-\begin{tabular}{llp{12.1cm}}
-	\nexttitle
+	\newcommand{\nextport}[3]{
+		{\tt #1} & 
+		{\tt \$#2} & 
+		#3 \\
+	}
 
-	\nextport{-W}{0}{Identifies TBBlue board type. Should always be 10 on Next} \\
-	\nextport{-W}{1}{Identifies core (FPGA image) version} \\
-	\nextport{RW}{2}{Identifies type of last reset. Can be written to force reset} \\
-	\nextport{RW}{3}{Identifies timing and machine type} \\
-	\nextport{R-}{4}{In config mode, allows RAM to be mapped to ROM area} \\
-	\nextport{RW}{5}{Sets joystick mode, video frequency and Scandoubler} \\
-	\nextport{RW}{6}{Enables CPU Speed key, DivMMC, Multiface, Mouse and AY audio} \\
-	\nextport{RW}{7}{Sets CPU Speed, reads actual speed} \\
-	\nextport{RW}{8}{ABC/ACB Stereo, Internal Speaker, SpecDrum, Timex Video Modes, Turbo Sound Next, RAM contention and [un]lock 128k paging} \\
-	\nextport{RW}{9}{Sets scanlines, AY mono output, Sprite-id lockstep, reset DivMMC mapram and disable HDMI audio} \\
-	\nextport{RW}{0A}{Mouse buttons and DPI config} \\
-	\nextport{-W}{0E}{Identifies core (FPGA image) version (sub minor number)} \\
-	\nextport{RW}{10}{Used within the Anti-brick system} \\
-	\nextport{RW}{11}{Sets video output timing variant} \\
-	\nextport{RW}{12}{Sets the bank number where Layer 2 video memory begins} \\
-	\nextport{RW}{13}{Sets the bank number where the Layer 2 shadow screen begins} \\
-	\nextport{RW}{14}{Sets the "transparent" colour for Layer 2, ULA and LoRes pixel data} \\
-	\nextport{RW}{15}{Enables/disables Sprites and Lores Layer, and chooses priority of sprites and Layer 2} \\
-	\nextport{RW}{16}{Sets the pixel offset used for drawing Layer 2 graphics on the screen} \\
-	\nextport{RW}{17}{Sets the Y offset used when drawing Layer 2 graphics on the screen} \\
-	\nextport{RW}{18}{Sets and reads clip-window for Layer 2} \\
-	\nextport{RW}{19}{Sets and reads clip-window for Sprites} \\
-	\nextport{RW}{1A}{Sets and reads clip-window for ULA/LoRes layer} \\
-	\nextport{RW}{1B}{Sets and reads clip-window for Tilemap} \\
-	\nextport{RW}{1C}{Controls (resets) the clip-window registers indices} \\
-	\nextport{-W}{1E}{Holds the MSB (only, as bit 0) of the raster line currently being drawn} \\
-	\nextport{-W}{1F}{Holds the eight LSBs of the raster line currently being drawn} \\
-	\nextport{RW}{22}{Controls the timing of raster interrupts and the ULA frame interrupt} \\
-	\nextport{RW}{23}{Holds the eight LSBs of the line on which a raster interrupt should occur} \\
-	\nextport{RW}{26}{Pixel X offset (0..255) to use when drawing ULA Layer} \\
-	\nextport{RW}{27}{Pixel Y offset (0..191) to use when drawing ULA Layer} \\
-	\nextport{RW}{28}{PS/2 Keymap address MSB, read (pending) first byte of palette colour} \\
-	\nextport{R-}{29}{PS/2 Keymap address LSB} \\
-	
-	\hline
-\end{tabular}
+	\setlength{\extrarowheight}{2pt}
 
-(continued)\\
+	\begin{tbbluereg}
+		\nextport{-W}{0}{Identifies TBBlue board type. Should always be 10 on Next}
+		\nextport{-W}{1}{Identifies core (FPGA image) version}
+		\nextport{RW}{2}{Identifies type of last reset. Can be written to force reset}
+		\nextport{RW}{3}{Identifies timing and machine type}
+		\nextport{R-}{4}{In config mode, allows RAM to be mapped to ROM area}
+		\nextport{RW}{5}{Sets joystick mode, video frequency and Scandoubler}
+		\nextport{RW}{6}{Enables CPU Speed key, DivMMC, Multiface, Mouse and AY audio}
+		\nextport{RW}{7}{Sets CPU Speed, reads actual speed}
+		\nextport{RW}{8}{ABC/ACB Stereo, Internal Speaker, SpecDrum, Timex Video Modes, Turbo Sound Next, RAM contention and [un]lock 128k paging}
+		\nextport{RW}{9}{Sets scanlines, AY mono output, Sprite-id lockstep, reset DivMMC mapram and disable HDMI audio}
+		\nextport{RW}{0A}{Mouse buttons and DPI config}
+		\nextport{-W}{0E}{Identifies core (FPGA image) version (sub minor number)}
+		\nextport{RW}{10}{Used within the Anti-brick system}
+		\nextport{RW}{11}{Sets video output timing variant}
+		\nextport{RW}{12}{Sets the bank number where Layer 2 video memory begins}
+		\nextport{RW}{13}{Sets the bank number where the Layer 2 shadow screen begins}
+		\nextport{RW}{14}{Sets the "transparent" colour for Layer 2, ULA and LoRes pixel data}
+		\nextport{RW}{15}{Enables/disables Sprites and Lores Layer, and chooses priority of sprites and Layer 2}
+		\nextport{RW}{16}{Sets the pixel offset used for drawing Layer 2 graphics on the screen}
+		\nextport{RW}{17}{Sets the Y offset used when drawing Layer 2 graphics on the screen}
+		\nextport{RW}{18}{Sets and reads clip-window for Layer 2}
+		\nextport{RW}{19}{Sets and reads clip-window for Sprites}
+		\nextport{RW}{1A}{Sets and reads clip-window for ULA/LoRes layer}
+		\nextport{RW}{1B}{Sets and reads clip-window for Tilemap}
+		\nextport{RW}{1C}{Controls (resets) the clip-window registers indices}
+		
+		\hline
+	\end{tbbluereg}
 
-\begin{tabular}{llp{12.1cm}}
-	\nexttitle
+	(continued)
+	\pagebreak
 
-	\nextport{R-}{2A}{High data to PS/2 Keymap (MSB of data in bit 0)} \\
-	\nextport{R-}{2B}{Low eight LSBs of PS/2 Keymap data} \\
-	\nextport{RW}{2C}{DAC B mirror, read current I2S left MSB} \\
-	\nextport{RW}{2D}{SpecDrum port 0xDF / DAC A+D mirror, read current I2S LSB} \\
-	\nextport{RW}{2E}{DAC C mirror, read current I2S right MSB} \\
-	\nextport{RW}{2F}{Sets the pixel offset (two high bits) used for drawing Tilemap graphics on the screen} \\
-	\nextport{RW}{30}{Sets the pixel offset (eight low bits) used for drawing Tilemap graphics on the screen} \\
-	\nextport{RW}{31}{Sets the pixel offset used for drawing Tilemap graphics on the screen} \\
-	\nextport{RW}{32}{Pixel X offset (0..255) to use when drawing LoRes Layer} \\
-	\nextport{RW}{33}{Pixel Y offset (0..191) to use when drawing LoRes Layer} \\
-	\nextport{RW}{34}{Selects sprite index 0..127 to be affected by writes to other Sprite ports (and mirrors)} \\
-	\nextport{R-}{35}{Nextreg port-mirror to write directly into "byte 1" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)} \\
-	\nextport{R-}{36}{Nextreg port-mirror to write directly into "byte 2" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)} \\
-	\nextport{-W}{37}{Nextreg port-mirror to write directly into "byte 3" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)} \\
-	\nextport{-W}{38}{Nextreg port-mirror to write directly into "byte 4" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)} \\
-	\nextport{-W}{39}{Nextreg port-mirror to write directly into "byte 5" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)} \\
-	\nextport{RW}{40}{Chooses an palette element (index) to manipulate with} \\
-	\nextport{RW}{41}{Use to set/read 8-bit colours of the ULANext palette} \\
-	\nextport{RW}{42}{Specifies mask to extract ink colour from attribute cell value in ULANext mode} \\
-	\nextport{RW}{43}{Enables or disables Enhanced ULA interpretation of attribute values and toggles active palette} \\
-	\nextport{RW}{44}{Use to set 9-bit (2-byte) colours of the Enhanced ULA palette, or to read second byte of colour} \\
-	\nextport{RW}{4A}{8-bit colour to be used when all layers contain transparent pixel} \\
-	\nextport{RW}{4B}{Index into sprite palette (of "transparent" colour)} \\
-	\nextport{RW}{4C}{Index into Tilemap palette (of "transparent" colour)} \\
-	\nextport{RW}{50}{Selects the 8k-bank stored in 8k-slot 0 (see Memory map)} \\
-	\nextport{RW}{51}{Selects the 8k-bank stored in 8k-slot 1 (see Memory map)} \\
-	\nextport{RW}{52}{Selects the 8k-bank stored in 8k-slot 2 (see Memory map)} \\
-	\nextport{RW}{53}{Selects the 8k-bank stored in 8k-slot 3 (see Memory map)} \\
-	\nextport{RW}{54}{Selects the 8k-bank stored in 8k-slot 4 (see Memory map)} \\
-	\nextport{RW}{55}{Selects the 8k-bank stored in 8k-slot 5 (see Memory map)} \\
-	\nextport{RW}{56}{Selects the 8k-bank stored in 8k-slot 6 (see Memory map)} \\
-	\nextport{RW}{57}{Selects the 8k-bank stored in 8k-slot 7 (see Memory map)} \\
-	\nextport{R-}{60}{Used to upload code to the Copper} \\
-	
-	\hline
-\end{tabular}
+	\begin{tbbluereg}
+		\nextport{-W}{1E}{Holds the MSB (only, as bit 0) of the raster line currently being drawn}
+		\nextport{-W}{1F}{Holds the eight LSBs of the raster line currently being drawn}
+		\nextport{RW}{22}{Controls the timing of raster interrupts and the ULA frame interrupt}
+		\nextport{RW}{23}{Holds the eight LSBs of the line on which a raster interrupt should occur}
+		\nextport{RW}{26}{Pixel X offset (0..255) to use when drawing ULA Layer}
+		\nextport{RW}{27}{Pixel Y offset (0..191) to use when drawing ULA Layer}
+		\nextport{RW}{28}{PS/2 Keymap address MSB, read (pending) first byte of palette colour}
+		\nextport{R-}{29}{PS/2 Keymap address LSB}
+		\nextport{R-}{2A}{High data to PS/2 Keymap (MSB of data in bit 0)}
+		\nextport{R-}{2B}{Low eight LSBs of PS/2 Keymap data}
+		\nextport{RW}{2C}{DAC B mirror, read current I2S left MSB}
+		\nextport{RW}{2D}{SpecDrum port 0xDF / DAC A+D mirror, read current I2S LSB}
+		\nextport{RW}{2E}{DAC C mirror, read current I2S right MSB}
+		\nextport{RW}{2F}{Sets the pixel offset (two high bits) used for drawing Tilemap graphics on the screen}
+		\nextport{RW}{30}{Sets the pixel offset (eight low bits) used for drawing Tilemap graphics on the screen}
+		\nextport{RW}{31}{Sets the pixel offset used for drawing Tilemap graphics on the screen}
+		\nextport{RW}{32}{Pixel X offset (0..255) to use when drawing LoRes Layer}
+		\nextport{RW}{33}{Pixel Y offset (0..191) to use when drawing LoRes Layer}
+		\nextport{RW}{34}{Selects sprite index 0..127 to be affected by writes to other Sprite ports (and mirrors)}
+		\nextport{R-}{35}{Nextreg port-mirror to write directly into "byte 1" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)}
+		\nextport{R-}{36}{Nextreg port-mirror to write directly into "byte 2" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)}
+		\nextport{-W}{37}{Nextreg port-mirror to write directly into "byte 3" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)}
+		\nextport{-W}{38}{Nextreg port-mirror to write directly into "byte 4" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)}
+		\nextport{-W}{39}{Nextreg port-mirror to write directly into "byte 5" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)}
+		\nextport{RW}{40}{Chooses an palette element (index) to manipulate with}
+		\nextport{RW}{41}{Use to set/read 8-bit colours of the ULANext palette}
+		\nextport{RW}{42}{Specifies mask to extract ink colour from attribute cell value in ULANext mode}
+		
+		\hline
+	\end{tbbluereg}
 
-(continued)\\
+	(continued)
+	\pagebreak
 
-\begin{tabular}{llp{12.1cm}}
-	\nexttitle
+	\begin{tbbluereg}
 
-	\nextport{RW}{61}{Holds low byte of Copper control bits} \\
-	\nextport{RW}{62}{Holds high byte of Copper control flags} \\
-	\nextport{R-}{63}{Used to upload code to the Copper} \\
-	\nextport{RW}{64}{Offset numbering of raster lines in copper/interrupt/active register} \\
-	\nextport{RW}{68}{Disable ULA, controls ULA mixing/blending, enable ULA+} \\
-	\nextport{RW}{69}{Layer2, ULA shadow, Timex \$FF port} \\
-	\nextport{RW}{6A}{LoRes Radastan mode} \\
-	\nextport{RW}{6B}{Controls Tilemap mode} \\
-	\nextport{RW}{6C}{Default tile attribute for 8-bit only maps} \\
-	\nextport{RW}{6E}{Base address of the 40x32 or 80x32 tile map (similar to text-mode of other computers)} \\
-	\nextport{RW}{6F}{Base address of the tiles' graphics} \\
-	\nextport{RW}{70}{Layer 2 resolution, palette offset} \\
-	\nextport{RW}{71}{Sets the pixel offset used for drawing Layer 2 graphics on the screen} \\
-	\nextport{R-}{75}{Same as Sprite port-mirror Attribute 0 Register (\$35) (write first byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)} \\
-	\nextport{R-}{76}{Same as Sprite port-mirror Attribute 1 Register (\$36) (write second byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)} \\
-	\nextport{R-}{77}{Same as Sprite port-mirror Attribute 2 Register (\$37) (write third byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)} \\
-	\nextport{R-}{78}{Same as Sprite port-mirror Attribute 3 Register (\$38) (write fourth byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)} \\
-	\nextport{R-}{79}{The same as Sprite port-mirror Attribute 4 Register (\$39) (write fifth byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)} \\
-	\nextport{RW}{7F}{8-bit storage for user} \\
-	\nextport{RW}{80}{Expansion bus enable/config} \\
-	\nextport{RW}{81}{Expansion bus controls} \\
-	\nextport{RW}{82}{Enabling internal ports decoding b0-7 Register} \\
-	\nextport{RW}{83}{Enabling internal ports decoding b8-15 Register} \\
-	\nextport{RW}{84}{Enabling internal ports decoding b16-23 Register} \\
-	\nextport{RW}{85}{Enabling internal ports decoding b24-31 Register} \\
-	\nextport{RW}{86}{When expansion bus is enabled: Internal ports decoding mask b0-7 Register} \\
-	\nextport{RW}{87}{When expansion bus is enabled: Internal ports decoding mask b8-15 Register} \\
-	\nextport{RW}{88}{When expansion bus is enabled: Internal ports decoding mask b16-23 Register} \\
-	\nextport{RW}{89}{When expansion bus is enabled: Internal ports decoding mask b24-31 Register} \\
-	\nextport{RW}{8A}{Monitoring internal I/O or adding external keyboard} \\
-	\nextport{RW}{8C}{Enable alternate ROM or lock 48k ROM} \\
-	\nextport{RW}{8E}{Control classic Spectrum memory mapping} \\
-	\nextport{RW}{90-93}{Enables GPIO pins output} \\
-	\nextport{RW}{98-9B}{GPIO pins mapped to Next Register} \\
-	\nextport{RW}{A0}{Enable Pi peripherals: UART, Pi hats, I2C, SPI} \\
-	\nextport{RW}{A2}{Pi I2S controls} \\
-	\nextport{RW}{A3}{Pi I2S clock divide in master mode} \\
-	
-	\hline
-\end{tabular}
+		\nextport{RW}{43}{Enables or disables Enhanced ULA interpretation of attribute values and toggles active palette}
+		\nextport{RW}{44}{Use to set 9-bit (2-byte) colours of the Enhanced ULA palette, or to read second byte of colour}
+		\nextport{RW}{4A}{8-bit colour to be used when all layers contain transparent pixel}
+		\nextport{RW}{4B}{Index into sprite palette (of "transparent" colour)}
+		\nextport{RW}{4C}{Index into Tilemap palette (of "transparent" colour)}
+		\nextport{RW}{50}{Selects the 8k-bank stored in 8k-slot 0 (see Memory map)}
+		\nextport{RW}{51}{Selects the 8k-bank stored in 8k-slot 1 (see Memory map)}
+		\nextport{RW}{52}{Selects the 8k-bank stored in 8k-slot 2 (see Memory map)}
+		\nextport{RW}{53}{Selects the 8k-bank stored in 8k-slot 3 (see Memory map)}
+		\nextport{RW}{54}{Selects the 8k-bank stored in 8k-slot 4 (see Memory map)}
+		\nextport{RW}{55}{Selects the 8k-bank stored in 8k-slot 5 (see Memory map)}
+		\nextport{RW}{56}{Selects the 8k-bank stored in 8k-slot 6 (see Memory map)}
+		\nextport{RW}{57}{Selects the 8k-bank stored in 8k-slot 7 (see Memory map)}
+		\nextport{R-}{60}{Used to upload code to the Copper}
+		\nextport{RW}{61}{Holds low byte of Copper control bits}
+		\nextport{RW}{62}{Holds high byte of Copper control flags}
+		\nextport{R-}{63}{Used to upload code to the Copper}
+		\nextport{RW}{64}{Offset numbering of raster lines in copper/interrupt/active register}
+		\nextport{RW}{68}{Disable ULA, controls ULA mixing/blending, enable ULA+}
+		\nextport{RW}{69}{Layer2, ULA shadow, Timex \$FF port}
+		\nextport{RW}{6A}{LoRes Radastan mode}
+		\nextport{RW}{6B}{Controls Tilemap mode}
+		\nextport{RW}{6C}{Default tile attribute for 8-bit only maps}
+		\nextport{RW}{6E}{Base address of the 40x32 or 80x32 tile map (similar to text-mode of other computers)}
+		\nextport{RW}{6F}{Base address of the tiles' graphics}
+		\nextport{RW}{70}{Layer 2 resolution, palette offset}
+		\nextport{RW}{71}{Sets the pixel offset used for drawing Layer 2 graphics on the screen}
+		\nextport{R-}{75}{Same as Sprite port-mirror Attribute 0 Register (\$35) (write first byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)}
+		\nextport{R-}{76}{Same as Sprite port-mirror Attribute 1 Register (\$36) (write second byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)}
+		\nextport{R-}{77}{Same as Sprite port-mirror Attribute 2 Register (\$37) (write third byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)}
+		
+		\hline
+	\end{tbbluereg}
 
-(continued)\\
+	(continued)
+	\pagebreak
 
-\begin{tabular}{llp{12.1cm}}
-	\nexttitle
+	\begin{tbbluereg}
 
-	\nextport{RW}{A8}{ESP WiFi GPIO Output} \\
-	\nextport{RW}{A9}{ESP WiFi GPIO Read/Write} \\
-	\nextport{-W}{B0}{Read Next keyboard compound keys separately} \\
-	\nextport{-W}{B1}{Read Next keyboard compound keys separately} \\
-	\nextport{RW}{B2}{DivMMC trap configuration} \\
-	\nextport{RW}{B4}{DivMMC trap configuration} \\
-	\nextport{R-}{FF}{Turns debug LEDs on and off on TBBlue implementations that have them} \\
+		\nextport{R-}{78}{Same as Sprite port-mirror Attribute 3 Register (\$38) (write fourth byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)}
+		\nextport{R-}{79}{The same as Sprite port-mirror Attribute 4 Register (\$39) (write fifth byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)}
+		\nextport{RW}{7F}{8-bit storage for user}
+		\nextport{RW}{80}{Expansion bus enable/config}
+		\nextport{RW}{81}{Expansion bus controls}
+		\nextport{RW}{82}{Enabling internal ports decoding b0-7 Register}
+		\nextport{RW}{83}{Enabling internal ports decoding b8-15 Register}
+		\nextport{RW}{84}{Enabling internal ports decoding b16-23 Register}
+		\nextport{RW}{85}{Enabling internal ports decoding b24-31 Register}
+		\nextport{RW}{86}{When expansion bus is enabled: Internal ports decoding mask b0-7 Register}
+		\nextport{RW}{87}{When expansion bus is enabled: Internal ports decoding mask b8-15 Register}
+		\nextport{RW}{88}{When expansion bus is enabled: Internal ports decoding mask b16-23 Register}
+		\nextport{RW}{89}{When expansion bus is enabled: Internal ports decoding mask b24-31 Register}
+		\nextport{RW}{8A}{Monitoring internal I/O or adding external keyboard}
+		\nextport{RW}{8C}{Enable alternate ROM or lock 48k ROM}
+		\nextport{RW}{8E}{Control classic Spectrum memory mapping}
+		\nextport{RW}{90-93}{Enables GPIO pins output}
+		\nextport{RW}{98-9B}{GPIO pins mapped to Next Register}
+		\nextport{RW}{A0}{Enable Pi peripherals: UART, Pi hats, I2C, SPI}
+		\nextport{RW}{A2}{Pi I2S controls}
+		\nextport{RW}{A3}{Pi I2S clock divide in master mode}
+		\nextport{RW}{A8}{ESP WiFi GPIO Output}
+		\nextport{RW}{A9}{ESP WiFi GPIO Read/Write}
+		\nextport{-W}{B0}{Read Next keyboard compound keys separately}
+		\nextport{-W}{B1}{Read Next keyboard compound keys separately}
+		\nextport{RW}{B2}{DivMMC trap configuration}
+		\nextport{RW}{B4}{DivMMC trap configuration}
+		\nextport{R-}{FF}{Turns debug LEDs on and off on TBBlue implementations that have them}
 
-\end{tabular}
-
+	\end{tbbluereg}
+}
 
 \pagebreak
 \section{Memory Map and Paging}
@@ -1497,7 +1544,6 @@ If you are using the standard interrupt handler or OS routines, then any time yo
 
 Example routine for selecting bank on 128K Spectrum (supports standard interrupt handler and OS routines). Routine takes bank number 0-7 as argument in {\tt B} (on next page):
 
-\pagebreak
 \begin{Verbatim}[gobble=1]
 	switchBank:
 		LD A, ($5B5C)     ; get existing value from port
@@ -1522,7 +1568,6 @@ To call the routine use:
 \end{Verbatim}
 
 Note: while above routine could be extended to support switching all 127 banks on ZX Spectrum Next by writing top 4 bits to {\tt \$DFFD}, it's much simpler to use Next specific bank switching support as described in section \ref{zx_next_bank_mmu_mode}.
-
 
 \pagebreak
 \subsubsection{+3 ``AllRam'' Mode}
@@ -1628,6 +1673,7 @@ Each register takes 8-bit page number it should use on memory address it represe
 \end{Verbatim}
 
 
+\pagebreak
 \subsection{Interaction Between Paging Modes}
 
 In normal 128K mode, changes made in 128K and Next mode memory management are synchronized. The most recent change always has priority. This means that using 128K mode memory management to select a new 16K bank in 16K slot 4 will update the MMU registers for the two 8K slots with the corresponding 8K bank numbers.
@@ -1697,27 +1743,30 @@ ROM can be paged out by using +3 "AllRam" or Next MMU-based mode. Beware though 
 \section{Keyboard}
 \label{zx_next_keyboard}
 
-Keyboard is read from port {\tt \$ssFE} where:
+Keyboard is read from port {\tt \$ssFE} where bits in result are as follows:
 
-{\tt 
-	\begin{tabular}{p{0.7cm}|cp{1cm}p{1cm}p{1cm}p{1.2cm}p{1.2cm}}
+{
+	\tt
+	\setlength{\extrarowheight}{0pt}
+	\def\arraystretch{0.1}
+	
+	\begin{tabular}{p{0.7cm}|cp{1cm}p{1cm}p{1cm}p{1.3cm}p{1.5cm}}
 
-		   & & \multicolumn{5}{c}{Result Bit} \\
 		~ss & & 4 & 3 & 2 & 1 & 0 \instrb \\
 		\hline
-		\$7F\instrt & & B & N & M & \fbox{Symb} & \fbox{Space} \\
-		\$BF\instrt & & H & J & K & L & \fbox{Enter} \\
+		\$7F\instrt & & B & N & M & Symb & Space \\
+		\$BF\instrt & & H & J & K & L & Enter \\
 		\$DF\instrt & & Y & U & I & O & P \\
 		\$EF\instrt & & 6 & 7 & 8 & 9 & 0 \\
 		\$F7\instrt & & 5 & 4 & 3 & 2 & 1 \\
 		\$FB\instrt & & T & R & E & W & Q \\
 		\$FD\instrt & & G & F & D & S & A \\
-		\$FE\instrt\instrb & & V & C & X & Z & \fbox{Caps} \\
+		\$FE\instrt\instrb & & V & C & X & Z & Caps \\
 
 	\end{tabular}
 }
 
-If key is pressed, corresponding bit is set to 0 and vice versa. Example for checking if P or I is pressed:
+If key is pressed, corresponding bit is set to {\tt 0} and vice versa. Example for checking if P or I is pressed:
 	
 \begin{Verbatim}
 	LD BC, $DFFE   ; We want to read keys:   YUIOP
@@ -1758,7 +1807,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 \newcommand{\FS}{$\updownarrow$} % standard effect
 \newcommand{\FN}{-} % no effect
 \newcommand{\FU}{?} % unknown effect
-\newcommand{\FX}{$\times$}
+\newcommand{\FX}{$\bullet$}
 \newcommand{\FPV}{VF} % Overflow
 \newcommand{\FPP}{PF} % Parity
 
@@ -1801,7 +1850,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 	{\tt \FU} & Effect on flag is unpredictable \\
 	{\tt VF} & P/V flag is used as overflow \\
 	{\tt PF} & P/V flag is used as parity \\
-	{\tt \FX} & Special case, described in \ref{instruction_details}
+	{\tt \FX} & Special case, see description in section \ref{instruction_details}
 \end{tabular}
 
 
@@ -1816,7 +1865,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 % this is internal definition for instruction table that takes 2 arguments: first 2 column definitions and body. It should only be used by NewEnviron macros, not intended as general purpose macro by itself (it could be used, but then tables would not be defined with begin/end)
 \newcommand{\INSTRTABLEBODYDECL}[2]{
 	{
-		\small
+		\footnotesize
 		\setlength{\fboxsep}{0.25mm}
 		\setlength{\tabcolsep}{0.75mm}
 		
@@ -1868,9 +1917,9 @@ This chapters presents all instructions at a glance for quick info and to easily
 }
 
 % writes symbolic operation (for the moment nothing special, but we may change it in the future and it will automatically be applied for all items); variant with S with add 3 dots after argument and one with P will add them in front; for multiline expressions
-\newcommand{\Symbol}[1]{\footnotesize {\tt #1} &}
-\newcommand{\SymbolS}[1]{\footnotesize {\tt #1}\ddd &}
-\newcommand{\SymbolP}[1]{\footnotesize \ddd{\tt #1} &}
+\newcommand{\Symbol}[1]{\scriptsize {\tt #1} &}
+\newcommand{\SymbolS}[1]{\scriptsize {\tt #1}\ddd &}
+\newcommand{\SymbolP}[1]{\scriptsize \ddd{\tt #1} &}
 
 % writes flags section + couple shorthands for symbolic flags
 \newcommand{\Flags}[6]{{\tt #1} & {\tt #2} & {\tt #3} & {\tt #4} & {\tt #5} & {\tt #6} & &}
@@ -1888,7 +1937,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 \newcommand{\Cycles}[2]{{\tt #1} & {\tt #2} & &}
 
 % writes a comment
-\newcommand{\Comment}[1]{\footnotesize #1}
+\newcommand{\Comment}[1]{\scriptsize #1}
 
 \newcommand{\SkipToSymbol}{\\ &}
 \newcommand{\FromSymbolToOpCode}{& \multicolumn{6}{l}{} &}
@@ -1903,9 +1952,12 @@ This chapters presents all instructions at a glance for quick info and to easily
 \newcommand{\Empty}[1]{& \multicolumn{16}{l}{} & \Comment{#1} \\}
 
 % writes a table break with vertical spacing so table starts at the same height as on previous page
-\newcommand{\InstrTableBreak}{
-	(continued)
-	\pagebreak
+\newcommand{\InstrTableContinue}{
+	\vspace*{-2.5ex}
+	{
+		\scriptsize
+		(continued on next page)
+	}
 }
 
 %------------------------------------------------------------------------------
@@ -1936,6 +1988,10 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 % writes a note item
 \newcommand{\NoteItem}[1]{& #1 \\}
+
+\newcommand{\NoteTableSingleItemSpaceCorrection}{
+	\vspace*{-1ex}	% single notes table results in some vertical spacing, so we need to manually move it upwards a bit...
+}
 
 
 \section{8-Bit Arithmetic and Logical}
@@ -2197,6 +2253,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 	\end{lastinstruction}
 
 \end{instrtable}
+
 \begin{notestable}
 	\NoteItem{\See{1}YF and XF flags are copied from the operand {\tt s}, not the result {\tt A-s}}
 
@@ -2576,16 +2633,24 @@ This chapters presents all instructions at a glance for quick info and to easily
 			\Hex{..}{}
 	\end{instruction}
 
-	\begin{instruction}{LD (HL),n}
+	\begin{lastinstruction}{LD (HL),n}
 		\Symbol{(HL)$\leftarrow$n}
 		\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
 		\OpCode{00}{110}{110}
 		\Hex{36}{2}
-		\Cycles{3}{10} \\
+		\Cycles{3}{10}
 	\SkipToOpCode
 		\OpRange{n}
 		\Hex{..}{}
-	\end{instruction}
+	\end{lastinstruction}
+
+\end{instrtable}
+
+\InstrTableContinue
+\pagebreak
+\vspace*{0.4cm}
+
+\begin{instrtable}
 
 	\begin{instruction}{LD (IX+d),n} 
 		\Symbol{(IX+d)$\leftarrow$n}
@@ -2604,7 +2669,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 			\Hex{..}{}
 	\end{instruction}
 
-	\begin{lastinstruction}{LD (IY+d),n} 
+	\begin{instruction}{LD (IY+d),n} 
 		\Symbol{(IY+d)$\leftarrow$n}
 			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
 			\OpCode{11}{111}{101}
@@ -2619,15 +2684,8 @@ This chapters presents all instructions at a glance for quick info and to easily
 		\SkipToOpCode
 			\OpRange{n}
 			\Hex{..}{}
-	\end{lastinstruction}
-
-\end{instrtable}
-
-\InstrTableBreak
-\vspace*{0.4cm}
-
-\begin{instrtable}
-
+	\end{instruction}
+	
 	\begin{instruction}{LD A,(BC)} 
 		\Symbol{A$\leftarrow$(BC)}
 			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
@@ -2854,7 +2912,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 			\Hex{..}{}
 	\end{instruction}
 
-	\begin{instruction}{LD IY,(nm)}
+	\begin{lastinstruction}{LD IY,(nm)}
 		\Symbol{IYh$\leftarrow$(nm+1)}
 			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
 			\OpCode{11}{111}{101}
@@ -2871,8 +2929,15 @@ This chapters presents all instructions at a glance for quick info and to easily
 		\SkipToOpCode 
 			\OpRange{n} 
 			\Hex{..}{} 
-	\end{instruction}
+	\end{lastinstruction}
 
+\end{instrtable}
+
+\InstrTableContinue
+\pagebreak
+\vspace*{0.4cm}
+
+\begin{instrtable}
 	\begin{instruction}{LD (nm),HL}
 		\Symbol{(nn+1)$\leftarrow$H}
 			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
@@ -3615,6 +3680,8 @@ This chapters presents all instructions at a glance for quick info and to easily
 	
 \end{instrtable}
 
+\NoteTableSingleItemSpaceCorrection
+
 \begin{notestable}
 	\NoteItem{\See{1}{\tt m} is one of {\tt r}, {\tt (HL)}, {\tt (IX+d)}, {\tt (IY+d)}. To form new opcode replace \fbox{000} of {\tt RLC}s with shown code.}
 \end{notestable}
@@ -4322,133 +4389,6 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 
 
-\section{General-Purpose Arithmetic and CPU Control}
-
-\begin{minipage}{\textwidth}
-
-\begin{instrtable}
-
-	\begin{instruction}{DAA}
-		\Comment{(see section \ref{instruction_details}) &}
-		\Flags{\FS}{\FS}{\FS}{\FPP}{\FN}{\FS}
-		\OpCode{00}{100}{111}
-		\Hex{27}{1}
-		\Cycles{1}{4}
-	\end{instruction}
-
-	\begin{instruction}{CPL} 
-		\Symbol{A$\leftarrow\mathtt{\overline{A}}$}
-			\Flags{\FN}{\FN}{1}{\FN}{1}{\FN}
-			\OpCode{00}{101}{111}
-			\Hex{2F}{1}
-			\Cycles{1}{4}
-	\end{instruction}
-
-	\begin{instruction}{NEG} 
-		\Symbol{A$\leftarrow$0-A}
-			\Flags{\FS}{\FS}{\FS}{\FPV}{1}{\FS}
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
-			\Cycles{2}{8}
-		\SkipToOpCode 
-			\OpCode{01}{000}{100}
-			\Hex{44}{}
-	\end{instruction}
-
-	\begin{instruction}{CCF\See{1}} 
-		\Symbol{CF$\leftarrow\mathtt{\overline{CF}}$}
-			\Flags{\FN}{\FN}{\FU\See{2}}{\FN}{0}{\FS}
-			\OpCode{00}{111}{111}
-			\Hex{3F}{1}
-			\Cycles{1}{4}
-	\end{instruction}
-
-	\begin{instruction}{SCF\See{1}} 
-		\Symbol{CF$\leftarrow$1}
-			\Flags{\FN}{\FN}{0}{\FN}{0}{1}
-			\OpCode{00}{110}{111}
-			\Hex{37}{1}
-			\Cycles{1}{4}
-	\end{instruction}
-
-	\begin{instruction}{NOP}
-		\Symbol{}
-			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
-			\OpCode{00}{000}{000}
-			\Hex{00}{1}
-			\Cycles{1}{4}
-	\end{instruction}
-
-	\begin{instruction}{HALT}
-		\Comment{(see section \ref{instruction_details}) &}
-			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
-			\OpCode{01}{110}{110}
-			\Hex{76}{1}
-			\Cycles{1}{4}
-	\end{instruction}
-
-	\begin{instruction}{DI\See{3}} 
-		\Symbol{IFF1,2$\leftarrow$0}
-			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
-			\OpCode{11}{110}{011}
-			\Hex{F3}{1}
-			\Cycles{1}{4}
-	\end{instruction}
-
-	\begin{instruction}{EI\See{3}} 
-		\Symbol{IFF1,2$\leftarrow$1}
-			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
-			\OpCode{11}{111}{011}
-			\Hex{FB}{1}
-			\Cycles{1}{4}
-	\end{instruction}
-
-	\begin{instruction}{IM 0\See{4}}
-		\Comment{(see section \ref{instruction_details}) &}
-			\Flags{\FN}{$\bullet$}{\FN}{\FN}{\FN}{\FN}
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
-			\Cycles{2}{8}
-		\SkipToOpCode 
-			\OpCode{01}{000}{110}
-			\Hex{46}{}
-	\end{instruction}
-
-	\begin{instruction}{IM 1\See{4}}
-		\Comment{(see section \ref{instruction_details}) &}
-			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
-			\Cycles{2}{8}
-		\SkipToOpCode 
-			\OpCode{01}{010}{110}
-			\Hex{56}{}
-	\end{instruction}
-
-	\begin{lastinstruction}{IM 2\See{4}}
-		\Comment{(see section \ref{instruction_details}) &}
-			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
-			\Cycles{2}{8}
-		\SkipToOpCode 
-			\OpCode{01}{011}{110}
-			\Hex{5E}{}
-	\end{lastinstruction}
-	
-\end{instrtable}
-
-\begin{notestable}
-	\NoteItem{\See{1}YF and XF are copied from register A.}
-	\NoteItem{\See{2}HF is like CF before the instruction.}
-	\NoteItem{\See{3}No interrupts are accepted directly after EI or DI.}
-	\NoteItem{\See{4}This instruction has other undocumented opcodes.}
-\end{notestable}
-	
-\end{minipage}
-
-
-
 \section{Input}
 
 \begin{minipage}{\textwidth}
@@ -4731,6 +4671,137 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 
 
+\section{General-Purpose Arithmetic and CPU Control}
+
+\begin{minipage}{\textwidth}
+
+\begin{instrtable}
+
+	\begin{instruction}{DAA}
+		\Symbol{}
+			\Flags{\FS}{\FS}{\FS}{\FPP}{\FN}{\FS}
+			\OpCode{00}{100}{111}
+			\Hex{27}{1}
+			\Cycles{1}{4}
+	\end{instruction}
+
+	\begin{instruction}{CPL} 
+		\Symbol{A$\leftarrow\mathtt{\overline{A}}$}
+			\Flags{\FN}{\FN}{1}{\FN}{1}{\FN}
+			\OpCode{00}{101}{111}
+			\Hex{2F}{1}
+			\Cycles{1}{4}
+	\end{instruction}
+
+	\begin{instruction}{NEG} 
+		\Symbol{A$\leftarrow$0-A}
+			\Flags{\FS}{\FS}{\FS}{\FPV}{1}{\FS}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{01}{000}{100}
+			\Hex{44}{}
+	\end{instruction}
+
+	\begin{instruction}{CCF\See{1}} 
+		\Symbol{CF$\leftarrow\mathtt{\overline{CF}}$}
+			\Flags{\FN}{\FN}{\FU\See{2}}{\FN}{0}{\FS}
+			\OpCode{00}{111}{111}
+			\Hex{3F}{1}
+			\Cycles{1}{4}
+	\end{instruction}
+
+	\begin{instruction}{SCF\See{1}} 
+		\Symbol{CF$\leftarrow$1}
+			\Flags{\FN}{\FN}{0}{\FN}{0}{1}
+			\OpCode{00}{110}{111}
+			\Hex{37}{1}
+			\Cycles{1}{4}
+	\end{instruction}
+
+	\begin{instruction}{NOP}
+		\Symbol{}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{00}{000}{000}
+			\Hex{00}{1}
+			\Cycles{1}{4}
+	\end{instruction}
+
+	\begin{instruction}{HALT}
+		\Symbol{}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{01}{110}{110}
+			\Hex{76}{1}
+			\Cycles{1}{4}
+	\end{instruction}
+
+	\begin{instruction}{DI\See{3}} 
+		\Symbol{IFF1,2$\leftarrow$0}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{110}{011}
+			\Hex{F3}{1}
+			\Cycles{1}{4}
+	\end{instruction}
+
+	\begin{instruction}{EI\See{3}} 
+		\Symbol{IFF1,2$\leftarrow$1}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{111}{011}
+			\Hex{FB}{1}
+			\Cycles{1}{4}
+	\end{instruction}
+
+	\begin{instruction}{IM 0\See{4}}
+		\Symbol{}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{01}{000}{110}
+			\Hex{46}{}
+	\end{instruction}
+
+	\begin{instruction}{IM 1\See{4}}
+		\Symbol{}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{01}{010}{110}
+			\Hex{56}{}
+	\end{instruction}
+
+	\begin{lastinstruction}{IM 2\See{4}}
+		\Symbol{}
+			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{01}{011}{110}
+			\Hex{5E}{}
+	\end{lastinstruction}
+	
+\end{instrtable}
+
+\begin{notestable}
+	\NoteItem{\See{1}YF and XF are copied from register {\tt A}.}
+	\NoteItem{\See{2}HF is like CF before the instruction.}
+	\NoteItem{\See{3}No interrupts are accepted directly after {\tt EI} or {\tt DI}.}
+	\NoteItem{\See{4}This instruction has other undocumented opcodes.}
+\end{notestable}
+	
+\end{minipage}
+
+
+\pagebreak
+\intentiallyempty
+\pagebreak
+
+
 \section{ZX Spectrum Next Extended}
 \label{zx_next_instructions_table}
 
@@ -4760,9 +4831,6 @@ This chapters presents all instructions at a glance for quick info and to easily
 			\OpCode{00}{110}{0ss}
 			\Hex{..}{}
 	\end{instruction}
-		
-	% we need some vertical spacing so ss/Reg table fits vertically
-	\\[1em]
 
 	\begin{instruction}{ADD pp,nm} 
 		\Symbol{pp$\leftarrow$pp+nm}
@@ -4771,7 +4839,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 			\Comment{
-				\multirow{3}{*}{
+				\multirow{6}{*}{
 					\tt
 					\begin{tabular}{ll}
 						pp & Reg \\
@@ -4811,33 +4879,33 @@ This chapters presents all instructions at a glance for quick info and to easily
 			\Hex{ED}{2}
 			\Cycles{2}{8}
 		\SkipToSymbol
-			\SymbolP{>>(B$\wedge$\$1F)\See{2}}
+			\SymbolP{>>(B$\wedge$\$1F)}
 			\FromSymbolToOpCode
 			\OpCode{00}{101}{001}
 			\Hex{29}{}
 	\end{instruction}
 
 	\begin{instruction}{BSRL DE,B\See{1}} 
-		\SymbolS{DE$\leftarrow$u(DE)}
+		\SymbolS{DE$\leftarrow$uns(DE)}
 			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{2}{8}
 		\SkipToSymbol
-			\SymbolP{>>(B$\wedge$\$1F)\See{3}}
+			\SymbolP{>>(B$\wedge$\$1F)}
 			\FromSymbolToOpCode
 			\OpCode{00}{101}{010}
 			\Hex{2A}{}
 	\end{instruction}
 
 	\begin{instruction}{BSRF DE,B\See{1}} 
-		\SymbolS{DE$\leftarrow\sim$(u($\sim$DE)}
+		\SymbolS{DE$\leftarrow\sim$(uns($\sim$DE)}
 			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{2}{8}
 		\SkipToSymbol
-			\SymbolP{>>(B$\wedge$\$1F))\See{4}}
+			\SymbolP{>>(B$\wedge$\$1F))}
 			\FromSymbolToOpCode
 			\OpCode{00}{101}{011}
 			\Hex{2B}
@@ -4967,15 +5035,14 @@ This chapters presents all instructions at a glance for quick info and to easily
 
 \end{instrtablesymbol}
 
+\NoteTableSingleItemSpaceCorrection
+
 \begin{notestable}
 	\NoteItem{\See{1} Core v2+ only!}
-	\NoteItem{\See{2} {\tt DE$\leftarrow$signed(DE) >> (B$\wedge$\$1F)}}
-	\NoteItem{\See{3} {\tt DE$\leftarrow$unsigned(DE) >> (B$\wedge$\$1F)}}
-	\NoteItem{\See{4} {\tt DE$\leftarrow\sim$(unsigned($\sim$DE) >> (B$\wedge$\$1F)))}}
 \end{notestable}
 
-% we can't use \InstrPageBreak here because we need continue inside minipage and pagebreak after...
-(continued)
+% we need to have "continue" within minipage, and pagebreak outside...
+\InstrTableContinue
 	
 \end{minipage}
 
@@ -5121,7 +5188,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 		\SkipToSymbol
 			\Symbol{~~+((D$\wedge$\$38)<<2)}
 		\SkipToSymbol
-			\Symbol{~~+(E>>3)\See{1}}
+			\Symbol{~~+(E>>3)}
 	\end{instruction}
 
 	\begin{instruction}{PIXELDN} 
@@ -5146,7 +5213,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 	\end{instruction}
 
 	\begin{instruction}{SETAE} 
-		\Symbol{\footnotesize A$\leftarrow$u(\$80)>>(E$\wedge$7)\See{2}}
+		\Symbol{A$\leftarrow$uns(\$80)>>(E$\wedge$7)}
 			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
 			\OpCode{11}{101}{101}
 			\Hex{ED}{3}
@@ -5203,7 +5270,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 			\Hex{90}{}
 	\end{instruction}
 
-	\begin{instruction}{PUSH nm\See{4}}
+	\begin{lastinstruction}{PUSH nm\See{1}}
 		\Symbol{SP$\leftarrow$SP-2}
 			\Flags{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
 			\OpCode{11}{101}{101}
@@ -5220,18 +5287,14 @@ This chapters presents all instructions at a glance for quick info and to easily
 		\SkipToOpCode 
 			\OpRange{m} 
 			\Hex{..}{}
-	\end{instruction}
+	\end{lastinstruction}
 
 \end{instrtablesymbol}
 
+\NoteTableSingleItemSpaceCorrection
+
 \begin{notestable}
-	\NoteItem{\See{1} {\tt HL$\leftarrow$\$4000 + ((D$\wedge$\$C0)<<5) + ((D$\wedge$\$07)<<8) + ((D$\wedge$\$38)<<2) + (E>>3)}}
-
-	\NoteItem{\See{2} {\tt A$\leftarrow$unsigned(\$80)>>(E$\wedge$7)}}
-
-	\NoteItem{\See{3} {\tt PC$\leftarrow$(PC$\wedge$\$C000) + (IN(C)<<6})}
-
-	\NoteItem{\See{4} This is not mistake, {\tt PUSH nm} operand is in fact encoded in big-endian}
+	\NoteItem{\See{1} This is not mistake, {\tt PUSH nm} operand is in fact encoded in big-endian}
 \end{notestable}
 
 \end{minipage}
@@ -5242,31 +5305,53 @@ This chapters presents all instructions at a glance for quick info and to easily
 \chapter{Instructions up Close}
 \label{instruction_details}
 
-The following pages describe all instructions. Alphabetical order is used as much as possible, but some deviations were made to better fit instructions to pages. Where possible, multiple variants are grouped together. Each instruction includes:
+\newcommand{\DetailParityOverflow}[1]{
+	\IfEqCase{#1}
+	{
+		{p}{
+			\small
+			\setlength{\unitlength}{0.2mm}
+			\begin{picture}(20,10)
+				\put(-5.6,7){\circle{20}}
+				\put(-11,0){P}
+				\put(4,0){V}
+			\end{picture}
+		}
+		{v}{
+			\small
+			\setlength{\unitlength}{0.2mm}
+			\begin{picture}(20,10)
+				\put(11,7){\circle{20}}
+				\put(-11,0){P}
+				\put(4,0){V}
+			\end{picture}
+		}
+		{}{PV}
+	}
+}
+The following pages describe all instructions. Alphabetical order is used as much as possible, but some deviations were made to better fit instructions to pages. Each instruction includes:
 
 \begin{itemize}
-	\setlength\itemsep{-1pt}
-	\item mnemonic
-	\item symbolic operation or function
-	\item all variants (where applicable)
-	\item short description
-	\item effects on flags
-	\item timing table
-	\vspace*{-\baselineskip}
+	\setlength\itemsep{1pt}
+	\item Mnemonic
+	\item Symbolic operation for an idea of what instruction does
+	\item All variants (where applicable)
+	\item Description with further details
+	\item Effects on flags
+	\item Timing table with machine cycles, T states and time required for execution on different CPU speeds
 \end{itemize}
 
-Where multiple timings are possible, timing table is sorted from shortest to longest.
+Where possible, multiple variants of same instruction are grouped together and where multiple timings are possible, timing table is sorted from shortest to longest.
 
-Instructions marked with \UNDOC ~are undocumented.\\
-Instructions marked with \ZXN ~are ZX Spectrum Next extended.
+\pagebreak
 
 \subsubsection{Abbreviations}
 
 \begin{tabularx}{\textwidth}{lX}
 	{\tt r} & 
-		8-bit register {\tt A}-{\tt L}\\
+		8-bit register {\tt A}-{\tt L} \\
 	{\tt n} &
-		8-bit immediate value\\
+		8-bit immediate value \\
 	{\tt rr} & 
 		16-bit register pair {\tt AF}, {\tt BC}, {\tt DE}, {\tt HL}, {\tt IX}, {\tt IY}, {\tt SP} (note in some cases particular register pairs may use different timing from the rest; if so, those will be explicitly indicated in their own line; {\tt rr} may still be used, though in those cases it will cover the remaining registers only) \\
 	{\tt nn} & 
@@ -5275,18 +5360,23 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		Placeholder for argument when multiple variants are possible \\
 	{\tt d} &
 		If instruction takes 2 operands, {\tt d} indicates destination and {\tt s} source \\
-\end{tabularx}
+	\UNDOC & Indicates undocumented instruction \\
+	\ZXN & Indicates ZX Spectrum Next extended instruction \\
+		
+	\end{tabularx}
 
 \subsubsection{Effects}
 
 \begin{tabular}{cl}
-	{\tt 0}/{\tt 1} & Flag is set to {\tt 0} or {\tt 1} \\
+	{\tt 0} & Flag is set to {\tt 0} \\
+	{\tt 1} & Flag is set to {\tt 1} \\
 	{\tt \FS} & Flag is modified according to operation \\
 	{\tt \FN} & Flag is not affected \\
 	{\tt \FU} & Effect on flag is unpredictable \\
-	{\tt VF} & P/V flag is used as overflow \\
-	{\tt PF} & P/V flag is used as parity \\
-	{\tt \FX} & Special case, see notes below effects table
+	{\tt \FX} & Special case, see notes below effects table \\
+	\DetailParityOverflow{v} & P/V flag is used as overflow \\
+	\DetailParityOverflow{p} & P/V flag is used as parity \\
+	\DetailParityOverflow{} & PV is undefined or indicates other result \\
 \end{tabular}
 
 \begin{basedescript}{
@@ -5295,7 +5385,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 	\desclabelwidth{3cm}}
 
 	% setup spacing between items
-	\setlength\itemsep{2em}
+	\setlength\itemsep{1.5em}
 
 	\newcommand{\DetailItem}[1]{\item[{\tt \large \textbf{#1}}]}
 	\newcommand{\DetailSymbol}[1]{{\tt #1}}
@@ -5335,7 +5425,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 	\environbodyname\DetailEffectsBODY
 	\NewEnviron{DetailEffects}[1][]{
 		\vspace{3pt}
-		\begin{tabularx}{0.767\textwidth}{@{}lXc|c|p{2.5ex}|c|p{2.5ex}|c|c|c|}
+		\begin{tabularx}{0.767\textwidth}{@{}lXc|c|p{2.6ex}|c|p{2.6ex}|c|c|c|}
 			\cline{3-10}
 			\multicolumn{2}{@{}X}{\textbf{Effects}} & 
 				\multicolumn{1}{|c|}{SF} & 
@@ -5343,27 +5433,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 				& 
 				HF & 
 				&
-				\IfEqCase{#1}{
-					{p}{
-						\small
-						\setlength{\unitlength}{0.2mm}
-						\begin{picture}(20,10)
-							\put(-6,6){\circle{20}}
-							\put(-11,0){P}
-							\put(4,0){V}
-						\end{picture}
-					}
-					{v}{
-						\small
-						\setlength{\unitlength}{0.2mm}
-						\begin{picture}(20,10)
-							\put(10,6){\circle{20}}
-							\put(-11,0){P}
-							\put(4,0){V}
-						\end{picture}
-					}
-					{}{PV}
-				}
+				\DetailParityOverflow{#1}
 				& 
 				NF & 
 				CF \notet\noteb\\[1pt]\cline{3-10}
@@ -5387,14 +5457,13 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 	}
 	\newcommand{\DetailFlagsComments}[1]{ 
 		& & \multicolumn{8}{p{6.6cm}}{
-			\vspace{-6pt}
+			\vspace{-2ex}
 			\setlist{leftmargin=1em}
 			\begin{itemize}
 				\setlength\itemsep{-1pt}
 				#1
-				\vspace*{-\baselineskip}
 			\end{itemize}	
-		} \\[0pt]
+		} \\[-3ex]
 	}
 	\newcommand{\DetailNoEffect}{
 		\begin{DetailEffects}
@@ -5405,7 +5474,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 	\environbodyname\DetailTimingBODY
 	\NewEnviron{DetailTiming}[1][Timing]{
 		\vspace{1pt}
-		\begin{tabularx}{0.78\textwidth}{@{}lXccrrrr}
+		\begin{tabularx}{0.8\textwidth}{@{}lXccrrrr}
 			\multicolumn{2}{@{}X}{\textbf{#1}} & Mc & Ts & 3.5MHz & 7MHz & 14MHz & 28MHz \\[1pt]
 			\DetailTimingBODY
 		\end{tabularx}
@@ -5473,55 +5542,12 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		
 	\end{detailitem}
 
-	\begin{detailitem}{AND s}
-		{A$\leftarrow$A$\wedge$s}
-
-		\begin{DetailVariants}
-			AND A\\
-			AND B\\
-			AND C\\
-			AND D\\
-			AND E\\
-			AND H\\
-			AND L\\
-			AND n
-			
-			\columnbreak
-			AND (HL)\\
-			AND (IX+d)\\
-			AND (IY+d)\\		
-			AND IXH\UNDOC\\
-			AND IXL\UNDOC\\
-			AND IYH\UNDOC\\
-			AND IYL\UNDOC
-
-			\columnbreak
-			~\\
-		\end{DetailVariants}
-
-		Performs logical AND between accumulator and given operand. Result is then stored back to accumulator.
-
-		\begin{DetailEffects}[p]
-			\DetailFlags{\FS}{\FS}{1}{\FS}{0}{0}
-		\end{DetailEffects}
-
-		\begin{DetailTiming}
-			\DetailTime{r}{1}{4}
-			\DetailTime{n}{2}{7}
-			\DetailTime{(HL)}{2}{7}
-			\DetailTime{(IX+d)}{5}{19}
-			\DetailTime{(IY+d)}{5}{19}
-		\end{DetailTiming}
-
-	\end{detailitem}
-
-	\pagebreak
 	\begin{detailitem}{ADD d,s}
 		{d$\leftarrow$d+s}
 
 		{
 			\tt
-			\begin{tabularx}{0.8\textwidth}{@{}p{1.5cm}Xp{2cm}p{2cm}p{2.2cm}}
+			\begin{tabularx}{0.8\textwidth}{@{}p{1.7cm}Xp{2.15cm}p{2.15cm}p{2.4cm}}
 				\textnormal{8-bit} & \textnormal{8-bit} & \textnormal{16-bit} & \textnormal{16-bit} & \textnormal{ZX Next} \\
 				ADD A,A & 
 					ADD A,(HL) & 
@@ -5586,6 +5612,47 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\begin{detailitem}{AND s}
+		{A$\leftarrow$A$\wedge$s}
+
+		\begin{DetailVariants}
+			AND A\\
+			AND B\\
+			AND C\\
+			AND D\\
+			AND E\\
+			AND H\\
+			AND L
+			
+			\columnbreak
+			AND n\\
+			AND (HL)\\
+			AND (IX+d)\\
+			AND (IY+d)
+
+			\columnbreak
+			AND IXH\UNDOC\\
+			AND IXL\UNDOC\\
+			AND IYH\UNDOC\\
+			AND IYL\UNDOC
+		\end{DetailVariants}
+
+		Performs logical AND between accumulator and given operand. Result is then stored back to accumulator.
+
+		\begin{DetailEffects}[p]
+			\DetailFlags{\FS}{\FS}{1}{\FS}{0}{0}
+		\end{DetailEffects}
+
+		\begin{DetailTiming}
+			\DetailTime{r}{1}{4}
+			\DetailTime{n}{2}{7}
+			\DetailTime{(HL)}{2}{7}
+			\DetailTime{(IX+d)}{5}{19}
+			\DetailTime{(IY+d)}{5}{19}
+		\end{DetailTiming}
+
+	\end{detailitem}
+
 	\begin{detailitem}{BIT b,s}
 		{ZF$\leftarrow\mathtt{\overline{s_b}}$}
 
@@ -5606,9 +5673,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			BIT b,(IY+d)
 		\end{DetailVariants}
 
-		{\tt b} is a value between {\tt 0} and {\tt 7}.
-
-		Tests specified bit {\tt b} of the given register {\tt s} or contents of memory addressed by {\tt s} and sets zero flag according to result; if bit was 1, {\tt ZF} is 0 and vice versa.
+		Tests specified bit {\tt b} {\tt 0-7} of the given register {\tt s} or contents of memory addressed by {\tt s} and sets zero flag according to result; if bit was 1, {\tt ZF} is 0 and vice versa.
 
 		\begin{DetailEffects}
 			\DetailFlags{\FU}{\FS}{1}{\FU}{0}{\FN}
@@ -5676,7 +5741,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{BSRL DE,B\ZXN}
 		{DE$\leftarrow$unsigned(DE)>>(B$\wedge$\$1F)}
 
@@ -5690,6 +5754,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 	
+	\pagebreak
 	\begin{detailitem}{CALL nn}
 		{(SP-1)$\leftarrow$PCh\\
 		(SP-2)$\leftarrow$PCl\\
@@ -5747,6 +5812,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 	
+	\pagebreak
 	\begin{detailitem}{CP s}
 		{A-s}
 
@@ -5804,20 +5870,13 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{CPD}
 		{A-(HL)\\
 		HL$\leftarrow$HL-1\\
 		BC$\leftarrow$BC-1}
 
-		Contents of memory location addressed by {\tt HL} register pair is subtracted from accumulator. Result is then discarded. Afterwards both {\tt HL} and {\tt BC} are decremented.
-
-		{\tt CDP} does the following operations combined into single instruction:
-
-		\begin{Verbatim}[gobble=3]
-			CP (HL)
-			DEC HL
-			DEC BC
-		\end{Verbatim}
+		Subtracts contents of memory location addressed by {\tt HL} register pair from accumulator {\tt A}. Result is then discarded. Afterwards both {\tt HL} and {\tt BC} are decremented.
 
 		\begin{DetailEffects}
 			\DetailFlags{\FS}{\FX}{\FS}{\FX}{1}{\FN}
@@ -5856,20 +5915,13 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{CPI}
 		{A-(HL)\\
 		HL$\leftarrow$HL+1\\
 		BC$\leftarrow$BC-1}
 
-		Contents of memory location addressed by {\tt HL} register pair is subtracted from accumulator. Result is then discarded. Afterwards {\tt HL} is incremented and {\tt BC} decremented. This is similar to {\tt CPD} except that {\tt HL} is incremented instead of decremented.
-
-		{\tt CDI} does the following operations combined into single instruction:
-
-		\begin{Verbatim}[gobble=3]
-			CP (HL)
-			INC HL
-			DEC BC
-		\end{Verbatim}
+		Subtracts contents of memory location addressed by {\tt HL} register pair from accumulator {\tt A}. Result is then discarded. Afterwards {\tt HL} is incremented and {\tt BC} decremented.
 
 		\begin{DetailEffects}
 			\DetailFlags{\FS}{\FX}{\FS}{\FX}{1}{\FN}
@@ -5893,7 +5945,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Repeats {\tt CPI} until either {\tt A=(HL)} or {\tt BC=0}.
 
-		\pagebreak
 		Example, searching for {\tt \$AB} in memory from {\tt \$0000-\$999}:
 
 		\begin{multicols}{2}
@@ -5967,7 +6018,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{DEC s}
 		{s$\leftarrow$s-1}
 
@@ -6044,6 +6094,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{EI}
 		{}
 
@@ -6077,8 +6128,10 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		\begin{tabular}{llcl}
 			\multicolumn{2}{c}{BEFORE} & & AFTER \\[5pt]
 			Reg & \multicolumn{3}{l}{Value} \\[5pt]
-			{\tt H} & {\tt \$AB} & \multirow{6}{*}{$\rightarrow$ {\tt EX (SP),HL} $\rightarrow$} & {\tt \$34}\\
-			{\tt L} & {\tt \$CD} & & {\tt \$12}\\
+			{\tt HL} & 
+				{\tt \$ABCD} & 
+				\multirow{5}{*}{$\rightarrow$ {\tt EX (SP),HL} $\rightarrow$} & 
+				{\tt \$3412}\\
 			{\tt SP} & {\tt \$0B00} & & {\tt \$0B00}\\[5pt]
 			Mem & Value \\[5pt]
 			{\tt \$0B00} & {\tt \$12} & & {\tt \$CD}\\
@@ -6096,6 +6149,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{EXX}
 		{BC$\leftrightarrow$BC'\\
 		DE$\leftrightarrow$DE'\\
@@ -6127,10 +6181,13 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 	\begin{detailitem}{IM n}
 		{}
 
-		\begin{DetailVariants}
+		\begin{DetailVariants}[1]
 			IM 0\\
 			IM 1\\
 			IM 2
+			
+			\columnbreak
+			~
 		\end{DetailVariants}
 
 		Sets the interrupt mode. All 3 interrupts are maskable, meaning they can be disabled using {\tt DI} instruction. See section \ref{interrupts} for details and example.
@@ -6143,6 +6200,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{IN r,(s)}
 		{r$\leftarrow$(s)}
 
@@ -6155,7 +6213,8 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			IN E,(C)\\
 			IN H,(C)\\
 			IN L,(C)\\
-			IN (C)\UNDOC / IN F,(C)\UNDOC
+			IN F,(C)\UNDOC\\
+			IN (C)\UNDOC
 		\end{DetailVariants}
 
 		Reads peripheral device addressed by {\tt BC} or combination of {\tt A} and immediate value and stores result in given register. Address is provided as follows:
@@ -6255,7 +6314,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		HL$\leftarrow$HL-1\\
 		B$\leftarrow$B-1}
 
-		Reads peripheral device addressed by {\tt BC} and stores result in memory addressed by {\tt HL} register pair. Then the values of {\tt HL} and {\tt B} are decremented.
+		Reads peripheral device addressed by {\tt BC} and stores result in memory addressed by {\tt HL} register pair. Then {\tt HL} and {\tt B} are decremented.
 
 		\begin{DetailEffects}
 			\DetailFlags{\FU}{\FX}{\FU}{\FU}{1}{\FN}
@@ -6270,7 +6329,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{INDR}
 		{do IND\\
 		Repeat until B=0}
@@ -6329,10 +6387,12 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		{PC$\leftarrow$nm}
 
 		\begin{DetailVariants}
-			JP nn\\
-			\\
-			JP (HL)\\
-			\\
+			JP nn
+			
+			\columnbreak
+			JP (HL)
+			
+			\columnbreak
 			JP (IX)\\
 			JP (IY)
 		\end{DetailVariants}
@@ -6391,6 +6451,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{JR e}
 		{PC$\leftarrow$PC+e}
 		
@@ -6425,7 +6486,47 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		\end{DetailTiming}
 
 	\end{detailitem}
-	
+
+	\pagebreak
+	\begin{detailitem}{LDD}
+		{(DE)$\leftarrow$(HL)\\
+		DE$\leftarrow$DE-1\\
+		HL$\leftarrow$HL-1\\
+		BC$\leftarrow$BC-1}
+
+		Loads contents of memory location addressed by {\tt HL} to memory location addressed by {\tt DE}. Then decrements {\tt DE}, {\tt HL} and {\tt BC} register pairs.
+
+		\begin{DetailEffects}
+			\DetailFlags{\FN}{\FN}{0}{\FX}{0}{\FN}
+			\DetailFlagsComments{
+				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
+			}
+		\end{DetailEffects}
+				
+		\begin{DetailTiming}
+			\DetailTime{}{4}{16}
+		\end{DetailTiming}
+
+	\end{detailitem}
+
+	\begin{detailitem}{LDDR}
+		{do LDD\\
+		Repeat until BC=0}
+
+		Repeats {\tt LDD} until {\tt BC=0}. {\tt LDDR} can be used for block transfer. See {\tt LDIR} below for an example and comparison of both instructions.
+
+		\begin{DetailEffects}
+			\DetailFlags{\FN}{\FN}{0}{0}{0}{\FN}
+		\end{DetailEffects}
+				
+		\begin{DetailTiming}
+			\DetailTime{BC=0}{4}{16}
+			\DetailTime{BC$\not=$0}{5}{21}
+		\end{DetailTiming}
+
+	\end{detailitem}
+
+	\pagebreak
 	\begin{detailitem}{LD d,s}
 		{d$\leftarrow$s}
 
@@ -6490,7 +6591,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			\DetailTime{A,R}{2}{9}
 		\end{DetailTiming}
 
-		\begin{DetailTiming}[Timing Continued]
+		\begin{DetailTiming}[Timing Cont.]
 			\DetailTime{I,A}{2}{9}
 			\DetailTime{R,A}{2}{9}
 			\DetailTime{SP,IX}{2}{10}
@@ -6516,14 +6617,15 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		\end{DetailTiming}
 
 	\end{detailitem}
-
-	\begin{detailitem}{LDD}
+	
+	\pagebreak
+	\begin{detailitem}{LDI}
 		{(DE)$\leftarrow$(HL)\\
-		DE$\leftarrow$DE-1\\
-		HL$\leftarrow$HL-1\\
+		DE$\leftarrow$DE+1\\
+		HL$\leftarrow$HL+1\\
 		BC$\leftarrow$BC-1}
 
-		Loads contents of memory location addressed by {\tt HL} to memory location addressed by {\tt DE}. Then decrements {\tt DE}, {\tt HL} and {\tt BC} register pairs.
+		Same as {\tt LDD}, except it increments {\tt DE} and {\tt HL}.
 
 		\begin{DetailEffects}
 			\DetailFlags{\FN}{\FN}{0}{\FX}{0}{\FN}
@@ -6538,11 +6640,29 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\begin{detailitem}{LDDR}
-		{do LDD\\
+	\begin{detailitem}{LDIR}
+		{do LDI\\
 		Repeat until BC=0}
 
-		Repeats {\tt LDD} until {\tt BC=0}. {\tt LDDR} can be used for block transfer. See {\tt LDIR} below for an example and comparison of both instructions.
+		Repeats {\tt LDI} until {\tt BC=0}. Example of copying 100 bytes from {\tt source} to {\tt destination} with {\tt LDIR} and {\tt LDDR}:
+
+		\begin{multicols}{2}
+			{\tt LDIR}
+			\begin{Verbatim}[gobble=4]
+				LD HL, source
+				LD DE, destination
+				LD BC, 100
+				LDIR
+			\end{Verbatim}
+			
+			{\tt LDDR}
+			\begin{Verbatim}[gobble=4]
+				LD HL, source+99
+				LD DE, destination+99
+				LD BC, 100
+				LDDR
+			\end{Verbatim}
+		\end{multicols}
 
 		\begin{DetailEffects}
 			\DetailFlags{\FN}{\FN}{0}{0}{0}{\FN}
@@ -6591,62 +6711,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\begin{detailitem}{LDI}
-		{(DE)$\leftarrow$(HL)\\
-		DE$\leftarrow$DE+1\\
-		HL$\leftarrow$HL+1\\
-		BC$\leftarrow$BC-1}
-
-		Same as {\tt LDD}, except it increments {\tt DE} and {\tt HL}.
-
-		\begin{DetailEffects}
-			\DetailFlags{\FN}{\FN}{0}{\FX}{0}{\FN}
-			\DetailFlagsComments{
-				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
-			}
-		\end{DetailEffects}
-				
-		\begin{DetailTiming}
-			\DetailTime{}{4}{16}
-		\end{DetailTiming}
-
-	\end{detailitem}
-
-	\begin{detailitem}{LDIR}
-		{do LDI\\
-		Repeat until BC=0}
-
-		Repeats {\tt LDI} until {\tt BC=0}. Example and comparison between {\tt LDIR} and {\tt LDDR} for copying 100 bytes from {\tt source} to {\tt destination}; both have the same results:
-
-		\begin{multicols}{2}
-			{\tt LDIR}
-			\begin{Verbatim}[gobble=4]
-				LD HL, source
-				LD DE, destination
-				LD BC, 100
-				LDIR
-			\end{Verbatim}
-			
-			{\tt LDDR}
-			\begin{Verbatim}[gobble=4]
-				LD HL, source+99
-				LD DE, destination+99
-				LD BC, 100
-				LDDR
-			\end{Verbatim}
-		\end{multicols}
-
-		\begin{DetailEffects}
-			\DetailFlags{\FN}{\FN}{0}{0}{0}{\FN}
-		\end{DetailEffects}
-				
-		\begin{DetailTiming}
-			\DetailTime{BC=0}{4}{16}
-			\DetailTime{BC$\not=$0}{5}{21}
-		\end{DetailTiming}
-
-	\end{detailitem}
-
 	\begin{detailitem}{LDIX\ZXN}
 		{if (HL)$\neq$A: (DE)$\leftarrow$(HL)\\
 		DE$\leftarrow$DE+1\\
@@ -6655,8 +6719,8 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 		Works similar to {\tt LDI} except:
 		\begin{DetailCompactList}
-			\item byte is only copied if it's different from {\tt A}
-			\item doesn't change flags.
+			\item Byte is only copied if it's different from {\tt A}
+			\item Doesn't change flags
 		\end{DetailCompactList}
 
 		\DetailNoEffect
@@ -6667,6 +6731,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{LDIRX\ZXN}
 		{do LDIX\\
 		Repeat until BC=0}
@@ -6682,7 +6747,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{LDPIRX\ZXN}
 		{do\\
 		\phantom{>>}t$\leftarrow$(HL$\wedge$\$FFF8+E$\wedge$7)\\
@@ -6702,6 +6766,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 	
+	\pagebreak
 	\begin{detailitem}{LDWS\ZXN}
 		{(DE)$\leftarrow$(HL)\\
 		INC L\\
@@ -6784,7 +6849,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 	\begin{detailitem}{MUL D,E\ZXN}
 		{DE$\leftarrow$D*E}
 
-		Multiplies {\tt D} by {\tt E}, storing 16 bit result into {\tt DE}.
+		Multiplies {\tt D} by {\tt E}, storing 16-bit result into {\tt DE}.
 
 		\DetailNoEffect
 				
@@ -6794,6 +6859,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{NEG}
 		{A$\leftarrow$0-A}
 
@@ -6841,7 +6907,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{OR s}
 		{A$\leftarrow$A$\vee$s}
 
@@ -6978,6 +7043,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{OUTI}
 		{(C)$\leftarrow$(HL)\\
 		HL$\leftarrow$HL+1\\
@@ -7026,7 +7092,8 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		\end{DetailTiming}
 
 	\end{detailitem}
-
+	
+	\pagebreak
 	\begin{detailitem}{PIXELDN\ZXN}
 		{if (HL$\wedge$\$700)$\neq$\$700\\
 		$\Rightarrow$HL$\leftarrow$HL+256\\
@@ -7054,12 +7121,17 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			POP AF\\
 			POP BC\\
 			POP DE\\
-			POP HL\\
+			POP HL
+
+			\columnbreak
 			POP IX\\
 			POP IY
+
+			\columnbreak
+			~
 		\end{DetailVariants}
 
-		Copies 2 bytes from {\tt SP} into contents of a register pair and increments {\tt SP}.
+		Copies 2 bytes from {\tt SP} into contents of the given register pair and increments {\tt SP} by {\tt 2}.
 
 		\DetailNoEffect
 				
@@ -7071,6 +7143,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{PUSH nn}
 		{(SP-2)$\leftarrow$nnl\\
 		(SP-1)$\leftarrow$nnh\\
@@ -7080,13 +7153,17 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			PUSH AF\\
 			PUSH BC\\
 			PUSH DE\\
-			PUSH HL\\
+			PUSH HL
+
+			\columnbreak
 			PUSH IX\\
 			PUSH IY\\
+
+			\columnbreak
 			PUSH nn\ZXN
 		\end{DetailVariants}
 
-		Copies contents of a register pair to top of {\tt SP}, then decrements it. ZX Next extended {\tt PUSH nn} also allows pushing immediate 16-bit value.
+		Copies contents of a register pair to top of {\tt SP}, then decrements it by {\tt 2}. ZX Next extended {\tt PUSH nn} also allows pushing immediate 16-bit value.
 
 		\DetailNoEffect
 				
@@ -7102,7 +7179,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		{$\mathtt{s_b}\leftarrow$0}
 
 		% we use tabularx instead of multicols because some columns need to be wider to accomodate instructions. And then tabularx instead of tabular to fit whole width
-		\begin{tabularx}{0.8\textwidth}{@{}p{1.8cm}XXp{2.6cm}}
+		\begin{tabularx}{0.8\textwidth}{@{}p{1.8cm}XXp{2.7cm}}
 			{\tt RES b,A} &
 				{\tt RES b,(IX+d),A\UNDOC} &
 				{\tt RES b,(IY+d),A\UNDOC} &
@@ -7129,7 +7206,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 				{\tt RES b,(IY+d),L\UNDOC} \\
 		\end{tabularx}
 
-		Resets bit {\tt b} ({\tt 0-7}) of the given register {\tt s} or memory addressed by operand {\tt s}.
+		Resets bit {\tt b} ({\tt 0-7}) of the given register {\tt s} or memory location addressed by operand {\tt s}.
 
 		\DetailNoEffect
 						
@@ -7282,6 +7359,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{RLA}
 		{
 			\scriptsize
@@ -7313,7 +7391,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 	
-	\pagebreak
 	\begin{detailitem}{RLC s}
 		{
 			\scriptsize
@@ -7378,6 +7455,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{RLCA}
 		{
 			\scriptsize
@@ -7435,7 +7513,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 		
 		If used with BCD numbers: as shift happens by 1 digit to the left, this effectively results in multiplication with {\tt 10}. {\tt A} acts as a sort of decimal carry in the operation. Example of multiplying BCD encoded number of any length by {\tt 10}:
 
-		\pagebreak
 		\begin{Verbatim}[gobble=2]
 			LD HL, number  ; number to multiply        | progress:
 			LD B, digits   ; number of repeats         | B A number+HL
@@ -7526,7 +7603,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{RRA}
 		{
 			\scriptsize
@@ -7558,6 +7634,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{RRC s}
 		{
 			\scriptsize
@@ -7652,8 +7729,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak	% this break allows effects and/or timing from previous item to stick on previous page, not be needed otherwise
-
+	\pagebreak
 	\begin{detailitem}{RRD}
 		{
 			\scriptsize
@@ -7784,6 +7860,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{SET b,s}
 		{$\mathtt{s_b}\leftarrow$1}
 
@@ -7818,7 +7895,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			SET b,(IY+d),L\UNDOC
 		\end{DetailVariants}
 
-		Sets bit {\tt b} of operand {\tt s} or memory location addressed by {\tt s}.
+		Sets bit {\tt b} ({\tt 0-7} of operand {\tt s} or memory location addressed by {\tt s}.
 
 		Note: undocumented variants {\tt SET b,(IX+d),r} and {\tt SET b,(IY+d),r} work slightly differently:
 
@@ -7912,6 +7989,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{SLL s}
 		{
 			\scriptsize
@@ -8038,7 +8116,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{SRL s}
 		{
 			\scriptsize
@@ -8101,6 +8178,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
+	\pagebreak
 	\begin{detailitem}{SUB s}
 		{A$\leftarrow$A-s}
 
@@ -8142,7 +8220,6 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 	\end{detailitem}
 
-	\pagebreak
 	\begin{detailitem}{SWAPNIB\ZXN}
 		{
 			\scriptsize
@@ -8201,7 +8278,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 			XOR D\\
 			XOR E\\
 			XOR H\\
-			XOR L\\
+			XOR L
 
 			\columnbreak
 			XOR n\\
@@ -8243,16 +8320,16 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 \chapter{Instructions Sorted by Mnemonic}
 
-Instructions marked with \UNDOC are undocumented.\\
-Instructions marked with \ZXN are ZX Spectrum Next extended.
+Instructions marked with \UNDOC ~are undocumented.\\
+Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 % TODO: and any instruction not listed has no effect? (same behaviour as an equal amount of NOP instructions)
-\setlength\columnsep{2em}
+\setlength\columnsep{4em}
 \begin{multicols}{3}
 {
 	\tt 
 	\small
 	\begin{tabbing}
-	ADC A,(HL){\qquad}{\qquad}\=8E\\
+	ADC A,(HL){\qquad}{\quad}\=8E\\
 	ADC A,(IX+d)\>DD8E d\\
 	ADC A,(IY+d)\>FD8E d\\
 	ADC A,A\>8F\\
@@ -8591,7 +8668,8 @@ Instructions marked with \ZXN are ZX Spectrum Next extended.
 	IN C,(C)\>ED48\\
 	IN D,(C)\>ED50\\
 	IN E,(C)\>ED58\\
-	IN F,(C)\UNDOC / IN (C)\UNDOC\>ED70\\
+	IN F,(C)\UNDOC\>ED70\\
+	IN (C)\UNDOC\>ED70\\
 	IN H,(C)\>ED60\\
 	IN L,(C)\>ED68\\
 	INC (HL)\>34\\
@@ -9558,11 +9636,11 @@ Instructions marked with \ZXN are ZX Spectrum Next extended.
 
 \chapter{Instructions Sorted by Opcode}
 
-Instructions marked with \UNDOC are undocumented.\\
-Instructions marked with \ZXN are ZX Spectrum Next extended.
+Instructions marked with \UNDOC ~are undocumented.\\
+Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 
 % TODO: and any instruction not listed has no effect? (same behaviour as an equal amount of NOP instructions)
-\setlength\columnsep{2em}
+\setlength\columnsep{4em}
 \begin{multicols}{3}
 {
 	\tt 
@@ -10464,7 +10542,8 @@ Instructions marked with \ZXN are ZX Spectrum Next extended.
 	ED6D\>RETN\UNDOC\\
 	ED6E\>IM 0\UNDOC\\
 	ED6F\>RLD\\
-	ED70\>IN F,(C)\UNDOC / IN (C)\UNDOC\\
+	ED70\>IN F,(C)\UNDOC\\
+	ED70\>IN (C)\UNDOC\\
 	ED71\>OUT (C),0\UNDOC\\
 	ED72\>SBC HL,SP\\
 	ED73 n n\>LD (nn),SP\\
