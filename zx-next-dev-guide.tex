@@ -17,8 +17,12 @@
 \usepackage{xfp}
 \usepackage{numprint}
 \usepackage{xstring}
+\usepackage{scalerel}
 \usepackage[table]{xcolor}
 \usepackage[nottoc,numbib]{tocbibind}
+
+\usepackage{tikz}
+\usetikzlibrary{matrix,fit,positioning,calc}
 
 % redefine the default "plain" pagestyle (used by chapter pages)
 \fancypagestyle{plain}{
@@ -49,6 +53,9 @@
 % empty pages before chapters should use empty style (aka nothing)
 \let\mtcleardoublepage\cleardoublepage
 \renewcommand{\cleardoublepage}{\clearpage{\pagestyle{empty}\mtcleardoublepage}}
+
+% less tall slash
+\newcommand\scslash{\stretchrel*{$/$}{\textsc{e}}}
 
 % top and bottom "struts" for instruction lines
 \newcommand{\instrt}{\rule{0pt}{2.5ex}}
@@ -1619,7 +1626,7 @@ Any time you write to Plus 3 Memory Paging Control {\tt \$1FFD} you should also 
 \subsection{MMU-based Mode}
 \label{zx_next_bank_mmu_mode}
 
-Next unique \textbf{MMU-based Mode} is much more flexible in that it allows mapping 8K chunks into any 8K slot of memory available to CPU. In this mode, 64K memory bank accessible to CPU is divided into 8 slots called MMU0 through MMU7, as shown in diagram below. Physical memory is thus divided into 96 (or 224 in expanded) slots.
+Next unique \textbf{MMU-based Mode} is much more flexible in that it allows mapping 8K chunks into any 8K slot of memory available to CPU. In this mode, 64K memory bank accessible to CPU is divided into 8 slots called MMU0 through MMU7, as shown in diagram below. Physical memory is thus divided into 96 (or 224 in expanded Next) slots.
 
 \begingroup
 	\setlength{\tabcolsep}{1pt}
@@ -1738,6 +1745,294 @@ ROM can be paged out by using +3 "AllRam" or Next MMU-based mode. Beware though 
 		Most significant bits of the 16K RAM bank selected in \textbf{Memory Paging Control} \$7FFD  \\
 \end{tabular}
 
+
+\pagebreak
+\section{ULA graphics}
+
+\newcommand{\ULAHead}[1]{\footnotesize \textbf{#1}}
+\newcommand{\ULACode}[1]{\tt #1}
+\newcommand{\ULAMath}[1]{\small #1}
+
+Original ZX Spectrum didn't have dedicated graphics chip. To keep price as low as possible, screen rendering was performed by ULA (``Uncommitted Logic Array'') chip.
+
+ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode 256x192 pixels. Because each character is 8x8 pixels, this gives us 32 characters in 24 character rows. Memory dedicated to ULA resides in second 16K page at addresses {\tt \$4000-\$5AFF}. And similar to memory configuration of other contemporary computers, pixel memory is separate from attributes/colour memory:
+
+\begingroup
+	\setlength{\tabcolsep}{5pt}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		ROM\notet\noteb & \multicolumn{3}{c|}{RAM} \\
+		\hline
+		16K & 16K & 16K & 16K \\
+		&
+			\begin{tabular}{c|c|c}
+				\arrayrulecolor{lightgray}
+				\hline
+				Pixels & Attributes & ... \\
+				{\tt \$4000}-{\tt \$57FF} & 
+					{\tt \$5800}-{\tt \$5AFF} &
+					{\tt \$5B00}-{\tt \$7FFF} \\
+			\end{tabular}
+		& & \\
+		\hline
+	\end{tabular}
+\endgroup
+
+\subsection{Pixel memory}
+
+Each screen pixel is represented by a single bit, meaning 1 byte holds 8 screen pixels. So, for each line of 256 pixels, 32 bytes are needed. However, for sake of efficiency, original Spectrum optimized screen memory layout for speed, but made it inconvenient for programming.
+
+Pixel memory is not linear, but is instead divided to fill character rows line by line. First 32 bytes of memory represent first line of first character row, followed by 32 bytes representing first line of second character row and so on until first line of 8 character rows is filled. Then next 32 bytes of screen memory represent second line of first character row, again followed by second line of second character row, until all 8 character rows are covered:
+
+\begin{multicols}{2}
+
+	\newcommand*{\M}[1]{\tt #1}
+	\newcommand*{\Mem}{\fbox{{\tt 0 1} ... {\tt 31}}}
+	\newcommand*{\BMM}[2]{\fbox{\textsc{{\tt #1} \scslash~{\tt #2}}}}
+	\newcommand*{\Connect}[3][0.5]{\draw[->] (#2) -| ($(#2) !#1! (#3)$) |- (#3);}
+
+	\begingroup
+		\footnotesize
+
+		\tikzset{
+			-|/.style={to path={-| (\tikztotarget)}},
+			|-/.style={to path={|- (\tikztotarget)}},
+		}
+
+		\begin{tikzpicture}[node distance=0cm]
+			\matrix(m)[matrix of nodes,row sep=0cm]{
+				& & Memory & ~~~~~ & Scr\scslash Chr \\
+				\M{\$4000} & 
+					\M{0} & 
+					\Mem & 
+					& 
+					\BMM{~0}{0.0} \\[-1.3ex]
+				\M{\$4020} & 
+					\M{1} & 
+					\Mem & 
+					& 
+					... \\[-1.3ex]
+				\M{\$4040} & 
+				    \M{2} & 
+				    \Mem &
+				    &
+				    \BMM{~8}{1.0} \\
+				& & ... & & ... \\
+				& & & & \BMM{16}{2.0} \\
+				& & & & ... \\
+			};
+
+			\Connect{m-2-3}{m-2-5}
+			\Connect[0.57]{m-3-3}{m-4-5}
+			\Connect[0.47]{m-4-3}{m-6-5}
+		\end{tikzpicture}
+	\endgroup
+
+	\columnbreak
+
+	\begingroup
+		\footnotesize
+
+		\tikzset{
+			-|/.style={to path={-| (\tikztotarget)}},
+			|-/.style={to path={|- (\tikztotarget)}},
+		}
+
+		\begin{tikzpicture}[node distance=0cm]
+			\matrix(m)[matrix of nodes,row sep=0cm]{
+				& & Memory & ~~~~~ & Scr\scslash Chr \\
+				\M{\$4000} & 
+					\M{0} & 
+					\Mem & 
+					& 
+					\BMM{0}{0.0} \\[-1.3ex]
+				& & ... & & \BMM{1}{0.1} \\[-1.3ex]
+				\M{\$4100} & 
+					\M{8} & 
+					\Mem & 
+					& 
+					\BMM{2}{0.2} \\
+				& & ... & & ... \\
+				\M{\$4200} & 
+					\M{16} & 
+					\Mem & 
+					& 
+					 \\
+				& & ... & & \\
+			};
+
+			\Connect{m-2-3}{m-2-5}
+			\Connect[0.47]{m-4-3}{m-3-5}
+			\Connect[0.6]{m-6-3}{m-4-5}
+		\end{tikzpicture}
+	\endgroup
+\end{multicols}
+\vspace*{-4ex}
+
+Left side shows how memory read sequentially translates to alternating screen and character lines, right side shows how memory needs to be read to fill in screen/character line by line. Note: character line uses 2 numbers: {\tt <character row>.<character line>}.
+
+Above may lead you to believe the formula for calculating memory location address for the first pixel in a particular screen line could be:
+
+$memory(line) = \$4000 + (line<<3)*\$20 - (line>>3)*\$7E0$
+
+It seems to work nicely, but this is not the end of peculiarities of Spectrum ULA mode; the formula wraps from {\tt \$47E0} for screen line 63 back to {\tt \$4100} for line 64. Reason is, ULA mode divides screen into 3 banks. Each bank covers 8 character rows or 64 screen lines, so 8*8*32 or 2048 bytes:
+
+\begin{tabular}{ccc}
+	Memory Range & Screen Lines & Char. Rows \\
+	{\tt \$4000} - {\tt \$47FF} & 
+		{\tt ~~0} - {\tt 63~} & 
+		{\tt ~0} - {\tt 8~} \\
+	{\tt \$4800} - {\tt \$4FFF} & 
+		{\tt ~64} - {\tt 127} & 
+		{\tt ~9} - {\tt 16} \\
+	{\tt \$5000} - {\tt \$57FF} & 
+		{\tt 128} - {\tt 191} & 
+		{\tt 17} - {\tt 24} \\
+\end{tabular}
+
+In fact, to calculate the address of memory for any given (x,y) coordinates, we'd need to prepare 16-bit value like this:
+
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+	\hline
+	\multicolumn{8}{|c|}{High Byte} & \multicolumn{8}{c|}{Low Byte} \\
+	\hline
+	\ULAHead{15} & 
+		\ULAHead{14} & 
+		\ULAHead{13} & 
+		\ULAHead{12} & 
+		\ULAHead{11} & 
+		\ULAHead{10} & 
+		\ULAHead{9} & 
+		\ULAHead{8} &
+	\ULAHead{7} & 
+		\ULAHead{6} & 
+		\ULAHead{5} & 
+		\ULAHead{4} & 
+		\ULAHead{3} & 
+		\ULAHead{2} & 
+		\ULAHead{1} & 
+		\ULAHead{0} \\
+	\hline
+	\ULACode{0} &
+		\ULACode{1} &
+		\ULACode{0} &
+		\ULAMath{$Y_7$} &
+		\ULAMath{$Y_6$} &
+		\ULAMath{$Y_2$} &
+		\ULAMath{$Y_1$} &
+		\ULAMath{$Y_0$} &
+	\ULAMath{$Y_5$} &
+		\ULAMath{$Y_4$} &
+		\ULAMath{$Y_3$} &
+		\ULAMath{$X_7$} &
+		\ULAMath{$X_6$} &
+		\ULAMath{$X_5$} &
+		\ULAMath{$X_4$} &
+		\ULAMath{$X_3$} \\
+	\hline
+	\ULACode{0} & \ULACode{1} & \ULACode{0} & 
+		\multicolumn{8}{c|}{$Y$} & 
+		\multicolumn{5}{c|}{$X$} \\
+	\hline
+\end{tabular}
+
+As you can see, X is quite straightforward; we need to take upper 5 bits and fill them in to lower 5 bits of 16-bit register pair. Y coordinate takes all 8 bits which need to be filled in to bits 12-5 of 16-bit register pair. However, notice how individual bits are scrambled. It makes incrementing address for next character row simple operation of {\tt INC H} (assuming {\tt HL} stores the address of previous row), which is likely one of the reasons for such implementation. But imagine for a second how complex Z80 program would need to be to set it up in the first place. Or increment to next screen line for that matter. Nothing couple shifts and masking operations couldn't handle but still, lots of wasted CPU cycles. However on ZX Spectrum Next we don't have to deal with any of the peculiarities of ULA mode; we have 3 new instructions that take care of all of the complexity for us:
+
+\begin{itemize}
+	\item {\tt PIXELAD} calculates address of a pixel with coordinates from {\tt DE} register pair where {\tt D} is Y and {\tt E} is X coordinate and stores the memory location address into {\tt HL} register pair for ready consumption
+	
+	\item {\tt PIXELDN} takes address of a pixel in {\tt HL} and updates it to point to the same X coordinate but one screen line down
+	
+	\item {\tt SETAE} takes X coordinte from {\tt E} register and prepares mask in register {\tt A} for reading or writing to ULA screen
+\end{itemize}
+
+Furthermore; each instruction only uses 8 T cycles, which is far less than corresponding Z80 assembly program would require. Somewhat naive program for drawing vertical line write from pixel at coordinate (16,32) to (16,50):
+
+\pagebreak
+\begin{Verbatim}
+	LD DE, $1020      ; Y=16, X=32
+	PIXELAD           ; HL=address of pixel (E,D)
+loop:
+	SETAE             ; A=pixel mask
+	OR (HL)           ; we'll write the pixel
+	LD (HL), A        ; actually write the pixel
+	
+	INC D             ; Y=Y+1
+	LD A, D           ; copy new Y coordinate to A
+	CP 51             ; are we at 51 already?
+	RET NC            ; yes, return
+
+	PIXELDN           ; no, update HL to next line
+	JR loop           ; continue with next pixel
+\end{Verbatim}
+
+Note: because we're updating our Y coordinate in {\tt D} register within the loop, we could also use {\tt PIXELAD} instead of {\tt PIXELDN} in line 13. Both instructions require 8 T states for execution, so there's no difference performance wise.
+
+If we instead wanted to check if pixel at given coordinate is set or not, we would use {\tt AND (HL)} instead of {\tt OR (HL)}. For example:
+
+\begin{Verbatim}[gobble=1]
+	LD DE, $1020      ; Y=16, X=32
+	PIXELAD           ; HL=address of pixel (E,D)
+	SETAE             ; A=pixel mask
+	AND (HL)          ; we'll read the pixel
+	RET Z             ; exit if pixel is set
+\end{Verbatim}
+
+
+\subsection{Attributes memory}
+
+Now that we know how to draw individual pixels, it's time to handle colour. Memory wise, it's stored immediately after pixel RAM, at memory locations {\tt \$5800} - {\tt \$5AFF}. Each byte represents colour and attributes for 8x8 pixel block on screen. Byte contents are as follows:
+
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+	\hline
+	\ULAHead{7} &
+		\ULAHead{6} &
+		\ULAHead{5} &
+		\ULAHead{4} &
+		\ULAHead{3} &
+		\ULAHead{2} &
+		\ULAHead{1} &
+		\ULAHead{0} \\
+	\hline
+	\ULAMath{$F$} &
+		\ULAMath{$B$} &
+		\ULAMath{$P_2$} &
+		\ULAMath{$P_1$} &
+		\ULAMath{$P_0$} &
+		\ULAMath{$I_2$} &
+		\ULAMath{$I_1$} &
+		\ULAMath{$I_0$} \\
+	\hline
+	\ULAMath{$F$} &
+		\ULAMath{$B$} &
+		\multicolumn{3}{c|}{Paper} &
+		\multicolumn{3}{c|}{Ink} \\
+	\hline
+\end{tabular}
+
+\begin{itemize}
+	\setlength\itemsep{1pt}
+	\item Bit 7: enables flashing if set, disables it otherwise
+	\item Bit 6: enables bright colours if set, normal colours otherwise
+	\item Bits 5-3: paper colour {\tt 0-7}
+	\item Bits 2-0: ink colour {\tt 0-7}
+\end{itemize}
+
+Colour value {\tt 0-7} corresponds to:
+
+\begin{tabular}{cll}
+	\ULAHead{Value} & \ULAHead{Colour} & \ULAHead{Bright} \\
+	\ULACode{0}	& Black & Black \\
+	\ULACode{1}	& Blue & Bright blue \\
+	\ULACode{2}	& Red & Bright red \\
+	\ULACode{3}	& Magenta & Bright magenta \\
+	\ULACode{4}	& Green & Bright green \\
+	\ULACode{5}	& Cyan & Bright cyan \\
+	\ULACode{6}	& Yellow & Bright yellow \\
+	\ULACode{7}	& Gray & White \\
+\end{tabular}
+
+Spectrum only requires 768 bytes to configure colour and attributes for the whole screen. And memory is contiguous so it's simple to manage. However it comes at expense of restricting to only 2 colours per each character block - the reason for the (in)famous colour clash.
 
 \pagebreak
 \section{Keyboard}
@@ -6513,7 +6808,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		{do LDD\\
 		Repeat until BC=0}
 
-		Repeats {\tt LDD} until {\tt BC=0}. {\tt LDDR} can be used for block transfer. See {\tt LDIR} below for an example and comparison of both instructions.
+		Repeats {\tt LDD} until {\tt BC=0}. {\tt LDDR} can be used for block transfer. See {\tt LDIR} for an example and comparison of both instructions.
 
 		\begin{DetailEffects}
 			\DetailFlags{\FN}{\FN}{0}{0}{0}{\FN}
@@ -8293,7 +8588,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			XOR IYl\UNDOC
 		\end{DetailVariants}
 
-		Performs exclusive or between accumulator and 8-bit immediate value, operand {\tt s} or memory location addressed by {\tt s}. Result is then stored back to {\tt A}
+		Performs exclusive or between accumulator and 8-bit immediate value, operand {\tt s} or memory location addressed by {\tt s}. Result is then stored back to {\tt A}.
 
 		\begin{DetailEffects}[p]
 			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{0}
@@ -8327,7 +8622,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 \begin{multicols}{3}
 {
 	\tt 
-	\small
+	\footnotesize
 	\begin{tabbing}
 	ADC A,(HL){\qquad}{\quad}\=8E\\
 	ADC A,(IX+d)\>DD8E d\\
@@ -9644,7 +9939,7 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 \begin{multicols}{3}
 {
 	\tt 
-	\small
+	\footnotesize
 	\begin{tabbing}
 	00{\qquad}{\qquad}{\quad}\=NOP\\
 	01 n n\>LD BC,nn\\

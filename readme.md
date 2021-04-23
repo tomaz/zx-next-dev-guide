@@ -22,7 +22,6 @@ Couple ideas for new content:
 - Description for other relevant ZX Spectrum / Next port
 - Code examples demonstrating port usage
 - Example of bank switching in MMU mode
-- ULA graphics
 - Layer 2
 - Sprites
 - Addressing modes?
