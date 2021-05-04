@@ -156,7 +156,7 @@ Permission is granted to copy, distribute and/or modify this document under the 
 
 ZX Spectrum Next guide is community oriented project. It's available free of charge as downloadable pdf file on releases tab of below github page. You can also find source {\LaTeX} there so you can freely edit it to your preferences! I also made it available as printed book on lulu, for those who prefer physical copy. Printing is done on demand with third party service, so it's not free, but I only set minimal price that will cover printing costs (printing services exist in many countries, so shipping costs should be minimal). Book is coil bound for easy flipping with additional cover that is not available in downloadable version, so definitely take a look if interested:
 
-{\tt \url{https://github.com/tomaz/zx-next-dev-guide}}\\
+{\tt \url{https://github.com/tomaz/zx-next-dev-guide}} (also includes example code)\\
 {\tt \url{https://www.lulu.com/TODO}}
 
 The latest version of original Z80 undocumented is available at:
@@ -1266,9 +1266,11 @@ That should cover all there is to say about the R register. It is often used in 
 
 \environbodyname\PORTBITTABLEBODY
 \NewEnviron{PortBitConfig}{
-	\begin{tabular}{ll}
+	{
+	\begin{tabularx}{\linewidth}{lX}
 		\PORTBITTABLEBODY
-	\end{tabular}	
+	\end{tabularx}	
+	}
 }
 \newcommand{\PortConfig}[2]{{\tt #1} & \PortDesc{#2}}
 
@@ -2546,7 +2548,6 @@ To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Re
 START_16K_BANK  EQU 9
 START_8K_BANK   EQU START_16K_BANK*2
 
-
 RESOLUTION_X    EQU 640
 RESOLUTION_Y    EQU 256
 
@@ -2603,6 +2604,7 @@ nextY:
 
 
 \subsection{Layer 2 Registers}
+\label{zx_next_layer2_registers}
 
 \subsubsection{Layer 2 Access Port {\tt \$123B}}
 
@@ -2844,10 +2846,592 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 This is only used for 320x256 and 640x256 modes. Together with \PortLink{Layer 2 X Offset Register}{16} full 319 pixels offsets are available. For 640x256 only 2 pixel offsets are possible.
 
 \pagebreak
+\section{Sprites}
+
+One of the frequently used ``my computer is better'' points from owners and developers of systems such as Commodore 64 was hardware supported sprites. None of the contra-arguments of, let's say CISC vs RISC seemed to matter. And to be fair, they had a point - poor old Speccy had none. But Next finally rectifies this with sprite system that far superseeds even later 16-bit era machines such as Amiga!
+
+Some of the capabilities of Next sprites:
+
+\begin{itemize}[topsep=1pt,itemsep=1pt]
+	\item 128 simultaneous sprites
+	\item 16x16 pixels per sprite
+	\item Magnification of 2x, 4x or 8x horizontally and vertically
+	\item Mirroring and rotation
+	\item Sprite grouping to form larger objects
+	\item 512 colours from 2 256 colour palettes
+	\item Per sprite palette
+	\item Built-in sprite editor
+\end{itemize}
+
+So lots of reasons to get excited! Let's dig in!
+
+\subsection{Editing}
+
+Before desciribing how sprites harware works, it seems appropriate to provide some links to various sprite editors. As mentioned, Next comes with built-in sprite editor. Change to desired folder, then enter {\tt .spredit <filename>} in BASIC or command line. If file exists, it will be loaded, otherwise new file will be created when data is saved. The editor is quite capable and can even be used with mouse if you have one attached to your Next (or in emulator).
+
+Alternatively, if you're developing cross platform, you can download UDGeed-Next\footnote{\url{http://zxbasic.uk/files/UDGeedNext-current.rar}} or use Remy's Sprite, Tile and Palette editor website\footnote{\url{https://zx.remysharp.com/sprites/}}.
+
+
+\subsection{Patterns}
+
+Sprites are always 16x16 pixels while display surface for sprites is 320x256, overlapping the ULA (or Layer 2) by 32 pixels on each side. Or in other words, to draw sprite fully on screen, (32,32) coordinate needs to be used, and the last coordinate where sprite is fully visible at bottom-right edge is (271,207). This allows sprites to be animated in and out of visible area. Sprites can be made visible or invisible when over border as well as rendered on top or below Layer 2 and ULA, all specified by \PortLink{Sprite and Layers System Register}{15}. It's also possible to further restrict sprite visibility within provided clip window using \PortLink{Clip Window Sprites Register}{19}.
+
+Sprite patterns (or pixel data) are stored in Next FPGA internal 16K memory. Sprites are always 16x16 pixels but can be 8-bit or 4-bit.
+
+\begin{itemize}[topsep=1pt,itemsep=1pt]
+	\item 8-bit sprites use full 8-bits to specify colour, so each pixel can be of any of 256 colours from sprite palette of which one acts as transparent. Each sprite therefore occupies 256 bytes of memory and 64 sprites can be stored.
+
+	\item 4-bit sprites use only 4-bits for colour, so each pixel can only choose from 16 colours, one of which is reserved for transparency. However 2 colours can be stored per each byte, so these sprites take half the memory of 8-bit ones: 128 bytes each, meaning 128 sprites can be stored in memory.
+\end{itemize}
+
+
+\subsection{Palette}
+
+Each sprite can specify its own palette offset. This allows sprites to share image data but use different colours. 4 bits are used for palette offset, therefore the final colour index within current sprite palette (as defined by \PortLink{Enhanced ULA Control Register}{43}) is determined using the following formula:
+
+\begin{multicols}{2}
+	8-bit sprites
+
+	\begin{tabular}{ccccccccc}
+		& \BitHead{7} & \BitHead{6} & \BitHead{5} & \BitHead{4} & \BitHead{3} & \BitHead{2} & \BitHead{1} & \BitHead{0} \\
+		\hline
+		  & $P_3$ & $P_2$ & $P_1$ & $P_0$ & 0 & 0 & 0 & 0 \\
+		+ & $S_7$ & $S_6$ & $S_5$ & $S_4$ & $S_3$ & $S_2$ & $S_1$ & $S_0$ \\
+		\hline
+		= & $C_7$ & $C_6$ & $C_5$ & $C_4$ & $C_3$ & $C_2$ & $C_1$ & $C_0$ \\
+	\end{tabular}
+
+	If default palette offset and default palette are used, sprite colour index can be interpretted as RGB332 colour.
+
+	\columnbreak
+
+	4-bit sprites
+
+	\begin{tabular}{ccccccccc}
+		& \BitHead{7} & \BitHead{6} & \BitHead{5} & \BitHead{4} & \BitHead{3} & \BitHead{2} & \BitHead{1} & \BitHead{0} \\
+		\hline
+		  & $P_3$ & $P_2$ & $P_1$ & $P_0$ & 0 & 0 & 0 & 0 \\
+		+ & 0 & 0 & 0 & 0 & $S_3$ & $S_2$ & $S_1$ & $S_0$ \\
+		\hline
+		= & $C_7$ & $C_6$ & $C_5$ & $C_4$ & $C_3$ & $C_2$ & $C_1$ & $C_0$ \\
+	\end{tabular}
+
+	Palette offset can be thought of as if selecting one of 16 different 16-colour palettes.
+\end{multicols}
+
+$P_n$ is palette offset bit, $S_n$ sprite colour index bit and $C_n$ final colour index.
+
+Transparent colour is defined with \PortLink{Sprites Transparency Index Register}{4B}.
+
+
+\pagebreak
+\subsection{Combined Sprites}
+
+\subsubsection{Anchor Sprites}
+
+These are ``normal'' 16x16 pixel sprites, as described in previous sections. They act as standalone sprites.
+
+The reason they are called ``anchor'' is because multiple sprites can be grouped together to form larger sprites. In such case ``anchor'' acts as parent and all its ``relative'' sprites are tied to it. In order to combine sprites, anchor needs to be defined first, immediately followed by all its relative sprites. The group ends with next anchor sprite which can either be another standalone sprite, or an anchor for anoter sprite group. For example, if sprite 5 is setup as anchor, its relative sprites must be followed at 6, 7, 8... until another sprite that's setup as ``anchor''.
+
+There are 2 types of relative sprites: composite and unified sprites.
+
+\subsubsection{Composite Relative Sprites}
+
+Composite sprites inherit certain attributes from their anchor.
+
+\begin{multicols}{2}
+	 Inherited attributes:
+
+	\begin{itemize}[topsep=1pt,itemsep=1pt]
+		\item Visibility
+		\item X
+		\item Y
+		\item Palette offset
+		\item Pattern number
+		\item 4 or 8-bit pattern 
+	\end{itemize}
+
+	\columnbreak
+
+	\textbf{NOT} inherited:
+
+	\begin{itemize}[topsep=1pt,itemsep=1pt]
+		\item Rotation
+		\item X \& Y mirroring
+		\item X \& Y scaling
+	\end{itemize}
+
+\end{multicols}
+
+Relative sprites only have 8-bits for X and Y coordinates (ninth bits are used for other purposes). But as the name suggests, these coordinates are relative to their parent anchor sprite. When anchor sprite is moved to a different position on screen, all its relatives are also moved by the same amount.
+
+Visibility of relative sprites is determined as {\tt AND} between anchor visibility and relative sprite visibility. This way individual relative sprites can be made invisible independently from their anchor, but if anchor is invisible, then all its relative sprites will also be invisible.
+
+Relative sprites inherit 4 or 8-bit setup from anchor. They can't use different type, but can use the same palette offset as its anchor, or it can use its own offset.
+
+It's also possible to tie relative sprite's pattern number to act as offset on top of anchor's pattern number and thus easily animate the whole sprite group simply by changing anchor's pattern number.
+
+\subsubsection{Unified Relative Sprites}
+
+Unified relative sprites are an extension of composite type. Everything described above applies here as well.
+
+The main difference is the hardware will automatically adjust relative sprites X, Y, rotation, mirroring and scaling attributes according to changes in anchor. So relatives will rotate, mirror and scale around the anchor as if it was single larger sprite.
+
+\subsection{Attributes}
+
+Attributes are 4 or 5 bytes that define where and how sprite is drawn. The data can be setup either by selecting sprite index with \PortLink{Sprite Status/Slot Select}{303B} and then continuously sending bytes to \PortLink{Sprite Attribute Upload}{xx57} (which automatically increments sprite index after all data for single sprite is transfered) or by calling individual direct access Next registers {\tt \$35-\$39} or their auto-increment variants {\tt \$75-\$79}. See registers section for description of individual bytes:
+
+\begin{itemize}[topsep=1pt,itemsep=1pt]
+	\item Byte 0: \PortLink{Sprite port-mirror Attribute 0 Register}{35}
+	\item Byte 1: \PortLink{Sprite port-mirror Attribute 1 Register}{36}
+	\item Byte 2: \PortLink{Sprite port-mirror Attribute 1 Register}{37}
+	\item Byte 3: \PortLink{Sprite port-mirror Attribute 1 Register}{38}
+	\item Byte 4: \PortLink{Sprite port-mirror Attribute 1 Register}{39}
+\end{itemize}
+
+
+\subsection{Examples}
+
+Reading about sprites may seem complicated, but in practice it's quite simple. The following pages include sample code for working with sprites. To preserve space, only partial code demonstrating relevant parts is included. You can find full source code on github \url{https://github.com/tomaz/zx-next-dev-guide}.
+
+
+\pagebreak
+\subsubsection{Loading Patterns into FPGA Memory}
+
+Before we can use sprites, we need to load their data into FPGA memory. This example introduces generic routine that uses DMA\footnote{\url{https://wiki.specnext.dev/DMA}} to copy from given memory to FPGA. Don't worry if it seems like magic - it's implemented as reusable routine, just copy it to your project. Routine requires 3 parameters:
+
+\begin{itemize}[topsep=1pt,itemsep=1pt]
+	\item {\tt HL} Source address of sprites to copy from
+	\item {\tt BC} Number of bytes to copy
+	\item {\tt A} Starting sprite number to copy to
+\end{itemize}
+
+\begin{Verbatim}
+loadSprites:
+	LD BC, $303B            ; Prepare port for sprite index
+	OUT (C), A              ; Load index of first sprite
+	LD (.dmaSource), HL     ; Copy sprite sheet address from HL
+	LD (.dmaLength), BC     ; Copy length in bytes from BC
+	LD HL, .dmaCode         ; Setup source for OTIR
+	LD B, .dmaCodeLength    ; Setup length for OTIR
+	LD C, $6B               ; Setup DMA port
+	OTIR                    ; Invoke DMA code
+	RET
+.dmaCode:
+	DB %10000011            ; Disable DMA
+	DB %01111101            ; WR0 transfer mode, A->B, write adress + block length
+.dmaSource:
+	DW 0                    ; WR0 port A, source address
+.dmaLength:
+	DW 0                    ; WR0 block length in bytes
+	DB %01010100            ; WR1 read A, increment, to memory, bitmaks
+	DB %00000010            ; WR1 cycle port A length
+	DB %01101000            ; WR2 write B, port B address fixed, B is IO
+	DB %00000010            ; WR2 cycle length B
+	DB %10101101            ; WR4 continuous mode, write destination address
+	DW $5B                  ; Sprite image port $xx5B
+	DB %10000010            ; WR5 restart on end of block
+	DB %11001111            ; WR6 load
+	DB %10000111            ; WR6 enable DMA
+.dmaCodeLength:  EQU $-.dmaCode
+\end{Verbatim}
+
+
+\pagebreak
+\subsubsection{Loading Sprites}
+
+Using {\tt loadSprites} routine is very simple. This example assumes you've edited sprites with one of the editors and saved them as {\tt sprites.spr} file in the same folder as the assembler code:
+
+\begin{Verbatim}
+	LD HL, sprites          ; Sprites data source
+	LD BC, 16*16*5          ; Copy 5 sprites, each 16x16 pixels
+	LD A, 0                 ; Start with first sprite
+	CALL loadSprites        ; Load sprites to FPGA
+
+sprites:
+	INCBIN "sprites.spr"    ; Sprite sheets file
+\end{Verbatim}
+
+
+\subsubsection{Enabling Sprites}
+
+After sprites are loaded into FPGA memory, we need to enable them:
+
+\begin{Verbatim}[gobble=1]
+	NEXTREG $15, %01000001		; Sprite 0 on top, SLU, sprites visible
+\end{Verbatim}
+
+
+\subsubsection{Displaying a Sprite}
+
+Sprites are now loaded into FPGA memory, they are enabled, so we can start displaying them. This example displays same sprite pattern twice, as two separate sprites:
+
+\begin{Verbatim}[gobble=1]
+	NEXTREG $34, 0              ; First sprite
+	NEXTREG $35, 100            ; X=100
+	NEXTREG $36, 80             ; Y=80
+	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
+	NEXTREG $38, %10000000      ; Visible, no byte 4, pattern 0
+
+	NEXTREG $34, 1              ; Second sprite
+	NEXTREG $35, 86             ; X=84
+	NEXTREG $36, 80             ; Y=80
+	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
+	NEXTREG $38, %10000000      ; Visible, no byte 4, pattern 0
+\end{Verbatim}
+
+
+\pagebreak
+\subsubsection{Displaying Combined Sprites}
+
+Even handling combined sprites is much simpler in practice than in theory! This example combines 4 sprites into single one using unified relative sprites. Note use of ``inc'' register {\tt \$79} which auto-increments sprite index for next sprite:
+
+\begin{Verbatim}[gobble=1]
+	NEXTREG $34, 2              ; Select third sprite
+	NEXTREG $35, 150            ; X=150
+	NEXTREG $36, 80             ; Y=80
+	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
+	NEXTREG $38, %11000001      ; Visible, use byte 4, pattern 1
+	NEXTREG $79, %00100000      ; Anchor with unified relatives, no scaling
+
+	NEXTREG $35, 16             ; X=AnchorX+16
+	NEXTREG $36, 0              ; Y=AnchorY+0
+	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
+	NEXTREG $38, %11000010      ; Visible, use byte 4, pattern 2
+	NEXTREG $79, %01000000      ; Relative sprite
+
+	NEXTREG $35, 0              ; X=AnchorX+0
+	NEXTREG $36, 16             ; Y=AnchorY+16
+	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
+	NEXTREG $38, %11000011      ; Visible, use byte 4, pattern 3
+	NEXTREG $79, %01000000      ; Relative sprite
+
+	NEXTREG $35, 16             ; X=AnchorX+16
+	NEXTREG $36, 16             ; Y=AnchorY+16
+	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
+	NEXTREG $38, %11000100      ; Visible, use byte 4, pattern 4
+	NEXTREG $79, %01000000      ; Relative sprite
+\end{Verbatim}
+
+Because we use combined sprite, we only need to update anchor to change all its relatives. And because we set it up as unified relative sprites, even rotation, mirroring and scaling is inherited as if it was a single sprite!
+
+\begin{Verbatim}[gobble=1]
+	NEXTREG $34, 1              ; Select second sprite
+	NEXTREG $35, 200            ; X=200
+	NEXTREG $36, 100            ; Y=100
+	NEXTREG $37, %00001010      ; Palette offset, mirror X, rotate
+	NEXTREG $38, %11000001      ; Visible, use byte 4, pattern 1
+	NEXTREG $39, %00101010      ; Anchor with unified relatives, scale X&Y 
+\end{Verbatim}
+
+
+\pagebreak
+\intentiallyempty
+\pagebreak
+
+\subsection{Sprite Registers}
+
+\subsubsection{Sprite Status/Slot Select {\tt \$303B}}
+
+Write: sets active sprite attribute and pattern slot index used by \PortLink{Sprite Attribute Upload}{xx57} and \PortLink{Sprite Pattern Upload}{xx5B}.
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{Set to {\tt 1} to offset reads and writes by 128 bytes}
+	\PortBits{6-0}
+		\PortDesc{{\tt 0-63} for pattern slots and {\tt 0-127} for attribute slots}
+\end{NextPort}
+
+Read: returns sprite status information
+
+\begin{NextPort}
+	\PortBits{7-2}
+		\PortDesc{Reserved}
+	\PortBits{1}	
+		\PortDesc{{\tt 1} if sprite renderer was not able to render all sprites; read will reset to {\tt 0}}
+	\PortBits{0}
+		\PortDesc{{\tt 1} when collision between any 2 sprites occurred; read will reset to {\tt 0}}
+\end{NextPort}
+
+
+\subsubsection{Sprite Pattern Upload {\tt \$xx5B}}
+
+Uploads sprite pattern data. 256 bytes are needed for individual sprite. For 8-bit sprites, each pattern slot contains single sprite. For 4-bit sprites it contains 2 128 byte sprites. After 256 bytes are sent, target pattern slot is auto-incremented.
+
+\begin{NextPort}
+	\PortBits{7-0}
+		\PortDesc{Next byte of pattern data for current sprite}
+\end{NextPort}
+
+
+\subsubsection{Sprite Attribute Upload {\tt \$xx57}}
+
+Uploads attributes for currently selected sprite slot. Attributes require 4 or 5 bytes. After all bytes are sent, sprite index slot automatically increments. See the following Next registers that directly set the value for specific bytes:
+
+\begin{itemize}[topsep=1pt,itemsep=1pt]
+	\item Byte 0: \PortLink{Sprite port-mirror Attribute 0 Register}{35}
+	\item Byte 1: \PortLink{Sprite port-mirror Attribute 1 Register}{36}
+	\item Byte 2: \PortLink{Sprite port-mirror Attribute 1 Register}{37}
+	\item Byte 3: \PortLink{Sprite port-mirror Attribute 1 Register}{38}
+	\item Byte 4: \PortLink{Sprite port-mirror Attribute 1 Register}{39}
+\end{itemize}
+
+
+\subsubsection{Peripheral 4 Register {\tt \$09}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{Enables AY2 ``mono'' output (A+B+C is sent to both R and L channels, makes it a bit louder than stereo mode)}
+	\PortBits{6}
+		\PortDesc{Enables AY1 ``mono'' output ({\tt 1} mono, {\tt 0} default)}
+	\PortBits{5}
+		\PortDesc{Enables AY0 ``mono'' output (0 after hard reset)}
+	\PortBits{4}
+		\PortDesc{{\tt 1} to lockstep \PortLink{Sprite port-mirror Index Register}{34} and \PortLink{Sprite Status/Slot Select}{303B}}
+	\PortBits{3}
+		\PortDesc{{\tt 1} to reset mapram bit in DivMMC}
+	\PortBits{2}
+		\PortDesc{{\tt 1} to silence HDMI audio (0 after hard reset) (since core 3.0.5)}
+	\PortBits{1-0}
+		\PortDesc{Scanlines weight (0 after hard reset)}
+		\PortDescOnly{
+			\begin{tabular}{lll}
+				& \BitHead{Core 3.1.1+} & \BitHead{Older cores} \\
+				\BitMono{00} & Scanlines off & Scalines off \\
+				\BitMono{01} & Scanlines 50\% & Scanlines 75\% \\
+				\BitMono{10} & Scanlines 50\% & Scanlines 25\% \\
+				\BitMono{11} & Scanlines 25\% & Scanlines 12.5\% \\
+			\end{tabular}
+		}
+\end{NextPort}
+
+
+\subsubsection{Sprite and Layers System Register {\tt \$15}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{{\tt 1} to enable lo-res layer, {\tt 0} disable it}
+	\PortBits{6}
+		\PortDesc{{\tt 1} to flip sprite rendering priority, i.e. sprite 0 is on top (0 after reset)}
+	\PortBits{5}
+		\PortDesc{{\tt 1} to change clipping to ``over border'' mode (doubling X-axis coordinates of clip window) (0 after reset)}
+	\PortBits{4-2}
+		\PortDesc{Layers priority and mixing}
+		\PortDescOnly{
+			\begin{PortBitConfig}
+				\PortConfig{000}{{\tt S L U} (Sprites are at top, Layer 2 under, Enhanced ULA at bottom)}
+				\PortConfig{001}{{\tt L S U}}
+				\PortConfig{010}{{\tt S U L}}
+				\PortConfig{011}{{\tt L U S}}
+				\PortConfig{100}{{\tt U S L}}
+				\PortConfig{101}{{\tt U L S}}
+				\PortConfig{110}{Core 3.1.1+: {\tt (U|T)S(T|U)(B+L)} blending layer and Layer 2 combined}
+				\PortConfig{   }{Older cores: {\tt S(U+L)} colours from ULA and L2 added per R/G/B channel}
+				\PortConfig{111}{Core 3.1.1+: {\tt (U|T)S(T|U)(B+L-5)} blending layer and Layer 2 combined}
+				\PortConfig{   }{Older cores: {\tt S(U+L-5)} similar as {\tt 110}, but per R/G/B channel {\tt (U+L-5)}}
+				\PortConfig{   }{{\tt 110} and {\tt 111} modes: colours are clamped to {\tt [0,7]}}
+			\end{PortBitConfig}
+		}
+	\PortBits{1}
+		\PortDesc{{\tt 1} to enable sprites over border (0 after reset)}
+	\PortBits{0}
+		\PortDesc{{\tt 1} to enable sprite visibility (0 after reset)}
+\end{NextPort}
+
+
+\subsubsection{Clip Window Sprites Register {\tt \$19}}
+
+\begin{NextPort}
+	\PortBits{7-0}
+		\PortDesc{Reads and writes clip-window coordinates for Sprites}
+\end{NextPort}
+
+4 coordinates need to be set: X1, X2, Y1 and Y2. Sprites will only be visible within these coordinates. Default values are {\tt 0}, {\tt 255}, {\tt 0}, {\tt 191}. Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset index to 0 in \PortLink{Clip Window Control Register}{1C}, then write all 4 coordinates in succession. Positions are inclusive.
+
+When ``over border'' mode is enabled (bit 1 of \PortLink{Sprite and Layers System Register}{15}), X coordinates are doubled internally.
+
+
+\subsubsection{Clip Window Control Register {\tt \$1C}}
+
+Write:
+
+\begin{NextPort}
+	\PortBits{7-4}
+		\PortDesc{Reserved, must be 0}
+	\PortBits{3}
+		\PortDesc{Write 1 to reset Tilemap clip-window register index}
+	\PortBits{2}
+		\PortDesc{Write 1 to reset ULA/LoRes clip-window register index}
+	\PortBits{1}
+		\PortDesc{Write 1 to reset Sprite clip-window register index}
+	\PortBits{0}
+		\PortDesc{Write 1 to reset Layer 2 clip-window register index}
+\end{NextPort}
+
+Read:
+
+\begin{NextPort}
+	\PortBits{7-6}
+		\PortDesc{Current Tilemap clip-window register index}
+	\PortBits{5-4}
+		\PortDesc{Current ULA/LoRes clip-window register index}
+	\PortBits{3-2}
+		\PortDesc{Current Sprite clip-window register index}
+	\PortBits{1-0}
+		\PortDesc{Current Layer 2 clip-window register index}
+\end{NextPort}
+
+
+
+\subsubsection{Sprite Port-Mirror Index Register {\tt \$34}}
+
+If sprite id lockstep in \PortLink{Peripheral 4 Register}{09} is enabled, write to this registers has same effect as writing to \PortLink{Sprite Status/Slot Select}{303B}.
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{Set to {\tt 1} to offset reads and writes by 128 bytes}
+	\PortBits{6-0}
+		\PortDesc{{\tt 0-63} for pattern slots and {\tt 0-127} for attribute slots}
+\end{NextPort}
+
+
+\subsubsection{Sprite port-mirror Attribute 0 Register {\tt \$35}}
+
+\begin{NextPort}
+	\PortBits{7-0}
+		\PortDesc{Low 8 bits of X position}
+\end{NextPort}
+
+
+\subsubsection{Sprite port-mirror Attribute 1 Register {\tt \$36}}
+
+\begin{NextPort}
+	\PortBits{7-0}
+		\PortDesc{Low 8 bits of Y position}
+\end{NextPort}
+
+
+\subsubsection{Sprite port-mirror Attribute 2 Register {\tt \$37}}
+
+\begin{NextPort}
+	\PortBits{7-4}
+		\PortDesc{Palette offset}
+	\PortBits{3}
+		\PortDesc{{\tt 1} to enable X mirroring, {\tt 0} to disable}
+	\PortBits{2}
+		\PortDesc{{\tt 1} to enable Y mirroring, {\tt 0} to disable}
+	\PortBits{1}
+		\PortDesc{{\tt 1} to rotate sprite 90\textsuperscript{o}, {\tt 0} to disable}
+	\PortBits{0}
+		\PortDesc{Anchor sprite: most significant bit of X coordinate}
+		\PortDescOnly{Relative sprite: {\tt 1} to add anchor palette offset, {\tt 0} to use independent palette offset}
+\end{NextPort}
+
+
+\subsubsection{Sprite port-mirror Attribute 3 Register {\tt \$38}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{{\tt 1} to make sprite visible, {\tt 0} to hide it}
+	\PortBits{6}
+		\PortDesc{{\tt 1} to enable optional byte 4, {\tt 0} to disable it}
+	\PortBits{5-0}
+		\PortDesc{Pattern index {\tt 0-63} (7th, MSB for 4-bit sprites is configured with byte 4)}
+\end{NextPort}
+
+
+\pagebreak
+\subsubsection{Sprite port-mirror Attribute 4 Register {\tt \$39}}
+
+For anchor sprites:
+
+\begin{NextPort}
+	\PortBits{7-6}
+		\PortDesc{{\tt H+N6} where {\tt H} is 4/8-bit data selector and {\tt N6} is sub-pattern selector for 4-bit sprites}
+		\PortDescOnly{
+			\begin{PortBitConfig}
+				\PortConfig{00}{Anchor sprite, 8-bit}
+				\PortConfig{10}{Anchor sprite, 4-bit using bytes 0-127 of pattern slot}
+				\PortConfig{11}{Anchor sprite, 4-bit using bytes 128-255 of pattern slot}
+			\end{PortBitConfig}
+		}
+	\PortBits{5}
+		\PortDesc{{\tt 0} if this anchor's relative sprites are composite, {\tt 1} for unified sprite}
+	\PortBits{4-3}
+		\PortDesc{X axis scale factor}
+		\PortDescOnly{
+			\begin{PortBitConfig}
+				\PortConfig{00}{1x}
+				\PortConfig{01}{2x}
+				\PortConfig{10}{4x}
+				\PortConfig{11}{8x}
+			\end{PortBitConfig}
+		}
+	\PortBits{2-1}
+		\PortDesc{Y axis scale factor, see above}
+	\PortBits{0}
+		\PortDesc{Most significant bit of Y coordinate}
+\end{NextPort}
+
+For composite relative sprites:
+
+\begin{NextPort}
+	\PortBits{7-6}
+		\PortDesc{{\tt 01} needs to be used for relative sprites}
+	\PortBits{5}
+		\PortDesc{4-bit mode: {\tt N6}, {\tt 1} to use bytes 0-127, {\tt 0} to use bytes 128-255 of pattern slot}
+		\PortDescOnly{8-bit mode: not used, set to {\tt 0}}
+	\PortBits{4-3}
+		\PortDesc{X axis scale factor, see below}
+	\PortBits{2-1}
+		\PortDesc{Y axis scale factor, see below}
+	\PortBits{0}
+		\PortDesc{{\tt 1} to enable relative pattern offset, {\tt 0} to use independent pattern index}
+\end{NextPort}
+
+For unified relative sprites
+
+\begin{NextPort}
+	\PortBits{7-6}
+		\PortDesc{{\tt 01} needs to be used for relative sprites}
+	\PortBits{5}
+		\PortDesc{4-bit mode: {\tt N6}, {\tt 1} to use bytes 0-127, {\tt 0} to use bytes 128-255 of pattern slot}
+		\PortDescOnly{8-bit mode: not used, set to {\tt 0}}
+	\PortBits{4-1}
+		\PortDesc{Set to {\tt 0}; scaling is defined by anchor sprite}
+	\PortBits{0}
+		\PortDesc{{\tt 1} to enable relative pattern offset, {\tt 0} to use independent pattern index}
+\end{NextPort}
+
+
+\subsubsection{Palette Index Register {\tt \$40}}
+\vspace*{-2ex}
+\subsubsection{Palette Value Register {\tt \$41}}
+\vspace*{-2ex}
+\subsubsection{Enhanced Ula Control Register {\tt \$43}}
+
+See description under Layer 2 chapter, section \ref{zx_next_layer2_registers}
+
+
+\subsubsection{Sprites Transparency Index Register {\tt \$4B}}
+
+\begin{NextPort}
+	\PortBits{7-0}\PortDesc{Sets index of transparent colour inside sprites palette.}
+\end{NextPort}
+
+For 4-bit sprites, low 4 bits of this register are used.
+
+
+\subsubsection{Sprite Port-Mirror Attribute N (With Inc) Register {\tt \$75-\$79}}
+
+This set of registers work the same as their non-inc counterpart in {\tt \$35-\$39}; writes byte 0-4 of Sprite attributes for currently selected sprite, except {\tt \$7X} variants also increment \PortLink{Sprite Port-Mirror Index Register}{34} after write. When batch updating multiple sprites, typically the first sprite is selected explicitly, then {\tt \$3X} registers are used until the last write, which occurs through {\tt \$7X} register to also increment sprite index for next iteration.
+
+
+\pagebreak
 \section{Keyboard}
 \label{zx_next_keyboard}
 
-Keyboard is read from port {\tt \$ssFE} where bits in result are as follows:
+Keyboard is read from port {\tt \$xxFE} where bits in result are as follows:
 
 {
 	\tt
@@ -2856,7 +3440,7 @@ Keyboard is read from port {\tt \$ssFE} where bits in result are as follows:
 	
 	\begin{tabular}{p{0.7cm}|cp{1cm}p{1cm}p{1cm}p{1.3cm}p{1.5cm}}
 
-		~ss & & 4 & 3 & 2 & 1 & 0 \instrb \\
+		~xx & & 4 & 3 & 2 & 1 & 0 \instrb \\
 		\hline
 		\$7F\instrt & & B & N & M & Symb & Space \\
 		\$BF\instrt & & H & J & K & L & Enter \\
