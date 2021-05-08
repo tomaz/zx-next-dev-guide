@@ -25,9 +25,7 @@ Sample code from the book is also included in this repository. I use Visual Stud
 Couple ideas for new content:
 
 - Description for other relevant ZX Spectrum / Next port
-- Tilemap (position between Layer 2 and Sprites)
-- DMA?
-- Addressing modes?
+- Describe DMA
 
 # License
 
