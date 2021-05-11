@@ -105,7 +105,7 @@
 % - Describe BIT A,(HL) undocumented flags from internal MEMPRT/WZ register
 % - Add testing code to appendices
 
-\title{ZX Spectrum Next Developer Guide}
+\title{ZX Spectrum Next Assembler Developer Guide}
 \author{Tomaz Kragelj}
 \date{Version 1.0, \today}
 
@@ -155,98 +155,115 @@ Permission is granted to copy, distribute and/or modify this document under the 
 
 \section{Where to get this document}
 
-ZX Spectrum Next guide is community oriented project. It's available free of charge as downloadable pdf file on releases tab of below github page. You can also find source {\LaTeX} there so you can freely edit it to your preferences! I also made it available as printed book on lulu, for those who prefer physical copy. Printing is done on demand with third party service, so it's not free, but I only set minimal price that will cover printing costs (printing services exist in many countries, so shipping costs should be minimal). Book is coil bound for easy flipping with additional cover that is not available in downloadable version, so definitely take a look if interested:
+ZX Spectrum Next Assembler Developer Guide is available as coil bound printed book on
 
-{\tt \url{https://github.com/tomaz/zx-next-dev-guide}} (also includes example code)\\
-{\tt \url{https://www.lulu.com/TODO}}
+\url{https://www.lulu.com/TODO}
 
-The latest version of original Z80 undocumented is available at:
+You can also download it as PDF document from github where you can also find its source \LaTeX form so you can edit it to your preference
 
-{\tt \url{http://www.myquest.nl/z80undocumented/}}
+\url{https://github.com/tomaz/zx-next-dev-guide}
+
+
+\section{Companion Source Code}
+
+github repository also includes companion source code. Sample projects were created in cross platform environment on Windows so instructions here are written with these in mind. But consider them merely as suggestion; you should be able to use your preferred editor or tools.
+
+\begin{description}[style=unboxed,leftmargin=0cm]
+	\item[Visual Studio Code (\url{https://code.visualstudio.com/})]\hfill
+	
+	My code editor of choice...
+
+	\item[DeZog plugin (\url{https://github.com/maziac/DeZog})]\hfill
+	
+	This amazing VS Code plugin hooks up VS Code with compiler and allows debugging the program. You can install it from within VS Code itself.
+
+	\item[sjasmplus 1.18.2 (\url{https://github.com/z00m128/sjasmplus})]\hfill
+
+	Source code includes sjasmplus specific directives for creating nex files at top and bottom of {\tt main.asm} files; if you use different compiler, you may need to tweak or comment them out.
+
+	VS Code projects are setup to expect binaries in specific folder. You will need to download and copy so that {\tt sjasmplus.exe} is located in {\tt Tools/sjasmplus}.
+
+	\item[CSpect 2.13.0 (\url{http://cspect.org})]\hfill
+
+	Similar to sjasmplus, CSpect binaries are expected in specific folder. To install, download and copy so that {\tt CSpect.exe} is located in {\tt Tools/CSpect} folder.
+
+	\item[CSpect Next Image (\url{http://www.zxspectrumnext.online/#sd})]\hfill
+
+	You will also need to download ZX Spectrum Next image file and copy it to the folder where {\tt CSpect.exe} is located. I use 2GB image, hence VS Code project file is configured for that. If you use different image, make sure to update {\tt .vscode/tasks.json} file.
+	
+	\item[DeZog CSpect plugin (\url{https://github.com/maziac/DeZogPlugin})]\hfill
+
+	DeZog requires this plugin to be installed in order to work with CSpect. To install, download and copy to the same folder where {\tt CSpect.exe} is located. Make sure plugin version matches DeZog version!
+
+	{\footnotesize Note: for whatever reason, default DeZog port of 11000 doesn't work on my computer, so I changed it to 13000. This needs to be managed in 2 places: {\tt .vscode/launch.json} and on plugin side. Companion code repository already includes the setup needed ({\tt DeZogPlugin.dll.config} file) so it should work out of the box.}
+
+\end{description}
+
+Remember you need to have CSpect launched before you can run the samples in VS Studio Code. I created a task for it: open VS Code commands panel ({\tt Ctrl+Shift+P} shortcut on my installation) and select ``Tasks: Run Task'' option (if you can't find it, start typing ``run'' into search box to filter). Select it by pressing enter, then select ``Launch CSpect'' from list. This is only needed once, afterwards use ``Run \> Start Debugging'' from main menu to compile and launch the program.
+
+
+\section{Background, Contact \& Feedback}
+
+My first computer was ZX Spectrum 48K. Initially it was only used to play games, but my creative mind soon set me on path of building simple games of my own in BASIC. While too young to master assembler at that point, the idea stayed with me. ZX Spectrum Next revived my wish to learn Z80 and return to writing games for the platform.
+	
+My original intent was to have coil bound list of all ZX Next instructions so I can quickly compare. However after finding this document, it felt like a perfect starting point. And with additional information it included, it also encouraged me to extend mere instructions description with Next specific chapters. So in a way this book represents my notes as I was learning those topics. However, I did my best to present information as a reference to keep book relevant.
+
+English is not my native tounge. And our own mind is not the best tool to correct our own work either. Since I can't afford professional proofreader, mistakes are a matter of fact I'm afraid. If you spot something, or want to contribute, feel free to open an issue on github. Pull requests are also welcome! If you want to contribute, but are unsure of what, check accompanying readme file on github for ideas. If you want to discuss in advance, or for anything else, you can find me on email {\tt tkragelj AT gmail DOT com} or Twitter {\tt @tomsbarks}.
 
 
 \pagebreak
-\section{Background}
+\section{Z80 Undocumented}
+
+As the saying ``standing on the shoulders of giants'' goes, this book is also based on pre-existing work from Jan and Sean. While my work is ZX Spectrum Next developer oriented, their original project was more focused on hardware perspective, for Z80 emulator developer.
+
+If interested, you can find it at \url{http://www.myquest.nl/z80undocumented/}.
 
 \begin{description}[style=unboxed,leftmargin=0cm]
-
-	\item[Tomaz]\hfill
-	
-	My first computer was ZX Spectrum 48K. Initially it was only used to play games, but my creative mind soon set me on path of creating simple games of my own in BASIC. While too young to master assembler, the idea stayed with me. ZX Spectrum Next revived my wish to learn Z80 and return to writing games for the platform.
-	
-	My original intent was to have coil bound list of all ZX Next instructions so I can quickly compare. However after finding this document, it felt like a perfect starting point. And with additional information it included, it also encouraged me to extend mere instruction set with additional description.
-
 	\item[Jan]\hfill
+	
+	\url{http://www.myquest.nl/z80undocumented/}\\
+	{\tt jw AT dds DOT nl}\\
+	{\tt @janwilmans}
 
 	Interested in emulation for a long time, but a few years after Sean started writing this document, I have also started writing my own MSX emulator in 2003 and I've used this document quite a lot. Now (2005) the Z80 emulation is nearing perfection, I decided to add what extra I have learned and comments various people have sent to Sean, to this document.
 
 	I have restyled the document (although very little) to fit my personal needs and I have checked a lot of things that were already in here.
  
 	\item[Sean]\hfill
+
+	\url{http://www.msxnet.org/}
 	
 	Ever since I first started working on an MSX emulator, I've been very interested in getting the emulation absolutely correct - including the undocumented features. Not just to make sure that all games work, but also to make sure that if a program crashes, it crashes exactly the same way if running on an emulator as on the real thing. Only then is perfection achieved.
 
 	I set about collecting information. I found pieces of information on the Internet, but not everything there is to know. So I tried to fill in the gaps, the results of which I put on my website. Various people have helped since then; this is the result of all those efforts and to my knowledge this document is the most complete.
-
-\end{description}
-
-
-\section{Feedback}
-
-\begin{description}[style=unboxed,leftmargin=0cm]
-
-	\item[Tomaz]\hfill
-
-	If you find any mistake, or have any other kind of feedback, feel free to open an issue on gitub. Pull requests are also welcome! If you want to contribute but are unsure of what, you can check todo section in the readme file for pointers or contact me at {\tt tkragelj(AT)gmail(DOT)com}. Either way, please keep in mind English is not my native tounge and for this free/low cost project I can't justify editor/proof reader costs. If you find mistakes, please let me know (or even better, create pull request with fixes). I will do my best to periodically refresh printed version as well!
-
-	\item[Jan]\hfill
-	
-	I welcome any kind of feedback. I would like to hear about any corrections or additions you might have. Also note that there are a few flags which are still unknown, it would be great if someone found out how they work. You can reach me at {\tt jw(AT)dds(DOT)nl} and my website can be found at \url{http://www.myquest.nl/z80undocumented/}. Sean's website is at \url{http://www.msxnet.org/}.
-
 \end{description}
 
 
 \pagebreak
 \section{ChangeLog}
+
 \begin{description}
 
-\item[29th March 2021 (Version 1.0)]
-Added ZX Spectrum Next information and instructions and restructured text for better maintainability and readability.
+	\item[11th May 2021 (Version 1.0)]
+	Added ZX Spectrum Next information and instructions and restructured text for better maintainability and readability.
 
-\item[15th Juni 2005 (version 0.9)]
-Corrected improper notation of JP x,nn mnemonics in opcode list, thanks to
-Laurens Holst. Corrected a mistake in the INI, INIR, IND, INDR section 
-and documented a mistake in offical Z80 documentation concerning Interrupt 
-Mode 2, thanks to Boris Donko. Thanks to Aaldert Dekker for his ideas, for 
-verifying many assumptions and writing instruction exercisers for various 
-instruction groups.
+	\item[15th Juni 2005 (version 0.9)]
+	Corrected improper notation of JP x,nn mnemonics in opcode list, thanks to Laurens Holst. Corrected a mistake in the INI, INIR, IND, INDR section and documented a mistake in offical Z80 documentation concerning Interrupt Mode 2, thanks to Boris Donko. Thanks to Aaldert Dekker for his ideas, for verifying many assumptions and writing instruction exercisers for various instruction groups.
 
-\item[18th May 2005 (version 0.8)]
-Added an alphabetical list of instructions for easy reference and corrected an 
-error in the 16-bit arithmetic section, SBC HL,nn sets the N-flag just like
-other subtraction instructions, thanks to Fredrik Olssen for pointing that out.
+	\item[18th May 2005 (version 0.8)]
+	Added an alphabetical list of instructions for easy reference and corrected an error in the 16-bit arithmetic section, SBC HL,nn sets the N-flag just like other subtraction instructions, thanks to Fredrik Olssen for pointing that out.
 
-\item[4th April 2005 (version 0.7)]
-I (Jan $<$jw@dds.nl$>$) will be maintaining this document from this version on.
-I restyled the document to fix the page numbering issues, 
-corrected an error in the I/O Block Instructions section, added 
-graphics for the RLD and RRD instructions and corrected the spelling in several places.
+	\item[4th April 2005 (version 0.7)]
+	I (Jan $<$jw@dds.nl$>$) will be maintaining this document from this version on. I restyled the document to fix the page numbering issues, corrected an error in the I/O Block Instructions section, added graphics for the RLD and RRD instructions and corrected the spelling in several places.
 
-\item[20th November 2003 (version 0.6)]
-Again, thanks to Ramsoft, added PF flag to {\tt OUTI}, {\tt INI} and
-friends. Minor fix to {\tt DAA} tables, other minor fixes.
+	\item[20th November 2003 (version 0.6)]
+	Again, thanks to Ramsoft, added PF flag to {\tt OUTI}, {\tt INI} and friends. Minor fix to {\tt DAA} tables, other minor fixes.
 
-\item[13th November 2003 (version 0.5)]
-Thanks to Ramsoft, add the correct tables for the {\tt DAA} instruction
-(section \ref{daa}). Minor corrections \& typos, thanks to Jim Battle,
-David Sutherland and most of all Fred Limouzin.
+	\item[13th November 2003 (version 0.5)]
+	Thanks to Ramsoft, add the correct tables for the {\tt DAA} instruction (section \ref{daa}). Minor corrections \& typos, thanks to Jim Battle, David Sutherland and most of all Fred Limouzin.
 
-\item[September 2001 (version 0.4)]
-Previous documents I had written were in plain text and Microsoft
-Word, which I now find very embarrassing, so I decided to combine them all 
-and use {\LaTeX}. Apart from a full re-write, the only changed information is
-``Power on defaults'' (section \ref{pon}) and the algorithm for the CF 
-and HF flags for {\tt OTIR} and friends (section \ref{block_io}).
+	\item[September 2001 (version 0.4)]
+	Previous documents I had written were in plain text and Microsoft Word, which I now find very embarrassing, so I decided to combine them all and use {\LaTeX}. Apart from a full re-write, the only changed information is ``Power on defaults'' (section \ref{pon}) and the algorithm for the CF and HF flags for {\tt OTIR} and friends (section \ref{block_io}).
 
 \end{description}
 
@@ -2605,7 +2622,6 @@ nextY:
 
 
 \subsection{Layer 2 Registers}
-
 \label{zx_next_layer2_registers}
 
 \subsubsection{Layer 2 Access Port {\tt \$123B}}
