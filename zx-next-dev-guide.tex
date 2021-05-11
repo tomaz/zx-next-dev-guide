@@ -18,11 +18,29 @@
 \usepackage{numprint}
 \usepackage{xstring}
 \usepackage{scalerel}
+\usepackage{bigdelim}
 \usepackage[table]{xcolor}
 \usepackage[nottoc,numbib]{tocbibind}
 
 \usepackage{tikz}
 \usetikzlibrary{matrix,fit,positioning,calc}
+
+% ASCII text created with https://fsymbols.com/generators/carty/
+% in case it's not obvious - these large titles are nicely visible in minimap¯\_(ツ)_/¯
+
+%% █████████████████████████████████████████████████████████████
+%% █░░░░░░░░░░░░███░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
+%% █░░▄▀▄▀▄▀▄▀░░░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░▄▀░░░░▄▀▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█
+%% █░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░█████████░░▄▀░░█████████
+%% █░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█
+%% █░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█░░░░░░░░░░▄▀░░█
+%% █░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░█████████████████░░▄▀░░█
+%% █░░▄▀░░░░▄▀▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░█████████░░░░░░░░░░▄▀░░█
+%% █░░▄▀▄▀▄▀▄▀░░░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░█████████░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░░░░░░░░░░░███░░░░░░░░░░░░░░█░░░░░░█████████░░░░░░░░░░░░░░█
+%% █████████████████████████████████████████████████████████████
 
 % redefine the default "plain" pagestyle (used by chapter pages)
 \fancypagestyle{plain}{
@@ -92,7 +110,6 @@
 	fontsize=\small
 }
 
-
 % use empty style for first couple pages, until defined otherwise
 \pagestyle{empty}
 
@@ -105,13 +122,26 @@
 % - Describe BIT A,(HL) undocumented flags from internal MEMPRT/WZ register
 % - Add testing code to appendices
 
+
+%% ████████████████████████████████████████████████████████████████████████
+%% █░░░░░░░░░░░░░░█░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░█████████░░░░░░░░░░░░░░█
+%% █░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░█████████░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░░░░░▄▀░░░░░░█░░░░▄▀░░░░█░░░░░░▄▀░░░░░░█░░▄▀░░█████████░░▄▀░░░░░░░░░░█
+%% █████░░▄▀░░███████░░▄▀░░███████░░▄▀░░█████░░▄▀░░█████████░░▄▀░░█████████
+%% █████░░▄▀░░███████░░▄▀░░███████░░▄▀░░█████░░▄▀░░█████████░░▄▀░░░░░░░░░░█
+%% █████░░▄▀░░███████░░▄▀░░███████░░▄▀░░█████░░▄▀░░█████████░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █████░░▄▀░░███████░░▄▀░░███████░░▄▀░░█████░░▄▀░░█████████░░▄▀░░░░░░░░░░█
+%% █████░░▄▀░░███████░░▄▀░░███████░░▄▀░░█████░░▄▀░░█████████░░▄▀░░█████████
+%% █████░░▄▀░░█████░░░░▄▀░░░░█████░░▄▀░░█████░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█
+%% █████░░▄▀░░█████░░▄▀▄▀▄▀░░█████░░▄▀░░█████░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █████░░░░░░█████░░░░░░░░░░█████░░░░░░█████░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
+%% ████████████████████████████████████████████████████████████████████████
+
 \title{ZX Spectrum Next Assembler Developer Guide}
 \author{Tomaz Kragelj}
 \date{Version 1.0, \today}
 
 \maketitle
-
-
 
 
 \chapter*{Copyright Statement}
@@ -147,8 +177,21 @@ Permission is granted to copy, distribute and/or modify this document under the 
 \mainmatter
 
 
-
 \chapter{Introduction}
+
+%% ████████████████████████████████████████████████████████████████████████████████████
+%% █░░░░░░░░░░█░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░░░███░░░░░░░░░░░░░░█
+%% █░░▄▀▄▀▄▀░░█░░▄▀░░░░░░░░░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀▄▀░░███░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░░░▄▀░░░░█░░▄▀▄▀▄▀▄▀▄▀░░██░░▄▀░░█░░░░░░▄▀░░░░░░█░░▄▀░░░░░░░░▄▀░░███░░▄▀░░░░░░▄▀░░█
+%% ███░░▄▀░░███░░▄▀░░░░░░▄▀░░██░░▄▀░░█████░░▄▀░░█████░░▄▀░░████░░▄▀░░███░░▄▀░░██░░▄▀░░█
+%% ███░░▄▀░░███░░▄▀░░██░░▄▀░░██░░▄▀░░█████░░▄▀░░█████░░▄▀░░░░░░░░▄▀░░███░░▄▀░░██░░▄▀░░█
+%% ███░░▄▀░░███░░▄▀░░██░░▄▀░░██░░▄▀░░█████░░▄▀░░█████░░▄▀▄▀▄▀▄▀▄▀▄▀░░███░░▄▀░░██░░▄▀░░█
+%% ███░░▄▀░░███░░▄▀░░██░░▄▀░░██░░▄▀░░█████░░▄▀░░█████░░▄▀░░░░░░▄▀░░░░███░░▄▀░░██░░▄▀░░█
+%% ███░░▄▀░░███░░▄▀░░██░░▄▀░░░░░░▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░█████░░▄▀░░██░░▄▀░░█
+%% █░░░░▄▀░░░░█░░▄▀░░██░░▄▀▄▀▄▀▄▀▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀░░░░░░█░░▄▀░░░░░░▄▀░░█
+%% █░░▄▀▄▀▄▀░░█░░▄▀░░██░░░░░░░░░░▄▀░░█████░░▄▀░░█████░░▄▀░░██░░▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░░░░░░░░░█░░░░░░██████████░░░░░░█████░░░░░░█████░░░░░░██░░░░░░░░░░█░░░░░░░░░░░░░░█
+%% ████████████████████████████████████████████████████████████████████████████████████
 
 \minitoc
 
@@ -199,14 +242,14 @@ github repository also includes companion source code. Sample projects were crea
 
 \end{description}
 
-Remember you need to have CSpect launched before you can run the samples in VS Studio Code. I created a task for it: open VS Code commands panel ({\tt Ctrl+Shift+P} shortcut on my installation) and select ``Tasks: Run Task'' option (if you can't find it, start typing ``run'' into search box to filter). Select it by pressing enter, then select ``Launch CSpect'' from list. This is only needed once, afterwards use ``Run \> Start Debugging'' from main menu to compile and launch the program.
+Remember you need to have CSpect launched before you can run the samples in VS Studio Code. I created a task for it: open VS Code commands panel ({\tt Ctrl+Shift+P} shortcut on my installation) and select ``Tasks: Run Task'' option (if you can't find it, start typing ``run'' into search box to filter). Select it by pressing enter, then select ``Launch CSpect'' from list. This is only needed once, afterwards use ``Run \textgreater ~Start Debugging'' from main menu to compile and launch the program.
 
 
 \section{Background, Contact \& Feedback}
 
 My first computer was ZX Spectrum 48K. Initially it was only used to play games, but my creative mind soon set me on path of building simple games of my own in BASIC. While too young to master assembler at that point, the idea stayed with me. ZX Spectrum Next revived my wish to learn Z80 and return to writing games for the platform.
 	
-My original intent was to have coil bound list of all ZX Next instructions so I can quickly compare. However after finding this document, it felt like a perfect starting point. And with additional information it included, it also encouraged me to extend mere instructions description with Next specific chapters. So in a way this book represents my notes as I was learning those topics. However, I did my best to present information as a reference to keep book relevant.
+My original intent was to have coil bound list of all ZX Next instructions so I can quickly compare. However after finding this document, it felt like a perfect starting point. And with additional information it included, it also encouraged me to extend mere instructions description with Next specific chapters. So in a way this book represents my notes as I was learning those topics. That being said, I did my best to present information as a reference to keep book relevant.
 
 English is not my native tounge. And our own mind is not the best tool to correct our own work either. Since I can't afford professional proofreader, mistakes are a matter of fact I'm afraid. If you spot something, or want to contribute, feel free to open an issue on github. Pull requests are also welcome! If you want to contribute, but are unsure of what, check accompanying readme file on github for ideas. If you want to discuss in advance, or for anything else, you can find me on email {\tt tkragelj AT gmail DOT com} or Twitter {\tt @tomsbarks}.
 
@@ -269,8 +312,26 @@ If interested, you can find it at \url{http://www.myquest.nl/z80undocumented/}.
 
 
 
+\pagebreak
+\intentiallyempty
+\pagebreak
+
 
 \chapter{Zilog Z80}
+
+%% ██████████████████████████████████████████████████
+%% █░░░░░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
+%% █░░▄▀▄▀▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░░░░░░░░░░░▄▀▄▀░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░▄▀░░█
+%% █████████░░░░▄▀░░░░█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█
+%% ███████░░░░▄▀░░░░███░░▄▀░░░░░░▄▀░░█░░▄▀░░██░░▄▀░░█
+%% █████░░░░▄▀░░░░█████░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀░░█
+%% ███░░░░▄▀░░░░███████░░▄▀░░░░░░▄▀░░█░░▄▀░░██░░▄▀░░█
+%% █░░░░▄▀░░░░█████████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█
+%% █░░▄▀▄▀░░░░░░░░░░░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░▄▀░░█
+%% █░░▄▀▄▀▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░░░░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
+%% ██████████████████████████████████████████████████
 
 \minitoc
 
@@ -282,7 +343,7 @@ In 1969 Intel was approached by a Japanese company called Busicom to produce  ch
 
 Intel went on to improve the design and produced the 4040 (an improved 4-bit design) the 8008 (the first 8-bit microprocessor) and then in 1974 the 8080. This last one turned out to be a very useful and popular design and was used in the first home computer, the Altair 8800, and CP/M. 
 
-In 1975 Federico Faggin who had had worked at Intel on the 4004 and its successors left the company and joined forces with Masatoshi Shima to from Zilog. At their new company Faggin and Shima designed a microprocessor that was compatible with Intel's 8080 (it ran all 78 instructions of the 8080 in almost the same way that Intel's chip did)\footnote{Thanks to Jim Battle $<$frustum@pacbell.net$>$: the 8080 always puts the parity in the PF flag; VF does not exist and the timing is different. Possibly there are other differences.} but had many more abilities (an extra 120 instructions, many more registers, simplified connection to hardware). Thus was born the mighty Z80! and thus was the empire forged.
+In 1975 Federico Faggin who had had worked at Intel on the 4004 and its successors left the company and joined forces with Masatoshi Shima to from Zilog. At their new company Faggin and Shima designed a microprocessor that was compatible with Intel's 8080 (it ran all 78 instructions of the 8080 in almost the same way that Intel's chip did)\footnote{Thanks to Jim Battle {\tt frustum AT pacbell DOT net}: the 8080 always puts the parity in the PF flag; VF does not exist and the timing is different. Possibly there are other differences.} but had many more abilities (an extra 120 instructions, many more registers, simplified connection to hardware). Thus was born the mighty Z80! and thus was the empire forged.
 
 The original Z80 was first released in July 1976, coincidentally Jan was born in the very same month. Since then newer versions have appeared with much of the same architecture but running at higher speeds. The original Z80 ran with a clock rate of 2.5MHz, the Z80A runs at 4MHz, the Z80B at 6MHz and the Z80H at 8Mhz. 
 
@@ -299,32 +360,47 @@ The addressing modes of the Z80 have been enhanced with Stack pointer relative l
 
 The following accessible registers exist in the Z80.
 
+\newcommand{\RegDesc}[2]{\rdelim\}{#1}{1ex}[#2]}
+
 \begin{tabular}{|c|c|l}
 	\cline{1-2}
-	\tt A & \tt F & Accumulator and Flags \\ \cline{1-2} \cline{1-2}
-	\multicolumn{2}{|c|}{\tt BC} & \\ \cline{1-2}
-	\multicolumn{2}{|c|}{\tt DE} & General purpose registers \\ \cline{1-2}
-	\multicolumn{2}{|c|}{\tt HL} & \\ \cline{1-2}
-	\multicolumn{2}{|c|}{\tt IX} & \\ \cline{1-2}
-	\multicolumn{2}{|c|}{\tt IY} & \raisebox{1.5ex}[0pt]{Index registers} \\ \cline{1-2}
-	\multicolumn{2}{|c|}{\tt PC} & \\ \cline{1-2}
-	\multicolumn{2}{|c|}{\tt SP} & Special purpose registers \\ \cline{1-2}
-	\tt I & \tt R & \\ \cline{1-2}
-	\multicolumn{2}{|c|}{\tt AF'} & \\ \cline{1-2}
-	\multicolumn{2}{|c|}{\tt BC'} & \\ \cline{1-2}
-	\multicolumn{2}{|c|}{\tt DE'} & \raisebox{1.5ex}[0pt]{Alternate general purpose registers}\\ \cline{1-2}
-	\multicolumn{2}{|c|}{\tt HL'} & \\ \cline{1-2}
+	\tt A & \tt F & \} Accumulator and Flags \\
+	\cline{1-2}
+	\multicolumn{2}{|c|}{\tt BC} & \RegDesc{3}{General purpose registers} \\ 
+	\cline{1-2}
+	\multicolumn{2}{|c|}{\tt DE} & \\ 
+	\cline{1-2}
+	\multicolumn{2}{|c|}{\tt HL} & \\ 
+	\cline{1-2}
+	\multicolumn{2}{|c|}{\tt IX} & \RegDesc{2}{Index registers} \\ 
+	\cline{1-2}
+	\multicolumn{2}{|c|}{\tt IY} & \\ 
+	\cline{1-2}
+	\multicolumn{2}{|c|}{\tt PC} & \RegDesc{3}{Special purpose registers} \\ 
+	\cline{1-2}
+	\multicolumn{2}{|c|}{\tt SP} & \\ 
+	\cline{1-2}
+	\tt I & \tt R & \\
+	\cline{1-2}
+	\multicolumn{2}{|c|}{\tt AF'} & \RegDesc{4}{Alternate general purpose registers} \\ 
+	\cline{1-2}
+	\multicolumn{2}{|c|}{\tt BC'} & \\ 
+	\cline{1-2}
+	\multicolumn{2}{|c|}{\tt DE'} & \\ 
+	\cline{1-2}
+	\multicolumn{2}{|c|}{\tt HL'} & \\ 
+	\cline{1-2}
 \end{tabular}
 
-For interrupts, there are two interrupt flop-flops, IFF1 and IFF2, and the interrupt mode is retained. See chapter \ref{interrupts} for more about interrupts. Also there is an internal register which is described in section \ref{block_io}.
+For interrupts, there are two interrupt flip-flops, IFF1 and IFF2, and the interrupt mode is retained. See chapter \ref{interrupts} for more about interrupts. Also there is an internal register which is described in section \ref{block_io}.
 
 
+\pagebreak
 \subsection{Flags}
 \label{flags}
 
-The conventional way of denoting the flags is with one letter, `C' for the carry flag for example. It could be confused with the C register, so I've chosen to use the `CF' notation for flags. Also in previous things I've written I called the two undocumented flags 5 and 3, but now I've changed to the same notation used in MAME\footnote{http://www.mame.net/}, which is YF and XF, respectively. Note that in mnemonics the original way is still maintained.
+The conventional way of denoting the flags is with one letter, `C' for the carry flag for example. It could be confused with the C register, so I've chosen to use the `CF' notation for flags. Also in previous things I've written I called the two undocumented flags 5 and 3, but now I've changed to the same notation used in MAME\footnote{\url{http://www.mame.net/}}, which is YF and XF, respectively. Note that in mnemonics the original way is still maintained.
 
-\pagebreak
 \begin{tabular}{|l|c|c|c|c|c|c|c|c|} 
 	\hline
 	bit & 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \instrt\instrb \\
@@ -365,14 +441,17 @@ Note that the only way to read the XF, YF and NF can be read using
 {\tt PUSH AF}.
 
 
+\pagebreak
 \subsection{Power on defaults}
 \label{pon}
 
-Matt\footnote{redflame@xmission.com} has done some excellent research on this. He found that AF and SP are always set to \$FFFF after a reset, and all other registers are undefined (different depending on how long the CPU has been powered off, different for different Z80 chips). Of course the PC should be set to 0 after a reset, and so should the IFF1 and IFF2 flags (otherwise strange things could happen). Also since the Z80 is 8080 compatible, interrupt mode is probably 0.
+Matt\footnote{\tt{redflame AT xmission DOT com}} has done some excellent research on this. He found that AF and SP are always set to {\tt \$FFFF} after a reset, and all other registers are undefined (different depending on how long the CPU has been powered off, different for different Z80 chips). Of course the PC should be set to 0 after a reset, and so should the IFF1 and IFF2 flags (otherwise strange things could happen). Also since the Z80 is 8080 compatible, interrupt mode is probably 0.
 
-Probably the best way to simulate this in an emulator is set PC, IFF1, IFF2, IM to 0 and set all other registers to \$FFFF.
+Probably the best way to simulate this in an emulator is set PC, IFF1, IFF2, IM to 0 and set all other registers to {\tt \$FFFF}.
 
 
+
+\pagebreak
 \subsection{Pin Descriptions \cite{datasheet}}
 
 This section might also relevant even if you don't do anything with hardware; it might give so insight into how the Z80 operates. Besides, it took me hours to draw this.
@@ -944,7 +1023,7 @@ Stefano Donati from Ramsoft\footnote{http://www.ramsoft.bbk.org/} has found the 
 		&
 		CF flag is affected:
 		&
-		NF flags is affected: \\
+		NF flag is affected: \\
 	\end{tabular}
 
 	\begin{tabular}{p{5.8cm}p{4.8cm}p{4.8cm}}
@@ -1116,14 +1195,13 @@ All the IFF related things are:
 
 \begin{tabular}{llll}
 	Accept NMI	& {\tt IFF1}	& {\tt IFF2} \\
-				& {\tt IFF1}	& {\tt IFF2} \\
 	CPU reset	& {\tt 0}		& {\tt 0}\\
 	{\tt DI}	& {\tt 0}		& {\tt 0}\\
 	{\tt EI}	& {\tt 1}		& {\tt 1}\\
 	Accept INT	& {\tt 0}		& {\tt 0}\\
 	Accept NMI	& {\tt 0}		& -\\
 	{\tt RETI/N}& {\tt IFF2}	& - & All the {\tt EDxx} {\tt RETI/N} instructions\\
-	{\tt LD A,I / LD A,R} & - & - & Copies {\tt IFF2} into {\tt PF} flag
+	{\tt LD A,I / LD A,R} & - & - & Copies {\tt IFF2} into {\tt PV} flag
 \end{tabular}
 
 If you're working with a Z80 system without NMIs (like the MSX), you can forget all about the two separate IFFs; since a NMI isn't ever generated, the two will always be the same. 
@@ -1140,6 +1218,7 @@ Since every INT routine must end with {\tt EI} followed by {\tt RETI} officially
 The HALT instruction halts the Z80; it does not increase the PC so that the instruction is re-executed, until a maskable or non-maskable interrupt is accepted. Only then does the Z80 increase the PC again and continues with the next instruction. During the HALT state, the HALT line is set. The PC is increased before the interrupt routine is called.
 
 
+\pagebreak
 \subsection{Where interrupts are accepted}
 
 During execution of instructions, interrupts won't be accepted. Only {\em between} instructions. This is also true for prefixed instructions.
@@ -1186,64 +1265,9 @@ This makes sense, if you think of DD and FD as a prefix which set the ``use IX i
 
 could be interpreted as a simple {\tt LD HL,0} if the interrupt was after the last DD. Which never happens, so the implementation is correct. Although I haven't tested this, as I imagine the same holds for NMI interrupts.
 
+Also see section \ref{zx_next_interrupts} for details on handling interrupts on ZX Spectrum Next.
 
-\subsection{Interrupts on ZX Spectrum Next}
 
-Maskable interrupts on ZX Spectrum:
-
-\begin{itemize}
-	\item {\textbf Mode 0}: meant for interrupts triggered by external device. Instruction to be executed needs to be placed on data bus ({\tt RST} or {\tt CALL} for example). On ZX Spectrum this is the mode that is enabled by default when device powers up. However ROM soon sets up mode 1.
-	
-	\item {\textbf Mode 1}: on ZX Spectrum, this interrupt is triggered by vertical blanking if the screen refresh, roughly 50 times per second. When this occurs, current contents of {\tt PC} counter are pushed onto stack {\tt SP}, then address of {\tt \$0038} is loaded and program stored on that location will start running. On ZX Spectrum Next this interrupt is responsible for updating system variable frame counter and scanning the keyboard.
-	
-	\item {\textbf Mode 2}: similar to {\tt IM 1} in frequency and handling, but uses vector table to jump to interrupt program instead of executing hard code ROM routine thus allowing user to setup their own interrupt handler.
-\end{itemize}
-
-On ZX Spectrum Next interrupt handler can be replaced by either:
-
-\begin{itemize}
-	\item Setting Z80 to {\tt IM 2} mode and configuring custom interrupt handler routine
-	
-	\item Page out ROM (as described in section \ref{zx_next_memorypaging}) and replace it with RAM page with custom interrupt routine at address {\tt \$0038}
-\end{itemize}
-
-You can also adjust timing of the interrupts with Next/TBBlue Feature Control Registers {\tt \$22} and {\tt \$23}.
-
-\pagebreak
-Example of setting up custom interrupt vectors with {\tt IM 2}\footnote{Based on \url{http://codersbucket.blogspot.com/2015/04/interrupts-on-zx-spectrum-what-are.html}}:
-
-\begin{Verbatim}
-	DI
-	
-	LD HL, vectorTable  ; HL=address of vector table
-	LD DE, IM2Handler   ; DE=address of IM2 handler routine
-	LD B, 128           ; 128 vector addresses
-
-	LD A, H
-	LD I, A             ; I=high byte of vector table
-
-setupVectorTable:       ; fills in vector table 128x
-	LD (HL), E
-	INC HL
-	LD (HL), D
-	INC HL
-	DJNZ setupVectorTable 
-
-	IM 2                ; enable mode 2 interrupts
-	EI
-	RET
-
-IM2Handler:             ; this is called every time IM2 interrupt occurs
-	...                 ; implement interrupt handler here
-	EI                  ; when complete call EI
-	RETI                ; end return from interrupt
-
-	ORG $F000           ; needs to be on 256 byte boundary
-vectorTable:
-	DEFS 256            ; 128x2
-\end{Verbatim}
-
-\pagebreak
 \section{Timing and R register}
 
 \subsection{R register and memory refresh}
@@ -1264,9 +1288,21 @@ After a hardware reset, or after power on, the R register is reset to 0.
 That should cover all there is to say about the R register. It is often used in programs for a random value, which is good but of course not truly random.
 
 
-
-
 \chapter{ZX Spectrum Next}
+
+%% █████████████████████████████████████████████████████████████████████████
+%% █░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░██░░░░░░░░█░░░░░░░░░░░░░░█
+%% █░░▄▀░░░░░░░░░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀░░██░░▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░▄▀▄▀▄▀▄▀▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░░░▄▀░░██░░▄▀░░░░█░░░░░░▄▀░░░░░░█
+%% █░░▄▀░░░░░░▄▀░░██░░▄▀░░█░░▄▀░░███████████░░▄▀▄▀░░▄▀▄▀░░███████░░▄▀░░█████
+%% █░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░███░░░░▄▀▄▀▄▀░░░░███████░░▄▀░░█████
+%% █░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█████░░▄▀▄▀▄▀░░█████████░░▄▀░░█████
+%% █░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░███░░░░▄▀▄▀▄▀░░░░███████░░▄▀░░█████
+%% █░░▄▀░░██░░▄▀░░░░░░▄▀░░█░░▄▀░░███████████░░▄▀▄▀░░▄▀▄▀░░███████░░▄▀░░█████
+%% █░░▄▀░░██░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░░░░░░░░░█░░░░▄▀░░██░░▄▀░░░░█████░░▄▀░░█████
+%% █░░▄▀░░██░░░░░░░░░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀░░██░░▄▀▄▀░░█████░░▄▀░░█████
+%% █░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░██░░░░░░░░█████░░░░░░█████
+%% █████████████████████████████████████████████████████████████████████████
 
 % the following definitions are used for describing port bits
 \environbodyname\NEXTPORTBODY
@@ -1351,7 +1387,12 @@ That should cover all there is to say about the R register. It is often used in 
 	\end{tabular}
 }
 
-With modern I/O ports, increased CPU speeds, more memory, better graphics (bye bye color clash), hardware sprites and tiles, to mention just the most obvious, ZX Spectrum Next is exciting platform for retro programmer.
+\newcommand{\NextPortRef}[2]{
+	\vspace*{-2ex}
+	See description under #2 chapter, section \ref{#1}.
+}
+
+With modern I/O ports, increased CPU speeds, more memory, better graphics, hardware sprites and tiles, to mention just the most obvious, ZX Spectrum Next is exciting platform for retro programmer.
 
 ~ % we need some vertical spacing between text and minitoc
 
@@ -1360,21 +1401,26 @@ With modern I/O ports, increased CPU speeds, more memory, better graphics (bye b
 \pagebreak
 \section{Ports}
 
-Information in this chapter was compiled from ZX Spectrum Next Official Developer Wiki\footnote{\url{https://wiki.specnext.dev/}} and User Manual as convenience. However including the whole would be far too much over the scope of this booklet, so only the most relevant or frequently used parts are included. Consult either Wiki or your Next manual for details.
+%% ────────────────────────────────────────────────────────────────────────────────
+%% ─██████████████─██████████████─████████████████───██████████████─██████████████─
+%% ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───██░░░░░░░░░░██─██░░░░░░░░░░██─
+%% ─██░░██████░░██─██░░██████░░██─██░░████████░░██───██████░░██████─██░░██████████─
+%% ─██░░██──██░░██─██░░██──██░░██─██░░██────██░░██───────██░░██─────██░░██─────────
+%% ─██░░██████░░██─██░░██──██░░██─██░░████████░░██───────██░░██─────██░░██████████─
+%% ─██░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░░░░░██───────██░░██─────██░░░░░░░░░░██─
+%% ─██░░██████████─██░░██──██░░██─██░░██████░░████───────██░░██─────██████████░░██─
+%% ─██░░██─────────██░░██──██░░██─██░░██──██░░██─────────██░░██─────────────██░░██─
+%% ─██░░██─────────██░░██████░░██─██░░██──██░░██████─────██░░██─────██████████░░██─
+%% ─██░░██─────────██░░░░░░░░░░██─██░░██──██░░░░░░██─────██░░██─────██░░░░░░░░░░██─
+%% ─██████─────────██████████████─██████──██████████─────██████─────██████████████─
+%% ────────────────────────────────────────────────────────────────────────────────
+
+
+\newcommand{\zxsee}[1]{(see \ref{#1})}
 
 \subsection{Mapped Spectrum Ports}
 
-Most Spectrum peripherals did not actually decode all 16 bits of the address bus; they checked only for certain bits, and would respond if those bit values were set correctly, regardless of the other bits. The "bitmask" column for each port shows the bits that are tested for by the device. Traditionally all "unused" bits are set to 1 to avoid conflicts with other devices, which is the basis of the given port numbers; but alternate port numbers may be used in some cases. However, beware of creating clashes: in particular any port which does not intend to access the ULA should have the LSB set, as the ULA checks only for a reset LSB.
-
-The table on next page is a general list of ports and registers on Spectrum Next board. Some of the ports are described in more detail in their own sections, for the rest and for more details see\footnote{
-\url{https://wiki.specnext.dev/Extended_Z80_instruction_set/}}
-
-
-\pagebreak
-\intentiallyempty
-\pagebreak
-
-{
+\begingroup
 	\newcommand{\zxport}[4]{
 		\tt {#1} & 
 		{\tt \$#2} & 
@@ -1391,17 +1437,17 @@ The table on next page is a general list of ports and registers on Spectrum Next
 		
 		\zxport{RW}{103B}{0001 0000 0011 1011}{Sets and reads the I2C SCL line}
 		\zxport{RW}{113B}{0001 0001 0011 1011}{Sets and reads the I2C SDA line}
-		\zxport{RW }{123B}{0001 0010 0011 1011}{Enables layer 2 and controls paging of layer 2 screen into lower memory}
-		\zxport{RW}{133B}{0001 0011 0011 1011}{Sends byte to serial port. If read, tells if data in RX buffer}
+		\zxport{RW}{123B}{0001 0010 0011 1011}{Enables layer 2 and controls paging of layer 2 screen into lower memory \zxsee{zx_next_layer2_registers}}
+		\zxport{RW}{133B}{0001 0011 0011 1011}{Sends byte to serial port. If read, tells if data is available in RX buffer}
 		\zxport{RW}{143B}{0001 0100 0011 1011}{Reads data from serial port, write sets the baudrate}
 		\zxport{RW}{153B}{0001 0101 0011 1011}{Configuration of UART interfaces}
-		\zxport{-W}{1FFD}{0001 ---- ---- --0-}{Controls ROM paging and special paging options from the +2a/+3 (also see section \ref{zx_next_memorypaging})}
+		\zxport{-W}{1FFD}{0001 ---- ---- --0-}{Controls ROM paging and special paging options from the +2a/+3 \zxsee{zx_next_memorypaging}}
 		\zxport{RW}{243B}{0010 0100 0011 1011}{Selects active port for TBBlue/Next feature configuration}
 		\zxport{--}{253B}{0010 0101 0011 1011}{Reads and/or writes the selected TBBlue control register}
-		\zxport{RW}{303B}{0011 0000 0011 1011}{Sets active sprite-attribute index and pattern-slot index, reads sprite status}
-		\zxport{-W}{7FFD}{01-- ---- ---- --0-}{Selects active RAM, ROM, and displayed screen (also see section \ref{zx_next_memorypaging})}
+		\zxport{RW}{303B}{0011 0000 0011 1011}{Sets active sprite-attribute index and pattern-slot index, reads sprite status \zxsee{zx_next_sprite_registers}}
+		\zxport{-W}{7FFD}{01-- ---- ---- --0-}{Selects active RAM, ROM, and displayed screen \zxsee{zx_next_memorypaging}}
 		\zxport{-W}{BFFD}{10-- ---- ---- --0-}{Writes to the selected register of the selected sound chip}
-		\zxport{-W}{DFFD}{1101 1111 1111 1101}{Provides additional bank select bits for extended memory (also see section \ref{zx_next_memorypaging})}
+		\zxport{-W}{DFFD}{1101 1111 1111 1101}{Provides additional bank select bits for extended memory \zxsee{zx_next_memorypaging}}
 		\zxport{R-}{FADF}{---- ---0 --0- ----}{Reads buttons on Kempston Mouse.}
 		\zxport{R-}{FBDF}{---- -0-1 --0- ----}{X coordinate of Kempston Mouse, 0-255}
 		\zxport{R-}{FFDF}{---- -1-1 --0- ----}{Y coordinate of Kempston Mouse, 0-192}
@@ -1409,6 +1455,8 @@ The table on next page is a general list of ports and registers on Spectrum Next
 
 	\end{tabularx}
 
+	\pagebreak
+	\vspace*{9ex}
 	\begin{tabularx}{\textwidth}{lllX}
 		{\tt RW} & Addr & Mask & Description \\
 		
@@ -1417,16 +1465,16 @@ The table on next page is a general list of ports and registers on Spectrum Next
 		\zxport{--}{xx0B}{---- ---- 0000 1011}{Controls Z8410 DMA chip via MB02 standard}
 		\zxport{R-}{xx1F}{---- ---- 0001 1111}{Reads movement of joysticks using Kempston interface}
 		\zxport{RW}{xx37}{}{Kempston interface second joystick variant and controls joystick I/O}
-		\zxport{-W}{xx57}{---- ---- 0101 0111}{Uploads sprite positions, visibility, colour type and effect flags}
-		\zxport{-W}{xx5B}{---- ---- 0101 1011}{Used to upload the pattern of the selected sprite}
+		\zxport{-W}{xx57}{---- ---- 0101 0111}{Uploads sprite positions, visibility, colour type and effect flags \zxsee{zx_next_sprite_registers}}
+		\zxport{-W}{xx5B}{---- ---- 0101 1011}{Used to upload the pattern of the selected sprite \zxsee{zx_next_sprite_registers}}
 		\zxport{RW}{xx6B}{---- ---- 0110 1011}{Controls zxnDMA chip}
 		\zxport{--}{xxDF}{---- ---- --01 1111}{Output to SpecDrum DAC}
-		\zxport{R-}{xxFE}{xxxx xxxx ---- ---0}{Keyboard status (see section \ref{zx_next_keyboard})}
-		\zxport{-W}{xxFE}{}{Controls border color and base Spectrum audio settings}
+		\zxport{R-}{xxFE}{xxxx xxxx ---- ---0}{Keyboard status \zxsee{zx_next_keyboard}}
+		\zxport{-W}{xxFE}{}{Controls border colour and base Spectrum audio settings}
 		\zxport{-W}{xxFF}{}{Controls Timex Sinclair video modes and colours in hi-res mode}
 
 	\end{tabularx}
-}
+\endgroup
 
 
 \pagebreak
@@ -1434,9 +1482,9 @@ The table on next page is a general list of ports and registers on Spectrum Next
 \subsection{Next/TBBlue Feature Control Registers}
 \label{zx_next_tbblue_registers}
 
-Specific features of the Next are controlled via these register numbers, accessed via TBBlue Register Select\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Select}} (\$243B / 9275) and TBBlue Register Access\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Access}} (\$253B / 9531), or via the NEXTREG opcode.
+Specific features of the Next are controlled via these register numbers, accessed via TBBlue Register Select\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Select}} ({\tt \$243B}) and TBBlue Register Access\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Access}} ({\tt \$253B}), or via the NEXTREG instruction.
 
-{
+\begingroup
 	\environbodyname\TBBlueBODY
 	\NewEnviron{tbbluereg}{
 		\begin{tabularx}{\textwidth}{llX}
@@ -1455,79 +1503,72 @@ Specific features of the Next are controlled via these register numbers, accesse
 	\setlength{\extrarowheight}{2pt}
 
 	\begin{tbbluereg}
-		\nextport{-W}{0}{Identifies TBBlue board type. Should always be 10 on Next}
-		\nextport{-W}{1}{Identifies core (FPGA image) version}
+		\nextport{R-}{0}{Identifies TBBlue board type. Should always be {\tt 10} on Next}
+		\nextport{R-}{1}{Identifies core (FPGA image) version}
 		\nextport{RW}{2}{Identifies type of last reset. Can be written to force reset}
 		\nextport{RW}{3}{Identifies timing and machine type}
-		\nextport{R-}{4}{In config mode, allows RAM to be mapped to ROM area}
+		\nextport{-W}{4}{In config mode, allows RAM to be mapped to ROM area}
 		\nextport{RW}{5}{Sets joystick mode, video frequency and Scandoubler}
 		\nextport{RW}{6}{Enables CPU Speed key, DivMMC, Multiface, Mouse and AY audio}
 		\nextport{RW}{7}{Sets CPU Speed, reads actual speed}
-		\nextport{RW}{8}{ABC/ACB Stereo, Internal Speaker, SpecDrum, Timex Video Modes, Turbo Sound Next, RAM contention and [un]lock 128k paging}
-		\nextport{RW}{9}{Sets scanlines, AY mono output, Sprite-id lockstep, reset DivMMC mapram and disable HDMI audio}
+		\nextport{RW}{8}{ABC/ACB Stereo, Internal Speaker, SpecDrum, Timex Video Modes, Turbo Sound Next, RAM contention and (un)lock 128k paging}
+		\nextport{RW}{9}{Sets scanlines, AY mono output, Sprite-id lockstep, reset DivMMC mapram and disable HDMI audio \zxsee{zx_next_sprite_registers}}
 		\nextport{RW}{0A}{Mouse buttons and DPI config}
-		\nextport{-W}{0E}{Identifies core (FPGA image) version (sub minor number)}
+		\nextport{R-}{0E}{Identifies core (FPGA image) version (sub minor number)}
 		\nextport{RW}{10}{Used within the Anti-brick system}
 		\nextport{RW}{11}{Sets video output timing variant}
-		\nextport{RW}{12}{Sets the bank number where Layer 2 video memory begins}
+		\nextport{RW}{12}{Sets the bank number where Layer 2 video memory begins \zxsee{zx_next_layer2_registers}}
 		\nextport{RW}{13}{Sets the bank number where the Layer 2 shadow screen begins}
 		\nextport{RW}{14}{Sets the "transparent" colour for Layer 2, ULA and LoRes pixel data}
-		\nextport{RW}{15}{Enables/disables Sprites and Lores Layer, and chooses priority of sprites and Layer 2}
-		\nextport{RW}{16}{Sets the pixel offset used for drawing Layer 2 graphics on the screen}
-		\nextport{RW}{17}{Sets the Y offset used when drawing Layer 2 graphics on the screen}
-		\nextport{RW}{18}{Sets and reads clip-window for Layer 2}
-		\nextport{RW}{19}{Sets and reads clip-window for Sprites}
+		\nextport{RW}{15}{Enables/disables Sprites and Lores Layer, and chooses priority of sprites and Layer 2 \zxsee{zx_next_tilemap_registers}}
+		\nextport{RW}{16}{Sets the pixel offset used for drawing Layer 2 graphics on the screen \zxsee{zx_next_layer2_registers}}
+		\nextport{RW}{17}{Sets the Y offset used when drawing Layer 2 graphics on the screen \zxsee{zx_next_layer2_registers}}
+		\nextport{RW}{18}{Sets and reads clip-window for Layer 2 \zxsee{zx_next_layer2_registers}}
+		\nextport{RW}{19}{Sets and reads clip-window for Sprites \zxsee{zx_next_sprite_registers}}
 		\nextport{RW}{1A}{Sets and reads clip-window for ULA/LoRes layer}
-		\nextport{RW}{1B}{Sets and reads clip-window for Tilemap}
-		\nextport{RW}{1C}{Controls (resets) the clip-window registers indices}
-		
-		\hline
+		\nextport{RW}{1B}{Sets and reads clip-window for Tilemap \zxsee{zx_next_tilemap_registers}}
+		\nextport{RW}{1C}{Controls (resets) the clip-window registers indices \zxsee{zx_next_layer2_registers}}
 	\end{tbbluereg}
 
-	(continued)
 	\pagebreak
 
 	\begin{tbbluereg}
-		\nextport{-W}{1E}{Holds the MSB (only, as bit 0) of the raster line currently being drawn}
-		\nextport{-W}{1F}{Holds the eight LSBs of the raster line currently being drawn}
+		\nextport{R-}{1E}{Holds the MSB (only, as bit 0) of the raster line currently being drawn}
+		\nextport{R-}{1F}{Holds the eight LSBs of the raster line currently being drawn}
 		\nextport{RW}{22}{Controls the timing of raster interrupts and the ULA frame interrupt}
 		\nextport{RW}{23}{Holds the eight LSBs of the line on which a raster interrupt should occur}
-		\nextport{RW}{26}{Pixel X offset (0..255) to use when drawing ULA Layer}
-		\nextport{RW}{27}{Pixel Y offset (0..191) to use when drawing ULA Layer}
+		\nextport{RW}{26}{Pixel X offset ({\tt 0-255}) to use when drawing ULA Layer}
+		\nextport{RW}{27}{Pixel Y offset ({\tt 0-191}) to use when drawing ULA Layer}
 		\nextport{RW}{28}{PS/2 Keymap address MSB, read (pending) first byte of palette colour}
-		\nextport{R-}{29}{PS/2 Keymap address LSB}
-		\nextport{R-}{2A}{High data to PS/2 Keymap (MSB of data in bit 0)}
-		\nextport{R-}{2B}{Low eight LSBs of PS/2 Keymap data}
+		\nextport{-W}{29}{PS/2 Keymap address LSB}
+		\nextport{-W}{2A}{High data to PS/2 Keymap (MSB of data in bit 0)}
+		\nextport{-W}{2B}{Low eight LSBs of PS/2 Keymap data}
 		\nextport{RW}{2C}{DAC B mirror, read current I2S left MSB}
 		\nextport{RW}{2D}{SpecDrum port 0xDF / DAC A+D mirror, read current I2S LSB}
 		\nextport{RW}{2E}{DAC C mirror, read current I2S right MSB}
-		\nextport{RW}{2F}{Sets the pixel offset (two high bits) used for drawing Tilemap graphics on the screen}
-		\nextport{RW}{30}{Sets the pixel offset (eight low bits) used for drawing Tilemap graphics on the screen}
-		\nextport{RW}{31}{Sets the pixel offset used for drawing Tilemap graphics on the screen}
-		\nextport{RW}{32}{Pixel X offset (0..255) to use when drawing LoRes Layer}
-		\nextport{RW}{33}{Pixel Y offset (0..191) to use when drawing LoRes Layer}
-		\nextport{RW}{34}{Selects sprite index 0..127 to be affected by writes to other Sprite ports (and mirrors)}
-		\nextport{R-}{35}{Nextreg port-mirror to write directly into "byte 1" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)}
-		\nextport{R-}{36}{Nextreg port-mirror to write directly into "byte 2" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)}
-		\nextport{-W}{37}{Nextreg port-mirror to write directly into "byte 3" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)}
-		\nextport{-W}{38}{Nextreg port-mirror to write directly into "byte 4" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)}
-		\nextport{-W}{39}{Nextreg port-mirror to write directly into "byte 5" of Sprite Attribute \mbox{Upload} (\$xx57 / 87)}
-		\nextport{RW}{40}{Chooses an palette element (index) to manipulate with}
-		\nextport{RW}{41}{Use to set/read 8-bit colours of the ULANext palette}
+		\nextport{RW}{2F}{Sets the pixel offset (two high bits) used for drawing Tilemap graphics on the screen \zxsee{zx_next_tilemap_registers}}
+		\nextport{RW}{30}{Sets the pixel offset (eight low bits) used for drawing Tilemap graphics on the screen \zxsee{zx_next_tilemap_registers}}
+		\nextport{RW}{31}{Sets the pixel offset used for drawing Tilemap graphics on the screen \zxsee{zx_next_tilemap_registers}}
+		\nextport{RW}{32}{Pixel X offset ({\tt 0-255}) to use when drawing LoRes Layer}
+		\nextport{RW}{33}{Pixel Y offset ({\tt 0-191}) to use when drawing LoRes Layer}
+		\nextport{RW}{34}{Selects sprite index {\tt 0-127} to be affected by writes to other Sprite ports (and mirrors) \zxsee{zx_next_sprite_registers}}
+		\nextport{-W}{35}{Nextreg port-mirror to write directly into "byte 1" of Sprite Attribute \mbox{Upload} ({\tt \$xx57}) \zxsee{zx_next_sprite_registers}}
+		\nextport{-W}{36}{Nextreg port-mirror to write directly into "byte 2" of Sprite Attribute \mbox{Upload} ({\tt \$xx57}) \zxsee{zx_next_sprite_registers}}
+		\nextport{-W}{37}{Nextreg port-mirror to write directly into "byte 3" of Sprite Attribute \mbox{Upload} ({\tt \$xx57}) \zxsee{zx_next_sprite_registers}}
+		\nextport{-W}{38}{Nextreg port-mirror to write directly into "byte 4" of Sprite Attribute \mbox{Upload} ({\tt \$xx57}) \zxsee{zx_next_sprite_registers}}
+		\nextport{-W}{39}{Nextreg port-mirror to write directly into "byte 5" of Sprite Attribute \mbox{Upload} ({\tt \$xx57}) \zxsee{zx_next_sprite_registers}}
+		\nextport{RW}{40}{Chooses an palette element (index) to manipulate with \zxsee{zx_next_layer2_registers}}
+		\nextport{RW}{41}{Use to set/read 8-bit colours of the ULANext palette \zxsee{zx_next_layer2_registers}}
 		\nextport{RW}{42}{Specifies mask to extract ink colour from attribute cell value in ULANext mode}
-		
-		\hline
 	\end{tbbluereg}
 
-	(continued)
 	\pagebreak
 
 	\begin{tbbluereg}
-
-		\nextport{RW}{43}{Enables or disables Enhanced ULA interpretation of attribute values and toggles active palette}
+		\nextport{RW}{43}{Enables or disables Enhanced ULA interpretation of attribute values and toggles active palette \zxsee{zx_next_layer2_registers}}
 		\nextport{RW}{44}{Use to set 9-bit (2-byte) colours of the Enhanced ULA palette, or to read second byte of colour}
 		\nextport{RW}{4A}{8-bit colour to be used when all layers contain transparent pixel}
-		\nextport{RW}{4B}{Index into sprite palette (of "transparent" colour)}
+		\nextport{RW}{4B}{Index into sprite palette (of "transparent" colour) \zxsee{zx_next_sprite_registers}}
 		\nextport{RW}{4C}{Index into Tilemap palette (of "transparent" colour)}
 		\nextport{RW}{50}{Selects the 8k-bank stored in 8k-slot 0 (see Memory map)}
 		\nextport{RW}{51}{Selects the 8k-bank stored in 8k-slot 1 (see Memory map)}
@@ -1537,45 +1578,41 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{RW}{55}{Selects the 8k-bank stored in 8k-slot 5 (see Memory map)}
 		\nextport{RW}{56}{Selects the 8k-bank stored in 8k-slot 6 (see Memory map)}
 		\nextport{RW}{57}{Selects the 8k-bank stored in 8k-slot 7 (see Memory map)}
-		\nextport{R-}{60}{Used to upload code to the Copper}
+		\nextport{-W}{60}{Used to upload code to the Copper}
 		\nextport{RW}{61}{Holds low byte of Copper control bits}
 		\nextport{RW}{62}{Holds high byte of Copper control flags}
-		\nextport{R-}{63}{Used to upload code to the Copper}
+		\nextport{-W}{63}{Used to upload code to the Copper}
 		\nextport{RW}{64}{Offset numbering of raster lines in copper/interrupt/active register}
-		\nextport{RW}{68}{Disable ULA, controls ULA mixing/blending, enable ULA+}
-		\nextport{RW}{69}{Layer2, ULA shadow, Timex \$FF port}
+		\nextport{RW}{68}{Disable ULA, controls ULA mixing/blending, enable ULA+ \zxsee{zx_next_tilemap_registers}}
+		\nextport{RW}{69}{Layer2, ULA shadow, Timex {\tt \$FF} port}
 		\nextport{RW}{6A}{LoRes Radastan mode}
-		\nextport{RW}{6B}{Controls Tilemap mode}
-		\nextport{RW}{6C}{Default tile attribute for 8-bit only maps}
-		\nextport{RW}{6E}{Base address of the 40x32 or 80x32 tile map (similar to text-mode of other computers)}
-		\nextport{RW}{6F}{Base address of the tiles' graphics}
-		\nextport{RW}{70}{Layer 2 resolution, palette offset}
-		\nextport{RW}{71}{Sets the pixel offset used for drawing Layer 2 graphics on the screen}
-		\nextport{R-}{75}{Same as Sprite port-mirror Attribute 0 Register (\$35) (write first byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)}
-		\nextport{R-}{76}{Same as Sprite port-mirror Attribute 1 Register (\$36) (write second byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)}
-		\nextport{R-}{77}{Same as Sprite port-mirror Attribute 2 Register (\$37) (write third byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)}
-		
-		\hline
+		\nextport{RW}{6B}{Controls Tilemap mode \zxsee{zx_next_tilemap_registers}}
+		\nextport{RW}{6C}{Default tile attribute for 8-bit only maps \zxsee{zx_next_tilemap_registers}}
+		\nextport{RW}{6E}{Base address of the 40x32 or 80x32 tile map \zxsee{zx_next_tilemap_registers}}
+		\nextport{RW}{6F}{Base address of the tiles' graphics \zxsee{zx_next_tilemap_registers}}
+		\nextport{RW}{70}{Layer 2 resolution, palette offset \zxsee{zx_next_layer2_registers}}
+		\nextport{RW}{71}{Sets pixel offset for drawing Layer 2 graphics on the screen \zxsee{zx_next_layer2_registers}}
+		\nextport{-W}{75}{Same as Sprite port-mirror Attribute 0 Register (\$35) plus increments \$34 \zxsee{zx_next_sprite_registers}}
+		\nextport{-W}{76}{Same as Sprite port-mirror Attribute 1 Register (\$36) plus increments \$34 \zxsee{zx_next_sprite_registers}}
+		\nextport{-W}{77}{Same as Sprite port-mirror Attribute 2 Register (\$37) plus increments \$34 \zxsee{zx_next_sprite_registers}}
 	\end{tbbluereg}
 
-	(continued)
 	\pagebreak
 
 	\begin{tbbluereg}
-
-		\nextport{R-}{78}{Same as Sprite port-mirror Attribute 3 Register (\$38) (write fourth byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)}
-		\nextport{R-}{79}{The same as Sprite port-mirror Attribute 4 Register (\$39) (write fifth byte of sprite-attributes), plus increments Sprite port-mirror Index Register (\$34)}
+		\nextport{-W}{78}{Same as Sprite port-mirror Attribute 3 Register (\$38) plus increments \$34 \zxsee{zx_next_sprite_registers}}
+		\nextport{-W}{79}{Same as Sprite port-mirror Attribute 4 Register (\$39) plus increments \$34 \zxsee{zx_next_sprite_registers}}
 		\nextport{RW}{7F}{8-bit storage for user}
 		\nextport{RW}{80}{Expansion bus enable/config}
 		\nextport{RW}{81}{Expansion bus controls}
-		\nextport{RW}{82}{Enabling internal ports decoding b0-7 Register}
-		\nextport{RW}{83}{Enabling internal ports decoding b8-15 Register}
-		\nextport{RW}{84}{Enabling internal ports decoding b16-23 Register}
-		\nextport{RW}{85}{Enabling internal ports decoding b24-31 Register}
-		\nextport{RW}{86}{When expansion bus is enabled: Internal ports decoding mask b0-7 Register}
-		\nextport{RW}{87}{When expansion bus is enabled: Internal ports decoding mask b8-15 Register}
-		\nextport{RW}{88}{When expansion bus is enabled: Internal ports decoding mask b16-23 Register}
-		\nextport{RW}{89}{When expansion bus is enabled: Internal ports decoding mask b24-31 Register}
+		\nextport{RW}{82}{Enabling internal ports decoding bits 0-7 Register}
+		\nextport{RW}{83}{Enabling internal ports decoding bits 8-15 Register}
+		\nextport{RW}{84}{Enabling internal ports decoding bits 16-23 Register}
+		\nextport{RW}{85}{Enabling internal ports decoding bits 24-31 Register}
+		\nextport{RW}{86}{When expansion bus is enabled: Internal ports decoding mask bits 0-7}
+		\nextport{RW}{87}{When expansion bus is enabled: Internal ports decoding mask bits 8-15}
+		\nextport{RW}{88}{When expansion bus is enabled: Internal ports decoding mask bits 16-23}
+		\nextport{RW}{89}{When expansion bus is enabled: Internal ports decoding mask bits 24-31}
 		\nextport{RW}{8A}{Monitoring internal I/O or adding external keyboard}
 		\nextport{RW}{8C}{Enable alternate ROM or lock 48k ROM}
 		\nextport{RW}{8E}{Control classic Spectrum memory mapping}
@@ -1586,22 +1623,38 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{RW}{A3}{Pi I2S clock divide in master mode}
 		\nextport{RW}{A8}{ESP WiFi GPIO Output}
 		\nextport{RW}{A9}{ESP WiFi GPIO Read/Write}
-		\nextport{-W}{B0}{Read Next keyboard compound keys separately}
-		\nextport{-W}{B1}{Read Next keyboard compound keys separately}
+		\nextport{R-}{B0}{Read Next keyboard compound keys separately}
+		\nextport{R-}{B1}{Read Next keyboard compound keys separately}
 		\nextport{RW}{B2}{DivMMC trap configuration}
 		\nextport{RW}{B4}{DivMMC trap configuration}
-		\nextport{R-}{FF}{Turns debug LEDs on and off on TBBlue implementations that have them}
-
+		\nextport{-W}{FF}{Turns debug LEDs on and off on TBBlue implementations that have them}
 	\end{tbbluereg}
-}
+\endgroup
+
 
 \pagebreak
 \section{Memory Map and Paging}
 \label{zx_next_memorypaging}
 
+%% ──────────────────────────────────────────────────────────────
+%% ─██████──────────██████─██████████████─██████──────────██████─
+%% ─██░░██████████████░░██─██░░░░░░░░░░██─██░░██████████████░░██─
+%% ─██░░░░░░░░░░░░░░░░░░██─██░░██████████─██░░░░░░░░░░░░░░░░░░██─
+%% ─██░░██████░░██████░░██─██░░██─────────██░░██████░░██████░░██─
+%% ─██░░██──██░░██──██░░██─██░░██████████─██░░██──██░░██──██░░██─
+%% ─██░░██──██░░██──██░░██─██░░░░░░░░░░██─██░░██──██░░██──██░░██─
+%% ─██░░██──██████──██░░██─██░░██████████─██░░██──██████──██░░██─
+%% ─██░░██──────────██░░██─██░░██─────────██░░██──────────██░░██─
+%% ─██░░██──────────██░░██─██░░██████████─██░░██──────────██░░██─
+%% ─██░░██──────────██░░██─██░░░░░░░░░░██─██░░██──────────██░░██─
+%% ─██████──────────██████─██████████████─██████──────────██████─
+%% ──────────────────────────────────────────────────────────────
+
 \newcommand{\colnoline}[1]{\multicolumn{1}{c}{#1}}
 
-ZX Spectrum Next is 8-bit computer with 16-bit address bus. This means it can access up to 2\textsuperscript{16} = 65.536 bytes or 64K at any given time. This 64K portion of the memory is called "bank" and is further divided into 16K or 8K chunks called "slots".
+ZX Spectrum Next is 8-bit computer with 16-bit address bus. This means it can access up to 2\textsuperscript{16} = 65.536 bytes or 64K at any given time. This 64K portion is further divided into 8K or 16K chunks called ``slots'' or ``pages''. Each slot has fixed memory address range, however as we assign different parts of memory into it, we effectively get ability to read or write that memory by using slots fixed addresses, as if that part of memory would be directly located on these addresses. Each slot is therefore like 8K or 16K window into the whole available memory.
+
+Chunks of memory assigned to particular slots are usually called ``banks''; to avoid confusion with 64K bank, size is always indicated. For example: ``8K bank'' or ``16K bank''.
 
 Unexpanded Next comes with 1024K while expanded with 2048K of memory. To get access to whole of available memory, paging is used. Next supports the following paging schemes:
 
@@ -1682,9 +1735,10 @@ To call the routine use:
 
 Note: while above routine could be extended to support switching all 127 banks on ZX Spectrum Next by writing top 4 bits to {\tt \$DFFD}, it's much simpler to use Next specific bank switching support as described in section \ref{zx_next_bank_mmu_mode}.
 
+\pagebreak
 \subsubsection{+3 ``AllRam'' Mode}
 
-3+ mode allows selecting all 16K slots of 64K bank from limited selection of arrangements. In normal mode, everything works as in 128K Mode, except that we can select from 4 instead of just 2 ROMs:
++3 mode allows selecting all 16K slots of 64K bank from limited selection of arrangements. In normal mode, everything works as in 128K Mode, except that we can select from 4 instead of just 2 ROMs:
 
 \begin{tabular}{ccccl}
 	{\tt \$0000} & {\tt \$4000} & {\tt \$8000} & {\tt \$C000} & \\
@@ -1727,10 +1781,11 @@ The following registers control paging in this mode (see section \ref{zx_next_ma
 
 Any time you write to Plus 3 Memory Paging Control {\tt \$1FFD} you should also store the value at {\tt \$5B67}.
 
+\pagebreak
 \subsection{MMU-based Mode}
 \label{zx_next_bank_mmu_mode}
 
-Next unique \textbf{MMU-based Mode} is much more flexible in that it allows mapping 8K chunks into any 8K slot of memory available to CPU. In this mode, 64K memory bank accessible to CPU is divided into 8 slots called MMU0 through MMU7, as shown in diagram below. Physical memory is thus divided into 96 (or 224 in expanded Next) slots.
+Next unique \textbf{MMU-based Mode} is much more flexible in that it allows mapping 8K banks into any 8K slot of memory available to CPU. In this mode, 64K memory bank accessible to CPU is divided into 8 slots called MMU0 through MMU7, as shown in diagram below. Physical memory is thus divided into 96 (or 224 in expanded Next) 8K banks.
 
 \begingroup
 	\setlength{\tabcolsep}{1pt}
@@ -1800,16 +1855,15 @@ We are effectively writing 20 bytes into memory {\tt \$14000} - {\tt \$14013}
 
 In normal 128K mode, changes made in 128K and Next mode memory management are synchronized. The most recent change always has priority. This means that using 128K mode memory management to select a new 16K bank in 16K slot 4 will update the MMU registers for the two 8K slots with the corresponding 8K bank numbers.
 
-However, enabling 3+ "AllRam" mode will override the Next MMU. The bank selections from the 3+ mode will override pages in the Next registers. The MMU registers can still be changed, but they will have no effect until special paging mode is disabled.
-
-Since the 128K mode memory management ports are not readable, there is no synchronization applicable in the other direction.
+However, enabling +3 ``AllRam'' mode will override the Next MMU. Bank selections from the +3 mode will override pages in the Next registers. MMU registers can still be changed, but they will have no effect until special paging mode is disabled.
 
 
 \subsection{Paging Out ROM}
 
-ROM can be paged out by using +3 "AllRam" or Next MMU-based mode. Beware though that some programs may expect to find ROM routines at fixed addresses between {\tt \$0000} and {\tt \$3FFF}. And if default interrupt mode (IM 1) is set, Z80 will jump PC to {\tt \$0038} expecting to find interrupt handler there.
+ROM can be paged out by using +3 ``AllRam'' or Next MMU-based mode. Beware though that some programs may expect to find ROM routines at fixed addresses between {\tt \$0000} and {\tt \$3FFF}. And if default interrupt mode (IM 1) is set, Z80 will jump PC to {\tt \$0038} expecting to find interrupt handler there.
 
 
+\pagebreak
 \subsection{Mapping Mode Registers}
 \label{zx_next_mappingregister}
 
@@ -1861,14 +1915,25 @@ ROM can be paged out by using +3 "AllRam" or Next MMU-based mode. Beware though 
 
 
 \pagebreak
-\intentiallyempty
-\pagebreak
-
 \section{ULA graphics}
+
+%% ──────────────────────────────────────────────
+%% ─██████──██████─██████─────────██████████████─
+%% ─██░░██──██░░██─██░░██─────────██░░░░░░░░░░██─
+%% ─██░░██──██░░██─██░░██─────────██░░██████░░██─
+%% ─██░░██──██░░██─██░░██─────────██░░██──██░░██─
+%% ─██░░██──██░░██─██░░██─────────██░░██████░░██─
+%% ─██░░██──██░░██─██░░██─────────██░░░░░░░░░░██─
+%% ─██░░██──██░░██─██░░██─────────██░░██████░░██─
+%% ─██░░██──██░░██─██░░██─────────██░░██──██░░██─
+%% ─██░░██████░░██─██░░██████████─██░░██──██░░██─
+%% ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░██──██░░██─
+%% ─██████████████─██████████████─██████──██████─
+%% ──────────────────────────────────────────────
 
 Original ZX Spectrum didn't have dedicated graphics chip. To keep price as low as possible, screen rendering was performed by ULA (``Uncommitted Logic Array'') chip.
 
-ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode 256x192 pixels. Because each character is 8x8 pixels, this gives us 32 characters in 24 character rows. Memory dedicated to ULA resides in second 16K page at addresses {\tt \$4000-\$5AFF}. And similar to memory configuration of other contemporary computers, pixel memory is separate from attributes/colour memory:
+ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode 256x192 pixels. Because each character is 8x8 pixels, this gives us 32 characters in 24 character rows. Memory dedicated to ULA resides in second 16K slot at addresses {\tt \$4000-\$5AFF}. And similar to memory configuration of other contemporary computers, pixel memory is separate from attributes/colour memory:
 
 \begingroup
 	\setlength{\tabcolsep}{5pt}
@@ -2120,8 +2185,30 @@ Colour value {\tt 0-7} corresponds to:
 Spectrum only requires 768 bytes to configure colour and attributes for the whole screen. And memory is contiguous so it's simple to manage. However it comes at expense of restricting to only 2 colours per each character block - the reason for the (in)famous colour clash.
 
 
+\subsection{Enhanced ULA Modes}
+
+ZX Spectrum Next also supports several enhanced ULA modes like Timex Sinclair Double Buffering, Timex Sinclair Hi-Res and Hi-Colour, etc. However with presence of Layer 2 and Tilemap modes, it's unlikely these will be used when programming new software on Next. Therefore they are not described here. If interested, read more on:
+
+\url{https://wiki.specnext.dev/Video_Modes}
+
+
 \pagebreak
 \section{Layer 2}
+\label{zx_next_layer2}
+
+%% ───────────────────────────────
+%% ─██████─────────██████████████─
+%% ─██░░██─────────██░░░░░░░░░░██─
+%% ─██░░██─────────██████████░░██─
+%% ─██░░██─────────────────██░░██─
+%% ─██░░██─────────██████████░░██─
+%% ─██░░██─────────██░░░░░░░░░░██─
+%% ─██░░██─────────██░░██████████─
+%% ─██░░██─────────██░░██─────────
+%% ─██░░██████████─██░░██████████─
+%% ─██░░░░░░░░░░██─██░░░░░░░░░░██─
+%% ─██████████████─██████████████─
+%% ───────────────────────────────
 
 As we saw in previous section, drawing with ULA graphics is much simplified on Next. But it doesn't eliminate the colour clash. Well, not with ULA mode at least. Next brings couple brand new graphic modes to the table, hidden behind somewhat casually named ``Layer 2''. But don't let its name deceive you; Layer 2 raises Next graphics capabilities to a whole new level!
 
@@ -2146,8 +2233,7 @@ By default, Layer 2 will use 256x192 with 256 colours, which is supported accros
 
 After Layer 2 is enabled, we can start writing into memory banks. As mentioned above, Layer 2 requires 3-5 contiguous 16K banks. While Next sets up default configuration, it's nonetheless good idea to set it up manually to ensure our code will work across all devices. \PortLink{Layer 2 Ram Page Register}{12} is used to setup bank number where Layer 2 video memory begins. Note it's always good idea to store previous bank setup so we can restore it afterwards.
 
-Paging can be implemented via any supported mode, as described in section \ref{zx_next_memorypaging} by swapping in bank numbers to slots at {\tt \$C000}. Perhaps the simplest and most versatile is MMU mode; MMU6 and MMU7 registers can be used.
-
+Paging can be implemented via any supported mode, as described in section \ref{zx_next_memorypaging}, by swapping in bank numbers to slots at {\tt \$C000}. Perhaps the simplest and most versatile is MMU mode; MMU6 and MMU7 registers correspond to 2 8K slots starting at {\tt \$C000}.
 
 \subsection{Drawing}
 
@@ -2169,7 +2255,7 @@ See specific modes in following pages for examples of writing pixel data.
 Scrolling effects can be achieved by writing pixel offsets to \PortLink{Layer 2 X Offset Register}{16}, \PortLink{Layer 2 X Offset MSB Register}{71} and \PortLink{Layer 2 Y Offset Register}{17}.
 
 
-\subsection{Pallette}
+\subsection{Palette}
 
 Pixel colour data is specified as palette indexes in all modes. Default palette is setup by Next automatically, but if needed, we can change it whole, or just partially to custom colours. This can be used to change specific entries to efficiently achieve different effects such as fade to/from black, animate transition from day to night, animate water etc.
 
@@ -2183,7 +2269,7 @@ Reusable subroutine for copying a number of palette entries defined by {\tt B} f
 	LD HL, palette            ; Address to copy RRRGGGBB bytes from
 	LD B, 255                 ; Copy 255 bytes
 	CALL copyPalette
-
+	...
 copyPalette:
 	LD A, (HL)                ; Load RRRGGGBB into A
 	INC HL                    ; Increment to next entry
@@ -2288,8 +2374,7 @@ START_8K_BANK   EQU START_16K_BANK*2
 	LD A, 2
 	OUT (C), A
     
-    ; Setup starting Layer2 16K bank and swap corresponding 8K
-    ; memory bank into screen memory $C000 where L2 will read from
+    ; Setup starting Layer2 16K bank
     NEXTREG $12, START_16K_BANK
     
     LD D, 0                   ; D=Y, start at top of the screen
@@ -2328,7 +2413,7 @@ nextX:
     JP C, nextY               ; No, continue with next linee
 \end{Verbatim}
 
-Worth noting: MMU page 6 (next register \$56) covers memory {\tt \$C000} - {\tt \$DFFF}. As we swap different 8K banks there, we're effectively changing 8K banks that are readable and writable at those memory addresses. That's why we {\tt OR \$C0} in line 24; we need to convert zero based address to {\tt \$C000} based. See section \ref{zx_next_bank_mmu_mode} for details on MMU paging mode.
+Worth noting: MMU page 6 (next register {\tt \$56}) covers memory {\tt \$C000} - {\tt \$DFFF}. As we swap different 8K banks there, we're effectively changing 8K banks that are readable and writable at those memory addresses. That's why we {\tt OR \$C0} in line 24; we need to convert zero based address to {\tt \$C000} based. See section \ref{zx_next_bank_mmu_mode} for details on MMU paging mode.
 
 Also note we don't have to handle bank swapping on every iteration, once per 32 rows would do for this example. But the code is more versatile this way and could be easily converted into reusable pixel setting routine.
 
@@ -2434,8 +2519,7 @@ BANK_X          EQU BANK_8K_SIZE / RESOLUTION_Y
 	LD A, 2
 	OUT (C), A
 
-	; Setup starting Layer2 16K bank and swap corresponding 8K
-	; memory bank into screen memory $C000 where L2 will read from
+	; Setup starting Layer2 16K bank
 	NEXTREG $12, START_16K_BANK
 	NEXTREG $70, %00010000    ; 320x256 256 colour mode
 
@@ -2558,7 +2642,7 @@ nextY:
 
 640x256 mode is very similar to 320x256, except that each byte represents 2 colours instead of 1. It's also available on Next core 3.0.6 or later only. Pixels are layed out from top to bottom and left to right. Each pixel takes 4 bits, so each byte contains data for 2 pixels. To cover the whole scren, 5 16K banks of 128 columns or 10 8K banks of 64 columns are needed. Together colour data requires 80K of memory. Similar to 320x256 mode, this mode also covers the whole screen, including border.
 
-Also similar to 320x256 mode, we can't represent all columns with 2 bytes. However, we can still represent all pixels with 16-bits within each individual bank. If upper byte is used for X and lower for Y, then most significant 2 bits correspond to 16K and top 3 bits to 8K bank. The rest of the X + Y is memory location within the bank.
+Also similar to 320x256 mode, we can't represent full extent of columns with 2 bytes. However, we can still represent all pixels within each individual bank. If upper byte is used for X and lower for Y, then most significant 2 bits correspond to 16K and top 3 bits to 8K bank. The rest of the X + Y is memory location within the bank.
 
 To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to setup clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
 
@@ -2578,8 +2662,7 @@ BANK_X          EQU BANK_8K_SIZE / RESOLUTION_Y
 	LD A, 2
 	OUT (C), A
 
-	; Setup starting Layer2 16K bank and swap corresponding 8K
-	; memory bank into screen memory $C000 where L2 will read from
+	; Setup starting Layer2 16K bank
 	NEXTREG $12, START_16K_BANK
 	NEXTREG $70, %00100000    ; 640x256 256 colour mode
 
@@ -2638,9 +2721,9 @@ nextY:
 			\end{PortBitConfig}
 		}
 	\PortBits{5}
-		\PortDesc{Reserved, use 0}
+		\PortDesc{Reserved, use {\tt 0}}
 	\PortBits{4}
-		\PortDesc{0}
+		\PortDesc{{\tt 0} (see below)}
 	\PortBits{3}
 		\PortDesc{Use Shadow Layer 2 for paging}
 		\PortDescOnly{
@@ -2662,11 +2745,11 @@ Since core 3.0.7, write with bit {\tt 4} set was also added:
 
 \begin{NextPort}
 	\PortBits{7-5}
-		\PortDesc{Reserved, use 0}
+		\PortDesc{Reserved, use {\tt 0}}
 	\PortBits{4}
-		\PortDesc{1}
+		\PortDesc{{\tt 1}}
 	\PortBits{3}
-		\PortDesc{Reserved, use 0}
+		\PortDesc{Reserved, use {\tt 0}}
 	\PortBits{2-0}
 		\PortDesc{16K bank relative offset (+0..+7) applied to Layer 2 memory mapping}
 \end{NextPort}
@@ -2676,7 +2759,7 @@ Since core 3.0.7, write with bit {\tt 4} set was also added:
 
 \begin{NextPort}
 	\PortBits{7}
-		\PortDesc{Reserved, must be 0}
+		\PortDesc{Reserved, must be {\tt 0}}
 	\PortBits{6-0}
 		\PortDesc{Starting 16K bank of Layer 2}
 \end{NextPort}
@@ -2719,7 +2802,7 @@ Valid range is:
 		\PortDesc{Reads and writes clip-window coordinates for Layer 2}
 \end{NextPort}
 
-4 coordinates need to be set: X1, X2, Y1 and Y2. Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset index to 0 in \PortLink{Clip Window Control Register}{1C}, then write all 4 coordinates in succession. Positions are inclusive. Furthermore X positions are doubled for 320x256 mode, quadrupled for 640x256. Therefore, to view the whole of Layer 2, the values are:
+4 coordinates need to be set: X1, X2, Y1 and Y2. Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset index to {\tt 0} in \PortLink{Clip Window Control Register}{1C}, then write all 4 coordinates in succession. Positions are inclusive. Furthermore X positions are doubled for 320x256 mode, quadrupled for 640x256. Therefore, to view the whole of Layer 2, the values are:
 
 \begin{tabular}{cllll}
 	& & 
@@ -2739,15 +2822,15 @@ Write:
 
 \begin{NextPort}
 	\PortBits{7-4}
-		\PortDesc{Reserved, must be 0}
+		\PortDesc{Reserved, must be {\tt 0}}
 	\PortBits{3}
-		\PortDesc{Write 1 to reset Tilemap clip-window register index}
+		\PortDesc{Write {\tt 1} to reset Tilemap clip-window register index}
 	\PortBits{2}
-		\PortDesc{Write 1 to reset ULA/LoRes clip-window register index}
+		\PortDesc{Write {\tt 1} to reset ULA/LoRes clip-window register index}
 	\PortBits{1}
-		\PortDesc{Write 1 to reset Sprite clip-window register index}
+		\PortDesc{Write {\tt 1} to reset Sprite clip-window register index}
 	\PortBits{0}
-		\PortDesc{Write 1 to reset Layer 2 clip-window register index}
+		\PortDesc{Write {\tt 1} to reset Layer 2 clip-window register index}
 \end{NextPort}
 
 Read:
@@ -2823,13 +2906,13 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 			\end{PortBitConfig}
 		}
 	\PortBits{3}
-		\PortDesc{Select Sprites palette (0 = first palette, 1 = second palette)}
+		\PortDesc{Select Sprites palette ({\tt 0} = first palette, {\tt 1} = second palette)}
 	\PortBits{2}
-		\PortDesc{Select Layer 2 palette (0 = first palette, 1 = second palette)}
+		\PortDesc{Select Layer 2 palette ({\tt 0} = first palette, {\tt 1} = second palette)}
 	\PortBits{1}
-		\PortDesc{Select ULA palette (0 = first palette, 1 = second palette)}
+		\PortDesc{Select ULA palette ({\tt 0} = first palette, {\tt 1} = second palette)}
 	\PortBits{0}
-		\PortDesc{Enable ULANext mode if 1 (0 after a reset)}
+		\PortDesc{Enable ULANext mode if {\tt 1} ({\tt 0} after a reset)}
 \end{NextPort}
 
 
@@ -2837,9 +2920,9 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 
 \begin{NextPort}
 	\PortBits{7-6}
-		\PortDesc{Reserved, must be 0}
+		\PortDesc{Reserved, must be {\tt 0}}
 	\PortBits{5-4}
-		\PortDesc{Layer 2 resolution (0 after soft reset)}
+		\PortDesc{Layer 2 resolution ({\tt 0} after soft reset)}
 		\PortDescOnly{
 			\begin{PortBitConfig}
 				\PortConfig{00}{256x192, 8BPP}
@@ -2848,7 +2931,7 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 			\end{PortBitConfig}
 		}
 	\PortBits{3-0}
-		\PortDesc{Palette offset (0 after soft reset)}
+		\PortDesc{Palette offset ({\tt 0} after soft reset)}
 \end{NextPort}
 
 
@@ -2856,7 +2939,7 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 
 \begin{NextPort}
 	\PortBits{7-1}
-		\PortDesc{Reserved, must be 0}
+		\PortDesc{Reserved, must be {\tt 0}}
 	\PortBits{0}
 		\PortDesc{MSB for X pixel offset}
 \end{NextPort}
@@ -2866,6 +2949,20 @@ This is only used for 320x256 and 640x256 modes. Together with \PortLink{Layer 2
 
 \pagebreak
 \section{Tilemap}
+
+%% ────────────────────────────────────────────────────────────────────────
+%% ─██████████████─██████████─██████─────────██████████████─██████████████─
+%% ─██░░░░░░░░░░██─██░░░░░░██─██░░██─────────██░░░░░░░░░░██─██░░░░░░░░░░██─
+%% ─██████░░██████─████░░████─██░░██─────────██░░██████████─██░░██████████─
+%% ─────██░░██───────██░░██───██░░██─────────██░░██─────────██░░██─────────
+%% ─────██░░██───────██░░██───██░░██─────────██░░██████████─██░░██████████─
+%% ─────██░░██───────██░░██───██░░██─────────██░░░░░░░░░░██─██░░░░░░░░░░██─
+%% ─────██░░██───────██░░██───██░░██─────────██░░██████████─██████████░░██─
+%% ─────██░░██───────██░░██───██░░██─────────██░░██─────────────────██░░██─
+%% ─────██░░██─────████░░████─██░░██████████─██░░██████████─██████████░░██─
+%% ─────██░░██─────██░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
+%% ─────██████─────██████████─██████████████─██████████████─██████████████─
+%% ────────────────────────────────────────────────────────────────────────
 
 Tilemaps are fast and effective way of displaying 8x8 pixel blocks on screen. There are two possible resolutions available: 40x32 or 80x32 tiles. Tilemap layer overlaps ULA by 32 pixels on each side. Or in other words, similar to 320x256 and 640x256 modes of Layer 2, tilemap also covers the whole of the screen, including the border.
 
@@ -2923,7 +3020,7 @@ The offset of the tilemap data memory address relative to the start of bank 5 ne
 
 \subsection{Memory Organization}
 
-Tilemap layer is closely tied with ULA. Memory wise, it always exists in 16K bank 5 (memory addresses {\tt \$4000-\$7FFF}).
+Tilemap layer is closely tied with ULA. Memory wise, it always exists in 16K slot 5 (memory addresses {\tt \$4000-\$7FFF}).
 
 If both ULA and tilemap are used, memory should be arranged to avoid overlap. Given ULA pixel and attributes memory occupied memory addresses {\tt \$4000-\$5AFF}, this leaves {\tt \$5B00-\$7FFF} for tilemap. If we also take into account various system variables that reside on top of ULA attributes, {\tt \$6000} should be used for starting address. This leaves us:
 
@@ -2944,7 +3041,7 @@ If both ULA and tilemap are used, memory should be arranged to avoid overlap. Gi
 
 Programmer needs to tell the system where in memory tilemap and tile definitions are stored. \PortLink{Tilemap Base Address Register}{6E} and \PortLink{Tile Definitions Base Address Register}{6F} are used for that.
 
-Both values are MSB of the offset into bank 5 (which starts at {\tt \$4000}). This means we can store data at any multiple of 256 bytes. For example, if data is stored in {\tt \$6000}, the value stored would be {\tt \$20}.
+Both values are MSB of the offset into memory slot 5 (which starts at {\tt \$4000}). This means we can store data at any multiple of 256 bytes. For example, if data is stored in {\tt \$6000}, the MSB offset value would be {\tt \$20}.
 
 Generic formula to calculate MSB of the offset is: $(Address - \$4000) >> 8$.
 
@@ -2955,7 +3052,7 @@ Generic formula to calculate MSB of the offset is: $(Address - \$4000) >> 8$.
 ULA and Tilemap can be combined in two ways:
 
 \begin{itemize}[topsep=1pt,itemsep=1pt]
-	\item Standard mode: uses bit 0 from tile's attribute byte to determine if tile is above or below ULA. If tilemap uses 2 bytes per tile, we can specify priority for each tile separately, otherwise we speficy it for all tiles. Transparent pixels are taken into account - if top layer is transparent, bottom one is visible through.
+	\item Standard mode: uses bit {\tt 0} from tile's attribute byte to determine if tile is above or below ULA. If tilemap uses 2 bytes per tile, we can specify priority for each tile separately, otherwise we speficy it for all tiles. Transparent pixels are taken into account - if top layer is transparent, bottom one is visible through.
 	
 	\item Stencil mode: only used if both, ULA and tileset are enabled. The final pixel is transparent if both, ULA and tilemap pixels are transparent. Otherwise final pixel is {\tt AND} of both colour bits. This mode allows one layer to act as cut-out for the other.
 \end{itemize}
@@ -3023,11 +3120,11 @@ The only remaining piece is to actually copy all the data to expected memory loc
 	CALL copyTileMap40x32        ; Copy 40x32 tilemaps
 \end{Verbatim}
 
-We already know {\tt copyPaletter} routine from Layer 2 chapter, the other two are straightforward {\tt LDIR} loops, so am not including them here. But you can find them in companion sample code on \url{https://github.com/tomaz/zx-next-dev-guide}.
+We already know {\tt copyPalette} routine from Layer 2 chapter, the other two are straightforward {\tt LDIR} loops, so am not including them here. But you can find them in companion sample code on \url{https://github.com/tomaz/zx-next-dev-guide}.
 
 
 \subsection{Tilemap Registers}
-\label{zx_next_tileset_registers}
+\label{zx_next_tilemap_registers}
 
 \subsubsection{Sprite and Layers System Register {\tt \$15}}
 
@@ -3035,9 +3132,9 @@ We already know {\tt copyPaletter} routine from Layer 2 chapter, the other two a
 	\PortBits{7}
 		\PortDesc{{\tt 1} to enable lo-res layer, {\tt 0} disable it}
 	\PortBits{6}
-		\PortDesc{{\tt 1} to flip sprite rendering priority, i.e. sprite 0 is on top (0 after reset)}
+		\PortDesc{{\tt 1} to flip sprite rendering priority, i.e. sprite 0 is on top ({\tt 0} after reset)}
 	\PortBits{5}
-		\PortDesc{{\tt 1} to change clipping to ``over border'' mode (doubling X-axis coordinates of clip window) (0 after reset)}
+		\PortDesc{{\tt 1} to change clipping to ``over border'' mode (doubling X-axis coordinates of clip window) ({\tt 0} after reset)}
 	\PortBits{4-2}
 		\PortDesc{Layers priority and mixing}
 		\PortDescOnly{
@@ -3056,9 +3153,9 @@ We already know {\tt copyPaletter} routine from Layer 2 chapter, the other two a
 			\end{PortBitConfig}
 		}
 	\PortBits{1}
-		\PortDesc{{\tt 1} to enable sprites over border (0 after reset)}
+		\PortDesc{{\tt 1} to enable sprites over border ({\tt 0} after reset)}
 	\PortBits{0}
-		\PortDesc{{\tt 1} to enable sprite visibility (0 after reset)}
+		\PortDesc{{\tt 1} to enable sprite visibility ({\tt 0} after reset)}
 \end{NextPort}
 
 
@@ -3077,40 +3174,14 @@ Which coordinate gets set, is determined by index. As each write to this registe
 \pagebreak
 \subsubsection{Clip Window Control Register {\tt \$1C}}
 
-Write:
-
-\begin{NextPort}
-	\PortBits{7-4}
-		\PortDesc{Reserved, must be 0}
-	\PortBits{3}
-		\PortDesc{Write 1 to reset Tilemap clip-window register index}
-	\PortBits{2}
-		\PortDesc{Write 1 to reset ULA/LoRes clip-window register index}
-	\PortBits{1}
-		\PortDesc{Write 1 to reset Sprite clip-window register index}
-	\PortBits{0}
-		\PortDesc{Write 1 to reset Layer 2 clip-window register index}
-\end{NextPort}
-
-Read:
-
-\begin{NextPort}
-	\PortBits{7-6}
-		\PortDesc{Current Tilemap clip-window register index}
-	\PortBits{5-4}
-		\PortDesc{Current ULA/LoRes clip-window register index}
-	\PortBits{3-2}
-		\PortDesc{Current Sprite clip-window register index}
-	\PortBits{1-0}
-		\PortDesc{Current Layer 2 clip-window register index}
-\end{NextPort}
+\NextPortRef{zx_next_layer2_registers}{Layer 2}
 
 
 \subsubsection{Tilemap Offset X MSB Register {\tt \$2F}}
 
 \begin{NextPort}
 	\PortBits{7-2}
-		\PortDesc{Reserved, use 0}
+		\PortDesc{Reserved, use {\tt 0}}
 	\PortBits{1-0}
 		\PortDesc{Most significant bit(s) of X offset}
 \end{NextPort}
@@ -3140,7 +3211,7 @@ Y offset is {\tt 0-255}.
 
 \subsubsection{Enhanced Ula Control Register {\tt \$43}}
 
-See description under Layer 2 chapter, section \ref{zx_next_layer2_registers}.
+\NextPortRef{zx_next_layer2_registers}{Layer 2}
 
 
 \subsubsection{ULA Control Register {\tt \$68}}
@@ -3165,7 +3236,7 @@ See description under Layer 2 chapter, section \ref{zx_next_layer2_registers}.
 	\PortBits{2}
 		\PortDesc{{\tt 1} to enable ULA half pixel scroll ({\tt 0} after soft reset)}
 	\PortBits{1}
-		\PortDesc{Reserved, set to 0}
+		\PortDesc{Reserved, set to {\tt 0}}
 	\PortBits{0}
 		\PortDesc{{\tt 1} to enable stencil mode when both the ULA and tilemap are enabled.}
 \end{NextPort}
@@ -3187,7 +3258,7 @@ See \PortLink{Sprite and Layers System Register}{15} for different priorities an
 	\PortBits{3}
 		\PortDesc{{\tt 1} to activate ``text mode''\See{1}}
 	\PortBits{2}
-		\PortDesc{Reserved, set to 0}
+		\PortDesc{Reserved, set to {\tt 0}}
 	\PortBits{1}
 		\PortDesc{{\tt 1} to activate 512, {\tt 0} for 256 tile mode}
 	\PortBits{0}
@@ -3220,7 +3291,7 @@ If single byte tilemap mode is selected (bit 5 of \PortLink{Tilemap Control Regi
 
 \begin{NextPort}
 	\PortBits{7-6}
-		\PortDesc{Ignored, set to 0}
+		\PortDesc{Ignored, set to {\tt 0}}
 	\PortBits{5-0}
 		\PortDesc{Most significant byte of tilemap data offset in bank 5}
 \end{NextPort}
@@ -3230,7 +3301,7 @@ If single byte tilemap mode is selected (bit 5 of \PortLink{Tilemap Control Regi
 
 \begin{NextPort}
 	\PortBits{7-6}
-		\PortDesc{Ignored, set to 0}
+		\PortDesc{Ignored, set to {\tt 0}}
 	\PortBits{5-0}
 		\PortDesc{Most significant byte of tile definitions offset in bank 5}
 \end{NextPort}
@@ -3239,7 +3310,21 @@ If single byte tilemap mode is selected (bit 5 of \PortLink{Tilemap Control Regi
 \pagebreak
 \section{Sprites}
 
-One of the frequently used ``my computer is better'' points from owners and developers of systems such as Commodore 64 was hardware supported sprites. None of the contra-arguments of, let's say CISC vs RISC seemed to matter. And to be fair, they had a point - poor old Speccy had none. But Next finally rectifies this with sprite system that far superseeds even later 16-bit era machines such as Amiga!
+%% ───────────────────────────────────────────────────────────────────────────────────────────
+%% ─██████████████─██████████████─████████████████───██████████─██████████████─██████████████─
+%% ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───██░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
+%% ─██░░██████████─██░░██████░░██─██░░████████░░██───████░░████─██████░░██████─██░░██████████─
+%% ─██░░██─────────██░░██──██░░██─██░░██────██░░██─────██░░██───────██░░██─────██░░██─────────
+%% ─██░░██████████─██░░██████░░██─██░░████████░░██─────██░░██───────██░░██─────██░░██████████─
+%% ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██─────██░░██───────██░░██─────██░░░░░░░░░░██─
+%% ─██████████░░██─██░░██████████─██░░██████░░████─────██░░██───────██░░██─────██░░██████████─
+%% ─────────██░░██─██░░██─────────██░░██──██░░██───────██░░██───────██░░██─────██░░██─────────
+%% ─██████████░░██─██░░██─────────██░░██──██░░██████─████░░████─────██░░██─────██░░██████████─
+%% ─██░░░░░░░░░░██─██░░██─────────██░░██──██░░░░░░██─██░░░░░░██─────██░░██─────██░░░░░░░░░░██─
+%% ─██████████████─██████─────────██████──██████████─██████████─────██████─────██████████████─
+%% ───────────────────────────────────────────────────────────────────────────────────────────
+
+One of the frequently used ``my computer is better'' arguments from owners and developers of systems such as Commodore 64 was hardware supported sprites. None of the contra-arguments of, let's say CISC vs RISC seemed to matter. And to be fair, they had a point - poor old Speccy had none. But Next finally rectifies this with sprite system that far superseeds even later 16-bit era machines such as Amiga. And as we'll see, it's really simple to program too!
 
 Some of the capabilities of Next sprites:
 
@@ -3465,7 +3550,7 @@ Sprites are now loaded into FPGA memory, they are enabled, so we can start displ
 	NEXTREG $38, %10000000      ; Visible, no byte 4, pattern 0
 
 	NEXTREG $34, 1              ; Second sprite
-	NEXTREG $35, 86             ; X=84
+	NEXTREG $35, 86             ; X=86
 	NEXTREG $36, 80             ; Y=80
 	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
 	NEXTREG $38, %10000000      ; Visible, no byte 4, pattern 0
@@ -3521,6 +3606,7 @@ Because we use combined sprite, we only need to update anchor to change all its 
 \pagebreak
 
 \subsection{Sprite Registers}
+\label{zx_next_sprite_registers}
 
 \subsubsection{Sprite Status/Slot Select {\tt \$303B}}
 
@@ -3545,16 +3631,6 @@ Read: returns sprite status information
 \end{NextPort}
 
 
-\subsubsection{Sprite Pattern Upload {\tt \$xx5B}}
-
-Uploads sprite pattern data. 256 bytes are needed for individual sprite. For 8-bit sprites, each pattern slot contains single sprite. For 4-bit sprites it contains 2 128 byte sprites. After 256 bytes are sent, target pattern slot is auto-incremented.
-
-\begin{NextPort}
-	\PortBits{7-0}
-		\PortDesc{Next byte of pattern data for current sprite}
-\end{NextPort}
-
-
 \subsubsection{Sprite Attribute Upload {\tt \$xx57}}
 
 Uploads attributes for currently selected sprite slot. Attributes require 4 or 5 bytes. After all bytes are sent, sprite index slot automatically increments. See the following Next registers that directly set the value for specific bytes:
@@ -3568,6 +3644,16 @@ Uploads attributes for currently selected sprite slot. Attributes require 4 or 5
 \end{itemize}
 
 
+\subsubsection{Sprite Pattern Upload {\tt \$xx5B}}
+
+Uploads sprite pattern data. 256 bytes are needed for individual sprite. For 8-bit sprites, each pattern slot contains single sprite. For 4-bit sprites it contains 2 128 byte sprites. After 256 bytes are sent, target pattern slot is auto-incremented.
+
+\begin{NextPort}
+	\PortBits{7-0}
+		\PortDesc{Next byte of pattern data for current sprite}
+\end{NextPort}
+
+
 \subsubsection{Peripheral 4 Register {\tt \$09}}
 
 \begin{NextPort}
@@ -3576,7 +3662,7 @@ Uploads attributes for currently selected sprite slot. Attributes require 4 or 5
 	\PortBits{6}
 		\PortDesc{Enables AY1 ``mono'' output ({\tt 1} mono, {\tt 0} default)}
 	\PortBits{5}
-		\PortDesc{Enables AY0 ``mono'' output (0 after hard reset)}
+		\PortDesc{Enables AY0 ``mono'' output ({\tt 0} after hard reset)}
 	\PortBits{4}
 		\PortDesc{{\tt 1} to lockstep \PortLink{Sprite port-mirror Index Register}{34} and \PortLink{Sprite Status/Slot Select}{303B}}
 	\PortBits{3}
@@ -3584,7 +3670,7 @@ Uploads attributes for currently selected sprite slot. Attributes require 4 or 5
 	\PortBits{2}
 		\PortDesc{{\tt 1} to silence HDMI audio (0 after hard reset) (since core 3.0.5)}
 	\PortBits{1-0}
-		\PortDesc{Scanlines weight (0 after hard reset)}
+		\PortDesc{Scanlines weight ({\tt 0} after hard reset)}
 		\PortDescOnly{
 			\begin{tabular}{lll}
 				& \BitHead{Core 3.1.1+} & \BitHead{Older cores} \\
@@ -3599,7 +3685,7 @@ Uploads attributes for currently selected sprite slot. Attributes require 4 or 5
 
 \subsubsection{Sprite and Layers System Register {\tt \$15}}
 
-See description under Tileset chapter, section \ref{zx_next_tileset_registers}.
+\NextPortRef{zx_next_tilemap_registers}{Tilemap}
 
 
 \subsubsection{Clip Window Sprites Register {\tt \$19}}
@@ -3617,8 +3703,8 @@ When ``over border'' mode is enabled (bit 1 of \PortLink{Sprite and Layers Syste
 
 
 \subsubsection{Clip Window Control Register {\tt \$1C}}
-\vspace*{-2ex}
-See description under Tilemap chapter, section \ref{zx_next_tileset_registers}.
+
+\NextPortRef{zx_next_layer2_registers}{Layer 2}
 
 
 \subsubsection{Sprite Port-Mirror Index Register {\tt \$34}}
@@ -3747,8 +3833,7 @@ For unified relative sprites
 \subsubsection{Palette Value Register {\tt \$41}}
 \vspace*{-2ex}
 \subsubsection{Enhanced Ula Control Register {\tt \$43}}
-\vspace*{-2ex}
-See description under Layer 2 chapter, section \ref{zx_next_layer2_registers}.
+\NextPortRef{zx_next_layer2_registers}{Layer 2}
 
 
 \subsubsection{Sprites Transparency Index Register {\tt \$4B}}
@@ -3764,12 +3849,101 @@ For 4-bit sprites, low 4 bits of this register are used.
 
 This set of registers work the same as their non-inc counterpart in {\tt \$35-\$39}; writes byte 0-4 of Sprite attributes for currently selected sprite, except {\tt \$7X} variants also increment \PortLink{Sprite Port-Mirror Index Register}{34} after write. When batch updating multiple sprites, typically the first sprite is selected explicitly, then {\tt \$3X} registers are used until the last write, which occurs through {\tt \$7X} register to also increment sprite index for next iteration.
 
+
 \pagebreak
 \intentiallyempty
 \pagebreak
 
+
+\section{Interrupts on ZX Spectrum Next}
+\label{zx_next_interrupts}
+
+%% ─────────────────────────────────────────────────────────────────────
+%% ─██████████─██████──────────██████─██████████████─████████████████───
+%% ─██░░░░░░██─██░░██████████──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
+%% ─████░░████─██░░░░░░░░░░██──██░░██─██████░░██████─██░░████████░░██───
+%% ───██░░██───██░░██████░░██──██░░██─────██░░██─────██░░██────██░░██───
+%% ───██░░██───██░░██──██░░██──██░░██─────██░░██─────██░░████████░░██───
+%% ───██░░██───██░░██──██░░██──██░░██─────██░░██─────██░░░░░░░░░░░░██───
+%% ───██░░██───██░░██──██░░██──██░░██─────██░░██─────██░░██████░░████───
+%% ───██░░██───██░░██──██░░██████░░██─────██░░██─────██░░██──██░░██─────
+%% ─████░░████─██░░██──██░░░░░░░░░░██─────██░░██─────██░░██──██░░██████─
+%% ─██░░░░░░██─██░░██──██████████░░██─────██░░██─────██░░██──██░░░░░░██─
+%% ─██████████─██████──────────██████─────██████─────██████──██████████─
+%% ─────────────────────────────────────────────────────────────────────
+
+Maskable interrupts on ZX Spectrum:
+
+\begin{itemize}
+	\item {\textbf Mode 0}: meant for interrupts triggered by external device. Instruction to be executed needs to be placed on data bus ({\tt RST} or {\tt CALL} for example). On ZX Spectrum this is the mode that is enabled by default when device powers up. However ROM soon sets up mode 1.
+	
+	\item {\textbf Mode 1}: on ZX Spectrum, this interrupt is triggered by vertical blanking if the screen refresh, roughly 50 times per second. When this occurs, current contents of {\tt PC} counter are pushed onto stack {\tt SP}, then address of {\tt \$0038} is loaded and program stored on that location will start running. On ZX Spectrum Next this interrupt is responsible for updating system variable frame counter and scanning the keyboard.
+	
+	\item {\textbf Mode 2}: similar to {\tt IM 1} in frequency and handling, but uses vector table to jump to interrupt program instead of executing hard code ROM routine thus allowing user to setup their own interrupt handler.
+\end{itemize}
+
+On ZX Spectrum Next interrupt handler can be replaced by either:
+
+\begin{itemize}
+	\item Setting Z80 to {\tt IM 2} mode and configuring custom interrupt handler routine
+	
+	\item Page out ROM (as described in section \ref{zx_next_memorypaging}) and replace it with RAM page with custom interrupt routine at address {\tt \$0038}
+\end{itemize}
+
+You can also adjust timing of the interrupts with Next/TBBlue Feature Control Registers {\tt \$22} and {\tt \$23}.
+
+\pagebreak
+Example of setting up custom interrupt vectors with {\tt IM 2}\footnote{Based on \url{http://codersbucket.blogspot.com/2015/04/interrupts-on-zx-spectrum-what-are.html}}:
+
+\begin{Verbatim}
+	DI
+	
+	LD HL, vectorTable  ; HL=address of vector table
+	LD DE, IM2Handler   ; DE=address of IM2 handler routine
+	LD B, 128           ; 128 vector addresses
+
+	LD A, H
+	LD I, A             ; I=high byte of vector table
+
+setupVectorTable:       ; fills in vector table 128x
+	LD (HL), E
+	INC HL
+	LD (HL), D
+	INC HL
+	DJNZ setupVectorTable 
+
+	IM 2                ; enable mode 2 interrupts
+	EI
+	RET
+
+IM2Handler:             ; this is called every time IM2 interrupt occurs
+	...                 ; implement interrupt handler here
+	EI                  ; when complete call EI
+	RETI                ; end return from interrupt
+
+	ORG $F000           ; needs to be on 256 byte boundary
+vectorTable:
+	DEFS 256            ; 128x2
+\end{Verbatim}
+
+
+\pagebreak
 \section{Keyboard}
 \label{zx_next_keyboard}
+
+%% ───────────────────────────────────────────────────────────────────
+%% ─██████──████████─██████████████─████████──████████─██████████████─
+%% ─██░░██──██░░░░██─██░░░░░░░░░░██─██░░░░██──██░░░░██─██░░░░░░░░░░██─
+%% ─██░░██──██░░████─██░░██████████─████░░██──██░░████─██░░██████████─
+%% ─██░░██──██░░██───██░░██───────────██░░░░██░░░░██───██░░██─────────
+%% ─██░░██████░░██───██░░██████████───████░░░░░░████───██░░██████████─
+%% ─██░░░░░░░░░░██───██░░░░░░░░░░██─────████░░████─────██░░░░░░░░░░██─
+%% ─██░░██████░░██───██░░██████████───────██░░██───────██████████░░██─
+%% ─██░░██──██░░██───██░░██───────────────██░░██───────────────██░░██─
+%% ─██░░██──██░░████─██░░██████████───────██░░██───────██████████░░██─
+%% ─██░░██──██░░░░██─██░░░░░░░░░░██───────██░░██───────██░░░░░░░░░░██─
+%% ─██████──████████─██████████████───────██████───────██████████████─
+%% ───────────────────────────────────────────────────────────────────
 
 Keyboard is read from port {\tt \$xxFE} where bits in result are as follows:
 
@@ -3822,8 +3996,26 @@ Using 16-bit load requires 10 T states for ``{\tt LD BC,nn}'' + 12 for ``{\tt IN
 First program is more understandable at a glance - port address is given as whole 16-bit value, as usually provided in documentation. The second program splits it into 2 8-bit values, so intent may not be immediately apparent. Of course, one learns the patterns with experience, but it nonetheless demonstrates the compromise between readability and speed.
 
 
+\pagebreak
+\intentiallyempty
+\pagebreak
+
 
 \chapter{Instructions at a Glance}
+
+%% ███████████████████████████████████████████████████████████████████████████████████████████████████
+%% █░░░░░░░░░░░░░░█░░░░░░█████████░░░░░░░░░░░░░░█░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
+%% █░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░█████████░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░░░░░░░░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░▄▀░░░░░░░░░░█░░▄▀░░█████████░░▄▀░░░░░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█
+%% █░░▄▀░░█████████░░▄▀░░█████████░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░█████████
+%% █░░▄▀░░█████████░░▄▀░░█████████░░▄▀░░░░░░▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░░░░░░░░░█
+%% █░░▄▀░░██░░░░░░█░░▄▀░░█████████░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░░░░░▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░░░░░░░░░█
+%% █░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░░░░░▄▀░░█░░▄▀░░█████████░░▄▀░░█████████
+%% █░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█
+%% █░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░██░░░░░░░░░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░██░░░░░░█░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
+%% ███████████████████████████████████████████████████████████████████████████████████████████████████
 
 This chapters presents all instructions at a glance for quick info and to easily compare them when choosing most optimal combination for task at hand. Instructions are grouped into logical sections based on area they operate on.
 
@@ -3858,11 +4050,11 @@ This chapters presents all instructions at a glance for quick info and to easily
 	ZF\notet & 
 		Set if the result is zero. \\
 	HY\notet & 
-		The half-carry of an addition/subtraction (from bit 3 to 4). Needed for BCD correctionwith {\tt DAA} \\
-	PF\notet & 
-		This flag can either be the parity of the result ({\tt PF}), or the 2-complement signed overflow ({\tt VF}): set if 2-complement value doesn’t fit in the register \\
+		The half-carry of an addition/subtraction (from bit 3 to 4). Needed for BCD correction with {\tt DAA} \\
+	PV\notet & 
+		This flag can either be the parity of the result ({\tt \FPP}), or the 2-complement signed overflow ({\tt \FPV}): set if 2-complement value doesn’t fit in the register \\
 	NF\notet & 
-		Shows whether the last operation was an addition (0) or an subtraction  (1). This information is needed for {\tt DAA} \\
+		Shows whether the last operation was an addition ({\tt 0}) or an subtraction  ({\tt 1}). This information is needed for {\tt DAA} \\
 	CF\notet & 
 		The carry flag, set if there was a carry after the most significant bit \\
 \end{tabular}
@@ -7328,10 +7520,22 @@ This chapters presents all instructions at a glance for quick info and to easily
 \end{minipage}
 
 
-
-
 \chapter{Instructions up Close}
 \label{instruction_details}
+
+%% ████████████████████████████████████████████████████████████████████████████
+%% █░░░░░░░░░░░░░░█░░░░░░█████████░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
+%% █░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░█████████░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░▄▀░░░░░░░░░░█░░▄▀░░█████████░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█
+%% █░░▄▀░░█████████░░▄▀░░█████████░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░█████████
+%% █░░▄▀░░█████████░░▄▀░░█████████░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█
+%% █░░▄▀░░█████████░░▄▀░░█████████░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░▄▀░░█████████░░▄▀░░█████████░░▄▀░░██░░▄▀░░█░░░░░░░░░░▄▀░░█░░▄▀░░░░░░░░░░█
+%% █░░▄▀░░█████████░░▄▀░░█████████░░▄▀░░██░░▄▀░░█████████░░▄▀░░█░░▄▀░░█████████
+%% █░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░▄▀░░█░░░░░░░░░░▄▀░░█░░▄▀░░░░░░░░░░█
+%% █░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
+%% ████████████████████████████████████████████████████████████████████████████
 
 \newcommand{\DetailParityOverflow}[1]{
 	\IfEqCase{#1}
@@ -7357,7 +7561,7 @@ This chapters presents all instructions at a glance for quick info and to easily
 		{}{PV}
 	}
 }
-The following pages describe all instructions. Alphabetical order is used as much as possible, but some deviations were made to better fit instructions to pages. Each instruction includes:
+The following pages describe all instructions in detail. Alphabetical order is used as much as possible, but some deviations were made to better fit instructions to pages. Each instruction includes:
 
 \begin{itemize}
 	\setlength\itemsep{1pt}
@@ -7700,7 +7904,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			BIT b,(IY+d)
 		\end{DetailVariants}
 
-		Tests specified bit {\tt b} {\tt 0-7} of the given register {\tt s} or contents of memory addressed by {\tt s} and sets zero flag according to result; if bit was 1, {\tt ZF} is 0 and vice versa.
+		Tests specified bit {\tt b} ({\tt 0-7}) of the given register {\tt s} or contents of memory addressed by {\tt s} and sets zero flag according to result; if bit was 1, {\tt ZF} is 0 and vice versa.
 
 		\begin{DetailEffects}
 			\DetailFlags{\FU}{\FS}{1}{\FU}{0}{\FN}
@@ -7808,9 +8012,9 @@ Where possible, multiple variants of same instruction are grouped together and w
 			{\tt CALL NC,nn} & calls if {\tt CF} is reset & &
 				{\tt CALL P,nn} & calls if {\tt SF} is reset\\
 			{\tt CALL Z,nn} & calls if {\tt ZF} is set & &
-				{\tt CALL PE,nn} & calls if {\tt PF} is set\\
+				{\tt CALL PE,nn} & calls if {\tt PV} is set\\
 			{\tt CALL NZ,nn} & calls if {\tt ZF} is reset & &
-				{\tt CALL PO,nn} & calls if {\tt PF} is reset\\
+				{\tt CALL PO,nn} & calls if {\tt PV} is reset\\
 		\end{tabular}
 
 		If given condition is met, {\tt CALL nn} is performed, as described above.
@@ -7878,8 +8082,8 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\begin{DetailCompactList}[Unsigned]
 				\item {\tt A=s}: {\tt ZF} set
 				\item {\tt A$\not$=s}: {\tt ZF} reset
-				\item {\tt A<s}: {\tt SF} and {\tt PF} different
-				\item {\tt A$\geqslant$s}: {\tt SF} and {\tt PF} the same				
+				\item {\tt A<s}: {\tt SF} and {\tt PV} different
+				\item {\tt A$\geqslant$s}: {\tt SF} and {\tt PV} the same				
 			\end{DetailCompactList}
 		\end{multicols}
 
@@ -7909,7 +8113,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\DetailFlags{\FS}{\FX}{\FS}{\FX}{1}{\FN}
 			\DetailFlagsComments{
 				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is decremented, reset otherwise
-				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
+				\item {\tt PV} reset if {\tt BC=0} after execution, set otherwise
 			}
 		\end{DetailEffects}
 
@@ -7931,7 +8135,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\DetailFlags{\FS}{\FX}{\FS}{\FX}{1}{\FN}
 			\DetailFlagsComments{
 				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is decremented, reset otherwise
-				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
+				\item {\tt PV} reset if {\tt BC=0} after execution, set otherwise
 			}
 		\end{DetailEffects}
 				
@@ -7954,7 +8158,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\DetailFlags{\FS}{\FX}{\FS}{\FX}{1}{\FN}
 			\DetailFlagsComments{
 				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is incremented, reset otherwise
-				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
+				\item {\tt PV} reset if {\tt BC=0} after execution, set otherwise
 			}
 		\end{DetailEffects}
 		
@@ -7996,7 +8200,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\DetailFlags{\FS}{\FX}{\FS}{\FX}{1}{\FN}
 			\DetailFlagsComments{
 				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is incremented, reset otherwise
-				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
+				\item {\tt PV} reset if {\tt BC=0} after execution, set otherwise
 			}
 		\end{DetailEffects}
 				
@@ -8096,7 +8300,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\begin{detailitem}{DI}
 		{}
 
-		Disables all maskable interrupts (mode 1 and 2). Interrupts are disabled after execution of the instruction following {\tt DI}. See section \ref{interrupts} for more details on interrupts.
+		Disables all maskable interrupts (mode 1 and 2). Interrupts are disabled after execution of the instruction following {\tt DI}. See sections \ref{interrupts} and \ref{zx_next_interrupts} for more details on interrupts.
 		
 		\DetailNoEffect
 				
@@ -8125,7 +8329,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\begin{detailitem}{EI}
 		{}
 
-		Enables maskable interrupts (mode 1 and 2). Interrupts are enabled after execution of the instruction following {\tt EI}. See section \ref{interrupts} for more details on interrupts.
+		Enables maskable interrupts (mode 1 and 2). Interrupts are enabled after execution of the instruction following {\tt EI}. See sections \ref{interrupts} and \ref{zx_next_interrupts} for more details on interrupts.
 
 		\DetailNoEffect
 				
@@ -8217,7 +8421,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			~
 		\end{DetailVariants}
 
-		Sets the interrupt mode. All 3 interrupts are maskable, meaning they can be disabled using {\tt DI} instruction. See section \ref{interrupts} for details and example.
+		Sets the interrupt mode. All 3 interrupts are maskable, meaning they can be disabled using {\tt DI} instruction. See sections \ref{interrupts} and \ref{zx_next_interrupts} for details and example.
 
 		\DetailNoEffect		
 
@@ -8341,7 +8545,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		HL$\leftarrow$HL-1\\
 		B$\leftarrow$B-1}
 
-		Reads peripheral device addressed by {\tt BC} and stores result in memory addressed by {\tt HL} register pair. Then {\tt HL} and {\tt B} are decremented.
+		Reads peripheral device addressed by {\tt BC} and stores result in memory addressed by {\tt HL} register pair. Then decrements {\tt HL} and {\tt B}.
 
 		\begin{DetailEffects}
 			\DetailFlags{\FU}{\FX}{\FU}{\FU}{1}{\FN}
@@ -8378,7 +8582,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		HL$\leftarrow$HL+1\\
 		B$\leftarrow$B-1}
 
-		Reads peripheral device addressed by {\tt BC} and stores result in memory addressed by {\tt HL} register pair. Then the value of {\tt HL} is incremented and {\tt B} decremented.
+		Reads peripheral device addressed by {\tt BC} and stores result in memory addressed by {\tt HL} register pair. Then increments the value of {\tt HL} decrements {\tt B}.
 
 		\begin{DetailEffects}
 			\DetailFlags{\FU}{\FX}{\FU}{\FU}{1}{\FN}
@@ -8449,10 +8653,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 				{\tt JP P,nn} & jumps if {\tt SF} is reset\\
 
 			{\tt JP Z,nn} & jumps if {\tt ZF} is set & &
-				{\tt JP PE,nn} & jumps if {\tt PF} is set\\
+				{\tt JP PE,nn} & jumps if {\tt PV} is set\\
 
 			{\tt JP NZ,nn} & jumps if {\tt ZF} is reset & &
-				{\tt JP PO,nn} & jumps if {\tt PF} is reset\\
+				{\tt JP PO,nn} & jumps if {\tt PV} is reset\\
 		\end{tabular}
 
 		Conditionally jumps to given absolute address. See {\tt CP} above for more details.
@@ -8526,7 +8730,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\begin{DetailEffects}
 			\DetailFlags{\FN}{\FN}{0}{\FX}{0}{\FN}
 			\DetailFlagsComments{
-				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
+				\item {\tt PV} reset if {\tt BC=0} after execution, set otherwise
 			}
 		\end{DetailEffects}
 				
@@ -8657,7 +8861,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\begin{DetailEffects}
 			\DetailFlags{\FN}{\FN}{0}{\FX}{0}{\FN}
 			\DetailFlagsComments{
-				\item {\tt PF} reset if {\tt BC=0} after execution, set otherwise
+				\item {\tt PV} reset if {\tt BC=0} after execution, set otherwise
 			}
 		\end{DetailEffects}
 				
@@ -8763,7 +8967,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		{do LDIX\\
 		Repeat until BC=0}
 
-		Works similar to {\tt LDIR} except the differences noted at {\tt LDIX} above.
+		Works similar to {\tt LDIR} except the differences noted at {\tt LDIX} on previous page.
 
 		\DetailNoEffect
 				
@@ -9171,9 +9375,9 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\end{detailitem}
 
 	\pagebreak
-	\begin{detailitem}{PUSH nn}
-		{(SP-2)$\leftarrow$nnl\\
-		(SP-1)$\leftarrow$nnh\\
+	\begin{detailitem}{PUSH ss}
+		{(SP-2)$\leftarrow$ssl\\
+		(SP-1)$\leftarrow$ssh\\
 		SP$\leftarrow$SP-2}
 
 		\begin{DetailVariants}
@@ -9190,7 +9394,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			PUSH nn\ZXN
 		\end{DetailVariants}
 
-		Copies contents of a register pair to top of {\tt SP}, then decrements it by {\tt 2}. ZX Next extended {\tt PUSH nn} also allows pushing immediate 16-bit value.
+		Copies contents of a register pair to top of {\tt SP}, then decrements {\tt SP} by {\tt 2}. ZX Next extended {\tt PUSH nn} also allows pushing immediate 16-bit value.
 
 		\DetailNoEffect
 				
@@ -9198,6 +9402,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\DetailTime{rr}{3}{11}
 			\DetailTime{IX}{4}{15}
 			\DetailTime{IY}{4}{15}
+			\DetailTime{nn}{6}{23}
 		\end{DetailTiming}
 
 	\end{detailitem}
@@ -9272,9 +9477,9 @@ Where possible, multiple variants of same instruction are grouped together and w
 			{\tt RET NC,nn} & returns if {\tt CF} is reset & & 
 				{\tt RET P,nn} & returns if {\tt SF} is reset\\
 			{\tt RET Z,nn} & returns if {\tt ZF} is set & & 
-				{\tt RET PE,nn} & returns if {\tt PF} is set\\
+				{\tt RET PE,nn} & returns if {\tt PV} is set\\
 			{\tt RET NZ,nn} & returns if {\tt ZF} is reset & & 
-				{\tt RET PO,nn} & returns if {\tt PF} is reset\\
+				{\tt RET PO,nn} & returns if {\tt PV} is reset\\
 		\end{tabular}
 
 		If given condition is met, {\tt RET} is performed, as described above.
@@ -9295,7 +9500,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Returns from maskable interrupt; restores stack pointer {\tt SP} and signals to I/O device that interrupt routine is completed.
 		
-		Note that it doesn't re-enable interrupts that were disabled when interrupt routine started - {\tt EI} should be called before {\tt RETI} to do that. See {\tt IM} instruction above for example of use.
+		Note that it doesn't re-enable interrupts that were disabled when interrupt routine started - {\tt EI} should be called before {\tt RETI} to do that. See {\tt IM} instruction on previous pages for example of use.
 
 		\DetailNoEffect
 				
@@ -9811,7 +10016,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			RST \$38
 		\end{DetailVariants}
 
-		Restarts at the {\tt s}. Only above addresses are possible, all in page {\tt 0} of the memory, therefore most significant byte is loaded with {\tt \$00}. The instruction may be used as a fast response to an interrupt.
+		Restarts at the zero page address {\tt s}. Only above addresses are possible, all in page {\tt 0} of the memory, therefore most significant byte is loaded with {\tt \$00}. The instruction may be used as a fast response to an interrupt.
 
 		\DetailNoEffect
 						
@@ -9922,7 +10127,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			SET b,(IY+d),L\UNDOC
 		\end{DetailVariants}
 
-		Sets bit {\tt b} ({\tt 0-7} of operand {\tt s} or memory location addressed by {\tt s}.
+		Sets bit {\tt b} ({\tt 0-7}) of operand {\tt s} or memory location addressed by {\tt s}.
 
 		Note: undocumented variants {\tt SET b,(IX+d),r} and {\tt SET b,(IY+d),r} work slightly differently:
 
@@ -10345,7 +10550,22 @@ Where possible, multiple variants of same instruction are grouped together and w
 % only print chapters in appendices, not sections and subsections
 \addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
 
+
 \chapter{Instructions Sorted by Mnemonic}
+
+%% █████████████████████████████████████████████████████████████████████████████████████
+%% █░░░░░░██████████░░░░░░█░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█░░░░░░██████████░░░░░░█
+%% █░░▄▀░░░░░░░░░░░░░░▄▀░░█░░▄▀░░░░░░░░░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░░░░░░░░░░░░░▄▀░░█
+%% █░░▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░▄▀░░░░░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░░░░░▄▀░░░░░░▄▀░░█
+%% █░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█
+%% █░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█
+%% █░░▄▀░░██░░░░░░██░░▄▀░░█░░▄▀░░██░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░██░░░░░░██░░▄▀░░█
+%% █░░▄▀░░██████████░░▄▀░░█░░▄▀░░██░░▄▀░░░░░░▄▀░░█░░▄▀░░█████████░░▄▀░░██████████░░▄▀░░█
+%% █░░▄▀░░██████████░░▄▀░░█░░▄▀░░██░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░██████████░░▄▀░░█
+%% █░░▄▀░░██████████░░▄▀░░█░░▄▀░░██░░░░░░░░░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██████████░░▄▀░░█
+%% █░░░░░░██████████░░░░░░█░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█░░░░░░██████████░░░░░░█
+%% █████████████████████████████████████████████████████████████████████████████████████
 
 Instructions marked with \UNDOC ~are undocumented.\\
 Instructions marked with \ZXN ~are ZX Spectrum Next extended.
@@ -11661,7 +11881,26 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 \normalsize
 
 
+\pagebreak
+\intentiallyempty
+\pagebreak
+
+
 \chapter{Instructions Sorted by Opcode}
+
+%% ███████████████████████████████████████████████████████████████████████████████████████████
+%% █░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░███░░░░░░░░░░░░░░█
+%% █░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀░░░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░░░▄▀▄▀░░█░░▄▀░░░░░░░░░░█
+%% █░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████
+%% █░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░█████████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█
+%% █░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░█████████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░█████████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█
+%% █░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░█████████░░▄▀░░██░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████
+%% █░░▄▀░░░░░░▄▀░░█░░▄▀░░█████████░░▄▀░░░░░░░░░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░░░▄▀▄▀░░█░░▄▀░░░░░░░░░░█
+%% █░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░█████████░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀░░░░█░░▄▀▄▀▄▀▄▀▄▀░░█
+%% █░░░░░░░░░░░░░░█░░░░░░█████████░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░███░░░░░░░░░░░░░░█
+%% ███████████████████████████████████████████████████████████████████████████████████████████
 
 Instructions marked with \UNDOC ~are undocumented.\\
 Instructions marked with \ZXN ~are ZX Spectrum Next extended.
@@ -12978,9 +13217,26 @@ Instructions marked with \ZXN ~are ZX Spectrum Next extended.
 \normalsize
 
 
+\pagebreak
+\intentiallyempty
+\pagebreak
+
 
 \chapter{Errors in official documentation}
 
+%% ███████████████████████████████████████████████████████████████████████████████████████████
+%% █░░░░░░░░░░░░░░█░░░░░░██░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░█░░░░░░░░██░░░░░░░░█
+%% █░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀░░█░░▄▀▄▀░░██░░▄▀▄▀░░█
+%% █░░▄▀░░░░░░░░░░█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█░░░░▄▀░░░░█░░░░▄▀░░██░░▄▀░░░░█
+%% █░░▄▀░░█████████░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░███████████░░▄▀░░█████░░▄▀▄▀░░▄▀▄▀░░███
+%% █░░▄▀░░░░░░░░░░█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░███░░▄▀░░█████░░░░▄▀▄▀▄▀░░░░███
+%% █░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░███░░▄▀░░███████░░▄▀▄▀▄▀░░█████
+%% █░░░░░░░░░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░███░░▄▀░░█████░░░░▄▀▄▀▄▀░░░░███
+%% █████████░░▄▀░░█░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░███████████░░▄▀░░█████░░▄▀▄▀░░▄▀▄▀░░███
+%% █░░░░░░░░░░▄▀░░█░░▄▀░░░░░░▄▀░░█░░▄▀░░█████████░░▄▀░░█████████░░░░▄▀░░░░█░░░░▄▀░░██░░▄▀░░░░█
+%% █░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░█████████░░▄▀░░█████████░░▄▀▄▀▄▀░░█░░▄▀▄▀░░██░░▄▀▄▀░░█
+%% █░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░█████████░░░░░░█████████░░░░░░░░░░█░░░░░░░░██░░░░░░░░█
+%% ███████████████████████████████████████████████████████████████████████████████████████████
 
 In some official Zilog documentation, the are some errors. Some don't have all of these mistakes, so your documentation may not be flawed but these are just things to look out for.
 
@@ -13055,6 +13311,11 @@ Note: In zilog's own z80cpu\_um.pdf document, there are a lot of errors, some ar
 
 \end{thebibliography}
 
+
+
+\pagebreak
+\intentiallyempty
+\pagebreak
 
 
 
