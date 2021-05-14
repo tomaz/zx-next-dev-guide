@@ -1,0 +1,123 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "dezog",
+			"request": "launch",
+			"name": "CSpect",
+			"remoteType": "cspect",
+			"cspect": {
+				"port": 13000,
+			},
+			"sjasmplus": [
+				{
+					"asm": "sjasmplus",
+					"useFiles": true,
+					"mainFile": "${fileDirname}/main.asm",
+					"path": "${workspaceRoot}/build/test.sld"
+				}
+			],
+			"history": {
+				"reverseDebugInstructionCount": 1000000,
+				"spotCount": 10,
+			},
+			"commandsAfterLaunch": [
+				"-logpoint enable",
+				//"-wpmem enable",
+				//"-sprites",
+				//"-patterns",
+			],
+			"disassemblerArgs": {
+				"esxdosRst": true
+			},
+			// "topOfStack": "stack_top",
+			"startAutomatically": false,
+			"preLaunchTask": "Build",
+			"rootFolder": "${workspaceFolder}",
+			"load": "${workspaceRoot}/build/test.nex",
+			"smallValuesMaximum": 513,
+			"tmpDir": ".tmp"
+		},
+
+		{
+			"type": "dezog",
+			"request": "launch",
+			"name": "ZEsarUX",
+			"remoteType": "zrcp",
+			"zrcp": {
+				"hostname": "localhost",
+				"port": 10000,
+				"loadDelay": 700,
+				"skipInterrupt": true,
+				//"socketTimeout": 50
+			},
+			"sjasmplus": [
+				{
+					"asm": "sjasmplus",
+					"useFiles": true,
+					"mainFile": "${fileDirname}/main.asm",
+					"path": "${workspaceRoot}/build/test.sld"
+				}
+			],
+			"history": {
+				"reverseDebugInstructionCount": 1000000,
+				"spotCount": 10,
+			},
+			"commandsAfterLaunch": [
+				"-logpoint enable",
+				"-wpmem enable",
+				//"-sprites",
+				//"-patterns",
+			],
+			"disassemblerArgs": {
+				"esxdosRst": true
+			},
+			// "topOfStack": "stack_top",
+			"startAutomatically": false,
+			"preLaunchTask": "Build",
+			"rootFolder": "${workspaceFolder}",
+			"load": "${workspaceRoot}/build/test.nex",
+			"smallValuesMaximum": 513,
+			"tmpDir": ".tmp"
+		},
+
+		{
+			"type": "dezog",
+			"request": "launch",
+			"name": "ZXNext",
+			"remoteType": "zxnext",
+			"zxnext": {
+				//"port": 13000,
+			},
+			"sjasmplus": [
+				{
+					"asm": "sjasmplus",
+					"useFiles": true,
+					"mainFile": "${fileDirname}/main.asm",
+					"path": "${workspaceRoot}/build/test.sld"
+				}
+			],
+			"history": {
+				"reverseDebugInstructionCount": 1000000,
+				"spotCount": 10
+			},
+			"commandsAfterLaunch": [
+				"-logpoint enable",
+				"-assert enable",
+			],
+			"disassemblerArgs": {
+				"esxdosRst": true
+			},
+			"topOfStack": "stack_top",
+			"startAutomatically": false,
+			"preLaunchTask": "Build",
+			"rootFolder": "${workspaceFolder}",
+			"load": "${workspaceRoot}/build/${fileBasenameNoExtension}.nex",
+			"smallValuesMaximum": 513,
+			"tmpDir": ".tmp"
+		},
+	]
+}

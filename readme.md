@@ -25,9 +25,8 @@ Sample code from the book is also included in this repository. I use Visual Stud
 Couple ideas for new content:
 
 - Description for other relevant ZX Spectrum / Next port
-- Sound and music
 - Describe DMA
 
 # License
 
-Document is available under GNU license, please see the end of LaTeX or PDF document for full licence info!
+ZX Spectrum Next Developer Guide and companion source code are available under GNU license, please see the end of LaTeX or PDF document for full licence info!
