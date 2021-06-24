@@ -15,10 +15,10 @@
 \usepackage{environ}
 \usepackage{tabularx}
 \usepackage{mathabx}
-\usepackage{xfp}
 \usepackage{numprint}
 \usepackage{scalerel}
 \usepackage{bigdelim}
+\usepackage{xfp}
 \usepackage{xurl}
 \usepackage{xstring}
 \usepackage[table]{xcolor}
@@ -4537,7 +4537,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 
 % defines instruction environment that embeds each instruction. Instruction mnemonic is taken as parameter, mainly to show it when environment is collapsed in editor. Note this needs to use \xdef and be an ugly mess of oneliner otherwise mnemonic will be right aligned...
 \environbodyname\INSTRBODY
-\NewEnviron{instruction}[1]{\xdef\instructionbody{\unexpanded{{\tt #1}\instrt&}\unexpanded\expandafter{\INSTRBODY}\unexpanded{\instrb\\}}
+\NewEnviron{instruction}[2][2.5ex]{\xdef\instructionbody{\unexpanded{{\tt #2}\rule{0pt}{#1}&}\unexpanded\expandafter{\INSTRBODY}\unexpanded{\instrb\\}}
 \aftergroup\instructionbody
 }
 \environbodyname\INSTRBODY
@@ -4655,22 +4655,108 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 % ──────────────────────────────────────────────────────────
 
 \newcommand{\SymTab}{~~}	% We can later redeclare this to result in different way of displaying a "tab" indent while maintaining symbol declarations
+\newcommand{\SymDrawing}[2][-10pt]{
+	\scriptsize
+	\vspace*{#1}	% this will center drawings better
+	#2
+}
 \newcommand{\SymADD}[2]{#1$\leftarrow$#1+#2}
 \newcommand{\SymADC}[2]{#1$\leftarrow$#1+#2+CF}
 \newcommand{\SymAND}[1]{A$\leftarrow$A$\wedge$#1}
+\newcommand{\SymBIT}[1]{ZF$\leftarrow\mathtt{\overline{#1_b}}$}
+\newcommand{\SymBRLC}[1][]{\ignorespaces
+	\IfEqCase{#1}{
+		{0}{DE$\leftarrow$DE<<(B$\wedge$\$0F {\normalfont or}}
+		{1}{DE$\leftarrow$DE>>(16-B$\wedge$\$0F)}
+		{}{\SymBRLC[0]\\\SymBRLC[1]}
+	}
+}
+\newcommand{\SymBSLA}[1][]{ % we don't need parameters here, but keep it so it's similar to other BSxx instructions
+	DE$\leftarrow$DE<<(B$\wedge$\$1F)
+}
+\newcommand{\SymBSRA}[1][]{\ignorespaces
+	\IfEqCase{#1}{
+		{0}{DE$\leftarrow$signed(DE)}
+		{1}{>>(B$\wedge$\$1F)}
+		{}{\SymBSRA[0]>>\SymBSRA[1]}
+	}
+}
+\newcommand{\SymBSRF}[1][]{\ignorespaces
+	\IfEqCase{#1}{
+		{0}{DE$\leftarrow\sim$(uns($\sim$DE)}
+		{1}{>>(B$\wedge$\$1F))}
+		{}{DE$\leftarrow\sim$(unsigned($\sim$DE)\SymBSRF[1]}
+	}
+}
+\newcommand{\SymBSRL}[1][]{\ignorespaces
+	\IfEqCase{#1}{
+		{0}{DE$\leftarrow$uns(DE)}
+		{1}{>>(B$\wedge$\$1F)}
+		{}{DE$\leftarrow$unsigned(DE)\SymBSRL[1]}
+	}
+}
+\newcommand{\SymCALL}[2][]{
+	\IfEqCase{#1}{
+		{0}{(SP-1)$\leftarrow$PC\High}
+		{1}{(SP-2)$\leftarrow$PC\Low}
+		{2}{SP$\leftarrow$SP-2}
+		{3}{PC$\leftarrow$#2}
+		{}{\SymCALL[0]{#2}\\\SymCALL[1]{#2}\\\SymCALL[2]{#2}\\\SymCALL[3]{#2}}
+	}
+}
+\newcommand{\SymCALLc}[1]{
+	if c=true:~CALL #1
+}
 \newcommand{\SymCCF}{CF$\leftarrow\mathtt{\overline{CF}}$}
 \newcommand{\SymCP}[1]{A-#1}
+\newcommand{\SymCPD}[1][]{
+	\IfEqCase{#1}{
+		{0}{A-(HL)}
+		{1}{HL$\leftarrow$HL-1}
+		{2}{BC$\leftarrow$BC-1}
+		{}{\SymCPD[0]\\\SymCPD[1]\\\SymCPD[2]}
+	}
+}
+\newcommand{\SymCPDR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do CPD}
+		{1}{while A$\neq$(HL)$\wedge$BC>0}
+		{}{\SymCPDR[0]\\\SymCPDR[1]}
+	}
+}
+\newcommand{\SymCPI}[1][]{
+	\IfEqCase{#1}{
+		{0}{A-(HL)}
+		{1}{HL$\leftarrow$HL+1}
+		{2}{BC$\leftarrow$BC-1}
+		{}{\SymCPI[0]\\\SymCPI[1]\\\SymCPI[2]}
+	}
+}
+\newcommand{\SymCPIR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do CPI}
+		{1}{while A$\neq$(HL)$\wedge$BC>0}
+		{}{\SymCPIR[0]\\\SymCPIR[1]}
+	}
+}
 \newcommand{\SymCPL}{A$\leftarrow\mathtt{\overline{A}}$}
 \newcommand{\SymDEC}[1]{#1$\leftarrow$#1-1}
 \newcommand{\SymDI}[1][]{
-	\IfEqCase{#1} {
+	\IfEqCase{#1}{
 		{0}{IFF1$\leftarrow$0}
 		{1}{IFF2$\leftarrow$0}
 		{}{\SymDI[0]\\\SymDI[1]}
 	}
 }
+\newcommand{\SymDJNZ}[2][]{
+	\IfEqCase{#1}{
+		{0}{B$\leftarrow$B-1}
+		{1}{if B$\neq$0:~JR #2}
+		{}{\SymDJNZ[0]{#2}\\\SymDJNZ[1]{#2}}
+	}
+}
 \newcommand{\SymEI}[1][]{
-	\IfEqCase{#1} {
+	\IfEqCase{#1}{
 		{0}{IFF1$\leftarrow$1}
 		{1}{IFF2$\leftarrow$1}
 		{}{\SymEI[0]\\\SymEI[1]}
@@ -4678,19 +4764,215 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 }
 \newcommand{\SymEX}[2]{#1$\leftrightarrow$#2}
 \newcommand{\SymEXX}[1][]{
-	\IfEqCase{#1} {
+	\IfEqCase{#1}{
 		{0}{\SymEX{BC}{BC'}}
 		{1}{\SymEX{DE}{DE'}}
 		{2}{\SymEX{HL}{HL'}}
 		{}{\SymEXX[0]\\\SymEXX[1]\\\SymEXX[2]}
 	}
 }
+\newcommand{\SymIN}[2]{#1$\leftarrow$(#2)}
 \newcommand{\SymINC}[1]{#1$\leftarrow$#1+1}
+\newcommand{\SymIND}[1][]{
+	\IfEqCase{#1}{
+		{0}{(HL)$\leftarrow$(BC)}
+		{1}{HL$\leftarrow$HL-1}
+		{2}{B$\leftarrow$B-1}
+		{}{\SymIND[0]\\\SymIND[1]\\\SymIND[2]}
+	}
+}
+\newcommand{\SymINDR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do IND}
+		{1}{while B>0}
+		{}{\SymINDR[0]\\\SymINDR[1]}
+	}
+}
+\newcommand{\SymINI}[1][]{
+	\IfEqCase{#1}{
+		{0}{(HL)$\leftarrow$(BC)}
+		{1}{HL$\leftarrow$HL+1}
+		{2}{B$\leftarrow$B-1}
+		{}{\SymINI[0]\\\SymINI[1]\\\SymINI[2]}
+	}
+}
+\newcommand{\SymINIR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do INI}
+		{1}{while B>0}
+		{}{\SymINIR[0]\\\SymINIR[1]}
+	}
+}
+\newcommand{\SymJP}[1]{PC$\leftarrow$#1}
+\newcommand{\SymJPc}[1]{if c=true:~JP #1}
+\newcommand{\SymJPC}{PC$\leftarrow$PC$\wedge$\$C000+IN(C)<<6}
+\newcommand{\SymJR}[1]{PC$\leftarrow$PC+#1}
+\newcommand{\SymJRc}[2]{if #1=true:~JR #2}
 \newcommand{\SymLD}[2]{#1$\leftarrow$#2}
+\newcommand{\SymLDD}[1][]{
+	\IfEqCase{#1}{
+		{0}{(DE)$\leftarrow$(HL)}
+		{1}{DE$\leftarrow$DE-1}
+		{2}{HL$\leftarrow$HL-1}
+		{3}{BC$\leftarrow$BC-1}
+		{}{\SymLDD[0]\\\SymLDD[1]\\\SymLDD[2]\\\SymLDD[3]}
+	}
+}
+\newcommand{\SymLDDR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do LDD}
+		{1}{while BC>0}
+		{}{\SymLDDR[0]\\\SymLDDR[1]}
+	}
+}
+\newcommand{\SymLDDX}[1][]{
+	\IfEqCase{#1}{
+		{0}{if (HL)$\neq$A:~(DE)$\leftarrow$(HL)}
+		{1}{DE$\leftarrow$DE+1}
+		{2}{HL$\leftarrow$HL-1}
+		{3}{BC$\leftarrow$BC+1}
+		{}{\SymLDDX[0]\\\SymLDDX[1]\\\SymLDDX[2]\\\SymLDDX[3]}
+	}
+}
+\newcommand{\SymLDI}[1][]{
+	\IfEqCase{#1}{
+		{0}{(DE)$\leftarrow$(HL)}
+		{1}{DE$\leftarrow$DE+1}
+		{2}{HL$\leftarrow$HL+1}
+		{3}{BC$\leftarrow$BC-1}
+		{}{\SymLDI[0]\\\SymLDI[1]\\\SymLDI[2]\\\SymLDI[3]}
+	}
+}
+\newcommand{\SymLDIR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do LDI}
+		{1}{while BC>0}
+		{}{\SymLDIR[0]\\\SymLDIR[1]}
+	}
+}
+\newcommand{\SymLDIX}[1][]{
+	\IfEqCase{#1}{
+		{0}{if (HL)$\neq$A: (DE)$\leftarrow$(HL)}
+		{1}{DE$\leftarrow$DE+1}
+		{2}{HL$\leftarrow$HL+1}
+		{3}{BC$\leftarrow$BC-1}
+		{}{\SymLDIX[0]\\\SymLDIX[1]\\\SymLDIX[2]\\\SymLDIX[3]}
+	}
+}
+\newcommand{\SymLDIRX}[1][]{
+	\IfEqCase{#1}{
+		{0}{do LDIX}
+		{1}{while BC>0}
+		{}{\SymLDIRX[0]\\\SymLDIRX[1]}
+	}
+}
+\newcommand{\SymLDPIRX}[1][]{
+	\IfEqCase{#1}{
+		{0}{do}
+		{1}{\SymTab{}t$\leftarrow$(HL$\wedge$\$FFF8+E$\wedge$7)}
+		{2}{\SymTab{}if t$\neq$A: (DE)$\leftarrow$t}
+		{3}{\SymTab{}DE$\leftarrow$DE+1}
+		{4}{\SymTab{}BC$\leftarrow$BC-1}
+		{5}{while BC>0}
+		{}{\SymLDPIRX[0]\\\SymLDPIRX[1]\\\SymLDPIRX[2]\\\SymLDPIRX[3]\\\SymLDPIRX[4]\\\SymLDPIRX[5]}
+	}
+}
+\newcommand{\SymLDWS}[1][]{
+	\IfEqCase{#1}{
+		{0}{(DE)$\leftarrow$(HL)}
+		{1}{INC L}
+		{2}{INC D}
+		{}{\SymLDWS[0]\\\SymLDWS[1]\\\SymLDWS[2]}
+	}
+}
+\newcommand{\SymMIRROR}[1]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+				
+			\node[plain] (reg) {\tt #1};
+			\node[framed, right=0.2em of reg] (hi) {7654};
+			\node[framed, right=0em of hi] (lo) {3210};
+				
+			\draw[arrow] (hi.148) |- +(0.1,0.5) -| (lo.32);
+			\draw[arrow] (hi.118) |- +(0.1,0.4) -| (lo.65);
+			\draw[arrow] (hi.64) |- +(0.1,0.3) -| (lo.118);
+			\draw[arrow] (hi.34) |- +(0.1,0.2) -| (lo.148);
+				
+			\draw[arrow] (lo.-148) |- +(-0.1,-0.2) -| (hi.-32);
+			\draw[arrow] (lo.-118) |- +(-0.1,-0.3) -| (hi.-65);
+			\draw[arrow] (lo.-34) |- +(-0.1,-0.5) -| (hi.-148);
+			\draw[arrow] (lo.-64) |- +(-0.1,-0.4) -| (hi.-118);
+		\end{tikzpicture}
+	}
+}
+\newcommand{\SymMUL}{DE$\leftarrow$D$\times$E}
 \newcommand{\SymNEG}{A$\leftarrow$-A}
+\newcommand{\SymNEXTREG}[1]{HwNextReg[n]$\leftarrow$#1}
 \newcommand{\SymOR}[1]{A$\leftarrow$A$\vee$#1}
+\newcommand{\SymOUT}[2]{(#1)$\leftarrow$#2}
+\newcommand{\SymOUTINB}[1][]{
+	\IfEqCase{#1}{
+		{0}{(BC)$\leftarrow$(HL)}
+		{1}{HL$\leftarrow$HL+1}
+		{}{\SymOUTINB[0]\\\SymOUTINB[1]}
+	}
+}
+\newcommand{\SymOUTD}[1][]{
+	\IfEqCase{#1}{
+		{0}{(BC)$\leftarrow$(HL)}
+		{1}{HL$\leftarrow$HL-1}
+		{2}{B$\leftarrow$B-1}
+		{}{\SymOUTD[0]\\\SymOUTD[1]\\\SymOUTD[2]}
+	}
+}
+\newcommand{\SymOUTI}[1][]{
+	\IfEqCase{#1}{
+		{0}{B$\leftarrow$B-1}
+		{1}{(BC)$\leftarrow$(HL)}
+		{2}{HL$\leftarrow$HL+1}
+		{}{\SymOUTI[0]\\\SymOUTI[1]\\\SymOUTI[2]}
+	}
+}
+\newcommand{\SymOTDR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do OUTD}
+		{1}{while B>0}
+		{}{\SymOTDR[0]\\\SymOTDR[1]}
+	}
+}
+\newcommand{\SymOTIR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do OUTI}
+		{1}{while B>0}
+		{}{\SymOTIR[0]\\\SymOTIR[1]}
+	}
+}
+\newcommand{\SymPIXELAD}[1][]{\ignorespaces
+	\IfEqCase{#1}{
+		{0}{HL$\leftarrow$\$4000}
+		{1}{+((D$\wedge$\$C0)<<5)}
+		{2}{+((D$\wedge$\$07)<<8)}
+		{3}{+((D$\wedge$\$38)<<2)}
+		{4}{+(E>>3)}
+		{}{\SymPIXELAD[0]\SymPIXELAD[1]\SymPIXELAD[2]\SymPIXELAD[3]\SymPIXELAD[4]}
+	}
+}
+\newcommand{\SymPIXELDN}[1][]{\ignorespaces
+	\IfEqCase{#1}{
+		{0}{if~(HL$\wedge$\$700)$\neq$\$700}
+		{1}{\SymTab{}HL$\leftarrow$HL+256}
+		{2}{else~if~(HL$\wedge$\$E0)$\neq$\$E0}
+		{3}{\SymTab{}HL$\leftarrow$HL$\wedge$\$F8FF+\$20}
+		{4}{else}
+		{5}{\SymTab{}HL$\leftarrow$HL$\wedge$\$F81F+\$800}
+		{}{\SymPIXELDN[0]\\\SymPIXELDN[1]\\\SymPIXELDN[2]\\\SymPIXELDN[3]\\\SymPIXELDN[4]\\\SymPIXELDN[5]}
+	}
+}
 \newcommand{\SymPOP}[2][]{
-	\IfEqCase{#1} {
+	\IfEqCase{#1}{
 		{0}{#2\High$\leftarrow$(SP+1)}
 		{1}{#2\Low$\leftarrow$(SP)}
 		{2}{SP$\leftarrow$SP+2}
@@ -4700,17 +4982,288 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		{}{\SymPOP[0]{#2}\\\SymPOP[1]{#2}\\\SymPOP[2]{#2}}
 	}
 }
-\newcommand{\SymPUSH}[2][]{
-	\IfEqCase{#1} {
-		{0}{(SP-2)$\leftarrow$#2\Low}
-		{1}{(SP-1)$\leftarrow$#2\High}
+\newcommand{\SymPUSHnn}[3][]{
+	\IfEqCase{#1}{
+		{0}{(SP-2)$\leftarrow$#3}
+		{1}{(SP-1)$\leftarrow$#2}
 		{2}{SP$\leftarrow$SP-2}
-		{}{\SymPUSH[0]{#2}\\\SymPUSH[1]{#2}\\\SymPUSH[2]{#2}}
+		{}{\SymPUSHnn[0]{#2}{#3}\\\SymPUSHnn[1]{#2}{#3}\\\SymPUSHnn[2]{#2}{#3}}
+	}
+}
+\newcommand{\SymPUSH}[2][]{
+	\SymPUSHnn[#1]{#2\High}{#2\Low}
+}
+\newcommand{\SymRES}[1]{$\mathtt{#1_b}\leftarrow$0}
+\newcommand{\SymRET}[1][]{
+	\IfEqCase{#1}{
+		{0}{PC\Low$\leftarrow$(SP)}
+		{1}{PC\High$\leftarrow$(SP+1)}
+		{2}{SP$\leftarrow$SP+2}
+		{}{\SymRET[0]\\\SymRET[1]\\\SymRET[2]}
+	}
+}
+\newcommand{\SymRETc}[1]{
+	if #1=true:~RET
+}
+\newcommand{\SymRETI}[1][]{
+	\IfEqCase{#1}{
+		{0}{PC\Low$\leftarrow$(SP)}
+		{1}{PC\High$\leftarrow$(SP+1)}
+		{2}{SP$\leftarrow$SP+2}
+		{}{\SymRETI[0]\\\SymRETI[1]\\\SymRETI[2]}
+	}
+}
+\newcommand{\SymRETN}[1][]{
+	\IfEqCase{#1}{
+		{0}{PC\Low$\leftarrow$(SP)}
+		{1}{PC\High$\leftarrow$(SP+1)}
+		{2}{SP$\leftarrow$SP+2}
+		{3}{IFF1$\leftarrow$IFF2}
+		{}{\SymRETN[0]\\\SymRETN[1]\\\SymRETN[2]\\\SymRETN[3]}
+	}
+}\newcommand{\SymRL}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={ rectangle, draw=black, inner sep=1 },
+			arrow/.style={thin,->,-latex}]
+
+			\node[framed] (cf) {\tt CF};
+			\node[framed] (bits) at([xshift=3em]cf) {7$\leftarrow$0};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node(reg) at([yshift=-1em]bits) {\tt #2};}
+			}
+
+			\draw[arrow] (bits) -- (cf);
+			\draw[arrow] (cf.west) |- +(-0.12,0) |- +(1.6,0.25) |- (bits.east);
+		\end{tikzpicture}
+	}
+}
+\newcommand{\SymRLC}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			arrow/.style={thin,->,-latex}]
+				
+			\node[framed] (cf) {\tt CF};
+			\node[framed, right=1.1em of cf] (bits) {7$\leftarrow$0};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+				
+			\draw[arrow] (bits) -- (cf);
+			\draw[arrow] (bits.west) |- +(-0.1,0) |- +(0.9,0.25) |- (bits.east);
+		\end{tikzpicture}
+	}
+}
+\newcommand{\SymRLCu}[3][]{
+	\IfEqCase{#1}{
+		{0}{#2$\leftarrow$(#3+d)}
+		{1}{RLC #2}
+		{2}{(#3+d)$\leftarrow$#2}
+		{}{\SymRLCu[0]{#2}{#3}\\\SymRLCu[1]{#2}{#3}\\\SymRLCu[2]{#2}{#3}}
+	}
+}
+\newcommand{\SymRLD}{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1, outer sep=0},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+			
+			\node[plain] (a) {\tt A};
+			
+			\node[framed, right=0.5ex of a] (bitsAhi) {7-4};
+			\node[framed, right=0ex of bitsAhi] (bitsAlo) {3-0};
+
+			\node[framed, right=1ex of bitsAlo] (bitsHLhi) {7-4};
+			\node[framed, right=0ex of bitsHLhi] (bitsHLlo) {3-0};
+ 			
+			\node[plain, right=0.5ex of bitsHLlo] (hl) {\tt (HL)};
+			
+			\draw[arrow] (bitsHLlo.south) |- +(-0.2,-0.2) -| (bitsHLhi.310);
+			\draw[arrow] (bitsHLhi.240) |- +(-0.2,-0.2) -| (bitsAlo.south);
+			\draw[arrow] (bitsAlo.north) |- +(0.2,0.2) -| (bitsHLlo.north);
+		\end{tikzpicture}
+	}
+}
+\newcommand{\SymRR}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={ rectangle, draw=black, inner sep=1 },
+			arrow/.style={thin,->,-latex}]
+
+			\node[framed] (bits) {7$\rightarrow$0};
+			\node[framed, right=1em of bits] (cf) {\tt CF};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+
+			\draw[arrow] (bits) -- (cf);
+			\draw[arrow] (cf.east) |- +(0.12,0) |- +(-1.6,0.25) |- (bits.west);
+		\end{tikzpicture}
+	}
+}
+\newcommand{\SymRRC}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			arrow/.style={thin,->,-latex}]
+			
+			\node[framed] (bits) {7$\rightarrow$0};
+			\node[framed, right=1.1em of bits] (cf) {\tt CF};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+			
+			\draw[arrow] (bits) -- (cf);
+			\draw[arrow] (bits.east) |- +(0.1,0) |- +(-0.9,0.25) |- (bits.west);
+		\end{tikzpicture}
+	}
+}
+\newcommand{\SymRRD}{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1, outer sep=0},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+			
+			\node[plain] (a) {\tt A};
+			
+			\node[framed, right=0.5ex of a] (bitsAhi) {7-4};
+			\node[framed, right=0ex of bitsAhi] (bitsAlo) {3-0};
+
+			\node[framed, right=1ex of bitsAlo] (bitsHLhi) {7-4};
+			\node[framed, right=0ex of bitsHLhi] (bitsHLlo) {3-0};
+ 			
+			\node[plain, right=0.5ex of bitsHLlo] (hl) {\tt (HL)};
+			
+			\draw[arrow] (bitsHLlo.south) |- +(-0.2,-0.2) -| (bitsAlo.south);
+			\draw[arrow] (bitsAlo.north) |- +(0.2,0.2) -| (bitsHLhi.120);
+			\draw[arrow] (bitsHLhi.60) |- +(0.2,0.2) -| (bitsHLlo.north);
+		\end{tikzpicture}
+	}
+}
+\newcommand{\SymRST}[2][]{
+	\IfEqCase{#1}{
+		{0}{(SP-1)$\leftarrow$PC\High}
+		{1}{(SP-2)$\leftarrow$PC\Low}
+		{2}{SP$\leftarrow$SP-2}
+		{3}{PC$\leftarrow$#2}
+		{}{\SymRST[0]{#2}\\\SymRST[1]{#2}\\\SymRST[2]{#2}\\\SymRST[3]{#2}}
+	}
+}
+\newcommand{\SymSET}[1]{$\mathtt{#1_b}\leftarrow$1}
+\newcommand{\SymSETu}[3][]{
+	\IfEqCase{#1}{
+		{0}{#2$\leftarrow$(#3+d)}
+		{1}{$\mathtt{#2_b}\leftarrow$1}
+		{2}{(#3+d)$\leftarrow$#2}
+		{}{\SymSETu[0]{#2}{#3}\\\SymSETu[1]{#2}{#3}\\\SymSETu[2]{#2}{#3}}
 	}
 }
 \newcommand{\SymSBC}[2]{#1$\leftarrow$#1-#2-CF}
 \newcommand{\SymSCF}{CF$\leftarrow$1}
+\newcommand{\SymSETAE}{A$\leftarrow$unsigned(\$80)>>(E$\wedge$7)}
+\newcommand{\SymSLA}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+
+			\node[framed] (cf) {\tt CF};
+			\node[framed, right=1em of cf] (bits) {7$\leftarrow$0};
+			\node[plain, right=1em of bits] (zero) {\tt 0};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+
+			\draw[arrow] (zero) -- (bits);
+			\draw[arrow] (bits) -- (cf);
+		\end{tikzpicture}
+	}
+}
+\newcommand{\SymSLI}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+
+			\node[framed] (cf) {\tt CF};
+			\node[framed, right=1em of cf] (bits) {7$\leftarrow$0};
+			\node[plain, right=1em of bits] (one) {\tt 1};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+
+			\draw[arrow] (one) -- (bits);
+			\draw[arrow] (bits) -- (cf);
+		\end{tikzpicture}
+	}
+}
+\newcommand{\SymSRA}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			arrow/.style={thin,->,-latex}]
+				
+			\node[framed] (bits) {7$\rightarrow$0};
+			\node[framed, right=1em of bits] (cf) {\tt CF};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+				
+			\draw[arrow] (bits) -- (cf);
+			\draw[arrow] (bits.211) |- +(-0.35,-0.1) |- (bits.west);
+		\end{tikzpicture}
+	}
+}
+\newcommand{\SymSRL}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+			
+			\node[plain] (zero) {\tt 0};
+			\node[framed, right=1em of zero] (bits) {7$\rightarrow$0};
+			\node[framed, right=1em of bits] (cf) {\tt CF};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+			
+			\draw[arrow] (zero) -- (bits);
+			\draw[arrow] (bits) -- (cf);
+		\end{tikzpicture}
+	}
+}
 \newcommand{\SymSUB}[1]{A$\leftarrow$A-#1}
+\newcommand{\SymSWAPNIB}[1][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+			
+			\node[plain] (a) {\tt A};
+			\node[framed, right=0.2em of a] (hi) {7654};
+			\node[framed, right=0em of hi] (lo) {3210};
+			
+			\draw[arrow] (hi.north) |- +(0.1,0.2) -| (lo.north);
+			\draw[arrow] (lo.south) |- +(-0.1,-0.2) -| (hi.south);
+		\end{tikzpicture}
+	}
+}
+\newcommand{\SymTEST}{A$\wedge$n}
 \newcommand{\SymXOR}[1]{A$\leftarrow$A$\veebar$#1}
 
 % ────────────────────────────────────────────────────────────────────────────
@@ -6245,7 +6798,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \begin{instrtable}
 
 	\begin{instruction}{BIT b,r} 
-		\Symbol{ZF$\leftarrow\mathtt{\overline{r_b}}$}
+		\Symbol{\SymBIT{r}}
 			\FlagsBITr
 			\OpCode{11}{001}{011}
 			\Hex{CB}{2}
@@ -6272,7 +6825,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{BIT b,(HL)} 
-		\Symbol{\mbox{ZF$\leftarrow\mathtt{\overline{(HL)_b}}$}}
+		\Symbol{\SymBIT{(HL)}}
 			\FlagsBITr
 			\OpCode{11}{001}{011}
 			\Hex{CB}{2}
@@ -6283,7 +6836,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{BIT b,(IX+d)\See{2}} 
-		\Symbol{ZF$\leftarrow\mathtt{\overline{(IX+d)_b}}$}
+		\Symbol{\SymBIT{(IX+d)}}
 			\FlagsBITr
 			\OpCode{11}{011}{101}
 			\Hex{DD}{4}
@@ -6300,7 +6853,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{BIT b,(IY+d)\See{2}} 
-		\Symbol{ZF$\leftarrow\mathtt{\overline{(IY+d)_b}}$}
+		\Symbol{\SymBIT{(IY+d)}}
 			\FlagsBITr
 			\OpCode{11}{111}{101}
 			\Hex{FD}{4}
@@ -6334,7 +6887,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{SET b,r} 
-		\Symbol{$\mathtt{r_b}\leftarrow$1}
+		\Symbol{\SymSET{r}}
 			\FlagsSETr
 			\OpCode{11}{001}{011}
 			\Hex{CB}{2}
@@ -6345,7 +6898,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{SET b,(HL)} 
-		\Symbol{$\mathtt{(HL)_b}\leftarrow$1}
+		\Symbol{\SymSET{(HL)}}
 			\FlagsSETr
 			\OpCode{11}{001}{011}
 			\Hex{CB}{2}
@@ -6356,7 +6909,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{SET b,(IX+d)} 
-		\Symbol{$\mathtt{(IX+d)_b}\leftarrow$1}
+		\Symbol{\SymSET{(IX+d)}}
 			\FlagsSETr
 			\OpCode{11}{011}{101}
 			\Hex{DD}{4}
@@ -6373,7 +6926,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{SET b,(IY+d)} 
-		\Symbol{$\mathtt{(IY+d)_b}\leftarrow$1}
+		\Symbol{\SymSET{(IY+d)}}
 			\FlagsSETr
 			\OpCode{11}{111}{101}
 			\Hex{FD}{4}
@@ -6389,19 +6942,19 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 	\end{instruction}
 
-	\begin{instruction}{\footnotesize SET b,(IX+d),r} 
-		\Symbol{r$\leftarrow$(IX+d)}
+	\begin{instruction}{SET b,(IX+d),r} 
+		\Symbol{\SymSETu[0]{r}{IX}}
 			\FlagsSETr
 			\OpCode{11}{011}{101}
 			\Hex{DD}{4}
 			\Cycles{6}{23}
 		\SkipToSymbol
-			\Symbol{$\mathtt{r_b}\leftarrow$1}
+			\Symbol{\SymSETu[1]{r}{IX}}
 			\FromSymbolToOpCode
 			\OpCode{11}{001}{011}
 			\Hex{CB}{}
 		\SkipToSymbol
-			\Symbol{(IX+d)$\leftarrow$r}
+			\Symbol{\SymSETu[2]{r}{IX}}
 			\FromSymbolToOpCode
 			\OpRange{d} 
 			\Hex{..}{}
@@ -6410,19 +6963,19 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 	\end{instruction}
 
-	\begin{instruction}{\footnotesize SET b,(IY+d),r} 
-		\Symbol{r$\leftarrow$(IY+d)}
+	\begin{instruction}{SET b,(IY+d),r} 
+		\Symbol{\SymSETu[0]{r}{IY}}
 			\FlagsSETr
 			\OpCode{11}{111}{101}
 			\Hex{FD}{4}
 			\Cycles{6}{23}
 		\SkipToSymbol 
-			\Symbol{$\mathtt{r_b}\leftarrow$1}
+			\Symbol{\SymSETu[1]{r}{IY}}
 			\FromSymbolToOpCode
 			\OpCode{11}{001}{011}
 			\Hex{CB}{}
 		\SkipToSymbol
-			\Symbol{(IY+d)$\leftarrow$r}
+			\Symbol{\SymSETu[2]{r}{IY}}
 			\FromSymbolToOpCode
 			\OpRange{d} 
 			\Hex{..}{}
@@ -6434,7 +6987,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\StartWithOpCode\OpCode{$\uparrow$}{}{} \\
 
 	\begin{lastinstruction}{RES b,m\See{3}} 
-		\Symbol{$\mathtt{m_b}\leftarrow$0}
+		\Symbol{\SymRES{m}}
 			\FlagsRESr
 			\OpCode{\fbox{10}}{...}{...}
 	\end{lastinstruction} 
@@ -6458,18 +7011,8 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \begin{instrtable}
 
 	\begin{instruction}{RLC r}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,5)
-				\put(0,0){\framebox(4,3){CF}}
-				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(8,1.5){\vector(-1,0){4}}
-				\put(6,1.5){\line(0,1){2.5}}
-				\put(6,4){\line(1,0){11}}
-				\put(17,4){\line(0,-1){2.5}}
-				\put(17,1.5){\vector(-1,0){2}}
-			\end{picture}}
+		% we need slightly more vertical space to accomodate symbolic operation drawing
+		\Symbol{\SymRLC[0]{r}}
 			\FlagsRLCr
 			\OpCode{11}{001}{011}
 			\Hex{CB}{2}
@@ -6496,18 +7039,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{RLC (HL)}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,5)
-				\put(0,0){\framebox(4,3){CF}}
-				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(8,1.5){\vector(-1,0){4}}
-				\put(6,1.5){\line(0,1){2.5}}
-				\put(6,4){\line(1,0){11}}
-				\put(17,4){\line(0,-1){2.5}}
-				\put(17,1.5){\vector(-1,0){2}}
-			\end{picture}}
+		\Symbol{\SymRLC[0]{(HL)}}
 			\FlagsRLCr
 			\OpCode{11}{001}{011}
 			\Hex{CB}{2}
@@ -6518,18 +7050,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{RLC (IX+d)}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,5)
-				\put(0,0){\framebox(4,3){CF}}
-				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(8,1.5){\vector(-1,0){4}}
-				\put(6,1.5){\line(0,1){2.5}}
-				\put(6,4){\line(1,0){11}}
-				\put(17,4){\line(0,-1){2.5}}
-				\put(17,1.5){\vector(-1,0){2}}
-			\end{picture}}
+		\Symbol{\SymRLC[0]{(IX+d)}}
 			\FlagsRLCr
 			\OpCode{11}{011}{101}
 			\Hex{DD}{4}
@@ -6546,18 +7067,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{RLC (IY+d)}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,5)
-				\put(0,0){\framebox(4,3){CF}}
-				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(8,1.5){\vector(-1,0){4}}
-				\put(6,1.5){\line(0,1){2.5}}
-				\put(6,4){\line(1,0){11}}
-				\put(17,4){\line(0,-1){2.5}}
-				\put(17,1.5){\vector(-1,0){2}}
-			\end{picture}}
+		\Symbol{\SymRLC[0]{(IY+d)}}
 			\FlagsRLCr
 			\OpCode{11}{111}{101}
 			\Hex{FD}{4}
@@ -6574,18 +7084,18 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{RLC r,(IX+d)}
-		\Symbol{r$\leftarrow$(IX+d)}
+		\Symbol{\SymRLCu[0]{r}{IX}}
 			\FlagsRLCr
 			\OpCode{11}{011}{101}
 			\Hex{DD}{4}
 			\Cycles{6}{23}
 		\SkipToSymbol
-			\Symbol{RLC r}
+			\Symbol{\SymRLCu[1]{r}{IX}}
 			\FromSymbolToOpCode
 			\OpCode{11}{001}{011}
 			\Hex{CB}{}
 		\SkipToSymbol
-			\Symbol{(IX+d)$\leftarrow$r}
+			\Symbol{\SymRLCu[2]{r}{IX}}
 			\FromSymbolToOpCode
 			\OpRange{d} 
 			\Hex{..}{}
@@ -6595,18 +7105,18 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{RLC r,(IY+d)}
-		\Symbol{r$\leftarrow$(IY+d)}
+		\Symbol{\SymRLCu[0]{r}{IY}}
 			\FlagsRLCr
 			\OpCode{11}{111}{101}
 			\Hex{FD}{4}
 			\Cycles{6}{23}
 		\SkipToSymbol
-			\Symbol{RLC r}
+			\Symbol{\SymRLCu[1]{r}{IY}}
 			\FromSymbolToOpCode
 			\OpCode{11}{001}{011}
 			\Hex{CB}{}
 		\SkipToSymbol
-			\Symbol{(IY+d)$\leftarrow$r}
+			\Symbol{\SymRLCu[2]{r}{IY}}
 			\FromSymbolToOpCode
 			\OpRange{d} 
 			\Hex{..}{}
@@ -6618,120 +7128,46 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\StartWithOpCode\OpCode{}{$\uparrow$}{} \\
 
 	\begin{instruction}{RRC m\See{1}}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(13,0){\framebox(4,3){CF}}
-				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(0,1.5){\vector(1,0){2}}
-				\put(9,1.5){\vector(1,0){4}}
-				\put(0,1.5){\line(0,1){2.5}}
-				\put(0,4){\line(1,0){11}}
-				\put(11,4){\line(0,-1){2.5}}
-			\end{picture}}
+		\Symbol{\SymRRC[0]{m}}
 			\FlagsRRCr
 			\OpCode{..}{\fbox{001}}{...}
 	\end{instruction}
 
 	\begin{instruction}{RL m\See{1}}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(2,0){\framebox(4,3){CF}}
-				\put(9,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(9,1.5){\vector(-1,0){3}}
-				\put(2,1.5){\line(-1,0){2}}
-				\put(0,1.5){\line(0,1){2.5}}
-				\put(0,4){\line(1,0){17.5}}
-				\put(17.5,4){\line(0,-1){2.5}}
-				\put(17.5,1.5){\vector(-1,0){1.5}}
-			\end{picture}}
+		\Symbol{\SymRL[0]{m}}
 			\FlagsRLr
 			\OpCode{..}{\fbox{010}}{...}
 	\end{instruction}
 
 	\begin{instruction}{RR m\See{1}}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(12,0){\framebox(4,3){CF}}
-				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(0,1.5){\vector(1,0){2}}
-				\put(9,1.5){\vector(1,0){3}}
-				\put(0,1.5){\line(0,1){2.5}}
-				\put(0,4){\line(1,0){17.5}}
-				\put(17.5,4){\line(0,-1){2.5}}
-				\put(16,1.5){\line(1,0){1.5}}
-			\end{picture}}
+		\Symbol{\SymRR[0]{m}}
 			\FlagsRRr
 			\OpCode{..}{\fbox{011}}{...}
 	\end{instruction}
 
 	\begin{instruction}{SLA m\See{1}}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(0,0){\framebox(4,3){CF}}
-				\put(7,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(7,1.5){\vector(-1,0){3}}
-				\put(17,1.5){\vector(-1,0){3}}
-				\put(16,0){\makebox(4,3){0}}
-			\end{picture}}
+		\Symbol{\vspace*{2pt}\SymSLA[0]{m}}
 			\FlagsSLAr
 			\OpCode{..}{\fbox{100}}{...}
 	\end{instruction}
 
 	\begin{instruction}{SLI m\See{1,2}}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(0,0){\framebox(4,3){CF}}
-				\put(7,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(7,1.5){\vector(-1,0){3}}
-				\put(17,1.5){\vector(-1,0){3}}
-				\put(16,0){\makebox(4,3){1}}
-			\end{picture}}
+		\Symbol{\vspace*{2pt}\SymSLI[0]{m}}
 			\FlagsSLIr
 			\OpCode{..}{\fbox{110}}{...}
 	\end{instruction}
 
 	\begin{instruction}{SLL m\See{3}}
-		
 	\end{instruction}
 
 	\begin{instruction}{SRA m\See{1}}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(13,0){\framebox(4,3){CF}}
-				\put(3,0){\framebox(7,3){7$\rightarrow$0}}
-				\put(10,1.5){\vector(1,0){3}}
-				\put(1,1.5){\vector(1,0){2}}
-				\put(1,-1.5){\line(0,1){3}}
-				\put(1,-1.5){\line(1,0){2.5}}
-				\put(3.5,-1.5){\line(0,1){1.5}}
-			\end{picture}}
+		\Symbol{\vspace*{3pt}\SymSRA[0]{m}}
 			\FlagsSRAr
 			\OpCode{..}{\fbox{101}}{...}
 	\end{instruction}
 
 	\begin{instruction}{SRL m\See{1}}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(-0.5,0){\makebox(1,3){0}}
-				\put(13,0){\framebox(4,3){CF}}
-				\put(3,0){\framebox(7,3){7$\rightarrow$0}}
-				\put(10,1.5){\vector(1,0){3}}
-				\put(1,1.5){\vector(1,0){2}}
-			\end{picture}}
+		\Symbol{\vspace*{2pt}\SymSRL[0]{m}}
 			\FlagsSRLr
 			\OpCode{..}{\fbox{111}}{...}
 	\end{instruction}
@@ -6739,26 +7175,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\Empty{}
 
 	\begin{instruction}{RLD}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(25,5.5)
-				\put(-7,0){\makebox(4,3){A}}
-				\put(20,0){\makebox(4,3){(HL)}}
-				\put(-2,0){\framebox(4.5,3){7-4}}
-				\put(2.65,0){\framebox(4.5,3){3-0}}
-				\put(9,0){\framebox(4.5,3){7-4}}
-				\put(13.65,0){\framebox(4.5,3){3-0}}
-				\put(5,4.45){\line(0,-1){1.45}}
-				\put(5,4.45){\line(1,0){11.5}}
-				\put(16.5,4.45){\vector(0,-1){1.45}}
-				\put(12,-1.45){\vector(0,1){1.45}}
-				\put(12,-1.45){\line(1,0){3.75}}
-				\put(15.75,-1.45){\line(0,1){1.45}}
-				\put(5,-1.45){\vector(0,1){1.45}}
-				\put(10.5,-1.45){\line(-1,0){5.5}}
-				\put(10.5,-1.45){\line(0,1){1.45}}
-			\end{picture}}
+		\Symbol{\vspace*{-12pt}\hspace*{-1cm}\SymRLD}
 			\FlagsRLD 
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
@@ -6769,26 +7186,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 		
 	\begin{instruction}{RRD}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(25,5.5)
-				\put(-7,0){\makebox(4,3){A}}
-				\put(20,0){\makebox(4,3){(HL)}}
-				\put(-2,0){\framebox(4.5,3){7-4}}
-				\put(2.65,0){\framebox(4.5,3){3-0}}
-				\put(9,0){\framebox(4.5,3){7-4}}
-				\put(13.65,0){\framebox(4.5,3){3-0}}
-				\put(16.5,-1.45){\line(0,1){1.45}}
-				\put(5,-1.45){\line(1,0){11.5}}
-				\put(5,-1.45){\vector(0,1){1.45}}
-				\put(15.75,4.45){\vector(0,-1){1.45}}
-				\put(12,4.45){\line(1,0){3.75}}
-				\put(12,4.45){\line(0,-1){1.45}}
-				\put(10.5,4.45){\vector(0,-1){1.45}}
-				\put(10.5,4.45){\line(-1,0){5.5}}
-				\put(5,4.45){\line(0,-1){1.45}}
-			\end{picture}}
+		\Symbol{\vspace*{-12pt}\hspace*{-1cm}\SymRRD}
 			\FlagsRRD
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
@@ -6799,18 +7197,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 	
 	\begin{instruction}{RLCA}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,5)
-				\put(0,0){\framebox(4,3){CF}}
-				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(8,1.5){\vector(-1,0){4}}
-				\put(6,1.5){\line(0,1){2.5}}
-				\put(6,4){\line(1,0){11}}
-				\put(17,4){\line(0,-1){2.5}}
-				\put(17,1.5){\vector(-1,0){2}}
-			\end{picture}}
+		\Symbol{\SymRLC[0]{A}}
 			\FlagsRLCA
 			\OpCode{00}{000}{111}
 			\Hex{07}{1}
@@ -6818,19 +7205,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 	
 	\begin{instruction}{RLA}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(2,0){\framebox(4,3){CF}}
-				\put(9,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(9,1.5){\vector(-1,0){3}}
-				\put(2,1.5){\line(-1,0){2}}
-				\put(0,1.5){\line(0,1){2.5}}
-				\put(0,4){\line(1,0){17.5}}
-				\put(17.5,4){\line(0,-1){2.5}}
-				\put(17.5,1.5){\vector(-1,0){1.5}}
-			\end{picture}}
+		\Symbol{\SymRL[0]{A}}
 			\FlagsRLA
 			\OpCode{00}{010}{111}
 			\Hex{17}{1}
@@ -6838,18 +7213,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 	
 	\begin{instruction}{RRCA}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(13,0){\framebox(4,3){CF}}
-				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(0,1.5){\vector(1,0){2}}
-				\put(9,1.5){\vector(1,0){4}}
-				\put(0,1.5){\line(0,1){2.5}}
-				\put(0,4){\line(1,0){11}}
-				\put(11,4){\line(0,-1){2.5}}
-			\end{picture}}
+		\Symbol{\SymRRC[0]{A}}
 			\FlagsRRCA
 			\OpCode{00}{001}{111}
 			\Hex{0F}{1}
@@ -6857,19 +7221,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 	
 	\begin{lastinstruction}{RRA}
-		\Symbol{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(12,0){\framebox(4,3){CF}}
-				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(0,1.5){\vector(1,0){2}}
-				\put(9,1.5){\vector(1,0){3}}
-				\put(0,1.5){\line(0,1){2.5}}
-				\put(0,4){\line(1,0){17.5}}
-				\put(17.5,4){\line(0,-1){2.5}}
-				\put(16,1.5){\line(1,0){1.5}}
-			\end{picture}}
+		\Symbol{\SymRR[0]{A}}
 			\FlagsRRA
 			\OpCode{00}{011}{111}
 			\Hex{1F}{1}
@@ -6898,7 +7250,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \begin{instrtable}
 
 	\begin{instruction}{JP nm} 
-		\Symbol{PC$\leftarrow$nm}
+		\Symbol{\SymJP{nm}}
 			\FlagsJPnn
 			\OpCode{11}{000}{011}
 			\Hex{C3}{3}
@@ -6929,7 +7281,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{JP c,nm} 
-		\Symbol{if c:~JP nm}
+		\Symbol{\SymJPc{nm}}
 			\FlagsJPccnn
 			\OpCode{11}{\ttt}{010}
 			\Hex{..}{3}
@@ -6943,7 +7295,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{JR e} 
-		\Symbol{PC$\leftarrow$PC+e}
+		\Symbol{\SymJR{e}}
 			\FlagsJRn
 			\OpCode{00}{011}{000}
 			\Hex{18}{2}
@@ -6954,7 +7306,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{JR p,e} 
-		\Symbol{if p:~JR e}
+		\Symbol{\SymJRc{p}{e}}
 			\FlagsJRccn
 			\OpCode{00}{1\Ss}{000}
 			\Hex{..}{2}
@@ -6968,7 +7320,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{JP (HL)}
-		\Symbol{PC$\leftarrow$HL}
+		\Symbol{\SymJP{HL}}
 			\FlagsJPrr
 			\OpCode{11}{101}{001}
 			\Hex{E9}{1}
@@ -6989,7 +7341,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{JP (IX)} 
-		\Symbol{PC$\leftarrow$IX}
+		\Symbol{\SymJP{IX}}
 			\FlagsJPrr
 			\OpCode{11}{011}{101}
 			\Hex{DD}{2}
@@ -7000,7 +7352,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{JP (IY)} 
-		\Symbol{PC$\leftarrow$IY}
+		\Symbol{\SymJP{IY}}
 			\FlagsJPrr
 			\OpCode{11}{111}{101}
 			\Hex{FD}{2}
@@ -7011,14 +7363,14 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{lastinstruction}{DJNZ e} 
-		\Symbol{B$\leftarrow$B-1}
+		\Symbol{\SymDJNZ[0]{e}}
 			\FlagsDJNZ
 			\OpCode{00}{010}{000}
 			\Hex{10}{2}
 			\Cycles{2}{8}
 			\Comment{if {\tt B}=0}
 		\SkipToSymbol
-			\Symbol{if B$\neq$0:~JR e}
+			\Symbol{\SymDJNZ[1]{e}}
 			\FromSymbolToOpCode
 			\OpCode{$|\leftarrow$}{e-2}{$\rightarrow|$}
 			\Hex{..}{}
@@ -7043,27 +7395,27 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \begin{instrtable}
 
 	\begin{instruction}{CALL nm} 
-		\Symbol{(SP-1)$\leftarrow$PC\High}
+		\Symbol{\SymCALL[0]{nm}}
 			\FlagsCALLnn
 			\OpCode{11}{001}{101}
 			\Hex{CD}{3}
 			\Cycles{5}{17}
 		\SkipToSymbol
-			\Symbol{(SP-2)$\leftarrow$PC\Low}
+			\Symbol{\SymCALL[1]{nm}}
 			\FromSymbolToOpCode
 			\OpRange{m} 
 			\Hex{..}{}
 		\SkipToSymbol
-			\Symbol{SP$\leftarrow$SP-2}
+			\Symbol{\SymCALL[2]{nm}}
 			\FromSymbolToOpCode
 			\OpRange{n} 
 			\Hex{..}{}
 		\SkipToSymbol
-			\Symbol{PC$\leftarrow$nm}
+			\Symbol{\SymCALL[3]{nm}}
 	\end{instruction}
 
 	\begin{instruction}{CALL c,nm} 
-		\Symbol{if c=true:~CALL nm}
+		\Symbol{\SymCALLc{nm}}
 			\FlagsCALLccnn
 			\OpCode{11}{\ttt}{100}
 			\Hex{..}{3}
@@ -7080,19 +7432,19 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{RET} 
-		\Symbol{PC\Low$\leftarrow$(SP)}
+		\Symbol{\SymRET[0]}
 			\FlagsRET
 			\OpCode{11}{001}{001}
 			\Hex{C9}{1}
 			\Cycles{3}{10}
 		\SkipToSymbol
-			\Symbol{PC\High$\leftarrow$(SP+1)}
+			\Symbol{\SymRET[1]}
 		\SkipToSymbol
-			\Symbol{SP$\leftarrow$SP+2}
+			\Symbol{\SymRET[2]}
 	\end{instruction}
 
 	\begin{instruction}{RET c} 
-		\Symbol{if c=true:~RET}
+		\Symbol{\SymRETc{c}}
 			\FlagsRETcc
 			\OpCode{11}{\ttt}{000}
 			\Hex{..}{1}
@@ -7106,7 +7458,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{RETI\See{1}} 
-		\Symbol{PC\Low$\leftarrow$(SP)}
+		\Symbol{\SymRETI[0]}
 			\FlagsRETI
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
@@ -7129,33 +7481,33 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 				}
 			}
 			\SkipToSymbol
-				\Symbol{PC\High$\leftarrow$(SP+1)}
+				\Symbol{\SymRETI[1]}
 				\FromSymbolToOpCode
 				\OpCode{01}{001}{101}
 				\Hex{4D}{}
 			\SkipToSymbol
-				\Symbol{SP$\leftarrow$SP+2}
+				\Symbol{\SymRETI[2]}
 	\end{instruction}
 
 	\begin{instruction}{RETN\See{2}} 
-		\Symbol{PC\Low$\leftarrow$(SP)}
+		\Symbol{\SymRETN[0]}
 			\FlagsRETN
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{14}
 		\SkipToSymbol
-			\Symbol{PC\High$\leftarrow$(SP+1)}
+			\Symbol{\SymRETN[1]}
 			\FromSymbolToOpCode
 			\OpCode{01}{000}{101}
 			\Hex{45}{}
 		\SkipToSymbol
-			\Symbol{SP$\leftarrow$SP+2}
+			\Symbol{\SymRETN[2]}
 		\SkipToSymbol
-			\Symbol{IFF1$\leftarrow$IFF2}
+			\Symbol{\SymRETN[3]}
 	\end{instruction}
 
 	\begin{lastinstruction}{RST p} 
-		\Symbol{(SP-1)$\leftarrow$PC\High}
+		\Symbol{\SymRST[0]{p}}
 			\FlagsRSTn
 			\OpCode{11}{\sss}{111}
 			\Hex{..}{1}
@@ -7178,11 +7530,11 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 				}
 			}
 		\SkipToSymbol
-			\Symbol{(SP-2)$\leftarrow$PC\Low}
+			\Symbol{\SymRST[1]{p}}
 		\SkipToSymbol
-			\Symbol{SP$\leftarrow$SP-2}
+			\Symbol{\SymRST[2]{p}}
 		\SkipToSymbol
-			\Symbol{PC$\leftarrow$p}
+			\Symbol{\SymRST[3][p]}
 	\end{lastinstruction}
 
 	\\[7ex] % note we need to add some manual spacing after this instruction so that tt/p comment table is visible in full (we don't have enough rows for multirow command)
@@ -7204,31 +7556,31 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \begin{instrtable}	
 
 	\begin{instruction}{LDI}
-		\Symbol{(DE)$\leftarrow$(HL)}
+		\Symbol{\SymLDI[0]}
 			\FlagsLDI
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 		\SkipToSymbol
-			\Symbol{DE$\leftarrow$DE+1}
+			\Symbol{\SymLDI[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{100}{000}
 			\Hex{A0}{}
 		\SkipToSymbol
-			\Symbol{HL$\leftarrow$HL+1}
+			\Symbol{\SymLDI[2]}
 		\SkipToSymbol
-			\Symbol{BC$\leftarrow$BC-1}
+			\Symbol{\SymLDI[3]}
 	\end{instruction}
 
 	\begin{instruction}{LDIR} 
-		\Symbol{do LDI}
+		\Symbol{\SymLDIR[0]}
 			\FlagsLDIR
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 			\Comment{if {\tt BC=0}}
 		\SkipToSymbol
-			\Symbol{while BC>0}
+			\Symbol{\SymLDIR[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{110}{000}
 			\Hex{B0}{}
@@ -7237,31 +7589,31 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{LDD} 
-		\Symbol{(DE)$\leftarrow$(HL)}
+		\Symbol{\SymLDD[0]}
 			\FlagsLDD
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 		\SkipToSymbol
-			\Symbol{DE$\leftarrow$DE-1}
+			\Symbol{\SymLDD[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{101}{000}
 			\Hex{A8}{}
 		\SkipToSymbol
-			\Symbol{HL$\leftarrow$HL-1}
+			\Symbol{\SymLDD[2]}
 		\SkipToSymbol
-			\Symbol{BC$\leftarrow$BC-1}
+			\Symbol{\SymLDD[3]}
 	\end{instruction}
 
 	\begin{instruction}{LDDR} 
-		\Symbol{do LDD}
+		\Symbol{\SymLDDR[0]}
 			\FlagsLDDR
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 			\Comment{if {\tt BC=0}}
 		\SkipToSymbol
-			\Symbol{while BC>0}
+			\Symbol{\SymLDDR[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{111}{000}
 			\Hex{B8}{}
@@ -7270,29 +7622,29 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{CPI} 
-		\Symbol{A-(HL)}
+		\Symbol{\SymCPI[0]}
 			\FlagsCPI
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 		\SkipToSymbol
-			\Symbol{HL$\leftarrow$HL+1}
+			\Symbol{\SymCPI[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{100}{001}
 			\Hex{A1}{}
 		\SkipToSymbol
-			\Symbol{BC$\leftarrow$BC-1}
+			\Symbol{\SymCPI[2]}
 	\end{instruction}
 
 	\begin{instruction}{CPIR} 
-		\Symbol{do CPI}
+		\Symbol{\SymCPIR[0]}
 			\FlagsCPIR
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 			\Comment{if {\tt A=(HL)}}
 		\SkipToSymbol
-			\Symbol{while A$\neq$(HL)$\wedge$BC>0}
+			\Symbol{\SymCPIR[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{110}{001}
 			\Hex{B1}{}
@@ -7308,32 +7660,32 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{}{}
 			\Cycles{}{}
 			\Comment{and {\tt BC$\neq$0}}
-		\end{instruction}
+	\end{instruction}
 
 	\begin{instruction}{CPD} 
-		\Symbol{A-(HL)}
+		\Symbol{\SymCPD[0]}
 			\FlagsCPD
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 		\SkipToSymbol
-			\Symbol{HL$\leftarrow$HL-1}
+			\Symbol{\SymCPD[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{101}{001}
 			\Hex{A9}{}
 		\SkipToSymbol
-			\Symbol{BC$\leftarrow$BC-1}
+			\Symbol{\SymCPD[2]}
 	\end{instruction}
 
 	\begin{lastinstruction}{CPDR} 
-		\Symbol{do CPD}
+		\Symbol{\SymCPDR[0]}
 			\FlagsCPDR
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 			\Comment{if {\tt A=(HL)}}
 		\SkipToSymbol
-			\Symbol{while A$\neq$(HL)$\wedge$BC>0}
+			\Symbol{\SymCPDR[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{111}{001}
 			\Hex{B9}{}
@@ -7349,7 +7701,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{}{}
 			\Cycles{}{}
 			\Comment{and {\tt BC$\neq$0}}
-		\end{lastinstruction}
+	\end{lastinstruction}
 
 \end{instrtable}
 
@@ -7371,7 +7723,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \begin{instrtable}
 
 	\begin{instruction}{IN A,(n)\See{1}} 
-		\Symbol{A$\leftarrow$(n)}
+		\Symbol{\SymIN{A}{n}}
 			\FlagsINan
 			\OpCode{11}{011}{011}
 			\Hex{DB}{2}
@@ -7398,7 +7750,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{IN r,(C)\See{2}} 
-		\Symbol{r$\leftarrow$(BC)}
+		\Symbol{\SymIN{r}{BC}}
 			\FlagsINrc
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
@@ -7420,29 +7772,29 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{IND} 
-		\Symbol{(HL)$\leftarrow$(BC)}
+		\Symbol{\SymIND[0]}
 			\FlagsIND
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 		\SkipToSymbol
-			\Symbol{HL$\leftarrow$HL-1}
+			\Symbol{\SymIND[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{101}{010}
 			\Hex{AA}{}
 		\SkipToSymbol
-			\Symbol{B$\leftarrow$B-1}
+			\Symbol{\SymIND[2]}
 	\end{instruction}
 
 	\begin{instruction}{INDR} 
-		\Symbol{do IND}
+		\Symbol{\SymINDR[0]}
 			\FlagsINDR
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 			\Comment{if {\tt B=0}}
 		\SkipToSymbol
-			\Symbol{while B>0}
+			\Symbol{\SymINDR[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{111}{010}
 			\Hex{BA}{}
@@ -7451,29 +7803,29 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{INI} 
-		\Symbol{(HL)$\leftarrow$(BC)}
+		\Symbol{\SymINI[0]}
 			\FlagsINI
 			\OpCode{11}{101}{101} 
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 		\SkipToSymbol
-			\Symbol{HL$\leftarrow$HL+1}
+			\Symbol{\SymINI[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{100}{010}
 			\Hex{A2}{}
 		\SkipToSymbol
-			\Symbol{B$\leftarrow$B-1}
+			\Symbol{\SymINI[2]}
 	\end{instruction}
 
 	\begin{lastinstruction}{INIR} 
-		\Symbol{do INI}
+		\Symbol{\SymINIR[0]}
 			\FlagsINIR
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 			\Comment{if {\tt B=0}}
 		\SkipToSymbol
-			\Symbol{while B>0}
+			\Symbol{\SymINIR[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{110}{010}
 			\Hex{B2}{}
@@ -7502,7 +7854,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \begin{instrtable}
 
 	\begin{instruction}{OUT (n),A} 
-		\Symbol{(n)$\leftarrow$A}
+		\Symbol{\SymOUT{n}{A}}
 			\FlagsOUTna
 			\OpCode{11}{010}{011}
 			\Hex{D3}{2}
@@ -7529,7 +7881,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{OUT (C),r} 
-		\Symbol{(BC)$\leftarrow$r}
+		\Symbol{\SymOUT{BC}{r}}
 			\FlagsOUTcr
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
@@ -7540,7 +7892,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{OUT (C),0} 
-		\Symbol{(BC)$\leftarrow$0}
+		\Symbol{\SymOUT{BC}{0}}
 			\FlagsOUTc
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
@@ -7551,29 +7903,29 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{OUTI} 
-		\Symbol{B$\leftarrow$B-1}
+		\Symbol{\SymOUTI[0]}
 			\FlagsOUTI
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 		\SkipToSymbol
-			\Symbol{(BC)$\leftarrow$(HL)}
+			\Symbol{\SymOUTI[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{100}{011}
 			\Hex{A3}{}
 		\SkipToSymbol
-			\Symbol{HL$\leftarrow$HL+1}
+			\Symbol{\SymOUTI[2]}
 	\end{instruction}
 
 	\begin{instruction}{OTIR} 
-		\Symbol{do OUTI}
+		\Symbol{\SymOTIR[0]}
 			\FlagsOTIR
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 			\Comment{if {\tt B=0}}
 		\SkipToSymbol
-			\Symbol{while B>0}
+			\Symbol{\SymOTIR[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{110}{011}
 			\Hex{B3}{}
@@ -7582,29 +7934,29 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{OUTD} 
-		\Symbol{B$\leftarrow$B-1}
+		\Symbol{\SymOUTD[0]}
 			\FlagsOUTI
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 		\SkipToSymbol
-			\Symbol{(BC)$\leftarrow$(HL)}
+			\Symbol{\SymOUTD[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{101}{011}
 			\Hex{AB}{}
 		\SkipToSymbol
-			\Symbol{HL$\leftarrow$HL-1}
+			\Symbol{\SymOUTD[2]}
 	\end{instruction}
 
 	\begin{lastinstruction}{OTDR} 
-		\Symbol{do OUTD}
+		\Symbol{\SymOTDR[0]}
 			\FlagsOTDR
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 			\Comment{if {\tt B=0}}
 		\SkipToSymbol
-			\Symbol{while B>0}
+			\Symbol{\SymOTDR[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{111}{011}
 			\Hex{BB}{}
@@ -7632,7 +7984,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \begin{instrtablesymbol}
 
 	\begin{instruction}{ADD rr,A} 
-		\Symbol{rr$\leftarrow$rr+A}
+		\Symbol{\SymADD{rr}{A}}
 			\FlagsADDrra
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
@@ -7655,7 +8007,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{ADD pp,nm} 
-		\Symbol{pp$\leftarrow$pp+nm}
+		\Symbol{\SymADD{pp}{nm}}
 			\FlagsADDrrnn
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
@@ -7684,7 +8036,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{BSLA DE,B\See{1}} 
-		\Symbol{DE$\leftarrow$DE<<(B$\wedge$\$1F)}
+		\Symbol{\SymBSLA[0]}
 			\FlagsBSLA
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
@@ -7695,74 +8047,83 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{BSRA DE,B\See{1}} 
-		\SymbolS{DE$\leftarrow$signed(DE)}
+		\SymbolS{\SymBSRA[0]}
 			\FlagsBSRA
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{2}{8}
 		\SkipToSymbol
-			\SymbolP{>>(B$\wedge$\$1F)}
+			\SymbolP{\SymBSRA[1]}
 			\FromSymbolToOpCode
 			\OpCode{00}{101}{001}
 			\Hex{29}{}
 	\end{instruction}
 
 	\begin{instruction}{BSRL DE,B\See{1}} 
-		\SymbolS{DE$\leftarrow$uns(DE)}
+		\SymbolS{\SymBSRL[0]}
 			\FlagsBSRL
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{2}{8}
 		\SkipToSymbol
-			\SymbolP{>>(B$\wedge$\$1F)}
+			\SymbolP{\SymBSRL[1]}
 			\FromSymbolToOpCode
 			\OpCode{00}{101}{010}
 			\Hex{2A}{}
 	\end{instruction}
 
 	\begin{instruction}{BSRF DE,B\See{1}} 
-		\SymbolS{DE$\leftarrow\sim$(uns($\sim$DE)}
+		\SymbolS{\SymBSRF[0]}
 			\FlagsBSRF
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{2}{8}
 		\SkipToSymbol
-			\SymbolP{>>(B$\wedge$\$1F))}
+			\SymbolP{\SymBSRF[1]}
 			\FromSymbolToOpCode
 			\OpCode{00}{101}{011}
 			\Hex{2B}
 	\end{instruction}
 		
 	\begin{instruction}{BRLC DE,B\See{1}} 
-		\Symbol{DE$\leftarrow$DE<<(B$\wedge$\$0F)}
+		\Symbol{\SymBRLC[0]}
 			\FlagsBRLC
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{2}{8}
 		\SkipToSymbol
-			\Symbol{DE$\leftarrow$DE>>(16-B$\wedge$\$0F)}
+			\Symbol{\SymBRLC[1]}
 			\FromSymbolToOpCode
 			\OpCode{00}{101}{100}
 			\Hex{2C}{}
 	\end{instruction}
 
+	\begin{instruction}{JP (C)} 
+		\Symbol{\SymJPC}
+			\FlagsJPc
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{3}{13}
+		\SkipToOpCode
+			\OpCode{10}{011}{000}
+			\Hex{98}{}
+	\end{instruction}
+
 	\begin{instruction}{LDDX} 
-		\Symbol{if (HL)$\neq$A:}
+		\Symbol{\SymLDDX[0]}
 			\FlagsLDDX
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 		\SkipToSymbol
-			\Symbol{~~(DE)$\leftarrow$(HL)}
+			\Symbol{\SymLDDX[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{101}{100}
 			\Hex{AC}{}
 		\SkipToSymbol
-			\Symbol{DE$\leftarrow$DE+1}
+			\Symbol{\SymLDDX[2]}
 		\SkipToSymbol
-			\Symbol{HL$\leftarrow$HL-1}
-		\SkipToSymbol
-			\Symbol{BC$\leftarrow$BC+1}
+			\Symbol{\SymLDDX[3]}
 	\end{instruction}
 
 	\begin{instruction}{LDDRX} 
@@ -7782,33 +8143,31 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{LDIX} 
-		\Symbol{if (HL)$\neq$A:}
+		\Symbol{\SymLDIX[0]}
 			\FlagsLDIX
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 		\SkipToSymbol
-			\Symbol{~~(DE)$\leftarrow$(HL)}
+			\Symbol{\SymLDIX[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{100}{100}
 			\Hex{A4}{}
 		\SkipToSymbol
-			\Symbol{DE$\leftarrow$DE+1}
+			\Symbol{\SymLDIX[2]}
 		\SkipToSymbol
-			\Symbol{HL$\leftarrow$HL+1}
-		\SkipToSymbol
-			\Symbol{BC$\leftarrow$BC-1}
+			\Symbol{\SymLDIX[3]}
 	\end{instruction}
 
 	\begin{instruction}{LDIRX} 
-		\Symbol{do LDIX}
+		\Symbol{\SymLDIRX[0]}
 			\FlagsLDIRX
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 			\Comment{if {\tt BC}=0}
 		\SkipToSymbol
-			\Symbol{while BC>0}
+			\Symbol{\SymLDIRX[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{110}{100}
 			\Hex{B4}{}
@@ -7817,42 +8176,42 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{LDPIRX} 
-		\Symbol{do}
+		\Symbol{\SymLDPIRX[0]}
 			\FlagsLDPIRX
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 			\Comment{if {\tt BC}=0}
 		\SkipToSymbol
-			\Symbol{~~t$\leftarrow$(HL$\wedge$\$FFF8+E$\wedge$7)}
+			\Symbol{\SymLDPIRX[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{110}{111}
 			\Hex{B7}{}
 			\Cycles{5}{21}
 			\Comment{if {\tt BC}$\neq$0}
 		\SkipToSymbol
-			\Symbol{~~if~t$\neq$A:~(DE)$\leftarrow$t}
+			\Symbol{\SymLDPIRX[2]}
 		\SkipToSymbol
-			\Symbol{~~DE$\leftarrow$DE+1}
+			\Symbol{\SymLDPIRX[3]}
 		\SkipToSymbol
-			\Symbol{~~BC$\leftarrow$BC-1}
+			\Symbol{\SymLDPIRX[4]}
 		\SkipToSymbol
-			\Symbol{while BC>0}
+			\Symbol{\SymLDPIRX[5]}
 	\end{instruction}
 
 	\begin{lastinstruction}{LDWS} 
-		\Symbol{(DE)$\leftarrow$(HL)}
+		\Symbol{\SymLDWS[0]}
 			\FlagsLDWS
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 		\SkipToSymbol
-			\Symbol{INC L}
+			\Symbol{\SymLDWS[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{100}{101}
 			\Hex{A5}{}
 		\SkipToSymbol
-			\Symbol{INC D}
+			\Symbol{\SymLDWS[2]}
 	\end{lastinstruction}
 
 \end{instrtablesymbol}
@@ -7875,82 +8234,11 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 
 \begin{instrtablesymbol}	
 
-	\begin{instruction}{SWAPNIB}
-		\Symbol{
-			\scriptsize
-			\multirow{3}{*}{
-				\setlength{\unitlength}{0.9mm}
-				\put(-1.5,1){\makebox(4,3){A}}
-				\begin{picture}(25,5.5)
-					\put(2,1){\framebox(6,3){7654}}
-					\put(8.2,1){\framebox(6,3){3210}}
+	% we need some extra spacing to accomodate the image; it's negative because \\ adds a line, but we don't need full line of space...
+	\\[-9pt]
 
-					\put(11.5,0.5){\line(0,-1){2}}
-					\put(11.5,-1.5){\line(-1,0){6.8}}
-					\put(4.7,-1.5){\vector(0,1){2}}
-
-					\put(4.7,6.5){\line(0,-1){2}}
-					\put(11.5,6.5){\line(-1,0){6.8}}
-					\put(11.5,6.5){\vector(0,-1){2}}
-				\end{picture}
-			}
-		}
-			\FlagsSWAPNIB
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
-			\Cycles{2}{8}
-		\SkipToOpCode 
-			\OpCode{00}{100}{011}
-			\Hex{23}
-	\end{instruction}
-	
-	% we need some extra spacing to accomodate the image
-	\\[0.1em]
-			
 	\begin{instruction}{MIRROR A}
-		\Symbol{
-			\scriptsize
-			\multirow{3}{*}{
-				\setlength{\unitlength}{0.9mm}
-				\put(-1.5,-2){\makebox(4,3){A}}
-				\begin{picture}(25,5.5)
-					\put(2,-2){\framebox(6,3){7654}}
-					\put(8.2,-2){\framebox(6,3){3210}}
-
-					\put(13.5,-2.5){\line(0,-1){5}}
-					\put(13.5,-7.5){\line(-1,0){11}}
-					\put(2.5,-7.5){\vector(0,1){5}}
-
-					\put(12,-2.5){\line(0,-1){4}}
-					\put(12,-6.5){\line(-1,0){7.8}}
-					\put(4.2,-6.5){\vector(0,1){4}}
-
-					\put(10.5,-2.5){\line(0,-1){3}}
-					\put(10.5,-5.5){\line(-1,0){4.7}}
-					\put(5.8,-5.5){\vector(0,1){3}}
-
-					\put(9,-2.5){\line(0,-1){2}}
-					\put(9,-4.5){\line(-1,0){1.8}}
-					\put(7.3,-4.5){\vector(0,1){2}}
-
-					\put(2.5,6.5){\line(0,-1){5}}
-					\put(13.5,6.5){\line(-1,0){11}}
-					\put(13.5,6.5){\vector(0,-1){5}}
-
-					\put(4.2,5.5){\line(0,-1){4}}
-					\put(12,5.5){\line(-1,0){7.8}}
-					\put(12,5.5){\vector(0,-1){4}}
-
-					\put(5.8,4.5){\line(0,-1){3}}
-					\put(10.5,4.5){\line(-1,0){4.7}}
-					\put(10.5,4.5){\vector(0,-1){3}}
-
-					\put(7.3,3.5){\line(0,-1){2}}
-					\put(9,3.5){\line(-1,0){1.8}}
-					\put(9,3.5){\vector(0,-1){2}}
-				\end{picture}
-			}
-		}
+		\Symbol{\multirow{2}{*}{\SymMIRROR{A}}}
 			\FlagsMIRRORa
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
@@ -7961,10 +8249,21 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 	
 	% we need some extra spacing to accomodate the image
-	\\[1em]
+	\\[0.5ex]
+
+	\begin{instruction}{MUL D,E} 
+		\Symbol{\SymMUL}
+			\FlagsMULde
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{00}{110}{000}
+			\Hex{30}
+	\end{instruction}
 
 	\begin{instruction}{NEXTREG n,A} 
-		\Symbol{HwNextReg[n]$\leftarrow$A}
+		\Symbol{\SymNEXTREG{A}}
 			\FlagsNEXTREGna
 			\OpCode{11}{101}{101} 
 			\Hex{ED}{3}
@@ -7978,7 +8277,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	\end{instruction}
 
 	\begin{instruction}{NEXTREG n,m}
-		\Symbol{HwNextReg[n]$\leftarrow$m}
+		\Symbol{\SymNEXTREG{m}}
 			\FlagsNEXTREGnn
 			\OpCode{11}{101}{101}
 			\Hex{ED}{3}
@@ -7993,49 +8292,83 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\OpRange{m} 
 			\Hex{..}{}
 	\end{instruction}
+	
+	\begin{instruction}{OUTINB} 
+		\Symbol{\SymOUTINB[0]}
+			\FlagsOUTINB
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{\SymOUTINB[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{010}{000}
+			\Hex{90}{}
+	\end{instruction}
 
 	\begin{instruction}{PIXELAD} 
-		\Symbol{HL$\leftarrow$\$4000}
+		\SymbolS{\SymPIXELAD[0]}
 			\FlagsPIXELAD
 			\OpCode{11}{101}{101}
 			\Hex{ED}{3}
 			\Cycles{2}{8}
 		\SkipToSymbol
-			\Symbol{~~+((D$\wedge$\$C0)<<5)}
+			\SymbolP{\SymPIXELAD[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{010}{100}
 			\Hex{94}{}
 		\SkipToSymbol
-			\Symbol{~~+((D$\wedge$\$07)<<8)}
+			\SymbolP{\SymPIXELAD[2]}
 		\SkipToSymbol
-			\Symbol{~~+((D$\wedge$\$38)<<2)}
+			\SymbolP{\SymPIXELAD[3]}
 		\SkipToSymbol
-			\Symbol{~~+(E>>3)}
+			\SymbolP{\SymPIXELAD[4]}
 	\end{instruction}
 
 	\begin{instruction}{PIXELDN} 
-		\Symbol{if~HL$\wedge$\$700$\neq$\$700}
+		\Symbol{\SymPIXELDN[0]}
 			\FlagsPIXELDN
 			\OpCode{11}{101}{101}
 			\Hex{ED}{3}
 			\Cycles{2}{8}
 		\SkipToSymbol
-			\Symbol{~~HL$\leftarrow$HL+256}
+			\Symbol{\SymPIXELDN[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{010}{011}
 			\Hex{93}{}
 		\SkipToSymbol
-			\Symbol{else~if~HL$\wedge$\$E0$\neq$\$E0}
+			\Symbol{\SymPIXELDN[2]}
 		\SkipToSymbol
-			\Symbol{~~HL$\leftarrow$HL$\wedge$\$F8FF+\$20}
+			\Symbol{\SymPIXELDN[3]}
 		\SkipToSymbol
-			\Symbol{else}
+			\Symbol{\SymPIXELDN[4]}
 		\SkipToSymbol
-			\Symbol{~~HL$\leftarrow$HL$\wedge$\$F81F+\$800}
+			\Symbol{\SymPIXELDN[5]}
+	\end{instruction}
+
+	\begin{instruction}{PUSH nm}
+		\Symbol{\SymPUSHnn[0]{n}{m}}
+			\FlagsPUSHnn
+			\OpCode{11}{101}{101}
+			\Hex{ED}{3}
+			\Cycles{6}{23}
+		\SkipToSymbol
+			\Symbol{\SymPUSHnn[1]{n}{m}}
+			\FromSymbolToOpCode
+			\OpCode{10}{001}{010}
+			\Hex{8A}{}
+		\SkipToSymbol
+			\Symbol{\SymPUSHnn[2]{n}{m}}
+			\FromSymbolToOpCode
+			\OpRange{n\See{1}} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{m\See{1}} 
+			\Hex{..}{}
 	\end{instruction}
 
 	\begin{instruction}{SETAE} 
-		\Symbol{A$\leftarrow$unsigned(\$80)>>(E$\wedge$7)}
+		\Symbol{\SymSETAE}
 			\FlagsSETAE
 			\OpCode{11}{101}{101}
 			\Hex{ED}{3}
@@ -8045,19 +8378,19 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{95}{}
 	\end{instruction}
 
-	\begin{instruction}{MUL D,E} 
-		\Symbol{DE$\leftarrow$D$\times$E}
-			\FlagsMULde
+	\begin{instruction}{SWAPNIB}
+		\Symbol{\multirow[b]{1}{*}{\SymSWAPNIB}}
+			\FlagsSWAPNIB
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{2}{8}
 		\SkipToOpCode 
-			\OpCode{00}{110}{000}
-			\Hex{30}
+			\OpCode{00}{100}{011}
+			\Hex{23}
 	\end{instruction}
 
-	\begin{instruction}{TEST n} 
-		\Symbol{A$\wedge$n}
+	\begin{lastinstruction}{TEST n} 
+		\Symbol{\SymTEST}
 			\FlagsTESTn
 			\OpCode{11}{101}{101}
 			\Hex{ED}{3}
@@ -8065,53 +8398,6 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpCode{00}{100}{111}
 			\Hex{27}{}
-	\end{instruction}
-
-	\begin{instruction}{JP (C)} 
-		\SymbolS{PC$\leftarrow$PC$\wedge$\$C000}
-			\FlagsJPc
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
-			\Cycles{3}{13}
-		\SkipToSymbol
-			\SymbolP{+IN(C)<<6}
-			\FromSymbolToOpCode
-			\OpCode{10}{011}{000}
-			\Hex{98}{}
-	\end{instruction}
-		
-	\begin{instruction}{OUTINB} 
-		\Symbol{(BC)$\leftarrow$(HL)}
-			\FlagsOUTINB
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
-			\Cycles{4}{16}
-		\SkipToSymbol
-			\Symbol{HL$\leftarrow$HL+1}
-			\FromSymbolToOpCode
-			\OpCode{10}{010}{000}
-			\Hex{90}{}
-	\end{instruction}
-
-	\begin{lastinstruction}{PUSH nm}
-		\Symbol{(SP-2)$\leftarrow$m}
-			\FlagsPUSHnn
-			\OpCode{11}{101}{101}
-			\Hex{ED}{3}
-			\Cycles{6}{23}
-		\SkipToSymbol
-			\Symbol{(SP-1)$\leftarrow$n}
-			\FromSymbolToOpCode
-			\OpCode{10}{001}{010}
-			\Hex{8A}{}
-		\SkipToSymbol
-			\Symbol{SP$\leftarrow$SP-2}
-			\FromSymbolToOpCode
-			\OpRange{n\See{1}} 
-			\Hex{..}{}
-		\SkipToOpCode 
-			\OpRange{m\See{1}} 
-			\Hex{..}{}
 	\end{lastinstruction}
 
 \end{instrtablesymbol}
@@ -8238,7 +8524,15 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	% redeclare instruction symbolic operation handling
 	\renewcommand{\SymTab}{\phantom{>>}}	% ~ doesn't work here, so we need to use invisible characters instead
-	
+	\renewcommand{\SymDrawing}[2][-1.7em]{
+		\hspace*{#1}	% vspace is fine here, but we need to adjust hspace, so we take over optional parameter
+		\scalebox{1.5}{
+			\scriptsize
+			#2
+		}
+	}
+
+
 	% 1st parameter: if not empty, it is interpretted as size, empty will yield no space (this is used for multiple successive notes)
 	\newcommand{\DetailNote}[2][1.5ex]{
 		\IfEq{#1}{}{
@@ -8268,11 +8562,19 @@ Where possible, multiple variants of same instruction are grouped together and w
 		% we want some spacing below each item
 		\vspace{1em}
 	}
-	\newcommand{\DetailItemRef}[2]{
-		\vspace*{-1em}
+	
+	% references to items from other pages
+	\newcommand{\DetailItemsRef}[2]{
+		\vspace*{-1.5em}
+		\desclabelstyle{\pushlabel}
 		\DetailMnemonic{#1}
-		\DetailNote{See page \pageref{#2}}
+		\desclabelstyle{\multilinelabel}
+		\DetailNote{#2}
 	}
+	\newcommand{\DetailItemRef}[2]{
+		\DetailItemsRef{#1}{See page \pageref{#2}}
+	}
+
 	\newenvironment{detailitemsimple}[2]{
 		\DetailMnemonic{#1}
 		\DetailSymbol{#2}
@@ -8312,6 +8614,11 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\setlength\itemsep{-1pt}
 			\DetailCompactListBODY
 		\end{itemize}
+	}
+
+	\newcommand{\DetailAlternative}[2]{
+		\underline{\tt #1}:\\[1ex]
+		\DetailSymbol{#2}
 	}
 
 	\environbodyname\DetailEffectsBODY
@@ -8533,7 +8840,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{BIT b,s}
 		{test \IH{BIT}}
-		{ZF$\leftarrow\mathtt{\overline{s_b}}$}
+		{\SymBIT{s}}
 
 		\begin{DetailVariants}
 			BIT b,A\\
@@ -8569,8 +8876,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{BRLC DE,B\ZXN}
 		{\IH{B}arrel \IH{R}otate \IH{L}eft \IH{C}ircular}
-		{DE$\leftarrow$DE<<(B$\wedge$\$0F)\\
-		DE$\leftarrow$DE>>(16-B$\wedge$\$0F)}
+		{\SymBRLC}
 
 		Rotates value in register pair {\tt DE} left for the amount given in bits 3-0 (low nibble) of register {\tt B}. To rotate right, use formula: {\tt B=16-places}. Result is stored in {\tt DE}.
 
@@ -8584,7 +8890,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{BSLA DE,B\ZXN}
 		{\IH{B}arrel \IH{S}hift \IH{L}eft \IH{A}rithmetic}
-		{DE$\leftarrow$DE<<(B$\wedge$\$1F)}
+		{\SymBSLA}
 
 		Performs shift left of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. Result is stored in {\tt DE}.
 
@@ -8598,7 +8904,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{BSRA DE,B\ZXN}
 		{\IH{B}arrel \IH{S}hift \IH{R}ight \IH{A}rithmetic}
-		{DE$\leftarrow$signed(DE)>>(B$\wedge$\$1F)}
+		{\SymBSRA}
 
 		Performs arithmetical shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. Result is stored in {\tt DE}.
 
@@ -8612,7 +8918,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{BSRF DE,B\ZXN}
 		{\IH{B}arrel \IH{S}hift \IH{R}ight \IH{F}ill-one}
-		{DE$\leftarrow\sim$(unsigned($\sim$DE)>>(B$\wedge$\$1F))}
+		{\SymBSRF}
 
 		Performs fill-one-way shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. Result is stored in {\tt DE}.
 
@@ -8626,7 +8932,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{BSRL DE,B\ZXN}
 		{\IH{B}arrel \IH{S}hift \IH{R}ight \IH{L}ogical}
-		{DE$\leftarrow$unsigned(DE)>>(B$\wedge$\$1F)}
+		{\SymBSRL}
 
 		Performs logical shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. Result is stored in {\tt DE}.
 
@@ -8641,10 +8947,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{CALL nn}
 		{\IH{CALL} subroutine}
-		{(SP-1)$\leftarrow$PC\High\\
-		(SP-2)$\leftarrow$PC\Low\\
-		SP$\leftarrow$SP-2\\
-		PC$\leftarrow$nn}
+		{\SymCALL{nn}}
 
 		Pushes program counter {\tt PC} to stack and calls subroutine at the given location {\tt nn} by changing {\tt PC} to point to address {\tt nn}.
 
@@ -8658,7 +8961,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{CALL c,nn}
 		{\IH{CALL} subroutine conditionally}
-		{if c=true:~CALL nn}
+		{\SymCALLc{nn}}
 
 		\vspace{1ex} % we need some vertical space to achieve same separation as multicols
 		\begin{tabular}{@{}llcll}			
@@ -8789,9 +9092,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{CPD}
 		{\IH{C}om\IH{P}are and \IH{D}ecrement}
-		{A-(HL)\\
-		HL$\leftarrow$HL-1\\
-		BC$\leftarrow$BC-1}
+		{\SymCPD}
 
 		Subtracts contents of memory location addressed by {\tt HL} register pair from accumulator {\tt A}. Result is then discarded. Afterwards both {\tt HL} and {\tt BC} are decremented.
 
@@ -8811,8 +9112,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{CPDR}
 		{\IH{C}om\IH{P}are and \IH{D}ecrement \IH{R}epeated}
-		{do CPD\\
-		while A$\neq$(HL)$\wedge$BC>0}
+		{\SymCPDR}
 
 		Repeats {\tt CPD} until either {\tt A=(HL)} or {\tt BC=0}. See {\tt CPIR} for example.
 
@@ -8834,9 +9134,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{CPI}
 		{\IH{C}om\IH{P}are and \IH{I}ncrement}
-		{A-(HL)\\
-		HL$\leftarrow$HL+1\\
-		BC$\leftarrow$BC-1}
+		{\SymCPI}
 
 		Subtracts contents of memory location addressed by {\tt HL} register pair from accumulator {\tt A}. Result is then discarded. Afterwards {\tt HL} is incremented and {\tt BC} decremented.
 
@@ -8856,8 +9154,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{CPIR}
 		{\IH{C}om\IH{P}are and \IH{D}ecrement \IH{R}epeated}
-		{do CPI\\
-		while A$\neq$(HL)$\wedge$BC>0}
+		{\SymCPIR}
 
 		Repeats {\tt CPI} until either {\tt A=(HL)} or {\tt BC=0}.
 
@@ -8995,8 +9292,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{DJNZ e}
 		{\IH{D}ecrement {\tt B} and \IH{J}ump if \IH{N}ot \IH{Z}ero}
-		{B$\leftarrow$B-1\\
-		if B$\neq$0:~PC$\leftarrow$PC+e}
+		{\SymDJNZ{e}}
 
 		Decrements {\tt B} register and jumps to given relative address if {\tt B$\neq$0}. Given offset is added to the value of {\tt PC} after parsing {\tt DJNZ} instruction, so effective offset it {\tt -126} to {\tt +129}. Assembler automatically subtracts {\tt 2} from offset value {\tt e} to generate opcode.
 
@@ -9125,7 +9421,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{IN r,(s)}
 		{\IH{IN}put from port}
-		{r$\leftarrow$(s)}
+		{\SymIN{r}{s}}
 
 		\begin{DetailVariants}
 			IN A,(n)\\
@@ -9239,9 +9535,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
  	\begin{DetailItem}{IND}
 		{\IH{IN}put and \IH{D}ecrement}
-		{(HL)$\leftarrow$(BC)\\
-		HL$\leftarrow$HL-1\\
-		B$\leftarrow$B-1}
+		{\SymIND}
 
 		Reads peripheral device addressed by {\tt BC} and stores result in memory addressed by {\tt HL} register pair. Then decrements {\tt HL} and {\tt B}.
 
@@ -9261,8 +9555,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{INDR}
 		{\IH{IN}put and \IH{D}ecrement \IH{R}epeated}
-		{do IND\\
-		while B>0}
+		{\SymINDR}
 
 		Repeats {\tt IND} until {\tt B=0}.
 
@@ -9283,9 +9576,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{INI}
 		{\IH{IN}put and \IH{I}ncrement}
-		{(HL)$\leftarrow$(BC)\\
-		HL$\leftarrow$HL+1\\
-		B$\leftarrow$B-1}
+		{\SymINI}
 
 		Reads peripheral device addressed by {\tt BC} and stores result in memory addressed by {\tt HL} register pair. Then increments {\tt HL} and decrements {\tt B}.
 
@@ -9305,8 +9596,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{INIR}
 		{\IH{IN}put and \IH{I}ncrement \IH{R}epeated}
-		{do INI\\
-		while B>0}
+		{\SymINIR}
 
 		Repeats {\tt INI} until {\tt B=0}.
 
@@ -9327,7 +9617,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{JP nn}
 		{\IH{J}um\IH{P}}
-		{PC$\leftarrow$nn}
+		{\SymJP{nn}}
 
 		\begin{DetailVariants}
 			JP nn\\
@@ -9353,7 +9643,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{JP c,nn}
 		{\IH{J}um\IH{P} conditionally}
-		{if c=true:~JP nn}
+		{\SymJPc{nn}}
 
 		\vspace{1ex} % we need some vertical space to achieve same separation as multicols
 		\begin{tabular}{@{}llcll}			
@@ -9382,7 +9672,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{JP (C)\ZXN}
 		{\IH{J}um\IH{P}}
-		{PC$\leftarrow$PC$\wedge$\$C000+IN(C)<<6}
+		{\SymJPC}
 
 		Sets bottom 14 bits of current program counter {\tt PC}\See{*} to value read from I/O port: {\tt PC[13-0] = (IN (C) << 6)}. Can be used to execute code block read from a disk stream.
 		
@@ -9398,7 +9688,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{JR e}
 		{\IH{J}ump \IH{R}elative}
-		{PC$\leftarrow$PC+e}
+		{\SymJR{e}}
 		
 		Unconditionally performs relative jump. Offset {\tt e} is added to the value of program counter {\tt PC} as signed value to allow jumps forward and backward. Offset is added to {\tt PC} after {\tt JR} instruction is read (aka {\tt PC+2}), so offset is in the range of {\tt -126} to {\tt 129}. Assembler automatically subtracts {\tt 2} from offset value {\tt e} to generate opcode.
 
@@ -9412,7 +9702,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{JR c,n}
 		{\IH{J}ump \IH{R}elative conditionally}
-		{if c is true:~JR n}
+		{\SymJRc{c}{n}}
 
 		\vspace{1ex} % we need some vertical space to achieve same separation as multicols
 		\begin{tabular}{@{}ll}
@@ -9527,10 +9817,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{LDD}
 		{\IH{L}oa\IH{D} and \IH{D}ecrement}		
-		{(DE)$\leftarrow$(HL)\\
-		DE$\leftarrow$DE-1\\
-		HL$\leftarrow$HL-1\\
-		BC$\leftarrow$BC-1}
+		{\SymLDD}
 
 		Loads contents of memory location addressed by {\tt HL} to memory location addressed by {\tt DE}. Then decrements {\tt DE}, {\tt HL} and {\tt BC} register pairs.
 
@@ -9549,8 +9836,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{LDDR}
 		{\IH{L}oa\IH{D} and \IH{D}ecrement \IH{R}epeated}		
-		{do LDD\\
-		while BC>0}
+		{\SymLDDR}
 
 		Repeats {\tt LDD} until {\tt BC=0}. {\tt LDDR} can be used for block transfer. See {\tt LDIR} for an example and comparison of both instructions.
 
@@ -9564,13 +9850,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailTiming}
 
 	\end{DetailItem}
-	
+
+	\DetailItemRef{LDDX, LDDRX}{DetailRefLDDX}
+
 	\begin{DetailItem}{LDI}
 		{\IH{L}oa\IH{D} and \IH{I}ncrement}		
-		{(DE)$\leftarrow$(HL)\\
-		DE$\leftarrow$DE+1\\
-		HL$\leftarrow$HL+1\\
-		BC$\leftarrow$BC-1}
+		{\SymLDI}
 
 		Same as {\tt LDD}, except it increments {\tt DE} and {\tt HL}.
 
@@ -9589,8 +9874,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{LDIR}
 		{\IH{L}oa\IH{D} and \IH{I}ncrement \IH{R}epeated}		
-		{do LDI\\
-		while BC>0}
+		{\SymLDIR}
 
 		Repeats {\tt LDI} until {\tt BC=0}. Example of copying 100 bytes from {\tt source} to {\tt destination} with {\tt LDIR} and {\tt LDDR}:
 
@@ -9622,24 +9906,21 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailTiming}
 
 	\end{DetailItem}
-	
+
+	\DetailItemsRef{LDIX, LDIRX}{See pages \pageref{DetailRefLDIX} and \pageref{DetailRefLDIRX}}
+
 	% this item is not in alphabetical order, should be after LDPIRX, but we have empty space here and following set of instructions belong together so want to keep them on the same page
 	\label{DetailRefLDWS}
 	\begin{DetailItem}{LDWS\ZXN}
-		{\IH{L}oa\IH{D} \IH{W}asp \IH{S}pecial\See{*}}
-		{(DE)$\leftarrow$(HL)\\
-		INC L\\
-		INC D}
+		{\IH{L}oa\IH{D} \IH{W}asp \IH{S}pecial}
+		{\SymLDWS}
 
 		Copies the byte pointed to by {\tt HL} to the address pointed to by {\tt DE}. Then increments {\tt L} and {\tt D}. This is used for vertically copying bytes to the Layer 2 display.
 			
-		Note the source data are read only from single 256B (aligned) block of memory, because only {\tt L} is incremented, not {\tt HL} pair.
-
 		\begin{DetailEffects}[v]
 			\FlagsLDWS
 			\DetailFlagsComments{
 				\item {\tt PV} set if {\tt D} was {\tt \$7F} before increment, otherwise reset
-				\item Flags are identical to what {\tt INC D} would produce
 			}
 		\end{DetailEffects}
 				
@@ -9647,18 +9928,17 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\DetailTime{}{4}{14}
 		\end{DetailTiming}
 
-		\DetailNote{Note: {\tt LDWS} is alphabetically after {\tt LDPIRX}, but is placed here to avoid empty space and to allow Next extended {\tt LDxx} instructions to be presented together}
+		\DetailNote{Note: the source data are read only from single 256B (aligned) block of memory, because only {\tt L} is incremented, not {\tt HL} pair.
+		}
 
-		\DetailNote[]{\See{*}\url{https://www.specnext.com/v-0-8e/}}
+		\DetailNote[]{Note: {\tt LDWS} is alphabetically after {\tt LDPIRX}, but is placed here to avoid empty space and to allow Next extended {\tt LDxx} instructions to be presented together}
 
 	\end{DetailItem}
 
+	\label{DetailRefLDDX}
 	\begin{DetailItem}{LDDX\ZXN}
 		{\IH{L}oa\IH{D} and \IH{D}ecrement e\IH{X}tended}		
-		{if (HL)$\neq$A:~(DE)$\leftarrow$(HL)\\
-		DE$\leftarrow$DE+1\\
-		HL$\leftarrow$HL-1\\
-		BC$\leftarrow$BC+1}
+		{\SymLDDX}
 
 		Works similar to {\tt LDD} except:
 		\begin{DetailCompactList}
@@ -9675,6 +9955,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\end{DetailItem}
 
+	\label{DetailRefLDDRX}
 	\begin{DetailItem}{LDDRX\ZXN}
 		{\IH{L}oa\IH{D} and \IH{D}ecrement \IH{R}epeated e\IH{X}tended}		
 		{do LDDX\\
@@ -9691,12 +9972,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\end{DetailItem}
 
+	\label{DetailRefLDIX}
 	\begin{DetailItem}{LDIX\ZXN}
 		{\IH{L}oa\IH{D} and \IH{I}ncrement e\IH{X}tended}		
-		{if (HL)$\neq$A: (DE)$\leftarrow$(HL)\\
-		DE$\leftarrow$DE+1\\
-		HL$\leftarrow$HL+1\\
-		BC$\leftarrow$BC-1}
+		{\SymLDIX}
 
 		Works similar to {\tt LDI} except:
 		\begin{DetailCompactList}
@@ -9712,10 +9991,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\end{DetailItem}
 
+	\label{DetailRefLDIRX}
 	\begin{DetailItem}{LDIRX\ZXN}
 		{\IH{L}oa\IH{D} and \IH{I}ncrement \IH{R}epeated e\IH{X}tended}		
-		{do LDIX\\
-		while BC>0}
+		{\SymLDIRX}
 
 		Works similar to {\tt LDIR} except the differences noted at {\tt LDIX} on previous page.
 
@@ -9728,14 +10007,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\end{DetailItem}
 
+	\label{DetailRefLDPIRX}
 	\begin{DetailItem}{LDPIRX\ZXN}
 		{\IH{L}oa\IH{D} \IH{P}attern fill and \IH{I}ncrement e\IH{X}tended}
-		{do\\
-		\phantom{>>}t$\leftarrow$(HL$\wedge$\$FFF8+E$\wedge$7)\\
-		\phantom{>>}if t$\neq$A: (DE)$\leftarrow$t\\
-		\phantom{>>}DE$\leftarrow$DE+1\\
-		\phantom{>>}BC$\leftarrow$BC-1\\
-		while BC>0}
+		{\SymLDPIRX}
 
 		Similar to {\tt LDIRX} except the source byte address is not just {\tt HL}, but is obtained by using the top 13 bits of {\tt HL} and lower 3 bits of {\tt DE}. Furthermore {\tt HL} is not incremented during loop; it serves as base address of aligned 8 byte lookup table. {\tt DE} works as destination and also wrapping index 0..7 into table. This instruction is intended for ``pattern fill'' functionality.
 
@@ -9753,51 +10028,8 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{MIRROR A\ZXN}
 		{\IH{MIRROR} bits}
-		{
-			\scriptsize
-			\multirow{3}{*}{
-				\setlength{\unitlength}{0.9mm}
-				\put(-1.5,-2){\makebox(4,3){A}}
-				\begin{picture}(25,5.5)
-					\put(2,-2){\framebox(6,3){7654}}
-					\put(8.2,-2){\framebox(6,3){3210}}
+		{\SymMIRROR{A}}
 
-					\put(13.5,-2.5){\line(0,-1){5}}
-					\put(13.5,-7.5){\line(-1,0){11}}
-					\put(2.5,-7.5){\vector(0,1){5}}
-
-					\put(12,-2.5){\line(0,-1){4}}
-					\put(12,-6.5){\line(-1,0){7.8}}
-					\put(4.2,-6.5){\vector(0,1){4}}
-
-					\put(10.5,-2.5){\line(0,-1){3}}
-					\put(10.5,-5.5){\line(-1,0){4.7}}
-					\put(5.8,-5.5){\vector(0,1){3}}
-
-					\put(9,-2.5){\line(0,-1){2}}
-					\put(9,-4.5){\line(-1,0){1.8}}
-					\put(7.3,-4.5){\vector(0,1){2}}
-
-					\put(2.5,6.5){\line(0,-1){5}}
-					\put(13.5,6.5){\line(-1,0){11}}
-					\put(13.5,6.5){\vector(0,-1){5}}
-
-					\put(4.2,5.5){\line(0,-1){4}}
-					\put(12,5.5){\line(-1,0){7.8}}
-					\put(12,5.5){\vector(0,-1){4}}
-
-					\put(5.8,4.5){\line(0,-1){3}}
-					\put(10.5,4.5){\line(-1,0){4.7}}
-					\put(10.5,4.5){\vector(0,-1){3}}
-
-					\put(7.3,3.5){\line(0,-1){2}}
-					\put(9,3.5){\line(-1,0){1.8}}
-					\put(9,3.5){\vector(0,-1){2}}
-				\end{picture}
-			}
-		}
-
-		\vspace{7ex}
 		Mirrors (reverses the order) of bits in the accumulator {\tt A}.
 
 		\DetailNoEffect
@@ -9812,7 +10044,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{MUL D,E\ZXN}
 		{\IH{MUL}tiply}
-		{DE$\leftarrow$D$\times$E}
+		{\SymMUL}
 
 		Multiplies {\tt D} by {\tt E}, storing 16-bit result into {\tt DE}.
 
@@ -9842,7 +10074,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{\small NEXTREG n,s{\scriptsize \ZXN}}
 		{set \IH{NEXT} \IH{REG}ister value}
-		{HwNextReg[n]$\leftarrow$s}
+		{\SymNEXTREG{s}}
 
 		\begin{DetailVariants}
 			NEXTREG n,A\\
@@ -9930,12 +10162,9 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{OTDR}
 		{\IH{O}u\IH{T}put and \IH{D}ec\IH{R}ement}
-		{(BC)$\leftarrow$(HL)\\
-		HL$\leftarrow$HL-1\\
-		B$\leftarrow$B-1\\
-		while B>0}
+		{\SymOTDR}
 
-		Reads from memory location addressed by {\tt HL} and writes to port at {\tt BC}. Afterwards {\tt HL} and {\tt B} are decremented. This is repeated until {\tt B=0}.
+		Repeats {\tt OUTD} (see page \pageref{DetailRefOUTD}) until {\tt B=0}. Similar to {\tt OTIR} except {\tt HL} is decremented instead of incremented.
 
 		\begin{DetailEffects}
 			\FlagsOTDR
@@ -9953,12 +10182,9 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{OTIR}
 		{\IH{O}u\IH{T}put and \IH{I}nc\IH{R}ement}
-		{(BC)$\leftarrow$(HL)\\
-		HL$\leftarrow$HL+1\\
-		B$\leftarrow$B-1\\
-		while B>0}
+		{\SymOTIR}
 
-		Similar to {\tt OTDR} except {\tt HL} is incremented instead of decremented.
+		Repeats {\tt OUTI} (see page \pageref{DetailRefOUTI}) until {\tt B=0}. Similar to {\tt OTDR} except {\tt HL} is incremented instead of decremented.
 
 		\begin{DetailEffects}
 			\FlagsOTIR
@@ -9977,7 +10203,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{OUT (d),s}
 		{\IH{OUT}put to port}
-		{(d)$\leftarrow$s}
+		{\SymOUT{d}{s}}
 
 		\begin{DetailVariants}
 			OUT (n),A
@@ -10020,9 +10246,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\label{DetailRefOUTD}
 	\begin{DetailItem}{OUTD}
 		{\IH{OUT}put and \IH{D}ecrement}
-		{(BC)$\leftarrow$(HL)\\
-		HL$\leftarrow$HL-1\\
-		B$\leftarrow$B-1}
+		{\SymOUTD}
 
 		Outputs the value from contents of memory addressed by {\tt HL} to port on address {\tt BC}. Then decrements both, {\tt HL} and {\tt B}.
 
@@ -10041,11 +10265,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\end{DetailItem}
 
 	\pagebreak
+	\label{DetailRefOUTI}
 	\begin{DetailItem}{OUTI}
 		{\IH{OUT}put and \IH{I}ncrement}
-		{(BC)$\leftarrow$(HL)\\
-		HL$\leftarrow$HL+1\\
-		B$\leftarrow$B-1}
+		{\SymOUTI}
 
 		Similar to {\tt OUTD} (see page \pageref{DetailRefOUTD}) except {\tt HL} is incremented.
 		
@@ -10065,8 +10288,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{OUTINB\ZXN}
 		{\IH{OUT}put and \IH{I}ncrement with \IH{N}o \IH{B}}
-		{(BC)$\leftarrow$(HL)\\
-		HL$\leftarrow$HL+1}
+		{\SymOUTINB}
 
 		Similar to {\tt OUTI} except it doesn't decrement {\tt B}.
 
@@ -10082,7 +10304,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{PIXELAD\ZXN}
 		{\IH{PIXEL} \IH{AD}dress}
-		{HL$\leftarrow$\$4000+((D$\wedge$\$C0)<<5)+((D$\wedge$\$07)<<8)+((D$\wedge$\$38)<<2)+(E>>3)}
+		{\SymPIXELAD}
 
 		Takes {\tt E} and {\tt D} as the (x,y) coordinates of a point and calculates the address of the byte containing this pixel in the pixel area of standard ULA screen 0. Result is stored in {\tt HL}.
 
@@ -10097,12 +10319,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{PIXELDN\ZXN}
 		{\IH{PIXEL} \IH{D}ow\IH{N}}
-		{if (HL$\wedge$\$700)$\neq$\$700\\
-		\phantom{>>}HL$\leftarrow$HL+256\\
-		else if (HL$\wedge$\$E0)$\neq$\$E0\\
-		\phantom{>>}HL$\leftarrow$HL$\wedge$\$F8FF+\$20\\
-		else\\
-		\phantom{>>}HL$\leftarrow$HL$\wedge$\$F81F+\$800}
+		{\SymPIXELDN}
 
 		Updates the address in {\tt HL} (likely from prior {\tt PIXELAD} or {\tt PIXELDN}) to move down by one line of pixels of standard ULA screen 0.
 
@@ -10184,7 +10401,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{RES b,s}
 		{\IH{RES}et bit}
-		{$\mathtt{s_b}\leftarrow$0}
+		{\SymRES{s}}
 
 		% we use tabularx instead of multicols because some columns need to be wider to accomodate instructions. And then tabularx instead of tabular to fit whole width
 		\begin{DetailVariants}
@@ -10234,9 +10451,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{RET}
 		{\IH{RET}urn from subroutine}
-		{PC\Low$\leftarrow$(SP)\\
-		PC\High$\leftarrow$(SP+1)\\
-		SP$\leftarrow$SP+2}
+		{\SymRET}
 
 		Returns from subroutine. The contents of program counter {\tt PC} is {\tt POP}-ed from stack so next instruction will be loaded from there.
 
@@ -10250,7 +10465,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{RET c}
 		{\IH{RET}urn from subroutine conditionally}
-		{if c is true:~RET}
+		{\SymRETc{c}}
 
 		\vspace{1ex} % we need some vertical space to achieve same separation as multicols
 		\begin{tabular}{@{}llcll}
@@ -10277,9 +10492,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{RETI}
 		{\IH{RET}urn from \IH{I}nterrupt}
-		{PC\Low$\leftarrow$(SP)\\
-		PC\High$\leftarrow$(SP+1)\\
-		SP$\leftarrow$SP+2}
+		{\SymRETI}
 
 		Returns from maskable interrupt; restores stack pointer {\tt SP} and signals to I/O device that interrupt routine is completed.
 		
@@ -10295,10 +10508,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{RETN}
 		{\IH{RET}urn from \IH{N}on-maskable interrupt}
-		{PC\Low$\leftarrow$(SP)\\
-		PC\High$\leftarrow$(SP+1)\\
-		SP$\leftarrow$SP+2\\
-		IFF1$\leftarrow$IFF2}
+		{\SymRETN}
 
 		Returns from non-maskable interrupt; restores stack pointer {\tt SP} and copies state of {\tt IFF2} back to {\tt IFF1} so that maskable interrupts are re-enabled.
 
@@ -10312,20 +10522,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{RL s}
 		{\IH{R}otate \IH{L}eft}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(2,0){\framebox(4,3){CF}}
-				\put(9,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(9,1.5){\vector(-1,0){3}}
-				\put(2,1.5){\line(-1,0){2}}
-				\put(0,1.5){\line(0,1){2.5}}
-				\put(0,4){\line(1,0){17.5}}
-				\put(17.5,4){\line(0,-1){2.5}}
-				\put(17.5,1.5){\vector(-1,0){1.5}}
-			\end{picture}
-		}
+		{\SymRL{s}}
 
 		\begin{DetailVariants}
 			RL A\\
@@ -10376,20 +10573,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{RLA}
 		{\IH{R}otate \IH{L}eft \IH{A}ccumulator}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(2,0){\framebox(4,3){CF}}
-				\put(9,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(9,1.5){\vector(-1,0){3}}
-				\put(2,1.5){\line(-1,0){2}}
-				\put(0,1.5){\line(0,1){2.5}}
-				\put(0,4){\line(1,0){17.5}}
-				\put(17.5,4){\line(0,-1){2.5}}
-				\put(17.5,1.5){\vector(-1,0){1.5}}
-			\end{picture}
-		}
+		{\SymRL{A}}
 
 		Performs {\tt RL A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
 
@@ -10405,19 +10589,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	
 	\begin{DetailItem}{RLC s}
 		{\IH{R}otate \IH{L}eft \IH{C}ircular}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,5)
-				\put(0,0){\framebox(4,3){CF}}
-				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(8,1.5){\vector(-1,0){4}}
-				\put(6,1.5){\line(0,1){2.5}}
-				\put(6,4){\line(1,0){11}}
-				\put(17,4){\line(0,-1){2.5}}
-				\put(17,1.5){\vector(-1,0){2}}
-			\end{picture}
-		}
+		{\SymRLC{s}}
 
 		\begin{DetailVariants}
 			RLC A\\
@@ -10452,6 +10624,14 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Performs 8-bit rotation to the left. Bit {\tt 7} is moved to carry flag {\tt CF} as well as to bit {\tt 0}. Result is then stored back to {\tt s}.
 
+		Note: undocumented variants work slightly differently:
+
+		\begin{multicols}{2}
+			\DetailAlternative{RLC r,(IX+d)}{\SymRLCu{r}{IX}}
+
+			\DetailAlternative{RLC r,(IY+d)}{\SymRLCu{r}{IY}}
+		\end{multicols}
+
 		\begin{DetailEffects}[p]
 			\FlagsRLCr
 		\end{DetailEffects}
@@ -10468,19 +10648,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{RLCA}
 		{\IH{R}otate \IH{L}eft \IH{C}ircular \IH{A}ccumulator}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,5)
-				\put(0,0){\framebox(4,3){CF}}
-				\put(8,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(8,1.5){\vector(-1,0){4}}
-				\put(6,1.5){\line(0,1){2.5}}
-				\put(6,4){\line(1,0){11}}
-				\put(17,4){\line(0,-1){2.5}}
-				\put(17,1.5){\vector(-1,0){2}}
-			\end{picture}
-		}
+		{\SymRLC{A}}
 		
 		Performs {\tt RLC A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
 
@@ -10497,27 +10665,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\label{DetailRefRLD}
 	\begin{DetailItem}{RLD}
 		{\IH{R}otate \IH{L}eft bcd \IH{D}igit}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(25,5.5)
-				\put(-7,0){\makebox(4,3){A}}
-				\put(20,0){\makebox(4,3){(HL)}}
-				\put(-2,0){\framebox(4.5,3){7-4}}
-				\put(2.65,0){\framebox(4.5,3){3-0}}
-				\put(9,0){\framebox(4.5,3){7-4}}
-				\put(13.65,0){\framebox(4.5,3){3-0}}
-				\put(5,4.45){\line(0,-1){1.45}}
-				\put(5,4.45){\line(1,0){11.5}}
-				\put(16.5,4.45){\vector(0,-1){1.45}}
-				\put(12,-1.45){\vector(0,1){1.45}}
-				\put(12,-1.45){\line(1,0){3.75}}
-				\put(15.75,-1.45){\line(0,1){1.45}}
-				\put(5,-1.45){\vector(0,1){1.45}}
-				\put(10.5,-1.45){\line(-1,0){5.5}}
-				\put(10.5,-1.45){\line(0,1){1.45}}
-			\end{picture}
-		}
+		{\SymRLD}
 
 		Performs leftward 12-bit rotation of 4-bit nibbles where 2 least significant nibbles are stored in memory location addressed by {\tt HL} and most significant digit as lower 4 bits of the accumulator {\tt A}.
 		
@@ -10551,20 +10699,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{RR s}
 		{\IH{R}otate \IH{R}ight}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(12,0){\framebox(4,3){CF}}
-				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(0,1.5){\vector(1,0){2}}
-				\put(9,1.5){\vector(1,0){3}}
-				\put(0,1.5){\line(0,1){2.5}}
-				\put(0,4){\line(1,0){17.5}}
-				\put(17.5,4){\line(0,-1){2.5}}
-				\put(16,1.5){\line(1,0){1.5}}
-			\end{picture}
-		}
+		{\SymRR{s}}
 
 		\begin{DetailVariants}
 			RR A\\
@@ -10614,20 +10749,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{RRA}
 		{\IH{R}otate \IH{R}ight \IH{A}ccumulator}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(12,0){\framebox(4,3){CF}}
-				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(0,1.5){\vector(1,0){2}}
-				\put(9,1.5){\vector(1,0){3}}
-				\put(0,1.5){\line(0,1){2.5}}
-				\put(0,4){\line(1,0){17.5}}
-				\put(17.5,4){\line(0,-1){2.5}}
-				\put(16,1.5){\line(1,0){1.5}}
-			\end{picture}
-		}
+		{\SymRR{A}}
 
 		Performs {\tt RR A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
 
@@ -10644,19 +10766,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{RRC s}
 		{\IH{R}otate \IH{R}ight \IH{C}ircular}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(13,0){\framebox(4,3){CF}}
-				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(0,1.5){\vector(1,0){2}}
-				\put(9,1.5){\vector(1,0){4}}
-				\put(0,1.5){\line(0,1){2.5}}
-				\put(0,4){\line(1,0){11}}
-				\put(11,4){\line(0,-1){2.5}}
-			\end{picture}
-		}
+		{\SymRRC{s}}
 
 		\begin{DetailVariants}
 			RRC A\\
@@ -10706,19 +10816,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{RRCA}
 		{\IH{R}otate \IH{R}ight \IH{C}ircular \IH{A}ccumulator}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(13,0){\framebox(4,3){CF}}
-				\put(2,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(0,1.5){\vector(1,0){2}}
-				\put(9,1.5){\vector(1,0){4}}
-				\put(0,1.5){\line(0,1){2.5}}
-				\put(0,4){\line(1,0){11}}
-				\put(11,4){\line(0,-1){2.5}}
-			\end{picture}
-		}
+		{\SymRRC{A}}
 
 		Performs {\tt RRC A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
 
@@ -10735,27 +10833,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{RRD}
 		{\IH{R}otate \IH{R}ight bcd \IH{D}igit}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(25,5.5)
-				\put(-7,0){\makebox(4,3){A}}
-				\put(20,0){\makebox(4,3){(HL)}}
-				\put(-2,0){\framebox(4.5,3){7-4}}
-				\put(2.65,0){\framebox(4.5,3){3-0}}
-				\put(9,0){\framebox(4.5,3){7-4}}
-				\put(13.65,0){\framebox(4.5,3){3-0}}
-				\put(16.5,-1.45){\line(0,1){1.45}}
-				\put(5,-1.45){\line(1,0){11.5}}
-				\put(5,-1.45){\vector(0,1){1.45}}
-				\put(15.75,4.45){\vector(0,-1){1.45}}
-				\put(12,4.45){\line(1,0){3.75}}
-				\put(12,4.45){\line(0,-1){1.45}}
-				\put(10.5,4.45){\vector(0,-1){1.45}}
-				\put(10.5,4.45){\line(-1,0){5.5}}
-				\put(5,4.45){\line(0,-1){1.45}}
-			\end{picture}
-		}
+		{\SymRRD}
 		
 		Similar to {\tt RLD} (page \pageref{DetailRefRLD}) except rotation is to the right. If used with BCD values, this operation effectively divides 3-digit BCD number by {\tt 10} and stores remainder in {\tt A}.
 
@@ -10771,10 +10849,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{RST n}
 		{\IH{R}e\IH{ST}art}
-		{(SP-1)$\leftarrow$PC\High\\
-		(SP-2)$\leftarrow$PC\Low\\
-		SP$\leftarrow$SP-2\\
-		PC$\leftarrow$n}
+		{\SymRST{n}}
 
 		\begin{DetailVariants}
 			RST \$00\\
@@ -10873,7 +10948,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{SET b,s}
 		{\IH{SET} bit}
-		{$\mathtt{s_b}\leftarrow$1}
+		{\SymSET{s}}
 
 		\begin{DetailVariants}
 			SET b,A\\
@@ -10911,15 +10986,9 @@ Where possible, multiple variants of same instruction are grouped together and w
 		Note: undocumented variants work slightly differently:
 
 		\begin{multicols}{2}
-			\underline{\tt SET b,(IX+d),r}:\\[1ex]
-			\DetailSymbol{r$\leftarrow$(IX+d)\\
-			$\mathtt{r_b}\leftarrow$1\\
-			(IX+d)$\leftarrow$r}
+			\DetailAlternative{SET b,(IX+d),r}{\SymSETu{r}{IX}}
 
-			\underline{\tt SET b,(IY+d),r}:\\[1ex]
-			\DetailSymbol{r$\leftarrow$(IY+d)\\
-			$\mathtt{r_b}\leftarrow$1\\
-			(IY+d)$\leftarrow$r}
+			\DetailAlternative{SET b,(IY+d),r}{\SymSETu{r}{IY}}
 		\end{multicols}
 
 		\DetailNoEffect
@@ -10935,7 +11004,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{SETAE\ZXN}
 		{\IH{SET} \IH{A}ccumulator from \IH{E}}
-		{A$\leftarrow$unsigned(\$80)>>(E$\wedge$7)}
+		{\SymSETAE}
 
 		Takes the bit number to set from {\tt E} (only the low 3 bits) and sets the value of the accumulator {\tt A} to the value of that bit, but counted from top to bottom ({\tt E=0} will produce {\tt A$\leftarrow$\$80}, {\tt E=7} will produce {\tt A$\leftarrow$\$01} and so on). This works as pixel mask for ULA bitmap modes, when {\tt E} represents x-coordinate {\tt 0-255}.
 
@@ -10950,17 +11019,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{SLA s}
 		{\IH{S}hift \IH{L}eft \IH{A}rithmetic}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(0,0){\framebox(4,3){CF}}
-				\put(7,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(7,1.5){\vector(-1,0){3}}
-				\put(17,1.5){\vector(-1,0){3}}
-				\put(16,0){\makebox(4,3){0}}
-			\end{picture}
-		}
+		{\SymSLA{s}}
 		
 		\begin{DetailVariants}
 			SLA A\\
@@ -11020,17 +11079,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\begin{DetailItem}{SLI s\UNDOC\\SL1 s\UNDOC}
 		{\IH{S}hift \IH{L}eft and \IH{I}ncrement\\
 		\IH{S}hift \IH{L}eft and add \IH{1}}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(0,0){\framebox(4,3){CF}}
-				\put(7,0){\framebox(7,3){7$\leftarrow$0}}
-				\put(7,1.5){\vector(-1,0){3}}
-				\put(17,1.5){\vector(-1,0){3}}
-				\put(16,0){\makebox(4,3){1}}
-			\end{picture}
-		}
+		{\SymSLI{s}}
 		
 		\begin{DetailVariants}
 			SLI A\\
@@ -11083,19 +11132,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\pagebreak
 	\begin{DetailItem}{SRA s}
 		{\IH{S}hift \IH{R}ight \IH{A}rithmetic}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(13,0){\framebox(4,3){CF}}
-				\put(3,0){\framebox(7,3){7$\rightarrow$0}}
-				\put(10,1.5){\vector(1,0){3}}
-				\put(1,1.5){\vector(1,0){2}}
-				\put(1,-1.5){\line(0,1){3}}
-				\put(1,-1.5){\line(1,0){2.5}}
-				\put(3.5,-1.5){\line(0,1){1.5}}
-			\end{picture}
-		}
+		{\SymSRA{s}}
 				
 		% we're using non-standard layout here so that we can fit SRA and SRL to the same page
 		\begin{DetailVariantsVar}{p{1.3cm}p{3.5cm}XX}
@@ -11125,17 +11162,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{SRL s}
 		{\IH{S}hift \IH{R}ight \IH{L}ogical}
-		{
-			\scriptsize
-			\setlength{\unitlength}{0.9mm}
-			\begin{picture}(17,4)
-				\put(-0.5,0){\makebox(1,3){0}}
-				\put(13,0){\framebox(4,3){CF}}
-				\put(3,0){\framebox(7,3){7$\rightarrow$0}}
-				\put(10,1.5){\vector(1,0){3}}
-				\put(1,1.5){\vector(1,0){2}}
-			\end{picture}
-		}
+		{\SymSRL{s}}
 				
 		% we're using non-standard layout here so that we can fit SRA and SRL to the same page
 		\begin{DetailVariantsVar}{p{1.3cm}p{3.5cm}XX}
@@ -11208,27 +11235,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{SWAPNIB\ZXN}
 		{\IH{SWAP} \IH{NIB}bles}
-		{
-			\scriptsize
-			\multirow{3}{*}{
-				\setlength{\unitlength}{0.9mm}
-				\put(-1.5,1){\makebox(4,3){A}}
-				\begin{picture}(25,5.5)
-					\put(2,1){\framebox(6,3){7654}}
-					\put(8.2,1){\framebox(6,3){3210}}
-
-					\put(11.5,0.5){\line(0,-1){2}}
-					\put(11.5,-1.5){\line(-1,0){6.8}}
-					\put(4.7,-1.5){\vector(0,1){2}}
-
-					\put(4.7,6.5){\line(0,-1){2}}
-					\put(11.5,6.5){\line(-1,0){6.8}}
-					\put(11.5,6.5){\vector(0,-1){2}}
-				\end{picture}
-			}
-		}
-
-		\vspace{3ex} % we need some vertical spacing to avoid clipping above image
+		{\SymSWAPNIB}
 
 		Swaps the high and low nibbles of accumulator {\tt A}.
 
@@ -11242,7 +11249,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\begin{DetailItem}{TEST n\ZXN}
 		{\IH{TEST}}
-		{A$\wedge$n}
+		{\SymTEST}
 
 		Similar to {\tt CP} (page \pageref{DetailRefCP}), but performs an {\tt AND} instead of a subtraction.
 
