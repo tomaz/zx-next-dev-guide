@@ -3,6 +3,7 @@
 \usepackage{fancyhdr}
 \usepackage{fancyvrb}
 \usepackage{a4wide}
+\usepackage{amsfonts}
 \usepackage{url}
 \usepackage{array}
 \usepackage{multicol}
@@ -4498,7 +4499,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\setlength{\fboxsep}{0.25mm}
 		\setlength{\tabcolsep}{0.75mm}
 		
-		\begin{tabularx}{\textwidth}{#1ccccccp{1pt}cccccp{1pt}ccp{1pt}l}
+		\begin{tabularx}{\textwidth}{#1ccccccp{1pt}p{2.5ex}p{4ex}p{4ex}ccp{1pt}ccp{1pt}l}
 			\hline
 			
 			% top header line
@@ -4567,7 +4568,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \newcommand{\kkb}{\OpCodeTemplate{kkb}}
 
 % writes given text embedded into left and right arrows; use instead of OpCode
-\newcommand{\OpRange}[1]{\multicolumn{3}{c}{{\tt $|\leftarrow$ #1 $\rightarrow|$}} &}
+\newcommand{\OpRange}[1]{\multicolumn{3}{l}{$|\dashleftarrow$ {\tt #1} $\dashrightarrow|$} &}
 
 % writes hex opcode and number of bytes
 \newcommand{\Hex}[2]{{\tt #1} & {\tt #2} & &}
@@ -5416,7 +5417,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Cycles{1}{4}
 			\Comment{
 				\tt
-				\multirow{7}{*}{
+				\multirow{6}{*}{
 					\begin{tabular}{ll}
 						r & ttt \\
 						\hline
@@ -8364,10 +8365,10 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToSymbol
 			\Symbol{\SymPUSHnn[2]{n}{m}}
 			\FromSymbolToOpCode
-			\OpRange{n\See{1}} 
+			\OpRange{\hspace*{-0.5ex}n\See{1}\hspace*{-0.5ex}} 
 			\Hex{..}{}
 		\SkipToOpCode 
-			\OpRange{m\See{1}} 
+			\OpRange{\hspace*{-0.5ex}m\See{1}\hspace*{-0.5ex}} 
 			\Hex{..}{}
 	\end{instruction}
 
