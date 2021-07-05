@@ -5307,10 +5307,10 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \newcommand{\FlagsCALLccnn}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsCCF}[1][]{\Flags[#1]{\FN}{\FN}{\FX\FlagsSee{2}}{\FN}{0}{\FS}}
 \newcommand{\FlagsCPr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{1}{\FS}}
-\newcommand{\FlagsCPI}[1][]{\Flags[#1]{\FS\FlagsSee{4}}{\FX\FlagsSee{3}}{\FS\FlagsSee{4}}{\FX\FlagsSee{1}}{1}{\FN}}
-\newcommand{\FlagsCPIR}[1][]{\Flags[#1]{\FS\FlagsSee{4}}{\FX\FlagsSee{3}}{\FS\FlagsSee{4}}{\FX\FlagsSee{1}}{1}{\FN}}
-\newcommand{\FlagsCPD}[1][]{\Flags[#1]{\FS\FlagsSee{4}}{\FX\FlagsSee{3}}{\FS\FlagsSee{4}}{\FX\FlagsSee{1}}{1}{\FN}}
-\newcommand{\FlagsCPDR}[1][]{\Flags[#1]{\FS\FlagsSee{4}}{\FX\FlagsSee{3}}{\FS\FlagsSee{4}}{\FX\FlagsSee{1}}{1}{\FN}}
+\newcommand{\FlagsCPI}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
+\newcommand{\FlagsCPIR}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
+\newcommand{\FlagsCPD}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
+\newcommand{\FlagsCPDR}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
 \newcommand{\FlagsCPL}[1][]{\Flags[#1]{\FN}{\FN}{1}{\FN}{1}{\FN}}
 \newcommand{\FlagsDAA}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPP}{\FN}{\FS}}
 \newcommand{\FlagsDECr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV\FlagsSee{5}}{1}{\FN}}
@@ -5341,10 +5341,10 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \newcommand{\FlagsLDr}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsLDrr}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsLDair}[1][]{\Flags[#1]{\FS}{\FS}{0}{{\FlagsSmall IFF2}}{0}{\FN}}
-\newcommand{\FlagsLDI}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FX\FlagsSee{1}}{0}{\FN}}
-\newcommand{\FlagsLDIR}[1][]{\Flags[#1]{\FN}{\FN}{0}{0\FlagsSee{2}}{0}{\FN}}
-\newcommand{\FlagsLDD}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FX\FlagsSee{1}}{0}{\FN}}
-\newcommand{\FlagsLDDR}[1][]{\Flags[#1]{\FN}{\FN}{0}{0\FlagsSee{2}}{0}{\FN}}
+\newcommand{\FlagsLDI}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FX\FlagsSee{3}}{0}{\FN}}
+\newcommand{\FlagsLDIR}[1][]{\Flags[#1]{\FN}{\FN}{0}{0\FlagsSee{4}}{0}{\FN}}
+\newcommand{\FlagsLDD}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FX\FlagsSee{3}}{0}{\FN}}
+\newcommand{\FlagsLDDR}[1][]{\Flags[#1]{\FN}{\FN}{0}{0\FlagsSee{4}}{0}{\FN}}
 \newcommand{\FlagsLDDX}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsLDDRX}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsLDIX}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
@@ -5564,16 +5564,16 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\OpCode{..}{\fbox{100}}{...}
 	\end{instruction}
 
-	\begin{instruction}{OR s\See{2}}
-		\Symbol{\SymOR{s}}
-			\FlagsORr
-			\OpCode{..}{\fbox{110}}{...}
-	\end{instruction}
-
 	\begin{instruction}{XOR s\See{2}}
 		\Symbol{\SymXOR{s}}
 			\FlagsXORr
 			\OpCode{..}{\fbox{101}}{...}
+	\end{instruction}
+
+	\begin{instruction}{OR s\See{2}}
+		\Symbol{\SymOR{s}}
+			\FlagsORr
+			\OpCode{..}{\fbox{110}}{...}
 	\end{instruction}
 
 	\begin{instruction}{CP s\See{1,2}}
@@ -5679,12 +5679,12 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 
 \begin{instrtable}
 
-	\begin{instruction}{ADD HL,rr} 
-		\Symbol{\SymADD{HL}{rr}}
-			\FlagsADDrr
-			\OpCode{00}{\Tt1}{001}
-			\Hex{..}{1}
-			\Cycles{3}{11}
+	\begin{instruction}{ADC HL,rr} 
+		\Symbol{\SymADC{HL}{rr}}
+			\FlagsADCrr
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{15}
 			\Comment{
 				\tt
 				\multirow{4}{*}{
@@ -5697,7 +5697,30 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 						SP & 11 \\
 					\end{tabular}
 				}
+
 			}
+		\SkipToOpCode
+			\OpCode{01}{\Tt1}{010}
+			\Hex{..}{}
+	\end{instruction}
+
+	\begin{instruction}{SBC HL,rr} 
+		\Symbol{\SymSBC{HL}{rr}}
+			\FlagsSBCrr
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{15}
+		\SkipToOpCode
+			\OpCode{01}{\Tt0}{010}
+			\Hex{..}{}
+	\end{instruction}
+
+	\begin{instruction}{ADD HL,rr} 
+		\Symbol{\SymADD{HL}{rr}}
+			\FlagsADDrr
+			\OpCode{00}{\Tt1}{001}
+			\Hex{..}{1}
+			\Cycles{3}{11}
 	\end{instruction}
 
 	\begin{instruction}{ADD IX,pp} 
@@ -5705,28 +5728,6 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\FlagsADDrr
 			\OpCode{11}{011}{110}
 			\Hex{DD}{2}
-			\Cycles{4}{15}
-		\SkipToOpCode
-			\OpCode{00}{\Ss1}{001}
-			\Hex{..}{}
-	\end{instruction}
-
-	\begin{instruction}{ADD IY,qq} 
-		\Symbol{\SymADD{IY}{qq}}
-			\FlagsADDrr
-			\OpCode{11}{111}{110}
-			\Hex{FD}{2}
-			\Cycles{4}{15}
-		\SkipToOpCode
-			\OpCode{00}{\Kk1}{001}
-			\Hex{..}{}
-	\end{instruction}
-
-	\begin{instruction}{ADC HL,rr} 
-		\Symbol{\SymADC{HL}{rr}}
-			\FlagsADCrr
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
 			\Cycles{4}{15}
 			\Comment{
 				\multirow{4}{*}{
@@ -5742,18 +5743,18 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 				}
 			}
 		\SkipToOpCode
-			\OpCode{01}{\Tt1}{010}
+			\OpCode{00}{\Ss1}{001}
 			\Hex{..}{}
 	\end{instruction}
 
-	\begin{instruction}{SBC HL,rr} 
-		\Symbol{\SymSBC{HL}{rr}}
-			\FlagsSBCrr
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
+	\begin{instruction}{ADD IY,qq} 
+		\Symbol{\SymADD{IY}{qq}}
+			\FlagsADDrr
+			\OpCode{11}{111}{110}
+			\Hex{FD}{2}
 			\Cycles{4}{15}
 		\SkipToOpCode
-			\OpCode{01}{\Tt0}{010}
+			\OpCode{00}{\Kk1}{001}
 			\Hex{..}{}
 	\end{instruction}
 
@@ -6578,61 +6579,6 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	
 \begin{instrtable}
 
-	\begin{instruction}{PUSH rr} 
-		\Symbol{\SymPUSH[0]{rr}}
-			\FlagsPUSHrr
-			\OpCode{11}{\Tt0}{101}
-			\Hex{..}{1}
-			\Cycles{3}{11}
-			\Comment{
-				\multirow{4}{*}{
-					\tt
-					\begin{tabular}{ll}
-						rr & tt \\
-						\hline
-						BC & 00 \\
-						DE & 01 \\
-						HL & 10 \\
-						AF & 11 \\
-					\end{tabular}
-				}
-			}
-		\SkipToSymbol
-			\Symbol{\SymPUSH[1]{rr}}
-		\SkipToSymbol
-			\Symbol{\SymPUSH[2]{rr}}
-	\end{instruction}
-
-	\begin{instruction}{PUSH IX} 
-		\Symbol{\SymPUSH[0]{IX}}
-			\FlagsPUSHrr
-			\OpCode{11}{011}{101}
-			\Hex{DD}{2}
-			\Cycles{4}{15}
-		\SkipToSymbol
-			\Symbol{\SymPUSH[1]{IX}}
-			\FromSymbolToOpCode
-			\OpCode{11}{100}{101}
-			\Hex{E5}{}
-		\SkipToSymbol
-			\Symbol{\SymPUSH[2]{IX}}
-	\end{instruction}
-
-	\begin{instruction}{PUSH IY} 
-		\Symbol{\SymPUSH[0]{IY}}
-			\FlagsPUSHrr
-			\OpCode{11}{111}{101}
-			\Hex{FD}{2}
-			\Cycles{4}{15}
-		\SkipToSymbol
-			\Symbol{\SymPUSH[1]{IY}}
-			\FromSymbolToOpCode
-			\OpCode{11}{100}{101}
-			\Hex{E5}{}
-		\SkipToSymbol
-			\Symbol{\SymPUSH[2]{IY}}
-	\end{instruction}
-
 	\begin{instruction}{POP pp} 
 		\Symbol{\SymPOP[0]{pp}}
 			\FlagsPOPrr
@@ -6684,7 +6630,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Symbol{\SymPOP[2]{IX}}
 	\end{instruction}
 
-	\begin{lastinstruction}{POP IY}
+	\begin{instruction}{POP IY}
 		\Symbol{\SymPOP[0]{IY}}
 			\FlagsPOPrr
 			\OpCode{11}{111}{101}
@@ -6697,8 +6643,63 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{E1}{}
 		\SkipToSymbol
 			\Symbol{\SymPOP[2]{IY}}
-	\end{lastinstruction}
+	\end{instruction}
 
+	\begin{instruction}{PUSH rr} 
+		\Symbol{\SymPUSH[0]{rr}}
+			\FlagsPUSHrr
+			\OpCode{11}{\Tt0}{101}
+			\Hex{..}{1}
+			\Cycles{3}{11}
+			\Comment{
+				\multirow{4}{*}{
+					\tt
+					\begin{tabular}{ll}
+						rr & tt \\
+						\hline
+						BC & 00 \\
+						DE & 01 \\
+						HL & 10 \\
+						AF & 11 \\
+					\end{tabular}
+				}
+			}
+		\SkipToSymbol
+			\Symbol{\SymPUSH[1]{rr}}
+		\SkipToSymbol
+			\Symbol{\SymPUSH[2]{rr}}
+	\end{instruction}
+	
+	\begin{instruction}{PUSH IX} 
+		\Symbol{\SymPUSH[0]{IX}}
+			\FlagsPUSHrr
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{4}{15}
+		\SkipToSymbol
+			\Symbol{\SymPUSH[1]{IX}}
+			\FromSymbolToOpCode
+			\OpCode{11}{100}{101}
+			\Hex{E5}{}
+		\SkipToSymbol
+			\Symbol{\SymPUSH[2]{IX}}
+	\end{instruction}
+	
+	\begin{lastinstruction}{PUSH IY} 
+		\Symbol{\SymPUSH[0]{IY}}
+			\FlagsPUSHrr
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{4}{15}
+		\SkipToSymbol
+			\Symbol{\SymPUSH[1]{IY}}
+			\FromSymbolToOpCode
+			\OpCode{11}{100}{101}
+			\Hex{E5}{}
+		\SkipToSymbol
+			\Symbol{\SymPUSH[2]{IY}}
+	\end{lastinstruction}
+	
 \end{instrtable}
 
 \NoteTableSingleItemSpaceCorrection
@@ -6716,14 +6717,6 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 	
 \begin{instrtable}	
 
-	\begin{instruction}{EX DE,HL} 
-		\Symbol{\SymEX{DE}{HL}}
-			\FlagsEXrr
-			\OpCode{11}{101}{011}
-			\Hex{EB}{1}
-			\Cycles{1}{4}
-	\end{instruction}
-
 	\begin{instruction}{EX AF,AF'} 
 		\Symbol{\SymEX{AF}{AF'}}
 			\FlagsEXaf
@@ -6732,16 +6725,12 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Cycles{1}{4}
 	\end{instruction}
 
-	\begin{instruction}{EXX} 
-		\Symbol{\SymEXX[0]}
-			\FlagsEXX
-			\OpCode{11}{011}{001}
-			\Hex{D9}{1}
+	\begin{instruction}{EX DE,HL} 
+		\Symbol{\SymEX{DE}{HL}}
+			\FlagsEXrr
+			\OpCode{11}{101}{011}
+			\Hex{EB}{1}
 			\Cycles{1}{4}
-		\SkipToSymbol
-			\Symbol{\SymEXX[1]}
-		\SkipToSymbol
-			\Symbol{\SymEXX[2]}
 	\end{instruction}
 
 	\begin{instruction}{EX (SP),HL} 
@@ -6767,7 +6756,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{E3}{}
 	\end{instruction}
 
-	\begin{lastinstruction}{EX (SP),IY} 
+	\begin{instruction}{EX (SP),IY} 
 		\Symbol{\SymEX{IY\High}{(SP+1)}}
 			\FlagsEXrr
 			\OpCode{11}{111}{101}
@@ -6778,8 +6767,20 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\FromSymbolToOpCode
 			\OpCode{11}{100}{011}
 			\Hex{E3}{}
-	\end{lastinstruction}
+	\end{instruction}
 
+	\begin{lastinstruction}{EXX} 
+		\Symbol{\SymEXX[0]}
+			\FlagsEXX
+			\OpCode{11}{011}{001}
+			\Hex{D9}{1}
+			\Cycles{1}{4}
+		\SkipToSymbol
+			\Symbol{\SymEXX[1]}
+		\SkipToSymbol
+			\Symbol{\SymEXX[2]}
+	\end{lastinstruction}
+	
 \end{instrtable}
 
 \NoteTableSingleItemSpaceCorrection
@@ -7009,9 +7010,10 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \begin{minipage}{\textwidth}
 	
 \begin{instrtable}
+	% we need slightly more vertical space to accomodate symbolic operation drawing for RLC; it's negative because we only need a fraction of what new line produces
+	\\[-10pt]
 
 	\begin{instruction}{RLC r}
-		% we need slightly more vertical space to accomodate symbolic operation drawing
 		\Symbol{\SymRLC[0]{r}}
 			\FlagsRLCr
 			\OpCode{11}{001}{011}
@@ -7151,19 +7153,16 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\OpCode{..}{\fbox{100}}{...}
 	\end{instruction}
 
-	\begin{instruction}{SLI m\See{1,2}}
-		\Symbol{\vspace*{2pt}\SymSLI[0]{m}}
-			\FlagsSLIr
-			\OpCode{..}{\fbox{110}}{...}
-	\end{instruction}
-
-	\begin{instruction}{SLL m\See{3}}
-	\end{instruction}
-
 	\begin{instruction}{SRA m\See{1}}
 		\Symbol{\vspace*{3pt}\SymSRA[0]{m}}
 			\FlagsSRAr
 			\OpCode{..}{\fbox{101}}{...}
+	\end{instruction}
+
+	\begin{instruction}{SLI m\See{1,2}}
+		\Symbol{\vspace*{2pt}\SymSLI[0]{m}}
+			\FlagsSLIr
+			\OpCode{..}{\fbox{110}}{...}
 	\end{instruction}
 
 	\begin{instruction}{SRL m\See{1}}
@@ -7172,28 +7171,17 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\OpCode{..}{\fbox{111}}{...}
 	\end{instruction}
 
-	\Empty{}
-
-	\begin{instruction}{RLD}
-		\Symbol{\vspace*{-12pt}\hspace*{-1cm}\SymRLD}
-			\FlagsRLD 
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
-			\Cycles{5}{18}
-		\SkipToOpCode 
-			\OpCode{01}{101}{111}
-			\Hex{6F}
+	\begin{instruction}{SLL m\See{3}}
 	\end{instruction}
-		
-	\begin{instruction}{RRD}
-		\Symbol{\vspace*{-12pt}\hspace*{-1cm}\SymRRD}
-			\FlagsRRD
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
-			\Cycles{5}{18}
-		\SkipToOpCode 
-			\OpCode{01}{100}{111}
-			\Hex{67}{}
+
+	\Empty{}
+	
+	\begin{instruction}{RLA}
+		\Symbol{\SymRL[0]{A}}
+			\FlagsRLA
+			\OpCode{00}{010}{111}
+			\Hex{17}{1}
+			\Cycles{1}{4}
 	\end{instruction}
 	
 	\begin{instruction}{RLCA}
@@ -7204,11 +7192,11 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Cycles{1}{4}
 	\end{instruction}
 	
-	\begin{instruction}{RLA}
-		\Symbol{\SymRL[0]{A}}
-			\FlagsRLA
-			\OpCode{00}{010}{111}
-			\Hex{17}{1}
+	\begin{instruction}{RRA}
+		\Symbol{\SymRR[0]{A}}
+			\FlagsRRA
+			\OpCode{00}{011}{111}
+			\Hex{1F}{1}
 			\Cycles{1}{4}
 	\end{instruction}
 	
@@ -7219,15 +7207,31 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{0F}{1}
 			\Cycles{1}{4}
 	\end{instruction}
-	
-	\begin{lastinstruction}{RRA}
-		\Symbol{\SymRR[0]{A}}
-			\FlagsRRA
-			\OpCode{00}{011}{111}
-			\Hex{1F}{1}
-			\Cycles{1}{4}
+
+	\Empty{}
+
+	\begin{instruction}{RLD}
+		\Symbol{\vspace*{-12pt}\hspace*{-0.8cm}\SymRLD}
+			\FlagsRLD 
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{18}
+		\SkipToOpCode 
+			\OpCode{01}{101}{111}
+			\Hex{6F}
+	\end{instruction}
+			
+	\begin{lastinstruction}{RRD}
+		\Symbol{\vspace*{-12pt}\hspace*{-0.8cm}\SymRRD}
+			\FlagsRRD
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{5}{18}
+		\SkipToOpCode 
+			\OpCode{01}{100}{111}
+			\Hex{67}{}
 	\end{lastinstruction}
-		
+			
 \end{instrtable}
 
 \NoteTableSingleItemSpaceCorrection
@@ -7553,7 +7557,89 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 
 \begin{minipage}{\textwidth}
 	
-\begin{instrtable}	
+\begin{instrtable}
+
+	\begin{instruction}{CPD} 
+		\Symbol{\SymCPD[0]}
+			\FlagsCPD
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{\SymCPD[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{101}{001}
+			\Hex{A9}{}
+		\SkipToSymbol
+			\Symbol{\SymCPD[2]}
+	\end{instruction}
+
+	\begin{instruction}{CPDR} 
+		\Symbol{\SymCPDR[0]}
+			\FlagsCPDR
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+			\Comment{if {\tt A=(HL)}}
+		\SkipToSymbol
+			\Symbol{\SymCPDR[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{111}{001}
+			\Hex{B9}{}
+			\Cycles{}{}
+			\Comment{or {\tt BC}=0}
+		\SkipToOpCode
+			\OpCode{}{}{}
+			\Hex{}{}
+			\Cycles{5}{21}
+			\Comment{if {\tt A$\neq$(HL)}}
+		\SkipToOpCode
+			\OpCode{}{}{}
+			\Hex{}{}
+			\Cycles{}{}
+			\Comment{and {\tt BC$\neq$0}}
+	\end{instruction}
+
+	\begin{instruction}{CPI} 
+		\Symbol{\SymCPI[0]}
+			\FlagsCPI
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{\SymCPI[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{100}{001}
+			\Hex{A1}{}
+		\SkipToSymbol
+			\Symbol{\SymCPI[2]}
+	\end{instruction}
+
+	\begin{instruction}{CPIR} 
+		\Symbol{\SymCPIR[0]}
+			\FlagsCPIR
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+			\Comment{if {\tt A=(HL)}}
+		\SkipToSymbol
+			\Symbol{\SymCPIR[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{110}{001}
+			\Hex{B1}{}
+			\Cycles{}{}
+			\Comment{or {\tt BC}=0}
+		\SkipToOpCode
+			\OpCode{}{}{}
+			\Hex{}{}
+			\Cycles{5}{21}
+			\Comment{if {\tt A$\neq$(HL)}}
+		\SkipToOpCode
+			\OpCode{}{}{}
+			\Hex{}{}
+			\Cycles{}{}
+			\Comment{and {\tt BC$\neq$0}}
+	\end{instruction}
 
 	\begin{instruction}{LDI}
 		\Symbol{\SymLDI[0]}
@@ -7605,7 +7691,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Symbol{\SymLDD[3]}
 	\end{instruction}
 
-	\begin{instruction}{LDDR} 
+	\begin{lastinstruction}{LDDR} 
 		\Symbol{\SymLDDR[0]}
 			\FlagsLDDR
 			\OpCode{11}{101}{101}
@@ -7619,97 +7705,15 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{B8}{}
 			\Cycles{5}{21}
 			\Comment{if {\tt BC$\neq$0}}
-	\end{instruction}
-
-	\begin{instruction}{CPI} 
-		\Symbol{\SymCPI[0]}
-			\FlagsCPI
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
-			\Cycles{4}{16}
-		\SkipToSymbol
-			\Symbol{\SymCPI[1]}
-			\FromSymbolToOpCode
-			\OpCode{10}{100}{001}
-			\Hex{A1}{}
-		\SkipToSymbol
-			\Symbol{\SymCPI[2]}
-	\end{instruction}
-
-	\begin{instruction}{CPIR} 
-		\Symbol{\SymCPIR[0]}
-			\FlagsCPIR
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
-			\Cycles{4}{16}
-			\Comment{if {\tt A=(HL)}}
-		\SkipToSymbol
-			\Symbol{\SymCPIR[1]}
-			\FromSymbolToOpCode
-			\OpCode{10}{110}{001}
-			\Hex{B1}{}
-			\Cycles{}{}
-			\Comment{or {\tt BC}=0}
-		\SkipToOpCode
-			\OpCode{}{}{}
-			\Hex{}{}
-			\Cycles{5}{21}
-			\Comment{if {\tt A$\neq$(HL)}}
-		\SkipToOpCode
-			\OpCode{}{}{}
-			\Hex{}{}
-			\Cycles{}{}
-			\Comment{and {\tt BC$\neq$0}}
-	\end{instruction}
-
-	\begin{instruction}{CPD} 
-		\Symbol{\SymCPD[0]}
-			\FlagsCPD
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
-			\Cycles{4}{16}
-		\SkipToSymbol
-			\Symbol{\SymCPD[1]}
-			\FromSymbolToOpCode
-			\OpCode{10}{101}{001}
-			\Hex{A9}{}
-		\SkipToSymbol
-			\Symbol{\SymCPD[2]}
-	\end{instruction}
-
-	\begin{lastinstruction}{CPDR} 
-		\Symbol{\SymCPDR[0]}
-			\FlagsCPDR
-			\OpCode{11}{101}{101}
-			\Hex{ED}{2}
-			\Cycles{4}{16}
-			\Comment{if {\tt A=(HL)}}
-		\SkipToSymbol
-			\Symbol{\SymCPDR[1]}
-			\FromSymbolToOpCode
-			\OpCode{10}{111}{001}
-			\Hex{B9}{}
-			\Cycles{}{}
-			\Comment{or {\tt BC}=0}
-		\SkipToOpCode
-			\OpCode{}{}{}
-			\Hex{}{}
-			\Cycles{5}{21}
-			\Comment{if {\tt A$\neq$(HL)}}
-		\SkipToOpCode
-			\OpCode{}{}{}
-			\Hex{}{}
-			\Cycles{}{}
-			\Comment{and {\tt BC$\neq$0}}
 	\end{lastinstruction}
 
 \end{instrtable}
 
 \begin{notestable}
-	\NoteItem{\See{1}PV is {\tt 1} if {\tt BC$\neq$0} after execution, otherwise {\tt 0}}
-	\NoteItem{\See{2}PV is {\tt 0} only at the completion of the instruction}
-	\NoteItem{\See{3}ZF is {\tt 1} if {\tt A=(HL)}, otherwise {\tt 0}}
-	\NoteItem{\See{4}See section \ref{block_mem} for a description}
+	\NoteItem{\See{1}See section \ref{block_mem} for a description}
+	\NoteItem{\See{2}ZF is {\tt 1} if {\tt A=(HL)}, otherwise {\tt 0}}
+	\NoteItem{\See{3}PV is {\tt 1} if {\tt BC$\neq$0} after execution, otherwise {\tt 0}}
+	\NoteItem{\See{4}PV is {\tt 0} only at the completion of the instruction}
 \end{notestable}
 
 \end{minipage}
