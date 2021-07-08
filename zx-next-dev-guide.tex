@@ -4585,7 +4585,8 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \newcommand{\OpRangeSmall}[1]{\OpRangeTemplate{\leftarrow}{#1}{\rightarrow}}
 
 % writes hex opcode and number of bytes
-\newcommand{\Hex}[2]{{\tt #1} & {\tt #2} & &}
+\newcommand{\HexBytes}[1]{\IfEq{#1}{}{}{{\tt #1}{\tiny B}}}
+\newcommand{\Hex}[2]{{\tt #1} & \HexBytes{#2} & &}
 
 % writes machine cycles and T states
 \newcommand{\Cycles}[2]{{\tt #1} & {\tt #2} & &}
