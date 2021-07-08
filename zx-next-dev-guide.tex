@@ -1323,6 +1323,7 @@ Directly after an {\tt EI} or {\tt DI} instruction, interrupts aren't accepted. 
 
 You can assume that there never is an interrupt after the {\tt EI}, before the {\tt IN A,(\$0A9)} - which would be a problem because the MSX interrupt routine reads the keyboard too.
 
+\pagebreak
 Using this feature of {\tt EI}, it is possible to check whether it is true that interrupts are never accepted during instructions:
 
 \begin{Verbatim}
@@ -1843,20 +1844,20 @@ If you are using the standard interrupt handler or OS routines, then any time yo
 
 Example routine for selecting bank on 128K Spectrum (supports standard interrupt handler and OS routines). Routine takes bank number 0-7 as argument in {\tt B}:
 
-\begin{Verbatim}[gobble=1]
-	switchBank:
-		LD A, ($5B5C)     ; get existing value from port
-		AND %11111000     ; clear bottom 3 bits
-		OR B              ; A now holds the value to be set
+\begin{Verbatim}
+switchBank:
+	LD A, ($5B5C)     ; get existing value from port
+	AND %11111000     ; clear bottom 3 bits
+	OR B              ; A now holds the value to be set
 
-		DI                ; interrupts must be disabled
+	DI                ; interrupts must be disabled
 
-		LD ($5B5C), A     ; write value into $5B5C
-		LD BC, $7FFD
-		OUT (C), A        ; write same value into $7FFD
+	LD ($5B5C), A     ; write value into $5B5C
+	LD BC, $7FFD
+	OUT (C), A        ; write same value into $7FFD
 
-		EI                ; enable interrupts
-		RET
+	EI                ; enable interrupts
+	RET
 \end{Verbatim}
 
 To call the routine use:
@@ -2287,8 +2288,8 @@ Next inherites Spectrum border colour handling through \PortLink{ULA Control Por
 % note: use of "previous page" in parenthesis above - this works as long as colours table will be physically on previous page in printed book, but make sure it's adjusted if additional content it added, or layout changes otherwise in the future ("in previous section" or "above" for example)
 
 \begin{Verbatim}
-LD A, 1       ; Select blue colour
-OUT ($FE), A  ; Set border colour from A
+	LD A, 1       ; Select blue colour
+	OUT ($FE), A  ; Set border colour from A
 \end{Verbatim}
 
 Note: border colour is set the same way regardless of graphics mode used. However some Layer 2 modes and Tileset may partially or fully cover border, effectively making it invisible to user.
@@ -2361,6 +2362,7 @@ After Layer 2 is enabled, we can start writing into memory banks. As mentioned a
 
 Paging can be implemented using any supported mode, as described in section \ref{zx_next_memorypaging}, by swapping in bank numbers to 16K slot at {\tt \$C000}. The simplest and most versatile is MMU mode; MMU6 and MMU7 registers correspond to 2 8K slots starting at {\tt \$C000}.
 
+\pagebreak
 \subsection{Drawing}
 
 In general, drawing pixels requires programmer to:
@@ -3227,6 +3229,7 @@ OFFSET_OF_TILES     EQU (START_OF_TILES - START_OF_BANK_5) >> 8
 
 Above code uses couple neat preprocessing tricks to automatically calculate MSB for tilemap and tile definitions offsets. The rest is simply setting up desired behaviour using Next registers.
 
+\pagebreak
 The only remaining piece is to actually copy all the data to expected memory locations:
 
 \begin{Verbatim}
@@ -3248,7 +3251,26 @@ The only remaining piece is to actually copy all the data to expected memory loc
 	CALL copyTileMap40x32        ; Copy 40x32 tilemaps
 \end{Verbatim}
 
-We already know {\tt copyPalette} routine from Layer 2 chapter, the other two are straightforward {\tt LDIR} loops, so am not including them here. But you can find them in companion sample code on \url{https://github.com/tomaz/zx-next-dev-guide}.
+We already know {\tt copyPalette} routine from Layer 2 chapter, the other two are straightforward {\tt LDIR} loops:
+
+\begin{Verbatim}
+copyTileDefinitions:
+	LD DE, START_OF_TILES
+	LDIR
+	RET
+
+copyTileMap40x32:
+	LD BC, 40*32		; This variant always load 40x32
+	JR copyTileMap
+
+copyTileMap80x32:
+	LD BC, 80*32		; This variant always loads 80x32
+
+copyTileMap:
+	LD DE, START_OF_TILEMAP
+	LDIR
+	RET
+\end{Verbatim}
 
 
 \pagebreak
@@ -3667,7 +3689,7 @@ sprites:
 
 After sprites are loaded into FPGA memory, we need to enable them:
 
-\begin{Verbatim}[gobble=1]
+\begin{Verbatim}
 	NEXTREG $15, %01000001		; Sprite 0 on top, SLU, sprites visible
 \end{Verbatim}
 
@@ -3676,7 +3698,7 @@ After sprites are loaded into FPGA memory, we need to enable them:
 
 Sprites are now loaded into FPGA memory, they are enabled, so we can start displaying them. This example displays same sprite pattern twice, as two separate sprites:
 
-\begin{Verbatim}[gobble=1]
+\begin{Verbatim}
 	NEXTREG $34, 0              ; First sprite
 	NEXTREG $35, 100            ; X=100
 	NEXTREG $36, 80             ; Y=80
@@ -3691,11 +3713,12 @@ Sprites are now loaded into FPGA memory, they are enabled, so we can start displ
 \end{Verbatim}
 
 
+\pagebreak
 \subsubsection{Displaying Combined Sprites}
 
 Even handling combined sprites is much simpler in practice than in theory! This example combines 4 sprites into single one using unified relative sprites. Note use of ``inc'' register {\tt \$79} which auto-increments sprite index for next sprite:
 
-\begin{Verbatim}[gobble=1]
+\begin{Verbatim}
 	NEXTREG $34, 2              ; Select third sprite
 	NEXTREG $35, 150            ; X=150
 	NEXTREG $36, 80             ; Y=80
@@ -3724,7 +3747,7 @@ Even handling combined sprites is much simpler in practice than in theory! This 
 
 Because we use combined sprite, we only need to update anchor to change all its relatives. And because we set it up as unified relative sprites, even rotation, mirroring and scaling is inherited as if it was a single sprite!
 
-\begin{Verbatim}[gobble=1]
+\begin{Verbatim}
 	NEXTREG $34, 1              ; Select second sprite
 	NEXTREG $35, 200            ; X=200
 	NEXTREG $36, 100            ; Y=100
@@ -4018,6 +4041,7 @@ A different way of playing sounds is to convert WAV file into 1, 2 or 4 bit per 
 For creating music there are also several options. NextDAW\footnote{\url{https://nextdaw.biasillo.com/}} is native composer that runs on ZX Spectrum Next itself. Or if you prefer cross platform, Arkos Tracker\footnote{\url{https://www.julien-nevo.com/arkostracker/}} or Vortex Tracker\footnote{\url{https://bulba.untergrund.net/vortex_e.htm}} should do the job. All include ``drivers''; Z80 code you can include in your program that can load and play created music.
 
 
+\pagebreak
 \subsection{Examples}
 
 Before we can start playing sounds, we need to enable the sound hardware. While this is usually enabled by default, it's nonetheless good idea to ensure our program will always run under the same conditions.
@@ -12346,7 +12370,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		\begin{multicols}{2}
 			{\tt CPIR} = finding first occurrence:
-			\begin{Verbatim}[gobble=4]
+			\begin{Verbatim}[gobble=3]
 				LD HL, $0000
 				LD BC, $0999
 				LD A, $AB
@@ -12354,7 +12378,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\end{Verbatim}
 
 			{\tt CPDR} = finding last occurrence:
-			\begin{Verbatim}[gobble=4]
+			\begin{Verbatim}[gobble=3]
 				LD HL, $0999
 				LD BC, $0999
 				LD A, $AB
@@ -12634,12 +12658,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 		So these 2 have exactly the same result (though, as mentioned in section \ref{zx_next_keyboard}, variant on the right is slightly faster, 18 vs 22 T states):
 
 		\begin{multicols}{2}
-			\begin{Verbatim}[gobble=4]
+			\begin{Verbatim}[gobble=3]
 				LD BC, $DFFE
 				IN A, (C)
 			\end{Verbatim}
 			\columnbreak
-			\begin{Verbatim}[gobble=4]
+			\begin{Verbatim}[gobble=3]
 				LD A, $DF
 				IN A, ($FE)
 			\end{Verbatim}
@@ -13064,7 +13088,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		\begin{multicols}{2}
 			{\tt LDIR} = copy forward
-			\begin{Verbatim}[gobble=4]
+			\begin{Verbatim}[gobble=3]
 				LD HL, source
 				LD DE, destination
 				LD BC, 100
@@ -13072,7 +13096,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\end{Verbatim}
 			
 			{\tt LDDR} = copy backwards
-			\begin{Verbatim}[gobble=4]
+			\begin{Verbatim}[gobble=3]
 				LD HL, source+99
 				LD DE, destination+99
 				LD BC, 100
