@@ -54,6 +54,10 @@
 % █░░░░░░░░░░░░███░░░░░░░░░░░░░░█░░░░░░█████████░░░░░░░░░░░░░░█
 % █████████████████████████████████████████████████████████████
 
+% definitions based on whether PDF is generated for book or online.
+\newcommand*{\PRINTED}{}	% comment this line for generating online variant
+\newcommand{\email}[3]{\ifdefined\PRINTED{\tt #1@#2.#3}\else{\tt #1 AT #2 DOT #3}\fi}
+
 % redefine the default "plain" pagestyle (used by chapter pages)
 \fancypagestyle{plain}{
 	\fancyhf{} 
@@ -142,16 +146,6 @@
 	xleftmargin=5mm,
 	tabsize=4,
 	fontsize=\small
-}
-
-% definitions based on whether PDF is generated for book or online.
-\newcommand*{\PRINTED}{}	% comment this line for generating online variant
-\newcommand{\email}[3]{
-	\ifdefined\PRINTED
-		{\tt #1@#2.#3}
-	\else
-		{\tt #1 AT #2 DOT #3}
-	\fi
 }
 
 
