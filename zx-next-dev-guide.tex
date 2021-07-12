@@ -19,7 +19,6 @@
 \usepackage{tabularx}
 \usepackage{mathabx}
 \usepackage{numprint}
-\usepackage{scalerel}
 \usepackage{bigdelim}
 \usepackage{xfp}
 \usepackage{xurl}
@@ -42,128 +41,11 @@
 % ASCII text created with https://fsymbols.com/generators/carty/
 % in case it's not obvious - these large titles are nicely visible in minimap¯\_(ツ)_/¯
 
-% █████████████████████████████████████████████████████████████
-% █░░░░░░░░░░░░███░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
-% █░░▄▀▄▀▄▀▄▀░░░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
-% █░░▄▀░░░░▄▀▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█
-% █░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░█████████░░▄▀░░█████████
-% █░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█
-% █░░▄▀░░██░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█
-% █░░▄▀░░██░░▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░░░░░░░░░█░░░░░░░░░░▄▀░░█
-% █░░▄▀░░██░░▄▀░░█░░▄▀░░█████████░░▄▀░░█████████████████░░▄▀░░█
-% █░░▄▀░░░░▄▀▄▀░░█░░▄▀░░░░░░░░░░█░░▄▀░░█████████░░░░░░░░░░▄▀░░█
-% █░░▄▀▄▀▄▀▄▀░░░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀░░█████████░░▄▀▄▀▄▀▄▀▄▀░░█
-% █░░░░░░░░░░░░███░░░░░░░░░░░░░░█░░░░░░█████████░░░░░░░░░░░░░░█
-% █████████████████████████████████████████████████████████████
+% include definitions from external files.
+\input{defines.tex}
+\input{tables.tex}
+\input{instructions.tex}
 
-% definitions based on whether PDF is generated for book or online.
-\newcommand*{\PRINTED}{}	% comment this line for generating online variant
-\newcommand{\email}[3]{\ifdefined\PRINTED{\tt #1@#2.#3}\else{\tt #1 AT #2 DOT #3}\fi}
-
-% redefine the default "plain" pagestyle (used by chapter pages)
-\fancypagestyle{plain}{
-	\fancyhf{} 
-	\fancyhead{}
-	\fancyfoot[L]{\thepage}
-	\renewcommand{\headrulewidth}{0pt}
-	\renewcommand{\footrulewidth}{0pt}
-}
-
-% define style used for normal pages
-\fancypagestyle{clean}{
-	\fancyhf{}
-	\fancyhead[RE,LO]{\leftmark}
-	\fancyfoot[RE,LO]{\thepage}
-}
-
-% define default paragraph styles
-\setlength{\parindent}{0em}
-\setlength{\parskip}{1.5ex}
-
-% don't stretch content into empty space vertically
-\raggedbottom
-
-% same as X and p{size} respectively, but centers text horizontally
-\newcolumntype{Y}{>{\centering\arraybackslash}X}
-\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
-
-% empty pages before chapters should use empty style (aka nothing)
-\let\mtcleardoublepage\cleardoublepage
-\renewcommand{\cleardoublepage}{\clearpage{\pagestyle{empty}\mtcleardoublepage}}
-\newcommand{\DottedLine}{\hdashline[1pt/1pt]}
-
-% less tall slash
-\newcommand\scslash{\stretchrel*{$/$}{\textsc{e}}}
-
-% top and bottom "struts" for instruction lines (note different height can be passed in via optional parameter)
-\newcommand{\instrt}[1][2.5ex]{\rule{0pt}{#1}}
-\newcommand{\instrb}[1][-1.4ex]{\rule[#1]{0pt}{0pt}}
-
-% top and bottom "struts" for note lines
-\newcommand{\notet}{\rule{0pt}{2.4ex}}
-\newcommand{\noteb}{\rule[-1.3ex]{0pt}{0pt}}
-
-% couple shorthands that can be used throughout the document
-\newcommand{\Deg}{\textsuperscript{o}}
-\newcommand{\ddd}{\makebox[1em][c]{.\hfil.\hfil.}}
-\newcommand{\See}[1]{\textsuperscript{#1}}
-\newcommand{\UNDOC}{\textnormal{\textsuperscript{**}}}
-\newcommand{\ZXN}{\textnormal{\textsuperscript{ZX}}}
-\newcommand{\ZXNS}{\tiny\textnormal{\textsuperscript{ZX}}}
-\newcommand{\High}{\textsubscript{h}}
-\newcommand{\Low}{\textsubscript{l}}
-
-% horizontal arrows of arbitrary size (lehgth specified through parameter)
-\newcommand{\RArrow}[1]{\parbox{#1}{\tikz{
-	\draw[->,line width=0.5pt](0,0)--(#1,0);
-}}}
-\newcommand{\LArrow}[1]{\parbox{#1}{\tikz{
-	\draw[<-,line width=0.5pt](0,0)--(#1,0);
-}}}
-
-% horizontal arrows with vertical line on the arrow side; parameters:
-% - mandatory horizontal line width
-% - optional any additional horizontal line styles (dotted, dashed etc)
-% - optional vertical line height (divided by 2), default 0.1
-% - optional arrow scale, default 1
-% - optional line width, default 0.5pt
-\NewDocumentCommand{\RArrowLine}{ m O{} O{0.1} O{1.6} O{0.5pt} }{\parbox{#1}{\tikz{
-	\draw[-{>[scale=#4,length=#4,width=#4]},line width=#5,#2](0,0)--(#1,0);
-	\draw[line width=#5](#1,-#3)--(#1,#3);
-}}}
-\NewDocumentCommand{\LArrowLine}{ m O{} O{0.1} O{1.6} O{0.5pt} }{\parbox{#1}{\tikz{
-	\draw[line width=#5](0,-#3)--(0,#3);
-	\draw[-{>[scale=#4,length=#4,width=#4]},line width=#5,#2](#1,0)--(0,0);
-}}}
-
-% general document info for simpler reuse
-\newcommand{\AuthorName}{Toma\v{z}}
-\newcommand{\AuthorNameSurname}{\AuthorName ~Kragelj}
-\newcommand{\LatestVersion}{1.0}
-\newcommand{\LatestYear}{2021}
-
-% we can use this for pages that are intentionally left blank
-\newcommand{\IntentionallyEmpty}{
-	\mbox{}
-	\vfill
-	\begin{center}
-	This page intentionally left empty
-	\end{center}
-	\vfill
-	\mbox{}
-}
-
-% customize Verbatim environment wiht default settings
-\RecustomVerbatimEnvironment{Verbatim}{Verbatim}{
-	numbers=left,
-	xleftmargin=5mm,
-	tabsize=4,
-	fontsize=\small
-}
-
-
-% use empty style for first couple pages, until defined otherwise
-\pagestyle{empty}
 
 \begin{document}
 
@@ -193,7 +75,7 @@
 % first page should be offset to the right to accomodate the binding; default setup assumes this is odd page so sets it up the other way around (binding offset on the right side), but it gets printed as even page
 \newgeometry{left=4cm,right=3cm}
 
-\title{ZX Spectrum Next Assembler Developer Guide}
+\title{\BookTitle}
 \author{\AuthorNameSurname}
 \date{Version \LatestVersion, \today}
 
@@ -256,7 +138,7 @@ Permission is granted to copy, distribute and/or modify this document under the 
 
 \section{Where to get this document}
 
-ZX Spectrum Next Assembler Developer Guide is available as coil bound printed book on
+\BookTitle ~is available as coil bound printed book on
 
 \url{https://bit.ly/zx-next-assembler-dev-guide}
 
@@ -1436,88 +1318,6 @@ Note: In zilog's own z80cpu\_um.pdf document, there are a lot of errors, some ar
 % █░░▄▀░░██░░░░░░░░░░▄▀░░█░░▄▀▄▀▄▀▄▀▄▀░░█░░▄▀▄▀░░██░░▄▀▄▀░░█████░░▄▀░░█████
 % █░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░██░░░░░░░░█████░░░░░░█████
 % █████████████████████████████████████████████████████████████████████████
-
-% the following definitions are used for describing port bits
-\environbodyname\NEXTPORTBODY
-\NewEnviron{NextPort}{
-	\begin{tabularx}{\textwidth}{cX}
-		Bit & Effect \\
-		\hline
-		\NEXTPORTBODY
-	\end{tabularx}
-}
-\newcommand{\PortBits}[1]{\tt #1\notet &}
-\newcommand{\PortDesc}[1]{#1 \\}
-\newcommand{\PortDescOnly}[1]{& \PortDesc{#1}}
-
-\environbodyname\PORTBITTABLEBODY
-\NewEnviron{PortBitConfig}{
-	{
-	\begin{tabularx}{\linewidth}{lX}
-		\PORTBITTABLEBODY
-	\end{tabularx}	
-	}
-}
-\newcommand{\PortConfig}[2]{{\tt #1} & \PortDesc{#2}}
-
-% the following definitions are used for describing bit tables
-\newcommand{\BitHead}[1]{\footnotesize \textbf{#1}}
-\newcommand{\BitMono}[1]{\tt #1}
-\newcommand{\BitSmall}[1]{\small #1}|
-\newcommand{\BitMulti}[2]{\multicolumn{#1}{c|}{#2}}
-\newcommand{\BitStartMulti}[2]{\multicolumn{#1}{|c|}{#2}}
-
-\environbodyname\BITTABLEBODY
-\NewEnviron{BitTableByte}{
-	\begin{tabular}{|c|c|c|c|c|c|c|c|}
-		\hline
-		\BitHead{7} &
-			\BitHead{6} &
-			\BitHead{5} &
-			\BitHead{4} &
-			\BitHead{3} &
-			\BitHead{2} &
-			\BitHead{1} &
-			\BitHead{0} \\
-
-		\hline
-
-		\BITTABLEBODY
-		
-		\hline
-	\end{tabular}
-}
-\NewEnviron{BitTableWord}{
-	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-		\hline
-
-		\multicolumn{8}{|c|}{High Byte} & \multicolumn{8}{c|}{Low Byte} \\
-
-		\hline
-
-		\BitHead{15} &
-			\BitHead{14} &
-			\BitHead{13} &
-			\BitHead{12} &
-			\BitHead{11} & 
-			\BitHead{10} &
-			\BitHead{9} &
-			\BitHead{8} &
-		\BitHead{7} &
-			\BitHead{6} &
-			\BitHead{5} &
-			\BitHead{4} &
-			\BitHead{3} &
-			\BitHead{2} &
-			\BitHead{1} &
-			\BitHead{0} \\
-
-		\hline
-		
-		\BITTABLEBODY
-		\hline
-	\end{tabular}
-}
 
 % PortLink is short link to port with description and address, suitable for inline use, while PortReference is longer reference with chapter title and section number mostly used for register lists when referring to previously described register
 \newcommand{\PortLink}[2]{{\small \textbf{#1} {\tt \$#2}}}
@@ -4475,14 +4275,6 @@ This chapter presents all instructions at a glance for quick info and to easily 
 
 \pagebreak
 
-% couple shorthands for keeping text more readable
-\newcommand{\FS}{$\updownarrow$} % standard effect
-\newcommand{\FN}{-}				% no effect
-\newcommand{\FU}{?}				% unknown effect
-\newcommand{\FX}{$\bullet$}		% special case
-\newcommand{\FPV}{VF}			% PV=Overflow
-\newcommand{\FPP}{PF}			% PV=Parity
-
 \subsubsection{Instruction Execution}
 
 \begin{tabular}{ll}
@@ -4533,938 +4325,6 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 
 
 \pagebreak
-
-% ─────────────────────────────────────────────────────────────
-% ─████████████───██████████████─██████████████─██████─────────
-% ─██░░░░░░░░████─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░██─────────
-% ─██░░████░░░░██─██░░██████████─██░░██████████─██░░██─────────
-% ─██░░██──██░░██─██░░██─────────██░░██─────────██░░██─────────
-% ─██░░██──██░░██─██░░██████████─██░░██─────────██░░██─────────
-% ─██░░██──██░░██─██░░░░░░░░░░██─██░░██─────────██░░██─────────
-% ─██░░██──██░░██─██░░██████████─██░░██─────────██░░██─────────
-% ─██░░██──██░░██─██░░██─────────██░░██─────────██░░██─────────
-% ─██░░████░░░░██─██░░██████████─██░░██████████─██░░██████████─
-% ─██░░░░░░░░████─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
-% ─████████████───██████████████─██████████████─██████████████─
-% ─────────────────────────────────────────────────────────────
-
-% this is internal definition for instruction table that takes 2 arguments: first 2 column definitions and body. It should only be used by NewEnviron macros, not intended as general purpose macro by itself (it could be used, but then tables would not be defined with begin/end)
-\newcommand{\InstrTableBody}[3]{
-	{
-		\footnotesize
-		\setlength{\fboxsep}{0.25mm}
-		\setlength{\tabcolsep}{0.75mm}
-	
-		\begin{tabularx}{\textwidth}{#1ccccccp{1pt}C{2.5ex}C{3.8ex}C{3.8ex}ccp{1pt}ccp{1pt}l}
-			\hline
-		
-			% top header line
-			\notet & 
-			Symbolic &
-			\multicolumn{6}{c}{Flags} & &
-			\multicolumn{3}{c}{Opcode} &
-			& \\
-	
-			% bottom header line
-			Mnemonic & 
-			Operation &
-			SF & ZF & HF & PV & NF & CF & &
-			{\tt 76} & {\tt 543} & {\tt 210} & 
-			Hex & B & & 
-			Mc & Ts & &
-			Comments \\
-	
-			\hline
-	
-			#2
-
-			#3
-
-		\end{tabularx}
-	}
-}
-\newcommand{\InstrTableBodyBottomLine}[2]{
-	\InstrTableBody{#1}{#2}{
-		\\ % we need this newline in here otherwise \hline below will end in error; it's because hline can only be inserted after \\ - even though \\ will be present by the time table is generated with instruction macros, compiler requires it at this point as well. Consequently, the last instruction in table should use lastinstruction macro to compensate - so far I wasn't able to get better solution (interestingly, this similar approach works for notestable ¯\_(ツ)_/¯)
-		
-		\hline
-	}
-}
-
-% declares instrtable environment that sets up everything for instruction tables; this should suffice for most tables, mnemonic and symbolic operation columns are same width
-\environbodyname\INSTRTABLEBODY
-\NewEnviron{instrtable}{\InstrTableBodyBottomLine{XX}{\INSTRTABLEBODY}}
-% this table restricts mnemonic width and uses all remaining available width for symbolic opreation
-\NewEnviron{instrtablesymbol}{\InstrTableBodyBottomLine{p{6em}X}{\INSTRTABLEBODY}}
-% this table doesn't use bottom line
-\NewEnviron{instrtablesimple}{\InstrTableBody{p{7em}X}{\INSTRTABLEBODY}{}}
-
-% defines instruction environment that embeds each instruction. Instruction mnemonic is taken as parameter, mainly to show it when environment is collapsed in editor. Note this needs to use \xdef and be an ugly mess of oneliner otherwise mnemonic will be right aligned...
-\environbodyname\INSTRBODY
-\NewEnviron{instruction}[1]{\xdef\instructionbody{\unexpanded{{\tt #1}\instrt&}\unexpanded\expandafter{\INSTRBODY}\unexpanded{\instrb\\}}
-\aftergroup\instructionbody
-}
-\NewEnviron{sepinstruction}[1]{\xdef\instructionbody{\unexpanded{{\tt #1}\instrt&}\unexpanded\expandafter{\INSTRBODY}\unexpanded{\instrb[-3ex]\\}}
-\aftergroup\instructionbody
-}
-\environbodyname\INSTRBODY
-\NewEnviron{lastinstruction}[1]{\xdef\instructionbody{\unexpanded{{\tt #1}\instrt&}\unexpanded\expandafter{\INSTRBODY}\unexpanded{\instrb}}
-\aftergroup\instructionbody
-}
-
-% writes symbolic operation (for the moment nothing special, but we may change it in the future and it will automatically be applied for all items); variant with S with add 3 dots after argument and one with P will add them in front; for multiline expressions
-\newcommand{\Symbol}[1]{\scriptsize {\tt #1} &}
-\newcommand{\SymbolS}[1]{\scriptsize {\tt #1}\ddd &}
-\newcommand{\SymbolP}[1]{\scriptsize \ddd{\tt #1} &}
-
-% writes flags section + couple shorthands for symbolic flags; note we only really need 6 parameters in this section, but we do need all 7 later on, hence we set first one optional and not use it
-\newcommand{\Flags}[7][]{{\tt #2} & {\tt #3} & {\tt #4} & {\tt #5} & {\tt #6} & {\tt #7} & &}
-
-% writes bitwise opcodes section
-\newcommand{\OpCode}[3]{{\tt #1} & {\tt #2} & {\tt #3} &}
-\newcommand{\OpCodeTemplate}[1]{\underline{#1}}
-\newcommand{\OCT}[1]{\StrLen{#1}[\ParLen]\IfEq{\ParLen}{2}{\OpCodeTemplate{#1}}{\LArrowLine{1ex}#1\RArrowLine{1ex}}}
-\newcommand{\OCTS}[1]{\LArrowLine{0.8ex}#1\hspace*{-0.2ex}\raisebox{0.2ex}{\tiny'}\hspace*{-0.2ex}\RArrowLine{0.7ex}}	% treats par as single letter (for s')
-
-% writes given text embedded into left and right arrows; use instead of OpCode
-\newcommand{\OpRangeTemplate}[2]{\multicolumn{3}{l}{\hspace*{0.25ex}\LArrowLine{#1}[densely dashed][0.16][1.9] {\tt #2} \RArrowLine{#1}[densely dashed][0.16][1.9]} &}
-\newcommand{\OpRange}[1]{\OpRangeTemplate{1.85em}{#1}}
-\newcommand{\OpRangeSmall}[1]{\OpRangeTemplate{1.3em}{#1}}
-
-% writes hex opcode and number of bytes
-\newcommand{\HexBytes}[1]{\IfEq{#1}{}{}{{\tt #1}{\tiny B}}}
-\newcommand{\Hex}[2]{{\tt #1} & \HexBytes{#2} & &}
-
-% writes machine cycles and T states
-\newcommand{\Cycles}[2]{{\tt #1} & {\tt #2} & &}
-
-% writes a comment
-\newcommand{\Comment}[1]{\scriptsize #1}
-
-\newcommand{\SkipToSymbol}{\\ &}
-\newcommand{\FromSymbolToOpCode}{& \multicolumn{6}{l}{} &}
-
-% skips whole table up until the opcodes part. difference between the 2 is insertion of new line before; use StartWithOpCode variant for empty line, the other inside instruction block
-% note that compiler is not happy with StartWithOpCode without using something in front of \multiline hence given solution
-\newcommand{\SkipToOpCode}{\\ \multicolumn{9}{l}{} &}
-\newcommand{\StartWithOpCode}{& \multicolumn{8}{l}{} &}
-
-% writes an empty line with optional data in the last column
-% note again that we need to use some char before \multicolmn to keep compiler happy
-\newcommand{\Empty}[1]{& \multicolumn{16}{l}{} & \Comment{#1} \\}
-
-% writes a table break with vertical spacing so table starts at the same height as on previous page
-\newcommand{\InstrTableContinue}{
-	\vspace*{-2.5ex}
-	{
-		\scriptsize
-		(continued on next page)
-	}
-}
-
-% ────────────────────────────────────────────────────────────────────────────────────
-% ─██████──────────██████─██████████████─██████████████─██████████████─██████████████─
-% ─██░░██████████──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
-% ─██░░░░░░░░░░██──██░░██─██░░██████░░██─██████░░██████─██░░██████████─██░░██████████─
-% ─██░░██████░░██──██░░██─██░░██──██░░██─────██░░██─────██░░██─────────██░░██─────────
-% ─██░░██──██░░██──██░░██─██░░██──██░░██─────██░░██─────██░░██████████─██░░██████████─
-% ─██░░██──██░░██──██░░██─██░░██──██░░██─────██░░██─────██░░░░░░░░░░██─██░░░░░░░░░░██─
-% ─██░░██──██░░██──██░░██─██░░██──██░░██─────██░░██─────██░░██████████─██████████░░██─
-% ─██░░██──██░░██████░░██─██░░██──██░░██─────██░░██─────██░░██─────────────────██░░██─
-% ─██░░██──██░░░░░░░░░░██─██░░██████░░██─────██░░██─────██░░██████████─██████████░░██─
-% ─██░░██──██████████░░██─██░░░░░░░░░░██─────██░░██─────██░░░░░░░░░░██─██░░░░░░░░░░██─
-% ─██████──────────██████─██████████████─────██████─────██████████████─██████████████─
-% ────────────────────────────────────────────────────────────────────────────────────
-
-% defines table for notes; unfortunately I wasn't able to add notes to the same table created using above macros, so we need to use separate one. 
-% Note: you should embed both tables into minipage to keep them together; while we could create macro for that too, we'd lose ability to collapse in editor
-\environbodyname\NOTEBODY
-\NewEnviron{notestable}{
-	{
-		\scriptsize
-		\setlength{\fboxsep}{1pt}	% keep fboxes tight to keep notes vertically short
-		\renewcommand{\arraystretch}{1}
-		
-		\begin{tabularx}{\textwidth}{lX}
-			Notes:
-
-			\NOTEBODY
-
-			\hline
-
-		\end{tabularx}
-	}
-}
-
-% writes a note item
-\newcommand{\NoteItem}[1]{& #1 \\}
-
-\newcommand{\NoteTableSingleItemSpaceCorrection}{
-	\vspace*{-1ex}	% single notes table results in some vertical spacing, so we need to manually move it upwards a bit...
-}
-
-% ──────────────────────────────────────────────────────────
-% ─██████████████─████████──████████─██████──────────██████─
-% ─██░░░░░░░░░░██─██░░░░██──██░░░░██─██░░██████████████░░██─
-% ─██░░██████████─████░░██──██░░████─██░░░░░░░░░░░░░░░░░░██─
-% ─██░░██───────────██░░░░██░░░░██───██░░██████░░██████░░██─
-% ─██░░██████████───████░░░░░░████───██░░██──██░░██──██░░██─
-% ─██░░░░░░░░░░██─────████░░████─────██░░██──██░░██──██░░██─
-% ─██████████░░██───────██░░██───────██░░██──██████──██░░██─
-% ─────────██░░██───────██░░██───────██░░██──────────██░░██─
-% ─██████████░░██───────██░░██───────██░░██──────────██░░██─
-% ─██░░░░░░░░░░██───────██░░██───────██░░██──────────██░░██─
-% ─██████████████───────██████───────██████──────────██████─
-% ──────────────────────────────────────────────────────────
-
-\newcommand{\SymTab}{~~}	% We can later redeclare this to result in different way of displaying a "tab" indent while maintaining symbol declarations
-\newcommand{\SymDrawing}[2][-10pt]{
-	\scriptsize
-	\vspace*{#1}	% this will center drawings better
-	#2
-}
-\newcommand{\SymADD}[2]{#1$\leftarrow$#1+#2}
-\newcommand{\SymADC}[2]{#1$\leftarrow$#1+#2+CF}
-\newcommand{\SymAND}[1]{A$\leftarrow$A$\wedge$#1}
-\newcommand{\SymBIT}[1]{ZF$\leftarrow\mathtt{\overline{#1_b}}$}
-\newcommand{\SymBRLC}[1][]{\ignorespaces
-	\IfEqCase{#1}{
-		{0}{DE$\leftarrow$DE<<(B$\wedge$\$0F {\normalfont or}}
-		{1}{DE$\leftarrow$DE>>(16-B$\wedge$\$0F)}
-		{}{\SymBRLC[0]\\\SymBRLC[1]}
-	}
-}
-\newcommand{\SymBSLA}[1][]{ % we don't need parameters here, but keep it so it's similar to other BSxx instructions
-	DE$\leftarrow$DE<<(B$\wedge$\$1F)
-}
-\newcommand{\SymBSRA}[1][]{\ignorespaces
-	\IfEqCase{#1}{
-		{0}{DE$\leftarrow$signed(DE)}
-		{1}{>>(B$\wedge$\$1F)}
-		{}{\SymBSRA[0]>>\SymBSRA[1]}
-	}
-}
-\newcommand{\SymBSRF}[1][]{\ignorespaces
-	\IfEqCase{#1}{
-		{0}{DE$\leftarrow\sim$(uns($\sim$DE)}
-		{1}{>>(B$\wedge$\$1F))}
-		{}{DE$\leftarrow\sim$(unsigned($\sim$DE)\SymBSRF[1]}
-	}
-}
-\newcommand{\SymBSRL}[1][]{\ignorespaces
-	\IfEqCase{#1}{
-		{0}{DE$\leftarrow$uns(DE)}
-		{1}{>>(B$\wedge$\$1F)}
-		{}{DE$\leftarrow$unsigned(DE)\SymBSRL[1]}
-	}
-}
-\newcommand{\SymCALL}[2][]{
-	\IfEqCase{#1}{
-		{0}{(SP-1)$\leftarrow$PC\High}
-		{1}{(SP-2)$\leftarrow$PC\Low}
-		{2}{SP$\leftarrow$SP-2}
-		{3}{PC$\leftarrow$#2}
-		{}{\SymCALL[0]{#2}\\\SymCALL[1]{#2}\\\SymCALL[2]{#2}\\\SymCALL[3]{#2}}
-	}
-}
-\newcommand{\SymCALLc}[1]{
-	if c=true:~CALL #1
-}
-\newcommand{\SymCCF}{CF$\leftarrow\mathtt{\overline{CF}}$}
-\newcommand{\SymCP}[1]{A-#1}
-\newcommand{\SymCPD}[1][]{
-	\IfEqCase{#1}{
-		{0}{A-(HL)}
-		{1}{HL$\leftarrow$HL-1}
-		{2}{BC$\leftarrow$BC-1}
-		{}{\SymCPD[0]\\\SymCPD[1]\\\SymCPD[2]}
-	}
-}
-\newcommand{\SymCPDR}[1][]{
-	\IfEqCase{#1}{
-		{0}{do CPD}
-		{1}{while A$\neq$(HL)$\wedge$BC>0}
-		{}{\SymCPDR[0]\\\SymCPDR[1]}
-	}
-}
-\newcommand{\SymCPI}[1][]{
-	\IfEqCase{#1}{
-		{0}{A-(HL)}
-		{1}{HL$\leftarrow$HL+1}
-		{2}{BC$\leftarrow$BC-1}
-		{}{\SymCPI[0]\\\SymCPI[1]\\\SymCPI[2]}
-	}
-}
-\newcommand{\SymCPIR}[1][]{
-	\IfEqCase{#1}{
-		{0}{do CPI}
-		{1}{while A$\neq$(HL)$\wedge$BC>0}
-		{}{\SymCPIR[0]\\\SymCPIR[1]}
-	}
-}
-\newcommand{\SymCPL}{A$\leftarrow\mathtt{\overline{A}}$}
-\newcommand{\SymDEC}[1]{#1$\leftarrow$#1-1}
-\newcommand{\SymDI}[1][]{
-	\IfEqCase{#1}{
-		{0}{IFF1$\leftarrow$0}
-		{1}{IFF2$\leftarrow$0}
-		{}{\SymDI[0]\\\SymDI[1]}
-	}
-}
-\newcommand{\SymDJNZ}[2][]{
-	\IfEqCase{#1}{
-		{0}{B$\leftarrow$B-1}
-		{1}{if B$\neq$0:~JR #2}
-		{}{\SymDJNZ[0]{#2}\\\SymDJNZ[1]{#2}}
-	}
-}
-\newcommand{\SymEI}[1][]{
-	\IfEqCase{#1}{
-		{0}{IFF1$\leftarrow$1}
-		{1}{IFF2$\leftarrow$1}
-		{}{\SymEI[0]\\\SymEI[1]}
-	}
-}
-\newcommand{\SymEX}[2]{#1$\leftrightarrow$#2}
-\newcommand{\SymEXX}[1][]{
-	\IfEqCase{#1}{
-		{0}{\SymEX{BC}{BC'}}
-		{1}{\SymEX{DE}{DE'}}
-		{2}{\SymEX{HL}{HL'}}
-		{}{\SymEXX[0]\\\SymEXX[1]\\\SymEXX[2]}
-	}
-}
-\newcommand{\SymIN}[2]{#1$\leftarrow$(#2)}
-\newcommand{\SymINC}[1]{#1$\leftarrow$#1+1}
-\newcommand{\SymIND}[1][]{
-	\IfEqCase{#1}{
-		{0}{(HL)$\leftarrow$(BC)}
-		{1}{HL$\leftarrow$HL-1}
-		{2}{B$\leftarrow$B-1}
-		{}{\SymIND[0]\\\SymIND[1]\\\SymIND[2]}
-	}
-}
-\newcommand{\SymINDR}[1][]{
-	\IfEqCase{#1}{
-		{0}{do IND}
-		{1}{while B>0}
-		{}{\SymINDR[0]\\\SymINDR[1]}
-	}
-}
-\newcommand{\SymINI}[1][]{
-	\IfEqCase{#1}{
-		{0}{(HL)$\leftarrow$(BC)}
-		{1}{HL$\leftarrow$HL+1}
-		{2}{B$\leftarrow$B-1}
-		{}{\SymINI[0]\\\SymINI[1]\\\SymINI[2]}
-	}
-}
-\newcommand{\SymINIR}[1][]{
-	\IfEqCase{#1}{
-		{0}{do INI}
-		{1}{while B>0}
-		{}{\SymINIR[0]\\\SymINIR[1]}
-	}
-}
-\newcommand{\SymJP}[1]{PC$\leftarrow$#1}
-\newcommand{\SymJPc}[1]{if c=true:~JP #1}
-\newcommand{\SymJPC}{PC$\leftarrow$PC$\wedge$\$C000+IN(C)<<6}
-\newcommand{\SymJR}[1]{PC$\leftarrow$PC+#1}
-\newcommand{\SymJRc}[2]{if #1=true:~JR #2}
-\newcommand{\SymLD}[2]{#1$\leftarrow$#2}
-\newcommand{\SymLDD}[1][]{
-	\IfEqCase{#1}{
-		{0}{(DE)$\leftarrow$(HL)}
-		{1}{DE$\leftarrow$DE-1}
-		{2}{HL$\leftarrow$HL-1}
-		{3}{BC$\leftarrow$BC-1}
-		{}{\SymLDD[0]\\\SymLDD[1]\\\SymLDD[2]\\\SymLDD[3]}
-	}
-}
-\newcommand{\SymLDDR}[1][]{
-	\IfEqCase{#1}{
-		{0}{do LDD}
-		{1}{while BC>0}
-		{}{\SymLDDR[0]\\\SymLDDR[1]}
-	}
-}
-\newcommand{\SymLDDX}[1][]{
-	\IfEqCase{#1}{
-		{0}{if (HL)$\neq$A:~(DE)$\leftarrow$(HL)}
-		{1}{DE$\leftarrow$DE+1}
-		{2}{HL$\leftarrow$HL-1}
-		{3}{BC$\leftarrow$BC+1}
-		{}{\SymLDDX[0]\\\SymLDDX[1]\\\SymLDDX[2]\\\SymLDDX[3]}
-	}
-}
-\newcommand{\SymLDI}[1][]{
-	\IfEqCase{#1}{
-		{0}{(DE)$\leftarrow$(HL)}
-		{1}{DE$\leftarrow$DE+1}
-		{2}{HL$\leftarrow$HL+1}
-		{3}{BC$\leftarrow$BC-1}
-		{}{\SymLDI[0]\\\SymLDI[1]\\\SymLDI[2]\\\SymLDI[3]}
-	}
-}
-\newcommand{\SymLDIR}[1][]{
-	\IfEqCase{#1}{
-		{0}{do LDI}
-		{1}{while BC>0}
-		{}{\SymLDIR[0]\\\SymLDIR[1]}
-	}
-}
-\newcommand{\SymLDIX}[1][]{
-	\IfEqCase{#1}{
-		{0}{if (HL)$\neq$A: (DE)$\leftarrow$(HL)}
-		{1}{DE$\leftarrow$DE+1}
-		{2}{HL$\leftarrow$HL+1}
-		{3}{BC$\leftarrow$BC-1}
-		{}{\SymLDIX[0]\\\SymLDIX[1]\\\SymLDIX[2]\\\SymLDIX[3]}
-	}
-}
-\newcommand{\SymLDIRX}[1][]{
-	\IfEqCase{#1}{
-		{0}{do LDIX}
-		{1}{while BC>0}
-		{}{\SymLDIRX[0]\\\SymLDIRX[1]}
-	}
-}
-\newcommand{\SymLDPIRX}[1][]{
-	\IfEqCase{#1}{
-		{0}{do}
-		{1}{\SymTab{}t$\leftarrow$(HL$\wedge$\$FFF8+E$\wedge$7)}
-		{2}{\SymTab{}if t$\neq$A: (DE)$\leftarrow$t}
-		{3}{\SymTab{}DE$\leftarrow$DE+1}
-		{4}{\SymTab{}BC$\leftarrow$BC-1}
-		{5}{while BC>0}
-		{}{\SymLDPIRX[0]\\\SymLDPIRX[1]\\\SymLDPIRX[2]\\\SymLDPIRX[3]\\\SymLDPIRX[4]\\\SymLDPIRX[5]}
-	}
-}
-\newcommand{\SymLDWS}[1][]{
-	\IfEqCase{#1}{
-		{0}{(DE)$\leftarrow$(HL)}
-		{1}{INC L}
-		{2}{INC D}
-		{}{\SymLDWS[0]\\\SymLDWS[1]\\\SymLDWS[2]}
-	}
-}
-\newcommand{\SymMIRROR}[1]{
-	\SymDrawing{
-		\begin{tikzpicture}[
-			framed/.style={rectangle, draw=black, inner sep=1},
-			plain/.style={inner sep=0},
-			arrow/.style={thin,->,-latex}]
-				
-			\node[plain] (reg) {\tt #1};
-			\node[framed, right=0.2em of reg] (hi) {7654};
-			\node[framed, right=0em of hi] (lo) {3210};
-				
-			\draw[arrow] (hi.148) |- +(0.1,0.5) -| (lo.32);
-			\draw[arrow] (hi.118) |- +(0.1,0.4) -| (lo.65);
-			\draw[arrow] (hi.64) |- +(0.1,0.3) -| (lo.118);
-			\draw[arrow] (hi.34) |- +(0.1,0.2) -| (lo.148);
-				
-			\draw[arrow] (lo.-148) |- +(-0.1,-0.2) -| (hi.-32);
-			\draw[arrow] (lo.-118) |- +(-0.1,-0.3) -| (hi.-65);
-			\draw[arrow] (lo.-34) |- +(-0.1,-0.5) -| (hi.-148);
-			\draw[arrow] (lo.-64) |- +(-0.1,-0.4) -| (hi.-118);
-		\end{tikzpicture}
-	}
-}
-\newcommand{\SymMUL}{DE$\leftarrow$D$\times$E}
-\newcommand{\SymNEG}{A$\leftarrow$-A}
-\newcommand{\SymNEXTREG}[1]{HwNextReg[n]$\leftarrow$#1}
-\newcommand{\SymOR}[1]{A$\leftarrow$A$\vee$#1}
-\newcommand{\SymOUT}[2]{(#1)$\leftarrow$#2}
-\newcommand{\SymOUTINB}[1][]{
-	\IfEqCase{#1}{
-		{0}{(BC)$\leftarrow$(HL)}
-		{1}{HL$\leftarrow$HL+1}
-		{}{\SymOUTINB[0]\\\SymOUTINB[1]}
-	}
-}
-\newcommand{\SymOUTD}[1][]{
-	\IfEqCase{#1}{
-		{0}{(BC)$\leftarrow$(HL)}
-		{1}{HL$\leftarrow$HL-1}
-		{2}{B$\leftarrow$B-1}
-		{}{\SymOUTD[0]\\\SymOUTD[1]\\\SymOUTD[2]}
-	}
-}
-\newcommand{\SymOUTI}[1][]{
-	\IfEqCase{#1}{
-		{0}{B$\leftarrow$B-1}
-		{1}{(BC)$\leftarrow$(HL)}
-		{2}{HL$\leftarrow$HL+1}
-		{}{\SymOUTI[0]\\\SymOUTI[1]\\\SymOUTI[2]}
-	}
-}
-\newcommand{\SymOTDR}[1][]{
-	\IfEqCase{#1}{
-		{0}{do OUTD}
-		{1}{while B>0}
-		{}{\SymOTDR[0]\\\SymOTDR[1]}
-	}
-}
-\newcommand{\SymOTIR}[1][]{
-	\IfEqCase{#1}{
-		{0}{do OUTI}
-		{1}{while B>0}
-		{}{\SymOTIR[0]\\\SymOTIR[1]}
-	}
-}
-\newcommand{\SymPIXELAD}[1][]{\ignorespaces
-	\IfEqCase{#1}{
-		{0}{HL$\leftarrow$\$4000}
-		{1}{+((D$\wedge$\$C0)<<5)}
-		{2}{+((D$\wedge$\$07)<<8)}
-		{3}{+((D$\wedge$\$38)<<2)}
-		{4}{+(E>>3)}
-		{}{\SymPIXELAD[0]\SymPIXELAD[1]\SymPIXELAD[2]\SymPIXELAD[3]\SymPIXELAD[4]}
-	}
-}
-\newcommand{\SymPIXELDN}[1][]{\ignorespaces
-	\IfEqCase{#1}{
-		{0}{if~(HL$\wedge$\$700)$\neq$\$700}
-		{1}{\SymTab{}HL$\leftarrow$HL+256}
-		{2}{else~if~(HL$\wedge$\$E0)$\neq$\$E0}
-		{3}{\SymTab{}HL$\leftarrow$HL$\wedge$\$F8FF+\$20}
-		{4}{else}
-		{5}{\SymTab{}HL$\leftarrow$HL$\wedge$\$F81F+\$800}
-		{}{\SymPIXELDN[0]\\\SymPIXELDN[1]\\\SymPIXELDN[2]\\\SymPIXELDN[3]\\\SymPIXELDN[4]\\\SymPIXELDN[5]}
-	}
-}
-\newcommand{\SymPOP}[2][]{
-	\IfEqCase{#1}{
-		{0}{#2\High$\leftarrow$(SP+1)}
-		{1}{#2\Low$\leftarrow$(SP)}
-		{2}{SP$\leftarrow$SP+2}
-		{10}{#2$\leftarrow$(SP+1)}
-		{11}{#2$\leftarrow$(SP)}
-		{12}{SP$\leftarrow$SP+2}
-		{}{\SymPOP[0]{#2}\\\SymPOP[1]{#2}\\\SymPOP[2]{#2}}
-	}
-}
-\newcommand{\SymPUSHnn}[3][]{
-	\IfEqCase{#1}{
-		{0}{(SP-2)$\leftarrow$#3}
-		{1}{(SP-1)$\leftarrow$#2}
-		{2}{SP$\leftarrow$SP-2}
-		{}{\SymPUSHnn[0]{#2}{#3}\\\SymPUSHnn[1]{#2}{#3}\\\SymPUSHnn[2]{#2}{#3}}
-	}
-}
-\newcommand{\SymPUSH}[2][]{
-	\SymPUSHnn[#1]{#2\High}{#2\Low}
-}
-\newcommand{\SymRES}[1]{$\mathtt{#1_b}\leftarrow$0}
-\newcommand{\SymRET}[1][]{
-	\IfEqCase{#1}{
-		{0}{PC\Low$\leftarrow$(SP)}
-		{1}{PC\High$\leftarrow$(SP+1)}
-		{2}{SP$\leftarrow$SP+2}
-		{}{\SymRET[0]\\\SymRET[1]\\\SymRET[2]}
-	}
-}
-\newcommand{\SymRETc}[1]{
-	if #1=true:~RET
-}
-\newcommand{\SymRETI}[1][]{
-	\IfEqCase{#1}{
-		{0}{PC\Low$\leftarrow$(SP)}
-		{1}{PC\High$\leftarrow$(SP+1)}
-		{2}{SP$\leftarrow$SP+2}
-		{}{\SymRETI[0]\\\SymRETI[1]\\\SymRETI[2]}
-	}
-}
-\newcommand{\SymRETN}[1][]{
-	\IfEqCase{#1}{
-		{0}{PC\Low$\leftarrow$(SP)}
-		{1}{PC\High$\leftarrow$(SP+1)}
-		{2}{SP$\leftarrow$SP+2}
-		{3}{IFF1$\leftarrow$IFF2}
-		{}{\SymRETN[0]\\\SymRETN[1]\\\SymRETN[2]\\\SymRETN[3]}
-	}
-}\newcommand{\SymRL}[2][]{
-	\SymDrawing{
-		\begin{tikzpicture}[
-			framed/.style={ rectangle, draw=black, inner sep=1 },
-			arrow/.style={thin,->,-latex}]
-
-			\node[framed] (cf) {\tt CF};
-			\node[framed] (bits) at([xshift=3em]cf) {7$\leftarrow$0};
-			\IfEqCase{#1} {
-				{0}{}
-				{}{\node(reg) at([yshift=-1em]bits) {\tt #2};}
-			}
-
-			\draw[arrow] (bits) -- (cf);
-			\draw[arrow] (cf.west) |- +(-0.12,0) |- +(1.6,0.25) |- (bits.east);
-		\end{tikzpicture}
-	}
-}
-\newcommand{\SymRLC}[2][]{
-	\SymDrawing{
-		\begin{tikzpicture}[
-			framed/.style={rectangle, draw=black, inner sep=1},
-			arrow/.style={thin,->,-latex}]
-				
-			\node[framed] (cf) {\tt CF};
-			\node[framed, right=1.1em of cf] (bits) {7$\leftarrow$0};
-			\IfEqCase{#1} {
-				{0}{}
-				{}{\node[below=-1pt of bits](reg) {\tt #2};}
-			}
-				
-			\draw[arrow] (bits) -- (cf);
-			\draw[arrow] (bits.west) |- +(-0.1,0) |- +(0.9,0.25) |- (bits.east);
-		\end{tikzpicture}
-	}
-}
-\newcommand{\SymRLCu}[3][]{
-	\IfEqCase{#1}{
-		{0}{#2$\leftarrow$(#3+d)}
-		{1}{RLC #2}
-		{2}{(#3+d)$\leftarrow$#2}
-		{}{\SymRLCu[0]{#2}{#3}\\\SymRLCu[1]{#2}{#3}\\\SymRLCu[2]{#2}{#3}}
-	}
-}
-\newcommand{\SymRLD}{
-	\SymDrawing{
-		\begin{tikzpicture}[
-			framed/.style={rectangle, draw=black, inner sep=1, outer sep=0},
-			plain/.style={inner sep=0},
-			arrow/.style={thin,->,-latex}]
-			
-			\node[plain] (a) {\tt A};
-			
-			\node[framed, right=0.5ex of a] (bitsAhi) {7-4};
-			\node[framed, right=0ex of bitsAhi] (bitsAlo) {3-0};
-
-			\node[framed, right=1ex of bitsAlo] (bitsHLhi) {7-4};
-			\node[framed, right=0ex of bitsHLhi] (bitsHLlo) {3-0};
- 			
-			\node[plain, right=0.5ex of bitsHLlo] (hl) {\tt (HL)};
-			
-			\draw[arrow] (bitsHLlo.south) |- +(-0.2,-0.2) -| (bitsHLhi.310);
-			\draw[arrow] (bitsHLhi.240) |- +(-0.2,-0.2) -| (bitsAlo.south);
-			\draw[arrow] (bitsAlo.north) |- +(0.2,0.2) -| (bitsHLlo.north);
-		\end{tikzpicture}
-	}
-}
-\newcommand{\SymRR}[2][]{
-	\SymDrawing{
-		\begin{tikzpicture}[
-			framed/.style={ rectangle, draw=black, inner sep=1 },
-			arrow/.style={thin,->,-latex}]
-
-			\node[framed] (bits) {7$\rightarrow$0};
-			\node[framed, right=1em of bits] (cf) {\tt CF};
-			\IfEqCase{#1} {
-				{0}{}
-				{}{\node[below=-1pt of bits](reg) {\tt #2};}
-			}
-
-			\draw[arrow] (bits) -- (cf);
-			\draw[arrow] (cf.east) |- +(0.12,0) |- +(-1.6,0.25) |- (bits.west);
-		\end{tikzpicture}
-	}
-}
-\newcommand{\SymRRC}[2][]{
-	\SymDrawing{
-		\begin{tikzpicture}[
-			framed/.style={rectangle, draw=black, inner sep=1},
-			arrow/.style={thin,->,-latex}]
-			
-			\node[framed] (bits) {7$\rightarrow$0};
-			\node[framed, right=1.1em of bits] (cf) {\tt CF};
-			\IfEqCase{#1} {
-				{0}{}
-				{}{\node[below=-1pt of bits](reg) {\tt #2};}
-			}
-			
-			\draw[arrow] (bits) -- (cf);
-			\draw[arrow] (bits.east) |- +(0.1,0) |- +(-0.9,0.25) |- (bits.west);
-		\end{tikzpicture}
-	}
-}
-\newcommand{\SymRRD}{
-	\SymDrawing{
-		\begin{tikzpicture}[
-			framed/.style={rectangle, draw=black, inner sep=1, outer sep=0},
-			plain/.style={inner sep=0},
-			arrow/.style={thin,->,-latex}]
-			
-			\node[plain] (a) {\tt A};
-			
-			\node[framed, right=0.5ex of a] (bitsAhi) {7-4};
-			\node[framed, right=0ex of bitsAhi] (bitsAlo) {3-0};
-
-			\node[framed, right=1ex of bitsAlo] (bitsHLhi) {7-4};
-			\node[framed, right=0ex of bitsHLhi] (bitsHLlo) {3-0};
- 			
-			\node[plain, right=0.5ex of bitsHLlo] (hl) {\tt (HL)};
-			
-			\draw[arrow] (bitsHLlo.south) |- +(-0.2,-0.2) -| (bitsAlo.south);
-			\draw[arrow] (bitsAlo.north) |- +(0.2,0.2) -| (bitsHLhi.120);
-			\draw[arrow] (bitsHLhi.60) |- +(0.2,0.2) -| (bitsHLlo.north);
-		\end{tikzpicture}
-	}
-}
-\newcommand{\SymRST}[2][]{
-	\IfEqCase{#1}{
-		{0}{(SP-1)$\leftarrow$PC\High}
-		{1}{(SP-2)$\leftarrow$PC\Low}
-		{2}{SP$\leftarrow$SP-2}
-		{3}{PC$\leftarrow$#2}
-		{}{\SymRST[0]{#2}\\\SymRST[1]{#2}\\\SymRST[2]{#2}\\\SymRST[3]{#2}}
-	}
-}
-\newcommand{\SymSET}[1]{$\mathtt{#1_b}\leftarrow$1}
-\newcommand{\SymSETu}[3][]{
-	\IfEqCase{#1}{
-		{0}{#2$\leftarrow$(#3+d)}
-		{1}{$\mathtt{#2_b}\leftarrow$1}
-		{2}{(#3+d)$\leftarrow$#2}
-		{}{\SymSETu[0]{#2}{#3}\\\SymSETu[1]{#2}{#3}\\\SymSETu[2]{#2}{#3}}
-	}
-}
-\newcommand{\SymSBC}[2]{#1$\leftarrow$#1-#2-CF}
-\newcommand{\SymSCF}{CF$\leftarrow$1}
-\newcommand{\SymSETAE}{A$\leftarrow$unsigned(\$80)>>(E$\wedge$7)}
-\newcommand{\SymSLA}[2][]{
-	\SymDrawing{
-		\begin{tikzpicture}[
-			framed/.style={rectangle, draw=black, inner sep=1},
-			plain/.style={inner sep=0},
-			arrow/.style={thin,->,-latex}]
-
-			\node[framed] (cf) {\tt CF};
-			\node[framed, right=1em of cf] (bits) {7$\leftarrow$0};
-			\node[plain, right=1em of bits] (zero) {\tt 0};
-			\IfEqCase{#1} {
-				{0}{}
-				{}{\node[below=-1pt of bits](reg) {\tt #2};}
-			}
-
-			\draw[arrow] (zero) -- (bits);
-			\draw[arrow] (bits) -- (cf);
-		\end{tikzpicture}
-	}
-}
-\newcommand{\SymSLI}[2][]{
-	\SymDrawing{
-		\begin{tikzpicture}[
-			framed/.style={rectangle, draw=black, inner sep=1},
-			plain/.style={inner sep=0},
-			arrow/.style={thin,->,-latex}]
-
-			\node[framed] (cf) {\tt CF};
-			\node[framed, right=1em of cf] (bits) {7$\leftarrow$0};
-			\node[plain, right=1em of bits] (one) {\tt 1};
-			\IfEqCase{#1} {
-				{0}{}
-				{}{\node[below=-1pt of bits](reg) {\tt #2};}
-			}
-
-			\draw[arrow] (one) -- (bits);
-			\draw[arrow] (bits) -- (cf);
-		\end{tikzpicture}
-	}
-}
-\newcommand{\SymSRA}[2][]{
-	\SymDrawing{
-		\begin{tikzpicture}[
-			framed/.style={rectangle, draw=black, inner sep=1},
-			arrow/.style={thin,->,-latex}]
-				
-			\node[framed] (bits) {7$\rightarrow$0};
-			\node[framed, right=1em of bits] (cf) {\tt CF};
-			\IfEqCase{#1} {
-				{0}{}
-				{}{\node[below=-1pt of bits](reg) {\tt #2};}
-			}
-				
-			\draw[arrow] (bits) -- (cf);
-			\draw[arrow] (bits.211) |- +(-0.35,-0.1) |- (bits.west);
-		\end{tikzpicture}
-	}
-}
-\newcommand{\SymSRL}[2][]{
-	\SymDrawing{
-		\begin{tikzpicture}[
-			framed/.style={rectangle, draw=black, inner sep=1},
-			plain/.style={inner sep=0},
-			arrow/.style={thin,->,-latex}]
-			
-			\node[plain] (zero) {\tt 0};
-			\node[framed, right=1em of zero] (bits) {7$\rightarrow$0};
-			\node[framed, right=1em of bits] (cf) {\tt CF};
-			\IfEqCase{#1} {
-				{0}{}
-				{}{\node[below=-1pt of bits](reg) {\tt #2};}
-			}
-			
-			\draw[arrow] (zero) -- (bits);
-			\draw[arrow] (bits) -- (cf);
-		\end{tikzpicture}
-	}
-}
-\newcommand{\SymSUB}[1]{A$\leftarrow$A-#1}
-\newcommand{\SymSWAPNIB}[1][]{
-	\IfEq{#1}{}{}{\hspace*{-1.6em}}
-	\SymDrawing{
-		\begin{tikzpicture}[
-			framed/.style={rectangle, draw=black, inner sep=1},
-			plain/.style={inner sep=0},
-			arrow/.style={thin,->,-latex}]
-			
-			\node[plain] (a) {\tt A};
-			\node[framed, right=0.2em of a] (hi) {7654};
-			\node[framed, right=0em of hi] (lo) {3210};
-			
-			\draw[arrow] (hi.north) |- +(0.1,0.2) -| (lo.north);
-			\draw[arrow] (lo.south) |- +(-0.1,-0.2) -| (hi.south);
-		\end{tikzpicture}
-	}
-}
-\newcommand{\SymTEST}{A$\wedge$n}
-\newcommand{\SymXOR}[1]{A$\leftarrow$A$\veebar$#1}
-
-% ────────────────────────────────────────────────────────────────────────────
-% ─██████████████─██████─────────██████████████─██████████████─██████████████─
-% ─██░░░░░░░░░░██─██░░██─────────██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
-% ─██░░██████████─██░░██─────────██░░██████░░██─██░░██████████─██░░██████████─
-% ─██░░██─────────██░░██─────────██░░██──██░░██─██░░██─────────██░░██─────────
-% ─██░░██████████─██░░██─────────██░░██████░░██─██░░██─────────██░░██████████─
-% ─██░░░░░░░░░░██─██░░██─────────██░░░░░░░░░░██─██░░██──██████─██░░░░░░░░░░██─
-% ─██░░██████████─██░░██─────────██░░██████░░██─██░░██──██░░██─██████████░░██─
-% ─██░░██─────────██░░██─────────██░░██──██░░██─██░░██──██░░██─────────██░░██─
-% ─██░░██─────────██░░██████████─██░░██──██░░██─██░░██████░░██─██████████░░██─
-% ─██░░██─────────██░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
-% ─██████─────────██████████████─██████──██████─██████████████─██████████████─
-% ────────────────────────────────────────────────────────────────────────────
-
-% note: because LaTeX doesn't allow numbers in commands, we use the following notation:
-% r = 8 bit register or number
-% n = 8 bit number (only if we already use r)
-% rr = 16 bit register pair or number
-% nn = 16 bit number (only if we already use rr)
-\newcommand{\FlagsSee}[1]{\See{#1}}	% We can later redeclare this to result in nothing displayed while maintaings manual footnotes in this section
-\newcommand{\FlagsFPP}{\FPP}		% Allows replacing this with another symbol in description section
-\newcommand{\FlagsFPV}{\FPV}		% Allows replacing this with another symbol in description section
-\newcommand{\FlagsSmall}[1]{\tiny #1}% Allows changing font size in description section
-% note: we need to pass 1 optional parameter to Flags; we need it in details section
-\newcommand{\FlagsADDr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{0}{\FS}}
-\newcommand{\FlagsADDrr}[1][]{\Flags[#1]{\FN}{\FN}{\FX\FlagsSee{2}}{\FN}{0}{\FS\FlagsSee{1}}}
-\newcommand{\FlagsADDrra}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsADDrrnn}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsADCr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{0}{\FS}}
-\newcommand{\FlagsADCrr}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FlagsFPV\FlagsSee{1}}{0}{\FS\FlagsSee{1}}}
-\newcommand{\FlagsANDr}[1][]{\Flags[#1]{\FS}{\FS}{1}{\FlagsFPV}{0}{0}}
-\newcommand{\FlagsBITr}[1][]{\Flags[#1]{\FU\FlagsSee{1}}{\FS}{1}{\FU\FlagsSee{1}}{0}{\FN}}
-\newcommand{\FlagsBSLA}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsBSRA}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsBSRL}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsBSRF}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsBRLC}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsCALLnn}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsCALLccnn}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsCCF}[1][]{\Flags[#1]{\FN}{\FN}{\FX\FlagsSee{2}}{\FN}{0}{\FS}}
-\newcommand{\FlagsCPr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{1}{\FS}}
-\newcommand{\FlagsCPI}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
-\newcommand{\FlagsCPIR}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
-\newcommand{\FlagsCPD}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
-\newcommand{\FlagsCPDR}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
-\newcommand{\FlagsCPL}[1][]{\Flags[#1]{\FN}{\FN}{1}{\FN}{1}{\FN}}
-\newcommand{\FlagsDAA}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPP}{\FN}{\FS}}
-\newcommand{\FlagsDECr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV\FlagsSee{5}}{1}{\FN}}
-\newcommand{\FlagsDECrr}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsDI}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsDJNZ}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsEI}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsEXrr}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsEXaf}[1][]{\Flags[#1]{\FX\FlagsSee{1}}{\FX\FlagsSee{1}}{\FX\FlagsSee{1}}{\FX\FlagsSee{1}}{\FX\FlagsSee{1}}{\FX\FlagsSee{1}}}
-\newcommand{\FlagsEXX}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsHALT}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsIM}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsINan}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsINrc}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FN}}
-\newcommand{\FlagsINc}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FN}}
-\newcommand{\FlagsINCr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV\FlagsSee{4}}{0}{\FN}}
-\newcommand{\FlagsINCrr}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsINI}[1][]{\Flags[#1]{\FX\FlagsSee{5}}{\FX\FlagsSee{4}}{\FX\FlagsSee{5}}{\FX\FlagsSee{5}}{1}{\FN}}
-\newcommand{\FlagsINIR}[1][]{\Flags[#1]{\FX\FlagsSee{5}}{1}{\FX\FlagsSee{5}}{\FX\FlagsSee{5}}{1}{\FN}}
-\newcommand{\FlagsIND}[1][]{\Flags[#1]{\FX\FlagsSee{5}}{\FX\FlagsSee{4}}{\FX\FlagsSee{5}}{\FX\FlagsSee{5}}{1}{\FN}}
-\newcommand{\FlagsINDR}[1][]{\Flags[#1]{\FX\FlagsSee{5}}{1}{\FX\FlagsSee{5}}{\FX\FlagsSee{5}}{1}{\FN}}
-\newcommand{\FlagsJPc}[1][]{\Flags[#1]{\FU}{\FU}{\FU}{\FU}{\FU}{\FU}}
-\newcommand{\FlagsJPnn}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsJPccnn}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsJPrr}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsJRn}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsJRccn}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsLDr}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsLDrr}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsLDair}[1][]{\Flags[#1]{\FS}{\FS}{0}{{\FlagsSmall IFF2}}{0}{\FN}}
-\newcommand{\FlagsLDI}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FX\FlagsSee{3}}{0}{\FN}}
-\newcommand{\FlagsLDIR}[1][]{\Flags[#1]{\FN}{\FN}{0}{0\FlagsSee{4}}{0}{\FN}}
-\newcommand{\FlagsLDD}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FX\FlagsSee{3}}{0}{\FN}}
-\newcommand{\FlagsLDDR}[1][]{\Flags[#1]{\FN}{\FN}{0}{0\FlagsSee{4}}{0}{\FN}}
-\newcommand{\FlagsLDDX}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsLDDRX}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsLDIX}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsLDIRX}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsLDPIRX}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsLDWS}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV\FlagsSee{2}}{0}{\FN}}
-\newcommand{\FlagsMIRRORa}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsMULde}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsNEG}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPP}{1}{\FS}}
-\newcommand{\FlagsNEXTREGna}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsNEXTREGnn}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsNOP}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsORr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPV}{0}{0}}
-\newcommand{\FlagsOUTna}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsOUTcr}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsOUTc}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsOUTI}[1][]{\Flags[#1]{\FX\FlagsSee{2}}{\FX\FlagsSee{1}}{\FX\FlagsSee{2}}{\FX\FlagsSee{2}}{1}{\FN}}
-\newcommand{\FlagsOTIR}[1][]{\Flags[#1]{\FX\FlagsSee{2}}{1}{\FX\FlagsSee{2}}{\FX\FlagsSee{2}}{1}{\FN}}
-\newcommand{\FlagsOUTD}[1][]{\Flags[#1]{\FX\FlagsSee{2}}{\FX\FlagsSee{1}}{\FX\FlagsSee{2}}{\FX\FlagsSee{2}}{1}{\FN}}
-\newcommand{\FlagsOTDR}[1][]{\Flags[#1]{\FX\FlagsSee{2}}{1}{\FX\FlagsSee{2}}{\FX\FlagsSee{2}}{1}{\FN}}
-\newcommand{\FlagsOUTINB}[1][]{\Flags[#1]{\FU}{\FU}{\FU}{\FU}{\FU}{\FU}}
-\newcommand{\FlagsPIXELAD}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsPIXELDN}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsPOPrr}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsPOPaf}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}}
-\newcommand{\FlagsPUSHrr}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsPUSHnn}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsRESr}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsRET}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsRETcc}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsRETI}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsRETN}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsRLr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
-\newcommand{\FlagsRLA}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FN}{0}{\FS}}
-\newcommand{\FlagsRLCr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
-\newcommand{\FlagsRLCA}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FN}{0}{\FS}}
-\newcommand{\FlagsRLD}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FN}}
-\newcommand{\FlagsRRr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
-\newcommand{\FlagsRRA}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FN}{0}{\FS}}
-\newcommand{\FlagsRRCr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
-\newcommand{\FlagsRRCA}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FN}{0}{\FS}}
-\newcommand{\FlagsRRD}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FN}}
-\newcommand{\FlagsRSTn}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsSBCr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{1}{\FS}}
-\newcommand{\FlagsSBCrr}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FlagsFPV\FlagsSee{1}}{1}{\FS\FlagsSee{1}}}
-\newcommand{\FlagsSCF}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FN}{0}{1}}
-\newcommand{\FlagsSETr}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsSETAE}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsSLAr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
-\newcommand{\FlagsSLIr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
-\newcommand{\FlagsSRAr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
-\newcommand{\FlagsSRLr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
-\newcommand{\FlagsSUBr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{1}{\FS}}
-\newcommand{\FlagsSWAPNIB}[1][]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsTESTn}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{\FU}{\FS}}
-\newcommand{\FlagsXORr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{0}}
 
 \section{8-Bit Arithmetic and Logical}
 
@@ -8047,7 +6907,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 
 \begin{minipage}{\textwidth}
 
-\begin{instrtablesymbol}
+\begin{instrtable}
 
 	\begin{instruction}{ADD rr,A} 
 		\Symbol{\SymADD{rr}{A}}
@@ -8280,7 +7140,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Symbol{\SymLDWS[2]}
 	\end{lastinstruction}
 
-\end{instrtablesymbol}
+\end{instrtable}
 
 \begin{notestable}
 	\NoteItem{\See{1}Core v2+ only}
@@ -8297,7 +7157,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 
 \begin{minipage}{\textwidth}
 
-\begin{instrtablesymbol}	
+\begin{instrtable}	
 
 	% we need some extra spacing to accomodate the image; it's negative because \\ adds a line, but we don't need full line of space...
 	\\[-9pt]
@@ -8465,7 +7325,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{27}{}
 	\end{lastinstruction}
 
-\end{instrtablesymbol}
+\end{instrtable}
 
 \NoteTableSingleItemSpaceCorrection
 
@@ -8541,7 +7401,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 	\end{instruction}
 
-	\begin{sepinstruction}{ADC HL,rr} 
+	\begin{instruction}{ADC HL,rr} 
 		\Symbol{\SymADC{HL}{rr}}
 			\FlagsADCrr
 			\OpCode{11}{101}{101}
@@ -8550,7 +7410,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode
 			\OpCode{01}{\OCT{rr}1}{010}
 			\Hex{..}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -8650,7 +7512,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 	\end{instruction}
 	
-	\begin{sepinstruction}{ADD rr,nm\ZXNS} 
+	\begin{instruction}{ADD rr,nm\ZXNS} 
 		\Symbol{\SymADD{rr}{nm}}
 			\FlagsADDrrnn
 			\OpCode{11}{101}{101}
@@ -8665,7 +7527,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpRange{n} 
 			\Hex{..}{} 
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -8770,7 +7634,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 	\end{instruction}
 	
-	\begin{sepinstruction}{BIT b,(IY+d)} 
+	\begin{instruction}{BIT b,(IY+d)} 
 		\Symbol{\SymBIT{(IY+d)}}
 			\FlagsBITr
 			\OpCode{11}{111}{101}
@@ -8785,7 +7649,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpCode{01}{\OCT{b}}{110}
 			\Hex{..}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 		
@@ -8839,7 +7705,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{2A}{}
 	\end{instruction}
 
-	\begin{sepinstruction}{BSRF DE,B\ZXNS} 
+	\begin{instruction}{BSRF DE,B\ZXNS} 
 		\SymbolS{\SymBSRF[0]}
 			\FlagsBSRF
 			\OpCode{11}{101}{101}
@@ -8851,7 +7717,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\OpCode{00}{101}{011}
 			\Hex{2B}{}
 			\Cycles{}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 	
@@ -8875,7 +7743,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Symbol{\SymCALL[3]{nm}}
 	\end{instruction}
 	
-	\begin{sepinstruction}{CALL c,nm} 
+	\begin{instruction}{CALL c,nm} 
 		\Symbol{\SymCALLc{nm}}
 			\FlagsCALLccnn
 			\OpCode{11}{\OCT{c}}{100}
@@ -8890,17 +7758,21 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode
 			\OpRange{n} 
 			\Hex{..}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 	
-	\begin{sepinstruction}{CCF} 
+	\begin{instruction}{CCF} 
 		\Symbol{\SymCCF}
 			\FlagsCCF
 			\OpCode{00}{111}{111}
 			\Hex{3F}{1}
 			\Cycles{1}{4}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -9057,13 +7929,15 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 
 	%-------------------------------------------
 
-	\begin{sepinstruction}{DAA}
+	\begin{instruction}{DAA}
 		\Symbol{}
 			\FlagsDAA
 			\OpCode{00}{100}{111}
 			\Hex{27}{1}
 			\Cycles{1}{4}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -9130,7 +8004,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{2B}{}
 	\end{instruction}
 	
-	\begin{sepinstruction}{DEC IY} 
+	\begin{instruction}{DEC IY} 
 		\Symbol{\SymDEC{IY}}
 			\FlagsDECrr
 			\OpCode{11}{111}{101}
@@ -9139,7 +8013,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode
 			\OpCode{00}{101}{011}
 			\Hex{2B}{}
-	\end{sepinstruction}	
+	\end{instruction}
+
+	\EmptySeparator	
 	
 	%-------------------------------------------
 
@@ -9255,13 +8131,15 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 
 	%-------------------------------------------
 
-	\begin{sepinstruction}{HALT}
+	\begin{instruction}{HALT}
 		\Symbol{}
 			\FlagsHALT
 			\OpCode{01}{110}{110}
 			\Hex{76}{1}
 			\Cycles{1}{4}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -9287,7 +8165,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{56}{}
 	\end{instruction}
 	
-	\begin{sepinstruction}{IM 2\See{4}}
+	\begin{instruction}{IM 2\See{4}}
 		\Symbol{}
 			\FlagsIM
 			\OpCode{11}{101}{101}
@@ -9296,7 +8174,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpCode{01}{011}{110}
 			\Hex{5E}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 	
 	%-------------------------------------------
 
@@ -9322,7 +8202,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 	\end{instruction}
 	
-	\begin{sepinstruction}{IN (C)}
+	\begin{instruction}{IN (C)}
 		\Symbol{(BC)}
 			\FlagsINc
 			\OpCode{11}{101}{101}
@@ -9331,7 +8211,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpCode{01}{110}{000}
 			\Hex{70}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 	
 	%-------------------------------------------
 
@@ -9398,7 +8280,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{23}{}
 	\end{instruction}
 		
-	\begin{sepinstruction}{INC IY} 
+	\begin{instruction}{INC IY} 
 		\Symbol{\SymINC{IY}}
 			\FlagsINCrr
 			\OpCode{11}{111}{101}
@@ -9407,7 +8289,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode
 			\OpCode{00}{100}{011}
 			\Hex{23}{}
-	\end{sepinstruction}	
+	\end{instruction}
+
+	\EmptySeparator	
 		
 	%-------------------------------------------
 
@@ -9457,7 +8341,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Symbol{\SymINI[2]}
 	\end{instruction}
 	
-	\begin{sepinstruction}{INIR} 
+	\begin{instruction}{INIR} 
 		\Symbol{\SymINIR[0]}
 			\FlagsINIR
 			\OpCode{11}{101}{101}
@@ -9471,7 +8355,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{B2}{}
 			\Cycles{5}{21}
 			\Comment{if {\tt B}$\neq$0}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 	
 	%-------------------------------------------
 
@@ -9560,7 +8446,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 	\end{instruction}
 	
-	\begin{sepinstruction}{JR c,e} 
+	\begin{instruction}{JR c,e} 
 		\Symbol{\SymJRc{c}{e}}
 			\FlagsJRccn
 			\OpCode{00}{1\OCT{cc}}{000}
@@ -9572,7 +8458,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 			\Cycles{3}{12}
 			\Comment{if {\tt p}=true}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 	
 	%-------------------------------------------
 
@@ -10029,7 +8917,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{} 
 	\end{instruction}
 		
-	\begin{sepinstruction}{LD (nm),IY} 
+	\begin{instruction}{LD (nm),IY} 
 		\Symbol{\SymLD{(nm+1)}{IY\High}}
 			\FlagsLDrr
 			\OpCode{11}{111}{101}
@@ -10046,7 +8934,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpRange{n} 
 			\Hex{..}{} 
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -10257,7 +9147,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 
 	%-------------------------------------------
 
-	\begin{sepinstruction}{NEG} 
+	\begin{instruction}{NEG} 
 		\Symbol{\SymNEG}
 			\FlagsNEG
 			\OpCode{11}{101}{101}
@@ -10266,7 +9156,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpCode{01}{000}{100}
 			\Hex{44}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -10284,7 +9176,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 	\end{instruction}
 
-	\begin{sepinstruction}{NEXTREG n,m}
+	\begin{instruction}{NEXTREG n,m}
 		\Symbol{\SymNEXTREG{m}}
 			\FlagsNEXTREGnn
 			\OpCode{11}{101}{101}
@@ -10299,17 +9191,21 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpRange{m} 
 			\Hex{..}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
-	\begin{sepinstruction}{NOP}
+	\begin{instruction}{NOP}
 		\Symbol{}
 			\FlagsNOP
 			\OpCode{00}{000}{000}
 			\Hex{00}{1}
 			\Cycles{1}{4}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -10354,7 +9250,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 	\end{instruction}
 				
-	\begin{sepinstruction}{OR (IY+d)}
+	\begin{instruction}{OR (IY+d)}
 		\Symbol{\SymOR{(IY+d)}}
 			\FlagsORr
 			\OpCode{11}{111}{101}
@@ -10366,7 +9262,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode
 			\OpRange{d}
 			\Hex{..}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -10501,7 +9399,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\SymbolP{\SymPIXELAD[4]}
 	\end{instruction}
 	
-	\begin{sepinstruction}{PIXELDN\ZXNS} 
+	\begin{instruction}{PIXELDN\ZXNS} 
 		\Symbol{\SymPIXELDN[0]}
 			\FlagsPIXELDN
 			\OpCode{11}{101}{101}
@@ -10520,7 +9418,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Symbol{\SymPIXELDN[4]}
 		\SkipToSymbol
 			\Symbol{\SymPIXELDN[5]}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -10563,7 +9463,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Symbol{\SymPOP[2]{IX}}
 	\end{instruction}
 	
-	\begin{sepinstruction}{POP IY}
+	\begin{instruction}{POP IY}
 		\Symbol{\SymPOP[0]{IY}}
 			\FlagsPOPrr
 			\OpCode{11}{111}{101}
@@ -10576,7 +9476,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{E1}{}
 		\SkipToSymbol
 			\Symbol{\SymPOP[2]{IY}}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -10622,7 +9524,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Symbol{\SymPUSH[2]{IY}}
 	\end{instruction}
 
-	\begin{sepinstruction}{PUSH nm\ZXNS}
+	\begin{instruction}{PUSH nm\ZXNS}
 		\Symbol{\SymPUSHnn[0]{n}{m}}
 			\FlagsPUSHnn
 			\OpCode{11}{101}{101}
@@ -10641,7 +9543,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpRange{m} 
 			\Hex{..}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 	
 	%-------------------------------------------
 
@@ -10749,7 +9653,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Symbol{\SymRETI[2]}
 	\end{instruction}
 	
-	\begin{sepinstruction}{RETN} 
+	\begin{instruction}{RETN} 
 		\Symbol{\SymRETN[0]}
 			\FlagsRETN
 			\OpCode{11}{101}{101}
@@ -10764,7 +9668,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Symbol{\SymRETN[2]}
 		\SkipToSymbol
 			\Symbol{\SymRETN[3]}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -10824,13 +9730,15 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{16}{}
 	\end{instruction}
 	
-	\begin{sepinstruction}{RLA}
+	\begin{instruction}{RLA}
 		\Symbol{\SymRL[0]{A}}
 			\FlagsRLA
 			\OpCode{00}{010}{111}
 			\Hex{17}{1}
 			\Cycles{1}{4}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 	
 	%-------------------------------------------
 
@@ -10890,13 +9798,15 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{06}{}
 	\end{instruction}
 	
-	\begin{sepinstruction}{RLCA}
+	\begin{instruction}{RLCA}
 		\Symbol{\SymRLC[0]{A}}
 			\FlagsRLCA
 			\OpCode{00}{000}{111}
 			\Hex{07}{1}
 			\Cycles{1}{4}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -10912,7 +9822,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Cycles{}{}
 	\end{instruction}
 			
-	\begin{sepinstruction}{RRD}
+	\begin{instruction}{RRD}
 		\Symbol{\vspace*{-12pt}\hspace*{-0.8cm}\SymRRD}
 			\FlagsRRD
 			\OpCode{11}{101}{101}
@@ -10921,7 +9831,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpCode{01}{100}{111}
 			\Hex{67}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 \end{instrtablesimple}
 
@@ -10990,13 +9902,15 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Cycles{}{}
 	\end{instruction}
 	
-	\begin{sepinstruction}{RRA}
+	\begin{instruction}{RRA}
 		\Symbol{\SymRR[0]{A}}
 			\FlagsRRA
 			\OpCode{00}{011}{111}
 			\Hex{1F}{1}
 			\Cycles{1}{4}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 	
@@ -11056,17 +9970,19 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{0E}{}
 	\end{instruction}
 	
-	\begin{sepinstruction}{RRCA}
+	\begin{instruction}{RRCA}
 		\Symbol{\SymRRC[0]{A}}
 			\FlagsRRCA
 			\OpCode{00}{001}{111}
 			\Hex{0F}{1}
 			\Cycles{1}{4}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 	
 	%-------------------------------------------
 
-	\begin{sepinstruction}{RST n} 
+	\begin{instruction}{RST n} 
 		\Symbol{\SymRST[0]{n}}
 			\FlagsRSTn
 			\OpCode{11}{\OCT{n}}{111}
@@ -11078,7 +9994,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Symbol{\SymRST[2]{n}}
 		\SkipToSymbol
 			\Symbol{\SymRST[3]{n}}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 
 	%-------------------------------------------
 
@@ -11137,7 +10055,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 	\end{instruction}
 	
-	\begin{sepinstruction}{SBC HL,rr} 
+	\begin{instruction}{SBC HL,rr} 
 		\Symbol{\SymSBC{HL}{rr}}
 			\FlagsSBCrr
 			\OpCode{11}{101}{101}
@@ -11146,7 +10064,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode
 			\OpCode{01}{\OCT{rr}0}{010}
 			\Hex{..}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 	
 	%-------------------------------------------
 
@@ -11203,7 +10123,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 	\end{instruction}
 	
-	\begin{sepinstruction}{SET b,(IY+d)} 
+	\begin{instruction}{SET b,(IY+d)} 
 		\Symbol{\SymSET{(IY+d)}}
 			\FlagsSETr
 			\OpCode{11}{111}{101}
@@ -11218,11 +10138,13 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpCode{11}{\OCT{b}}{110}
 			\Hex{..}{}
-	\end{sepinstruction}	
+	\end{instruction}
+
+	\EmptySeparator	
 
 	%-------------------------------------------
 
-	\begin{sepinstruction}{SETAE} 
+	\begin{instruction}{SETAE} 
 		\Symbol{\SymSETAE}
 			\FlagsSETAE
 			\OpCode{11}{101}{101}
@@ -11231,7 +10153,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpCode{10}{010}{101}
 			\Hex{95}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 	
 	%-------------------------------------------
 	
@@ -11274,7 +10198,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{26}{}
 	\end{instruction}
 		
-	\begin{sepinstruction}{SLA (IY+d)}
+	\begin{instruction}{SLA (IY+d)}
 		\Symbol{\SymSLA[0]{(IY+d)}}
 			\FlagsSLAr
 			\OpCode{11}{111}{101}
@@ -11289,7 +10213,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpCode{00}{100}{110}
 			\Hex{26}{}	
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 		
 	%-------------------------------------------
 	
@@ -11332,7 +10258,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{36}{}
 	\end{instruction}
 			
-	\begin{sepinstruction}{SLI (IY+d)\UNDOC}
+	\begin{instruction}{SLI (IY+d)\UNDOC}
 		\Symbol{\SymSLI[0]{(IY+d)}}
 			\FlagsSLIr
 			\OpCode{11}{111}{101}
@@ -11347,7 +10273,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode 
 			\OpCode{00}{110}{110}
 			\Hex{36}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 	
 \end{instrtablesimple}
 
@@ -11395,7 +10323,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{2E}{}
 	\end{instruction}
 			
-	\begin{sepinstruction}{SRA (IY+d)}
+	\begin{instruction}{SRA (IY+d)}
 		\Symbol{\SymSRA[0]{(IY+d)}}
 			\FlagsSRAr
 			\OpCode{11}{111}{101}
@@ -11410,7 +10338,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode
 			\OpCode{00}{101}{110}
 			\Hex{2E}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 			
 	%-------------------------------------------
 	
@@ -11453,7 +10383,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{3E}{}
 	\end{instruction}
 				
-	\begin{sepinstruction}{SRL (IY+d)}
+	\begin{instruction}{SRL (IY+d)}
 		\Symbol{\SymSRL[0]{(IY+d)}}
 			\FlagsSRLr
 			\OpCode{11}{111}{101}
@@ -11468,7 +10398,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode
 			\OpCode{00}{111}{110}
 			\Hex{3E}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 				
 	%-------------------------------------------
 
@@ -11513,7 +10445,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 	\end{instruction}
 				
-	\begin{sepinstruction}{SUB (IY+d)}
+	\begin{instruction}{SUB (IY+d)}
 		\Symbol{\SymSUB{(IY+d)}}
 			\FlagsSUBr
 			\OpCode{11}{111}{101}
@@ -11525,11 +10457,13 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode
 			\OpRange{d}
 			\Hex{..}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 		
 	%-------------------------------------------
 
-	\begin{sepinstruction}{SWAPNIB}
+	\begin{instruction}{SWAPNIB}
 		\Symbol{\multirow[b]{1}{*}{\SymSWAPNIB[0]}}
 			\FlagsSWAPNIB
 			\OpCode{11}{101}{101}
@@ -11539,11 +10473,13 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\OpCode{00}{100}{011}
 			\Hex{23}{}
 			\Cycles{}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 	
 	%-------------------------------------------
 
-	\begin{sepinstruction}{TEST n} 
+	\begin{instruction}{TEST n} 
 		\Symbol{\SymTEST}
 			\FlagsTESTn
 			\OpCode{11}{101}{101}
@@ -11553,7 +10489,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\OpCode{00}{100}{111}
 			\Hex{27}{}
 			\Cycles{}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 	
 \end{instrtablesimple}
 
@@ -11600,7 +10538,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 			\Hex{..}{}
 	\end{instruction}
 					
-	\begin{sepinstruction}{XOR (IY+d)}
+	\begin{instruction}{XOR (IY+d)}
 		\Symbol{\SymXOR{(IY+d)}}
 			\FlagsXORr
 			\OpCode{11}{111}{101}
@@ -11612,7 +10550,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 		\SkipToOpCode
 			\OpRange{d}
 			\Hex{..}{}
-	\end{sepinstruction}
+	\end{instruction}
+
+	\EmptySeparator
 	
 \end{instrtablesimple}
 
@@ -11636,30 +10576,8 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 % █░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
 % ████████████████████████████████████████████████████████████████████████████
 
-\newcommand{\DetailParityOverflow}[1]{
-	\IfEqCase{#1}
-	{
-		{p}{
-			\small
-			\setlength{\unitlength}{0.2mm}
-			\begin{picture}(20,10)
-				\put(-5.6,7){\circle{20}}
-				\put(-11,0){P}
-				\put(4,0){V}
-			\end{picture}
-		}
-		{v}{
-			\small
-			\setlength{\unitlength}{0.2mm}
-			\begin{picture}(20,10)
-				\put(11,7){\circle{20}}
-				\put(-11,0){P}
-				\put(4,0){V}
-			\end{picture}
-		}
-		{}{PV}
-	}
-}
+\input{details.tex}
+
 The following pages describe all instructions in detail. Alphabetical order is used as much as possible, but some deviations were made to better fit to pages. Each instruction includes:
 
 \begin{itemize}
@@ -11717,216 +10635,18 @@ Where possible, multiple variants of same instruction are grouped together and w
 	% setup spacing between items
 	\setlength\itemsep{1.5em}
 
-	%------------------------------------------------------------------------------
-	%------------------------------------------------------------------------------
-	%------------------------------------------------------------------------------
-	% DECLARATIONS
-	%------------------------------------------------------------------------------
-	%------------------------------------------------------------------------------
-	%------------------------------------------------------------------------------
-
-	\newcommand{\DetailMnemonic}[1]{\item[{\tt \large \textbf{#1}}]}
-	\newcommand{\DetailName}[1]{\textbf{#1}}
-	\newcommand{\DetailSymbol}[1]{{\tt #1}}
-	\newcommand{\IH}[1]{\underline{#1}} % Instruction Highlight (for highlighting letters forming mnemonic in \DetailName)
-
-	% redeclare instruction symbolic operation handling
-	\renewcommand{\SymTab}{\phantom{>>}}	% ~ doesn't work here, so we need to use invisible characters instead
-	\renewcommand{\SymDrawing}[2][-1.7em]{
-		\hspace*{#1}	% vspace is fine here, but we need to adjust hspace, so we take over optional parameter
-		\scalebox{1.5}{
-			\scriptsize
-			#2
-		}
-	}
-
-
-	% 1st parameter: if not empty, it is interpretted as size, empty will yield no space (this is used for multiple successive notes)
-	\newcommand{\DetailNote}[2][1.5ex]{
-		\IfEq{#1}{}{
-			% if empty, no spacing should be applied
-		}{
-			% otherwise interpret #1 as size and use for vertical spacing
-			\vspace*{#1}
-		}
-		% either way, print note in smaller font
-		{\small \normalfont{#2}}
-	}
-	
-	\newenvironment{DetailItem}[3]{
-		\DetailMnemonic{#1}
-		\DetailName{#2}
-		% if symbolic operation is not given we should not use any spacing, otherwise, we should
-		\if\relax\detokenize{#3}\relax
-			% we don't have symbolic operation
-		\else
-			\\[1.2ex]
-			\DetailSymbol{#3}
-		\fi
-		% reduce spacing before and after multicols
-		\setlength{\multicolsep}{1ex}
-
-	}{
-		% we want some spacing below each item
-		\vspace{1em}
-	}
-	
-	% references to items from other pages
-	\newcommand{\DetailItemsRef}[2]{
-		\vspace*{-1.5em}
-		\desclabelstyle{\pushlabel}
-		\DetailMnemonic{#1}
-		\desclabelstyle{\multilinelabel}
-		\DetailNote{#2}
-	}
-	\newcommand{\DetailItemRef}[2]{
-		\DetailItemsRef{#1}{See page \pageref{#2}}
-	}
-
-	\newenvironment{detailitemsimple}[2]{
-		\DetailMnemonic{#1}
-		\DetailSymbol{#2}
-		% reduce spacing before and after multicols
-		\setlength{\multicolsep}{1ex}
-
-	}{
-		% we want some spacing below each item
-		\vspace{1em}
-	}
-
-	\environbodyname\DetailVariantsBODY
-	\NewEnviron{DetailVariants}[1][3]{
-		{
-			\tt
-			\begin{multicols}{#1}
-				\DetailVariantsBODY
-			\end{multicols}
-		}
-	}
-	\NewEnviron{DetailVariantsVar}[1]{
-		{
-			\tt
-			\vspace*{0.8ex}
-			\begin{tabularx}{\linewidth}{@{}#1}
-				\DetailVariantsBODY
-			\end{tabularx}
-		}
-	}
-
-	\environbodyname\DetailCompactListBODY
-	\NewEnviron{DetailCompactList}[1][]{
-		#1
-		\vspace{-6pt}
-		\setlist{leftmargin=1em}
-		\begin{itemize}
-			\setlength\itemsep{-1pt}
-			\DetailCompactListBODY
-		\end{itemize}
-	}
-
-	\newcommand{\DetailAlternative}[2]{
-		\underline{\tt #1}:\\[1ex]
-		\DetailSymbol{#2}
-	}
-
-	\environbodyname\DetailEffectsBODY
-	\NewEnviron{DetailEffects}[1][]{
-		\vspace{3pt}
-		\begin{tabularx}{\linewidth}{@{}lXc|c|p{2.6ex}|c|p{2.6ex}|c|c|c|c}
-			\cline{3-10}
-			\multicolumn{2}{@{}X}{\textbf{Effects}} & 
-				\multicolumn{1}{|c|}{SF} & 
-				ZF & 
-				& 
-				HF & 
-				&
-				\DetailParityOverflow{#1}
-				& 
-				NF & 
-				CF \notet\noteb\\[1pt]\cline{3-10}
-
-			\DetailEffectsBODY
-
-		\end{tabularx}
-		\vspace{2pt}
-	}
-
-	% This redeclaration allows us to reuse all previously declared flags so changes can only be made in single place
-	\renewcommand{\FlagsFPP}{\FS}		% we indicate PF status in header, so use standard in table
-	\renewcommand{\FlagsFPV}{\FS}		% we indicate VF status in header, so use standard in table
-	\renewcommand{\FlagsSmall}[1]{\small #1}	% larger font that in tables above
-	\renewcommand{\FlagsSee}[1]{}		% we don't want to display any footnotes in details section, we describe unusual cases below table
-	\renewcommand{\Flags}[7][]{
-		& 
-		#1 & 
-		\multicolumn{1}{|c|}{\tt #2} & 
-		{\tt #3} & 
-		& 
-		{\tt #4} & 
-		& 
-		{\tt #5} & 
-		{\tt #6} & 
-		{\tt #7} & \notet\noteb \\\cline{3-10}
-	}
-	\newcommand{\DetailFlags}[7][]{
-		\Flags[#1]{#2}{#3}{#4}{#5}{#6}{#7}
-	}
-	\newcommand{\DetailFlagsComments}[1]{ 
-		& & \multicolumn{9}{p{7.8cm}}{
-			\vspace{-2ex}
-			\setlist{leftmargin=1em}
-			\begin{itemize}
-				\setlength\itemsep{-1pt}
-				#1
-			\end{itemize}	
-		} \\[-3ex]
-	}
-	\newcommand{\DetailNoEffect}{
-		\begin{DetailEffects}
-			\DetailFlags[No effect on flags]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}
-		\end{DetailEffects}
-	}
-	
-	\environbodyname\DetailTimingBODY
-	\NewEnviron{DetailTiming}[1][Timing]{
-		\vspace{1pt}
-		\begin{tabularx}{0.8\textwidth}{@{}lXccrrrr}
-			\multicolumn{2}{@{}X}{\textbf{#1}} & Mc & Ts & 3.5MHz & 7MHz & 14MHz & 28MHz \\[1pt]
-			\DetailTimingBODY
-		\end{tabularx}
-	}
-	\newcommand{\DetailTime}[3]{
-		& {\tt #1} & #2 & #3 & 
-			\nprounddigits{1}
-			{\footnotesize {\tt \numprint{\fpeval{#3/3.5}}}$\mu$s} & 
-			\nprounddigits{2}
-			{\footnotesize {\tt \numprint{\fpeval{#3/7}}}$\mu$s} & 
-			\nprounddigits{2}
-			{\footnotesize {\tt \numprint{\fpeval{#3/14}}}$\mu$s} & 
-			\nprounddigits{2}
-			{\footnotesize {\tt \numprint{\fpeval{#3/28}}}$\mu$s} \\
-	}
-
-	%------------------------------------------------------------------------------
-	%------------------------------------------------------------------------------
-	%------------------------------------------------------------------------------
-	% INSTRUCTIONS
-	%------------------------------------------------------------------------------
-	%------------------------------------------------------------------------------
-	%------------------------------------------------------------------------------
-
 	\pagebreak
 	\begin{DetailItem}{ADC d,s}
 		{\IH{AD}d with \IH{C}arry}
 		{\SymADC{d}{s}}
 
-		\begin{DetailVariantsVar}{p{1.9cm}p{1.9cm}Xp{2.8cm}p{2.4cm}}
+		\begin{DetailVariants}[p{1.9cm}p{1.9cm}Xp{2.8cm}p{2.4cm}]
 			\textnormal{8 bit} & \textnormal{8 bit} & \textnormal{8 bit} & \textnormal{8 bit} & \textnormal{16 bit} \\
 			ADC A,A	& ADC A,E	& ADC A,(HL)	& ADC A,IXH\UNDOC	& ADC HL,BC \\
 			ADC A,B	& ADC A,H	& ADC A,(IX+d)	& ADC A,IXL\UNDOC	& ADC HL,DE \\
 			ADC A,C	& ADC A,L	& ADC A,(IY+d)	& ADC A,IYH\UNDOC	& ADC HL,HL \\
 			ADC A,D	& ADC A,n	& 				& ADC A,IYL\UNDOC	& ADC HL,SP \\
-		\end{DetailVariantsVar}
+		\end{DetailVariants}
 		
 		Adds source operand {\tt s} or contents of the memory location addressed by {\tt s} and value of carry flag to destination {\tt d}. Result is then stored to destination {\tt d}.
 
@@ -11939,12 +10659,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 
 		\begin{DetailTiming}
-			\DetailTime{A,r}{1}{4}
-			\DetailTime{A,n}{2}{7}
-			\DetailTime{A,(HL)}{2}{7}
-			\DetailTime{HL,rr}{4}{15}
-			\DetailTime{A,(IX+d)}{5}{19}
-			\DetailTime{A,(IY+d)}{5}{19}
+			\DetailTime[A,r]{1}{4}
+			\DetailTime[A,n]{2}{7}
+			\DetailTime[A,(HL)]{2}{7}
+			\DetailTime[HL,rr]{4}{15}
+			\DetailTime[A,(IX+d)]{5}{19}
+			\DetailTime[A,(IY+d)]{5}{19}
 		\end{DetailTiming}
 		
 	\end{DetailItem}
@@ -11953,7 +10673,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		{\IH{ADD}}
 		{\SymADD{d}{s}}
 
-		\begin{DetailVariantsVar}{p{1.9cm}Xp{2.3cm}p{2.3cm}p{2.4cm}}
+		\begin{DetailVariants}[p{1.9cm}Xp{2.3cm}p{2.3cm}p{2.4cm}]
 			\textnormal{8-bit} & \textnormal{8-bit} & \textnormal{16-bit} & \textnormal{16-bit} & \textnormal{ZX Next} \\
 			ADD A,A & ADD A,(HL) 		& ADD IX,BC & ADD HL,BC	& ADD BC,A\ZXN \\
 			ADD A,B & ADD A,(IX+d)		& ADD IX,DE & ADD HL,DE & ADD DE,A\ZXN \\
@@ -11963,7 +10683,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			ADD A,H & ADD A,IYH\UNDOC	& ADD IY,DE & 			& ADD HL,nn\ZXN \\
 			ADD A,L & ADD A,IYL\UNDOC	& ADD IY,IY \\
 			ADD A,n & 					& ADD IY,SP \\
-		\end{DetailVariantsVar}
+		\end{DetailVariants}
 		
 		Similar to {\tt ADC} except carry flag is not used in calculation: adds operand {\tt s} or contents of the memory location addressed by {\tt s} to destination {\tt d}. Result is then stored to destination {\tt d}.
 
@@ -11978,16 +10698,16 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 
 		\begin{DetailTiming}
-			\DetailTime{A,r}{1}{4}
-			\DetailTime{A,n}{2}{7}
-			\DetailTime{A,(HL)}{2}{7}
-			\DetailTime{rr,A\ZXN}{2}{8}
-			\DetailTime{HL,rr}{3}{11}
-			\DetailTime{IX,rr}{4}{15}
-			\DetailTime{IY,rr}{4}{15}
-			\DetailTime{rr,nn\ZXN}{4}{16}
-			\DetailTime{A,(IX+d)}{5}{19}
-			\DetailTime{A,(IY+d)}{5}{19}
+			\DetailTime[A,r]{1}{4}
+			\DetailTime[A,n]{2}{7}
+			\DetailTime[A,(HL)]{2}{7}
+			\DetailTime[rr,A\ZXN]{2}{8}
+			\DetailTime[HL,rr]{3}{11}
+			\DetailTime[IX,rr]{4}{15}
+			\DetailTime[IY,rr]{4}{15}
+			\DetailTime[rr,nn\ZXN]{4}{16}
+			\DetailTime[A,(IX+d)]{5}{19}
+			\DetailTime[A,(IY+d)]{5}{19}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12036,11 +10756,11 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 
 		\begin{DetailTiming}
-			\DetailTime{r}{1}{4}
-			\DetailTime{n}{2}{7}
-			\DetailTime{(HL)}{2}{7}
-			\DetailTime{(IX+d)}{5}{19}
-			\DetailTime{(IY+d)}{5}{19}
+			\DetailTime[r]{1}{4}
+			\DetailTime[n]{2}{7}
+			\DetailTime[(HL)]{2}{7}
+			\DetailTime[(IX+d)]{5}{19}
+			\DetailTime[(IY+d)]{5}{19}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12074,10 +10794,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 
 		\begin{DetailTiming}
-			\DetailTime{b,r}{2}{8}
-			\DetailTime{b,(HL)}{3}{12}
-			\DetailTime{b,(IX+d)}{5}{20}
-			\DetailTime{b,(IY+d)}{5}{20}
+			\DetailTime[b,r]{2}{8}
+			\DetailTime[b,(HL)]{3}{12}
+			\DetailTime[b,(IX+d)]{5}{20}
+			\DetailTime[b,(IY+d)]{5}{20}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12088,10 +10808,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Rotates value in register pair {\tt DE} left for the amount given in bits 3-0 (low nibble) of register {\tt B}. To rotate right, use formula: {\tt B=16-places}. Result is stored in {\tt DE}.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsBRLC
+		\end{DetailEffects}
 
 		\begin{DetailTiming}
-			\DetailTime{}{2}{8}
+			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12102,10 +10824,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Performs shift left of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. Result is stored in {\tt DE}.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsBSLA
+		\end{DetailEffects}
 		
 		\begin{DetailTiming}
-			\DetailTime{}{2}{8}
+			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12116,10 +10840,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Performs arithmetical shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. Result is stored in {\tt DE}.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsBSRA
+		\end{DetailEffects}
 		
 		\begin{DetailTiming}
-			\DetailTime{}{2}{8}
+			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12130,10 +10856,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Performs fill-one-way shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. Result is stored in {\tt DE}.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsBSRF
+		\end{DetailEffects}
 		
 		\begin{DetailTiming}
-			\DetailTime{}{2}{8}
+			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12144,10 +10872,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Performs logical shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. Result is stored in {\tt DE}.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsBSRL
+		\end{DetailEffects}
 		
 		\begin{DetailTiming}
-			\DetailTime{}{2}{8}
+			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12159,10 +10889,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Pushes program counter {\tt PC} to stack and calls subroutine at the given location {\tt nn} by changing {\tt PC} to point to address {\tt nn}.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsCALLnn
+		\end{DetailEffects}
 		
 		\begin{DetailTiming}
-			\DetailTime{}{5}{17}
+			\DetailTime{5}{17}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12185,11 +10917,13 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		If given condition is met, {\tt CALL nn} is performed, as described above.
 
-		\DetailNoEffect
-				
+		\begin{DetailEffects}
+			\FlagsCALLccnn
+		\end{DetailEffects}
+
 		\begin{DetailTiming}
-			\DetailTime{c\normalfont{ false}}{3}{10}
-			\DetailTime{c\normalfont{ true}}{5}{17}
+			\DetailTime[c\normalfont{=false}]{3}{10}
+			\DetailTime[c\normalfont{=true}]{5}{17}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12208,7 +10942,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 		
 		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
+			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12267,11 +11001,11 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 		
 		\begin{DetailTiming}
-			\DetailTime{r}{1}{4}
-			\DetailTime{n}{2}{7}
-			\DetailTime{(HL)}{2}{7}
-			\DetailTime{(IX+d)}{5}{19}
-			\DetailTime{(IY+d)}{5}{19}
+			\DetailTime[r]{1}{4}
+			\DetailTime[n]{2}{7}
+			\DetailTime[(HL)]{2}{7}
+			\DetailTime[(IX+d)]{5}{19}
+			\DetailTime[(IY+d)]{5}{19}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12290,7 +11024,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 		
 		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
+			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 		\DetailNote{Note: {\tt CPL} is alphabetically after {\tt CPD}, {\tt CPDR}, {\tt CPI} and {\tt CPIR}, but is placed here to avoid empty space and to allow {\tt CPxx} instructions to be presented together}
@@ -12313,7 +11047,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 
 		\begin{DetailTiming}
-			\DetailTime{}{4}{16}
+			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12333,8 +11067,8 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{BC=0 or A=(HL)}{4}{16}
-			\DetailTime{BC$\neq$0 and A$\neq$(HL)}{5}{21}
+			\DetailTimeRegular[{\tt BC}=0 or {\tt A}={\tt (HL)}]{4}{16}
+			\DetailTimeRegular[{\tt BC}$\neq$0 and {\tt A}$\neq${\tt (HL)}]{5}{21}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12347,7 +11081,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		Subtracts contents of memory location addressed by {\tt HL} register pair from accumulator {\tt A}. Result is then discarded. Afterwards {\tt HL} is incremented and {\tt BC} decremented.
 
 		\begin{DetailEffects}
-			\DetailFlags{\FS}{\FX}{\FS}{\FX}{1}{\FN}
+			\FlagsCPI
 			\DetailFlagsComments{
 				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is incremented, reset otherwise
 				\item {\tt PV} set if {\tt BC$\neq$0} after execution, rest otherwise
@@ -12355,7 +11089,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 		
 		\begin{DetailTiming}
-			\DetailTime{}{4}{16}
+			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12387,7 +11121,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{multicols}
 
 		\begin{DetailEffects}
-			\DetailFlags{\FS}{\FX}{\FS}{\FX}{1}{\FN}
+			\FlagsCPIR
 			\DetailFlagsComments{
 				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is incremented, reset otherwise
 				\item {\tt PV} set if {\tt BC$\neq$0} after execution, rest otherwise
@@ -12395,8 +11129,8 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{BC=0 or A=(HL)}{4}{16}
-			\DetailTime{BC$\neq$0 and A$\neq$(HL)}{5}{21}
+			\DetailTimeRegular[{\tt BC}=0 or {\tt A}={\tt (HL)}]{4}{16}
+			\DetailTimeRegular[{\tt BC}$\neq$0 and {\tt A}$\neq${\tt (HL)}]{5}{21}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12422,7 +11156,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 		
 		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
+			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12472,13 +11206,13 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 		
 		\begin{DetailTiming}
-			\DetailTime{r}{1}{4}
-			\DetailTime{rr}{1}{6}
-			\DetailTime{IX}{2}{10}
-			\DetailTime{IY}{2}{10}
-			\DetailTime{(HL)}{3}{11}
-			\DetailTime{(IX+d)}{6}{23}
-			\DetailTime{(IY+d)}{6}{23}
+			\DetailTime[r]{1}{4}
+			\DetailTime[rr]{1}{6}
+			\DetailTime[IX]{2}{10}
+			\DetailTime[IY]{2}{10}
+			\DetailTime[(HL)]{3}{11}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12490,10 +11224,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Disables all maskable interrupts (mode 1 and 2). Interrupts are disabled after execution of the instruction following {\tt DI}. See sections \ref{interrupts} and \ref{zx_next_interrupts} for more details on interrupts.
 		
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsDI
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
+			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12504,11 +11240,13 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Decrements {\tt B} register and jumps to given relative address if {\tt B$\neq$0}. Given offset is added to the value of {\tt PC} after parsing {\tt DJNZ} instruction, so effective offset it {\tt -126} to {\tt +129}. Assembler automatically subtracts {\tt 2} from offset value {\tt e} to generate opcode.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsDJNZ
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{B=0}{2}{8}
-			\DetailTime{B$\neq$0}{3}{13}
+			\DetailTimeRegular[{\tt B}=0]{2}{8}
+			\DetailTimeRegular[{\tt B}$\neq$0]{3}{13}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12519,10 +11257,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Enables maskable interrupts (mode 1 and 2). Interrupts are enabled after execution of the instruction following {\tt EI}; typically {\tt RETI} or {\tt RETN}. See sections \ref{interrupts} and \ref{zx_next_interrupts} for more details on interrupts.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsEI
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
+			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12566,10 +11306,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{rr,rr}{1}{4}
-			\DetailTime{(SP),HL}{5}{19}
-			\DetailTime{(SP),IX}{6}{23}
-			\DetailTime{(SP),IY}{6}{23}
+			\DetailTime[rr,rr]{1}{4}
+			\DetailTime[(SP),HL]{5}{19}
+			\DetailTime[(SP),IX]{6}{23}
+			\DetailTime[(SP),IY]{6}{23}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12580,10 +11320,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Exchanges contents of registers {\tt BC}, {\tt DE} and {\tt HL} with shadow registers {\tt BC'}, {\tt DE'} and {\tt HL'}. Most frequent use is in interrupt handlers as alternative of using stack for saving and restoring register values. If using outside interrupt handlers, interrupts must be disabled before using this instruction.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsEXX
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
+			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12595,10 +11337,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Suspends CPU and executes {\tt NOP}s (to continue memory refresh cycles), until the next interrupt or reset. This effectively creates a delay. You can chain {\tt HALT}s. But make sure that there will be an interrupt, otherwise {\tt HALT} will run forever.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsHALT
+		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
+			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12618,10 +11362,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Sets the interrupt mode. All 3 interrupts are maskable, meaning they can be disabled using {\tt DI} instruction. See sections \ref{interrupts} and \ref{zx_next_interrupts} for details and example.
 
-		\DetailNoEffect		
+		\begin{DetailEffects}
+			\FlagsIM		
+		\end{DetailEffects}
 
 		\begin{DetailTiming}
-			\DetailTime{}{2}{8}
+			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12675,8 +11421,8 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{r,(n)}{3}{11}
-			\DetailTime{r,(C)}{3}{12}
+			\DetailTime[r,(n)]{3}{11}
+			\DetailTime[r,(C)]{3}{12}
 		\end{DetailTiming}
 
 		\DetailNote{Note: {\tt IN (C)} (or its alternative form {\tt IN F,(C)}) variant performs an input, but does not store the result, only sets the flags.}
@@ -12729,13 +11475,13 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{r}{1}{6}
-			\DetailTime{rr}{1}{6}
-			\DetailTime{IX}{2}{10}
-			\DetailTime{IY}{2}{10}
-			\DetailTime{(HL)}{3}{11}
-			\DetailTime{(IX+d)}{6}{23}
-			\DetailTime{(IY+d)}{6}{23}
+			\DetailTime[r]{1}{6}
+			\DetailTime[rr]{1}{6}
+			\DetailTime[IX]{2}{10}
+			\DetailTime[IY]{2}{10}
+			\DetailTime[(HL)]{3}{11}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12756,7 +11502,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{4}{16}
+			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12775,8 +11521,8 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{B=0}{4}{16}
-			\DetailTime{B$\neq$0}{5}{21}
+			\DetailTimeRegular[{\tt B}=0]{4}{16}
+			\DetailTimeRegular[{\tt B}$\neq$0]{5}{21}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12797,7 +11543,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{4}{16}
+			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12816,8 +11562,8 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{B=0}{4}{16}
-			\DetailTime{B$\neq$0}{5}{21}
+			\DetailTimeRegular[{\tt B}=0]{4}{16}
+			\DetailTimeRegular[{\tt B}$\neq$0]{5}{21}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12838,13 +11584,15 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Unconditionally jumps (changes program counter {\tt PC} to point) to given absolute address or the memory location addressed by register pair. Unconditional jumps are the fastest way of changing program counter, even faster than {\tt JR}, but they take more bytes.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsJPnn
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{(HL)}{1}{4}
-			\DetailTime{(IX)}{2}{8}
-			\DetailTime{(IY)}{2}{8}
-			\DetailTime{nn}{3}{10}
+			\DetailTime[(HL)]{1}{4}
+			\DetailTime[(IX)]{2}{8}
+			\DetailTime[(IY)]{2}{8}
+			\DetailTime[nn]{3}{10}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12870,10 +11618,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Conditionally jumps to given absolute address. See {\tt CP} on page \pageref{DetailRefCP} for more details on comparisons.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsJPccnn
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{3}{10}
+			\DetailTime{3}{10}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12886,10 +11636,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 		
 		\DetailNote[]{\See{*}``Current {\tt PC}'' is address of the next instruction after {\tt JP (C)}; {\tt PC} was already advanced after fetching {\tt JP (C)} instruction from memory. If {\tt JP (C)} instruction is located at the very end of 16K memory block ({\tt \$..FE} or {\tt \$..FF} address), then new {\tt PC} value will land into following 16K block.}
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsJPc
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{3}{13}
+			\DetailTime{3}{13}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12900,10 +11652,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 		
 		Unconditionally performs relative jump. Offset {\tt e} is added to the value of program counter {\tt PC} as signed value to allow jumps forward and backward. Offset is added to {\tt PC} after {\tt JR} instruction is read (aka {\tt PC+2}), so offset is in the range of {\tt -126} to {\tt 129}. Assembler automatically subtracts {\tt 2} from offset value {\tt e} to generate opcode.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsJRn
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{3}{12}
+			\DetailTime{3}{12}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12922,11 +11676,13 @@ Where possible, multiple variants of same instruction are grouped together and w
 		
 		Conditionally performs relative jump. Note: in contrast to {\tt JP}, {\tt JR} only supports above 4 conditions. See {\tt CP} on page \pageref{DetailRefCP} for more details on conditions.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsJRccn
+		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{c false}{2}{7}
-			\DetailTime{c true}{3}{12}
+			\DetailTimeRegular[{\tt c}=false]{2}{7}
+			\DetailTimeRegular[{\tt c}=true]{3}{12}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -12942,8 +11698,9 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\fontsize{9pt}{9pt}	% 9pt results in slightly wider table than the rest of the text, but the larger the font, more readable it is, so I prefer it this way (originally \scripsize was used which makes the table slightly slimer than the rest of the text)
 			\definecolor{llgray}{rgb}{0.9, 0.9, 0.9}
 			\setlength{\tabcolsep}{1pt}
-			\newcommand{\X}{$\bullet$}
-			\newcommand{\n}{\cellcolor{llgray}}
+			% note: OO and ii were chosen simply because the difference is noticable in the table below...
+			\newcommand{\OO}{$\bullet$}
+			\newcommand{\ii}{\cellcolor{llgray}}
 
 			\begin{tabular}{@{}|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 				\arrayrulecolor{gray}
@@ -12951,33 +11708,35 @@ Where possible, multiple variants of same instruction are grouped together and w
 				& {\tt A} & {\tt B} & {\tt C} & {\tt D} & {\tt E} & {\tt H} & {\tt L} & {\tt I} & {\tt R} & {\tt IXH} & {\tt IXL} & {\tt IYH} & {\tt IYL} & {\tt BC} & {\tt DE} & {\tt HL} & {\tt SP} & {\tt IX} & {\tt IY} & {\tt (BC)} & {\tt (DE)} & {\tt (HL)} & {\tt (IX+d)} & {\tt (IY+d)} & {\tt n} & {\tt nn} & {\tt (nn)} \\
 				\hline
 
-				{\tt A}      &\X&\X&\X&\X&\X&\X&\X&\X&\X&\X&\X&\X&\X&\n&\n&\n&\n&\n&\n&\X&\X&\X&\X&\X&\X&\n&\X \\ \hline
-				{\tt B}      &\X&\X&\X&\X&\X&\X&\X&\n&\n&\X&\X&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n&\X&\X&\X&\X&\n&\n \\ \hline
-				{\tt C}      &\X&\X&\X&\X&\X&\X&\X&\n&\n&\X&\X&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n&\X&\X&\X&\X&\n&\n \\ \hline
-				{\tt D}      &\X&\X&\X&\X&\X&\X&\X&\n&\n&\X&\X&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n&\X&\X&\X&\X&\n&\n \\ \hline
-				{\tt E}      &\X&\X&\X&\X&\X&\X&\X&\n&\n&\X&\X&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n&\X&\X&\X&\X&\n&\n \\ \hline
-				{\tt H}      &\X&\X&\X&\X&\X&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\X&\X&\X&\X&\n&\n \\ \hline
-				{\tt L}      &\X&\X&\X&\X&\X&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\X&\X&\X&\X&\n&\n \\ \hline
-				{\tt I}      &\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n \\ \hline
-				{\tt R}      &\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n \\ \hline
-				{\tt IXH}    &\X&\X&\X&\X&\n&\n&\n&\n&\n&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\X&\n&\n \\ \hline
-				{\tt IXL}    &\X&\X&\X&\X&\n&\n&\n&\n&\n&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\X&\n&\n \\ \hline
-				{\tt IYH}    &\X&\X&\X&\X&\n&\n&\n&\n&\n&\n&\n&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\X&\n&\n \\ \hline
-				{\tt IYL}    &\X&\X&\X&\X&\n&\n&\n&\n&\n&\n&\n&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\X&\n&\n \\ \hline
-				{\tt BC}     &\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\X&\X \\ \hline
-				{\tt DE}     &\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\X&\X \\ \hline
-				{\tt HL}     &\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\X&\X \\ \hline
-				{\tt SP}     &\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\X&\n&\X&\X&\n&\n&\n&\n&\n&\n&\X&\X \\ \hline
-				{\tt IX}     &\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\X&\X \\ \hline
-				{\tt IY}     &\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\X&\X \\ \hline
-				{\tt (BC)}   &\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n \\ \hline
-				{\tt (DE)}   &\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n \\ \hline
-				{\tt (HL)}   &\X&\X&\X&\X&\X&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n \\ \hline
-				{\tt (IX+d)} &\X&\X&\X&\X&\X&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n \\ \hline
-				{\tt (IY+d)} &\X&\X&\X&\X&\X&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n \\ \hline
-				{\tt (nn)}   &\X&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\n&\X&\X&\X&\X&\X&\X&\n&\n&\n&\n&\n&\n&\n&\n \\ \hline
+				{\tt A}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\OO \\ \hline
+				{\tt B}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
+				{\tt C}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
+				{\tt D}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
+				{\tt E}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
+				{\tt H}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
+				{\tt L}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
+				{\tt I}      &\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
+				{\tt R}      &\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
+				{\tt IXH}    &\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\ii \\ \hline
+				{\tt IXL}    &\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\ii \\ \hline
+				{\tt IYH}    &\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\ii \\ \hline
+				{\tt IYL}    &\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\ii \\ \hline
+				{\tt BC}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
+				{\tt DE}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
+				{\tt HL}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
+				{\tt SP}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
+				{\tt IX}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
+				{\tt IY}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
+				{\tt (BC)}   &\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
+				{\tt (DE)}   &\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
+				{\tt (HL)}   &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
+				{\tt (IX+d)} &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
+				{\tt (IY+d)} &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
+				{\tt (nn)}   &\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
 			\end{tabular}
 		}
+
+		\vspace*{1em}
 
 		\begin{DetailEffects}
 			\FlagsLDair[{\tt LD A,I} and {\tt LD A,R}]
@@ -12987,37 +11746,37 @@ Where possible, multiple variants of same instruction are grouped together and w
 		% while moving this table to next page presents a gap below effects table, it's nonetheless more user friendly to keep it all together; the following instructions could be moved up to this same page too, but they're better kept together as they are related (LDD, LDDR, LDI, LDIR etc)
 		\pagebreak
 		\begin{DetailTiming}
-			\DetailTime{r,r}{1}{4}
-			\DetailTime{SP,HL}{1}{6}
-			\DetailTime{r,n}{2}{7}
-			\DetailTime{rr,A}{2}{7}
-			\DetailTime{A,(rr)}{2}{7}
-			\DetailTime{r,(HL)}{2}{7}
-			\DetailTime{(HL),r}{2}{7}
-			\DetailTime{A,I}{2}{9}
-			\DetailTime{A,R}{2}{9}
-			\DetailTime{I,A}{2}{9}
-			\DetailTime{R,A}{2}{9}
-			\DetailTime{SP,IX}{2}{10}
-			\DetailTime{SP,IY}{2}{10}
-			\DetailTime{(HL),n}{3}{10}
-			\DetailTime{rr,nn}{3}{10}
-			\DetailTime{A,(nn)}{4}{13}
-			\DetailTime{(nn),A}{4}{13}
-			\DetailTime{IX,nn}{4}{14}
-			\DetailTime{IY,nn}{4}{14}
-			\DetailTime{(HL),nn}{5}{16}
-			\DetailTime{(nn),HL}{5}{16}
-			\DetailTime{r,(IX+d)}{5}{19}
-			\DetailTime{r,(IY+d)}{5}{19}
-			\DetailTime{(IX+d),r}{5}{19}
-			\DetailTime{(IX+d),n}{5}{19}
-			\DetailTime{(IY+d),r}{5}{19}
-			\DetailTime{(IY+d),n}{5}{19}
-			\DetailTime{(IX),nn}{6}{20}
-			\DetailTime{(IY),nn}{6}{20}
-			\DetailTime{rr,(nn)}{6}{20}
-			\DetailTime{(nn),rr}{6}{20}
+			\DetailTime[r,r]{1}{4}
+			\DetailTime[SP,HL]{1}{6}
+			\DetailTime[r,n]{2}{7}
+			\DetailTime[rr,A]{2}{7}
+			\DetailTime[A,(rr)]{2}{7}
+			\DetailTime[r,(HL)]{2}{7}
+			\DetailTime[(HL),r]{2}{7}
+			\DetailTime[A,I]{2}{9}
+			\DetailTime[A,R]{2}{9}
+			\DetailTime[I,A]{2}{9}
+			\DetailTime[R,A]{2}{9}
+			\DetailTime[SP,IX]{2}{10}
+			\DetailTime[SP,IY]{2}{10}
+			\DetailTime[(HL),n]{3}{10}
+			\DetailTime[rr,nn]{3}{10}
+			\DetailTime[A,(nn)]{4}{13}
+			\DetailTime[(nn),A]{4}{13}
+			\DetailTime[IX,nn]{4}{14}
+			\DetailTime[IY,nn]{4}{14}
+			\DetailTime[(HL),nn]{5}{16}
+			\DetailTime[(nn),HL]{5}{16}
+			\DetailTime[r,(IX+d)]{5}{19}
+			\DetailTime[r,(IY+d)]{5}{19}
+			\DetailTime[(IX+d),r]{5}{19}
+			\DetailTime[(IX+d),n]{5}{19}
+			\DetailTime[(IY+d),r]{5}{19}
+			\DetailTime[(IY+d),n]{5}{19}
+			\DetailTime[(IX),nn]{6}{20}
+			\DetailTime[(IY),nn]{6}{20}
+			\DetailTime[rr,(nn)]{6}{20}
+			\DetailTime[(nn),rr]{6}{20}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13037,7 +11796,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{4}{16}
+			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13053,8 +11812,8 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{BC=0}{4}{16}
-			\DetailTime{BC$\neq$0}{5}{21}
+			\DetailTimeRegular[{\tt BC}=0]{4}{16}
+			\DetailTimeRegular[{\tt BC}$\neq$0]{5}{21}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13068,14 +11827,14 @@ Where possible, multiple variants of same instruction are grouped together and w
 		Same as {\tt LDD}, except it increments {\tt DE} and {\tt HL}.
 
 		\begin{DetailEffects}
-			\DetailFlags{\FN}{\FN}{0}{\FX}{0}{\FN}
+			\FlagsLDI
 			\DetailFlagsComments{
 				\item {\tt PV} reset if {\tt BC=0} after execution, set otherwise
 			}
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{4}{16}
+			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13105,12 +11864,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{multicols}
 
 		\begin{DetailEffects}
-			\DetailFlags{\FN}{\FN}{0}{0}{0}{\FN}
+			\FlagsLDIR
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{BC=0}{4}{16}
-			\DetailTime{BC$\neq$0}{5}{21}
+			\DetailTimeRegular[{\tt BC}=0]{4}{16}
+			\DetailTimeRegular[{\tt BC}$\neq$0]{5}{21}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13133,7 +11892,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{4}{14}
+			\DetailTime{4}{14}
 		\end{DetailTiming}
 
 		\DetailNote{Note: the source data are read only from single 256B (aligned) block of memory, because only {\tt L} is incremented, not {\tt HL} pair.
@@ -13155,10 +11914,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\item Doesn't change flags
 		\end{DetailCompactList}
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsLDDX
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{4}{16}
+			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13171,11 +11932,13 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Works similar to {\tt LDDR} except the differences noted at {\tt LDDX} above.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsLDDRX
+		\end{DetailEffects}
 					
 		\begin{DetailTiming}
-			\DetailTime{BC=0}{4}{16}
-			\DetailTime{BC$\neq$0}{5}{21}
+			\DetailTimeRegular[{\tt BC}=0]{4}{16}
+			\DetailTimeRegular[{\tt BC}$\neq$0]{5}{21}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13191,10 +11954,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\item Doesn't change flags
 		\end{DetailCompactList}
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsLDIX
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{4}{16}
+			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13206,11 +11971,13 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Works similar to {\tt LDIR} except the differences noted at {\tt LDIX} on previous page.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsLDIRX
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{BC=0}{4}{16}
-			\DetailTime{BC$\neq$0}{5}{21}
+			\DetailTimeRegular[{\tt BC}=0]{4}{16}
+			\DetailTimeRegular[{\tt BC}$\neq$0]{5}{21}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13222,12 +11989,14 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Similar to {\tt LDIRX} except the source byte address is not just {\tt HL}, but is obtained by using the top 13 bits of {\tt HL} and lower 3 bits of {\tt DE}. Furthermore {\tt HL} is not incremented during loop; it serves as base address of aligned 8 byte lookup table. {\tt DE} works as destination and also wrapping index 0..7 into table. This instruction is intended for ``pattern fill'' functionality.
 
-		\DetailNoEffect
-				
+		\begin{DetailEffects}
+			\FlagsLDPIRX
+		\end{DetailEffects}	
+
 		\begin{DetailTiming}
-			\DetailTime{BC=0}{4}{16}
-			\DetailTime{BC$\neq$0}{5}{21}
-		\end{DetailTiming}
+			\DetailTimeRegular[{\tt BC}=0]{4}{16}
+			\DetailTimeRegular[{\tt BC}$\neq$0]{5}{21}
+				\end{DetailTiming}
 
 	\end{DetailItem}
 
@@ -13240,10 +12009,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Mirrors (reverses the order) of bits in the accumulator {\tt A}.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsMIRRORa
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{2}{8}
+			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 		\DetailNote{Note: Older core versions also supported {\tt MIRROR DE}, but this was removed.}
@@ -13256,10 +12027,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Multiplies {\tt D} by {\tt E}, storing 16-bit result into {\tt DE}.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsMULde
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{2}{8}
+			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13271,11 +12044,11 @@ Where possible, multiple variants of same instruction are grouped together and w
 		Negates contents of accumulator and stores result back to {\tt A}.
 
 		\begin{DetailEffects}[p]
-			\DetailFlags{\FS}{\FS}{\FS}{\FS}{1}{\FS}
+			\FlagsNEG
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{2}{8}
+			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13291,11 +12064,13 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Directly sets the Next Feature Control Registers without going through ports TBBlue Register Select. See section \ref{zx_next_tbblue_registers} for ports list.
 
-		\DetailNoEffect
-				
+		\begin{DetailEffects}
+			\FlagsNEXTREGna
+		\end{DetailEffects}		
+		
 		\begin{DetailTiming}
-			\DetailTime{r,A}{4}{17}
-			\DetailTime{r,n}{5}{20}
+			\DetailTime[r,A]{4}{17}
+			\DetailTime[r,n]{5}{20}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13306,10 +12081,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Does nothing for 4 cycles.
 		
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsNOP
+		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
+			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13358,11 +12135,11 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{r}{1}{4}
-			\DetailTime{n}{2}{7}
-			\DetailTime{(HL)}{2}{7}
-			\DetailTime{(IX+d)}{5}{19}
-			\DetailTime{(IY+d)}{5}{19}
+			\DetailTime[r]{1}{4}
+			\DetailTime[n]{2}{7}
+			\DetailTime[(HL)]{2}{7}
+			\DetailTime[(IX+d)]{5}{19}
+			\DetailTime[(IY+d)]{5}{19}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13382,8 +12159,8 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{B=0}{4}{16}
-			\DetailTime{B$\neq$0}{5}{21}
+			\DetailTimeRegular[{\tt B}=0]{4}{16}
+			\DetailTimeRegular[{\tt B}$\neq$0]{5}{21}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13402,8 +12179,8 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{B=0}{4}{16}
-			\DetailTime{B$\neq$0}{5}{21}
+			\DetailTimeRegular[{\tt B}=0]{4}{16}
+			\DetailTimeRegular[{\tt B}$\neq$0]{5}{21}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13440,11 +12217,13 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{tabular}
 		\vspace{1ex} % some spacing before next text for less cluttered layout
 
-		\DetailNoEffect
-				
+		\begin{DetailEffects}
+			\FlagsOUTcr
+		\end{DetailEffects}
+		
 		\begin{DetailTiming}
-			\DetailTime{(n),A}{3}{11}
-			\DetailTime{(C),r}{3}{12}
+			\DetailTime[(n),A]{3}{11}
+			\DetailTime[(C),r]{3}{12}
 		\end{DetailTiming}
 
 		\DetailNote{Note: on the Next FPGA {\tt OUT (C),0} variant outputs {\tt 0} to the port at address {\tt BC}, but some Z80 chips may output different value like {\tt \$FF}, so it is not recommended to use {\tt OUT (C),0} if you want to reuse your code on original ZX Spectrum also.}
@@ -13467,7 +12246,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{4}{16}
+			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13489,7 +12268,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{4}{16}
+			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13505,7 +12284,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{4}{16}
+			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13516,10 +12295,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Takes {\tt E} and {\tt D} as the (x,y) coordinates of a point and calculates the address of the byte containing this pixel in the pixel area of standard ULA screen 0. Result is stored in {\tt HL}.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsPIXELAD
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{2}{8}
+			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13531,10 +12312,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Updates the address in {\tt HL} (likely from prior {\tt PIXELAD} or {\tt PIXELDN}) to move down by one line of pixels of standard ULA screen 0.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsPIXELDN
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{2}{8}
+			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13568,9 +12351,9 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{rr}{3}{10}
-			\DetailTime{IX}{4}{14}
-			\DetailTime{IY}{4}{14}
+			\DetailTime[rr]{3}{10}
+			\DetailTime[IX]{4}{14}
+			\DetailTime[IY]{4}{14}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13596,13 +12379,15 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Copies contents of a register pair to the top of the stack pointer {\tt SP}, then decrements {\tt SP} by {\tt 2}. Next extended {\tt PUSH nn} also allows pushing immediate 16-bit value.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsPUSHrr
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{rr}{3}{11}
-			\DetailTime{IX}{4}{15}
-			\DetailTime{IY}{4}{15}
-			\DetailTime{nn}{6}{23}
+			\DetailTime[rr]{3}{11}
+			\DetailTime[IX]{4}{15}
+			\DetailTime[IY]{4}{15}
+			\DetailTime[nn]{6}{23}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13645,13 +12430,15 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Resets bit {\tt b} ({\tt 0-7}) of the given register {\tt s} or memory location addressed by operand {\tt s}.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsRESr
+		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{r}{2}{8}
-			\DetailTime{(HL)}{4}{15}
-			\DetailTime{(IX+d)}{6}{23}
-			\DetailTime{(IY+d)}{6}{23}
+			\DetailTime[r]{2}{8}
+			\DetailTime[(HL)]{4}{15}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13663,10 +12450,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Returns from subroutine. The contents of program counter {\tt PC} is {\tt POP}-ed from stack so next instruction will be loaded from there.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsRET
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{3}{10}
+			\DetailTime{3}{10}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13689,11 +12478,13 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		If given condition is met, {\tt RET} is performed, as described above.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsRETcc
+		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{c=false}{1}{5}
-			\DetailTime{c=true}{3}{11}
+			\DetailTimeRegular[{\tt c}=false]{1}{5}
+			\DetailTimeRegular[{\tt c}=true]{3}{11}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13706,10 +12497,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 		
 		Note that {\tt RETI} doesn't re-enable interrupts that were disabled when interrupt routine started - {\tt EI} should be called before {\tt RETI} to do that.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsRETI
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{4}{14}
+			\DetailTime{4}{14}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13720,10 +12513,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Returns from non-maskable interrupt; restores stack pointer {\tt SP} and copies state of {\tt IFF2} back to {\tt IFF1} so that maskable interrupts are re-enabled.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsRETN
+		\end{DetailEffects}
 				
 		\begin{DetailTiming}
-			\DetailTime{}{4}{14}
+			\DetailTime{4}{14}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13770,10 +12565,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{r}{2}{8}
-			\DetailTime{(HL)}{4}{15}
-			\DetailTime{(IX+d)}{6}{23}
-			\DetailTime{(IY+d)}{6}{23}
+			\DetailTime[r]{2}{8}
+			\DetailTime[(HL)]{4}{15}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13790,7 +12585,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
+			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13835,9 +12630,9 @@ Where possible, multiple variants of same instruction are grouped together and w
 		Note: undocumented variants work slightly differently:
 
 		\begin{multicols}{2}
-			\DetailAlternative{RLC r,(IX+d)}{\SymRLCu{r}{IX}}
+			\DetailSymbolVariants{RLC r,(IX+d)}{\SymRLCu{r}{IX}}
 
-			\DetailAlternative{RLC r,(IY+d)}{\SymRLCu{r}{IY}}
+			\DetailSymbolVariants{RLC r,(IY+d)}{\SymRLCu{r}{IY}}
 		\end{multicols}
 
 		\begin{DetailEffects}[p]
@@ -13845,10 +12640,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{r}{2}{8}
-			\DetailTime{(HL)}{4}{15}
-			\DetailTime{(IX+d)}{6}{23}
-			\DetailTime{(IY+d)}{6}{23}
+			\DetailTime[r]{2}{8}
+			\DetailTime[(HL)]{4}{15}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13865,7 +12660,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
+			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13897,7 +12692,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{}{5}{18}
+			\DetailTime{5}{18}
 		\end{DetailTiming}
 
 		\DetailNote{Note: instruction doesn't assume any format of the data; it simply rotates nibbles. So while it's most frequently associated with BCD numbers, it can be used for shifting hexadecimal values (in which case it would represent multiplication by {\tt 16}), or any other content.}
@@ -13947,10 +12742,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{r}{2}{8}
-			\DetailTime{(HL)}{4}{15}
-			\DetailTime{(IX+d)}{6}{23}
-			\DetailTime{(IY+d)}{6}{23}
+			\DetailTime[r]{2}{8}
+			\DetailTime[(HL)]{4}{15}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -13966,7 +12761,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
+			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14014,10 +12809,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{r}{2}{8}
-			\DetailTime{(HL)}{4}{15}
-			\DetailTime{(IX+d)}{6}{23}
-			\DetailTime{(IY+d)}{6}{23}
+			\DetailTime[r]{2}{8}
+			\DetailTime[(HL)]{4}{15}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14033,7 +12828,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
+			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14046,11 +12841,11 @@ Where possible, multiple variants of same instruction are grouped together and w
 		Similar to {\tt RLD} (page \pageref{DetailRefRLD}) except rotation is to the right. If used with BCD values, this operation effectively divides 3-digit BCD number by {\tt 10} and stores remainder in {\tt A}.
 
 		\begin{DetailEffects}[p]
-			\DetailFlags{\FS}{\FS}{0}{\FS}{0}{\FN}
+			\FlagsRRD
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{}{5}{18}
+			\DetailTime{5}{18}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14074,10 +12869,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Restarts at the zero page address {\tt s}. Only above addresses are possible, all in page {\tt 0} of the memory, therefore most significant byte of the program counter {\tt PC} is loaded with {\tt \$00}. The instruction may be used as a fast response to an interrupt.
 
-		\DetailNoEffect
-						
+		\begin{DetailEffects}
+			\FlagsRSTn				
+		\end{DetailEffects}
+
 		\begin{DetailTiming}
-			\DetailTime{}{3}{11}
+			\DetailTime{3}{11}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14127,12 +12924,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{r}{1}{4}
-			\DetailTime{n}{2}{7}
-			\DetailTime{(HL)}{2}{7}
-			\DetailTime{HL,rr}{4}{15}
-			\DetailTime{(IX+d)}{5}{19}
-			\DetailTime{(IY+d)}{5}{19}
+			\DetailTime[r]{1}{4}
+			\DetailTime[n]{2}{7}
+			\DetailTime[(HL)]{2}{7}
+			\DetailTime[HL,rr]{4}{15}
+			\DetailTime[(IX+d)]{5}{19}
+			\DetailTime[(IY+d)]{5}{19}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14148,7 +12945,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{}{1}{4}
+			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14194,18 +12991,20 @@ Where possible, multiple variants of same instruction are grouped together and w
 		Note: undocumented variants work slightly differently:
 
 		\begin{multicols}{2}
-			\DetailAlternative{SET b,(IX+d),r}{\SymSETu{r}{IX}}
+			\DetailSymbolVariants{SET b,(IX+d),r}{\SymSETu{r}{IX}}
 
-			\DetailAlternative{SET b,(IY+d),r}{\SymSETu{r}{IY}}
+			\DetailSymbolVariants{SET b,(IY+d),r}{\SymSETu{r}{IY}}
 		\end{multicols}
 
-		\DetailNoEffect
-						
+		\begin{DetailEffects}
+			\FlagsSETr
+		\end{DetailEffects}			
+
 		\begin{DetailTiming}
-			\DetailTime{r}{2}{8}
-			\DetailTime{(HL)}{4}{15}
-			\DetailTime{(IX+d)}{6}{23}
-			\DetailTime{(IY+d)}{6}{23}
+			\DetailTime[r]{2}{8}
+			\DetailTime[(HL)]{4}{15}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14216,10 +13015,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Takes the bit number to set from {\tt E} (only the low 3 bits) and sets the value of the accumulator {\tt A} to the value of that bit, but counted from top to bottom ({\tt E=0} will produce {\tt A$\leftarrow$\$80}, {\tt E=7} will produce {\tt A$\leftarrow$\$01} and so on). This works as pixel mask for ULA bitmap modes, when {\tt E} represents x-coordinate {\tt 0-255}.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsSETAE
+		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{}{2}{8}
+			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14267,10 +13068,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{r}{2}{8}
-			\DetailTime{(HL)}{4}{15}
-			\DetailTime{(IX+d)}{6}{23}
-			\DetailTime{(IY+d)}{6}{23}
+			\DetailTime[r]{2}{8}
+			\DetailTime[(HL)]{4}{15}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14327,10 +13128,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{r}{2}{8}
-			\DetailTime{(HL)}{4}{15}
-			\DetailTime{(IX+d)}{6}{23}
-			\DetailTime{(IY+d)}{6}{23}
+			\DetailTime[r]{2}{8}
+			\DetailTime[(HL)]{4}{15}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
 		\end{DetailTiming}
 
 		\DetailNote{Note: most assemblers will accept both variants: {\tt SLI} or {\tt SL1}, but some may only accept one or the other, while some may expect {\tt SLL} instead.}
@@ -14343,7 +13144,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		{\SymSRA{s}}
 				
 		% we're using non-standard layout here so that we can fit SRA and SRL to the same page
-		\begin{DetailVariantsVar}{p{1.3cm}p{3.5cm}XX}
+		\begin{DetailVariants}[p{1.3cm}p{3.5cm}XX]
 			SRA A	& SRA (HL)		& SRA (IX+d),A\UNDOC	& SRA (IY+d),A\UNDOC \\
 			SRA B	& SRA (IX+d)	& SRA (IX+d),B\UNDOC	& SRA (IY+d),B\UNDOC \\
 			SRA C	& SRA (IY+d)	& SRA (IX+d),C\UNDOC	& SRA (IY+d),C\UNDOC \\
@@ -14351,7 +13152,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			SRA E	&				& SRA (IX+d),E\UNDOC	& SRA (IY+d),E\UNDOC \\
 			SRA H	&				& SRA (IX+d),H\UNDOC	& SRA (IY+d),H\UNDOC \\
 			SRA L	&				& SRA (IX+d),L\UNDOC	& SRA (IY+d),L\UNDOC \\
-		\end{DetailVariantsVar}
+		\end{DetailVariants}
 
 		Performs arithmetic shift right of the operand {\tt s} or memory location addressed by {\tt s}. Bit {\tt 0} is moved to {\tt CF} while bit {\tt 7} remains unchanged (on the assumption that it's the sign bit).
 
@@ -14360,10 +13161,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{r}{2}{8}
-			\DetailTime{(HL)}{4}{15}
-			\DetailTime{(IX+d)}{6}{23}
-			\DetailTime{(IY+d)}{6}{23}
+			\DetailTime[r]{2}{8}
+			\DetailTime[(HL)]{4}{15}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14373,7 +13174,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		{\SymSRL{s}}
 				
 		% we're using non-standard layout here so that we can fit SRA and SRL to the same page
-		\begin{DetailVariantsVar}{p{1.3cm}p{3.5cm}XX}
+		\begin{DetailVariants}[p{1.3cm}p{3.5cm}XX]
 			SRL A	& SRL (HL)		& SRL (IX+d),A\UNDOC	& SRL (IY+d),A\UNDOC \\
 			SRL B	& SRL (IX+d)	& SRL (IX+d),B\UNDOC	& SRL (IY+d),B\UNDOC \\
 			SRL C	& SRL (IY+d)	& SRL (IX+d),C\UNDOC	& SRL (IY+d),C\UNDOC \\
@@ -14381,7 +13182,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			SRL E	&				& SRL (IX+d),E\UNDOC	& SRL (IY+d),E\UNDOC \\
 			SRL H	&				& SRL (IX+d),H\UNDOC	& SRL (IY+d),H\UNDOC \\
 			SRL L	&				& SRL (IX+d),L\UNDOC	& SRL (IY+d),L\UNDOC \\
-		\end{DetailVariantsVar}
+		\end{DetailVariants}
 
 		Performs logical shift right of the operand {\tt s} or memory location addressed by {\tt s}. Bit {\tt 0} is moved to {\tt CF} while {\tt 0} is moved to bit {\tt 7}.
 
@@ -14390,10 +13191,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{r}{2}{8}
-			\DetailTime{(HL)}{4}{15}
-			\DetailTime{(IX+d)}{6}{23}
-			\DetailTime{(IY+d)}{6}{23}
+			\DetailTime[r]{2}{8}
+			\DetailTime[(HL)]{4}{15}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14432,11 +13233,11 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{r}{1}{4}
-			\DetailTime{n}{2}{7}
-			\DetailTime{(HL)}{2}{7}
-			\DetailTime{(IX+d)}{5}{19}
-			\DetailTime{(IY+d)}{5}{19}
+			\DetailTime[r]{1}{4}
+			\DetailTime[n]{2}{7}
+			\DetailTime[(HL)]{2}{7}
+			\DetailTime[(IX+d)]{5}{19}
+			\DetailTime[(IY+d)]{5}{19}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14447,10 +13248,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Swaps the high and low nibbles of accumulator {\tt A}.
 
-		\DetailNoEffect
+		\begin{DetailEffects}
+			\FlagsSWAPNIB
+		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{}{2}{8}
+			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14462,11 +13265,11 @@ Where possible, multiple variants of same instruction are grouped together and w
 		Similar to {\tt CP} (page \pageref{DetailRefCP}), but performs an {\tt AND} instead of a subtraction.
 
 		\begin{DetailEffects}[v]
-			\DetailFlags{\FS}{\FS}{\FS}{\FS}{\FU}{\FS}
+			\FlagsTESTn
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{}{3}{11}
+			\DetailTime{3}{11}
 		\end{DetailTiming}
 
 	\end{DetailItem}
@@ -14514,11 +13317,11 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailEffects}
 						
 		\begin{DetailTiming}
-			\DetailTime{r}{1}{4}
-			\DetailTime{n}{2}{7}
-			\DetailTime{(HL)}{2}{7}
-			\DetailTime{(IX+d)}{5}{19}
-			\DetailTime{(IY+d)}{5}{19}
+			\DetailTime[r]{1}{4}
+			\DetailTime[n]{2}{7}
+			\DetailTime[(HL)]{2}{7}
+			\DetailTime[(IX+d)]{5}{19}
+			\DetailTime[(IY+d)]{5}{19}
 		\end{DetailTiming}
 
 	\end{DetailItem}

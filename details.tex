@@ -1,0 +1,277 @@
+% ───────────────────────────────────────────────────────────────────────────────────────
+% ─████████████───██████████████─██████████████─██████████████─██████████─██████─────────
+% ─██░░░░░░░░████─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░██─██░░██─────────
+% ─██░░████░░░░██─██░░██████████─██████░░██████─██░░██████░░██─████░░████─██░░██─────────
+% ─██░░██──██░░██─██░░██─────────────██░░██─────██░░██──██░░██───██░░██───██░░██─────────
+% ─██░░██──██░░██─██░░██████████─────██░░██─────██░░██████░░██───██░░██───██░░██─────────
+% ─██░░██──██░░██─██░░░░░░░░░░██─────██░░██─────██░░░░░░░░░░██───██░░██───██░░██─────────
+% ─██░░██──██░░██─██░░██████████─────██░░██─────██░░██████░░██───██░░██───██░░██─────────
+% ─██░░██──██░░██─██░░██─────────────██░░██─────██░░██──██░░██───██░░██───██░░██─────────
+% ─██░░████░░░░██─██░░██████████─────██░░██─────██░░██──██░░██─████░░████─██░░██████████─
+% ─██░░░░░░░░████─██░░░░░░░░░░██─────██░░██─────██░░██──██░░██─██░░░░░░██─██░░░░░░░░░░██─
+% ─████████████───██████████████─────██████─────██████──██████─██████████─██████████████─
+% ───────────────────────────────────────────────────────────────────────────────────────
+
+
+% ▒█▀▀█ ▒█▀▀▀ ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀█ ▒█░░░ ░█▀▀█ ▒█▀▀█ ░█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ ▒█▀▀▀█ 
+% ▒█▄▄▀ ▒█▀▀▀ ▒█░▒█ ▒█▀▀▀ ▒█░░░ ▒█░░░ ▒█▄▄█ ▒█▄▄▀ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ ░▀▀▀▄▄ 
+% ▒█░▒█ ▒█▄▄▄ ▒█▄▄▀ ▒█▄▄▄ ▒█▄▄█ ▒█▄▄█ ▒█░▒█ ▒█░▒█ ▒█░▒█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
+
+% ~ doesn't work here, so we need to use invisible characters instead
+\renewcommand{\SymTab}{\phantom{>>}}
+
+% all drawings should be scaled up and drawn slightly to the left to be aligned perfectly with the rest of the text. Note that instruction tables use optional parameter for vertical spacing, we take it over for horizontal spacing - vertical spacing is fine in details, but we do need horizontal to align drawing with rest of the text
+\renewcommand{\SymDrawing}[2][-1.7em]{
+	\hspace*{#1}
+	\scalebox{1.5}{
+		\scriptsize
+		#2
+	}
+}
+
+% these redeclaration allows us to reuse all previously declared flags so changes can only be made in single place
+\renewcommand{\FlagsFPP}{\FS}		% we indicate PF status in header, so use standard in table
+\renewcommand{\FlagsFPV}{\FS}		% we indicate VF status in header, so use standard in table
+\renewcommand{\FlagsSmall}[1]{\small #1}	% larger font than in tables above
+\renewcommand{\FlagsSee}[1]{}		% we don't want to display any footnotes in details section, we describe unusual cases below table
+\renewcommand{\FlagsNoEffect}{No effect on flags}   % we do want to show this text in details
+
+% and the main flags redeclaration as well - we need additional columns and different formatting in details tables
+% see "EFFECTS TABLE" section below for table declaration
+\renewcommand{\Flags}[7][]{
+	& 
+	#1 & 
+	\multicolumn{1}{|c|}{\tt #2} & 
+	{\tt #3} & 
+	& 
+	{\tt #4} & 
+	& 
+	{\tt #5} & 
+	{\tt #6} & 
+	{\tt #7} & \notet\noteb \\\cline{3-10}
+}
+
+
+% ▒█▀▀█ ▒█▀▀▀█ ▒█▀▄▀█ ▒█▀▄▀█ ▒█▀▀▀█ ▒█▄░▒█ 　 ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀█ ▒█░░░ ░█▀▀█ ▒█▀▀█ ░█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ ▒█▀▀▀█ 
+% ▒█░░░ ▒█░░▒█ ▒█▒█▒█ ▒█▒█▒█ ▒█░░▒█ ▒█▒█▒█ 　 ▒█░▒█ ▒█▀▀▀ ▒█░░░ ▒█░░░ ▒█▄▄█ ▒█▄▄▀ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ ░▀▀▀▄▄ 
+% ▒█▄▄█ ▒█▄▄▄█ ▒█░░▒█ ▒█░░▒█ ▒█▄▄▄█ ▒█░░▀█ 　 ▒█▄▄▀ ▒█▄▄▄ ▒█▄▄█ ▒█▄▄█ ▒█░▒█ ▒█░▒█ ▒█░▒█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
+
+
+% mnemonic - also serves as the title for instruction
+\newcommand{\DetailMnemonic}[1]{\item[{\tt \large \textbf{#1}}]}
+
+% symbolic operation
+\newcommand{\DetailSymbol}[1]{{\tt #1}}
+% symbolic operation for alternative variants
+\newcommand{\DetailSymbolVariants}[2]{
+	\underline{\tt #1}:\\[1ex]
+	\DetailSymbol{#2}
+}
+
+% name - explains the letters used for mnemonic
+\newcommand{\DetailName}[1]{\textbf{#1}}
+
+% (I)nstruction (H)ighlight (for highlighting letters forming mnemonic in `DetailName`)
+\newcommand{\IH}[1]{\underline{#1}}
+
+
+% ▒█▀▄▀█ ░█▀▀█ ▀█▀ ▒█▄░▒█ 　 ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀█ ▒█░░░ ░█▀▀█ ▒█▀▀█ ░█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ ▒█▀▀▀█ 
+% ▒█▒█▒█ ▒█▄▄█ ▒█░ ▒█▒█▒█ 　 ▒█░▒█ ▒█▀▀▀ ▒█░░░ ▒█░░░ ▒█▄▄█ ▒█▄▄▀ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ ░▀▀▀▄▄ 
+% ▒█░░▒█ ▒█░▒█ ▄█▄ ▒█░░▀█ 　 ▒█▄▄▀ ▒█▄▄▄ ▒█▄▄█ ▒█▄▄█ ▒█░▒█ ▒█░▒█ ▒█░▒█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
+
+% main instruction enviroment, takes 3 parameters:
+% - mnemonic (uses `DetailMnemonic` under the hood)
+% - name (uses `DetailName` under the hood)
+% - symbolic operation (uses `DetailSymbol` under the hood)
+\newenvironment{DetailItem}[3]{
+	\DetailMnemonic{#1}
+	\DetailName{#2}
+	% if symbolic operation is not given we should not use any spacing, otherwise, we should
+	\if\relax\detokenize{#3}\relax
+		% we don't have symbolic operation
+	\else
+		\\[1.2ex]
+		\DetailSymbol{#3}
+	\fi
+	% reduce spacing before and after multicols
+	\setlength{\multicolsep}{1ex}
+
+}{
+	% we want some spacing below each item
+	\vspace{1em}
+}
+
+
+% ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀█ ▀█▀ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 　 ▒█▀▀▀█ ▒█▀▀▀ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 
+% ▒█░▒█ ▒█▀▀▀ ░▀▀▀▄▄ ▒█░░░ ▒█▄▄▀ ▒█░ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 　 ░▀▀▀▄▄ ▒█▀▀▀ ▒█░░░ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 
+% ▒█▄▄▀ ▒█▄▄▄ ▒█▄▄▄█ ▒█▄▄█ ▒█░▒█ ▄█▄ ▒█░░░ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ 　 ▒█▄▄▄█ ▒█▄▄▄ ▒█▄▄█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█
+
+% describes all variants of the instruction - only used where applicable. Note this can generate 2 variants based on optional parameter:
+% - if parameter is number (defaults to 3), then `multicols` environment is used and parameter is taken to be number of columns
+% - otherwise `tabularx` is used and parameter is taken to be columns definitions
+\environbodyname\DetailVariantsBODY
+\NewEnviron{DetailVariants}[1][3]{
+	{
+		\tt
+		\StrLeft{#1}{1}[\FirstLetter]
+		\IfInteger{\FirstLetter}{
+			\begin{multicols}{#1}
+				\DetailVariantsBODY
+			\end{multicols}
+		}{
+			\vspace*{0.8ex}
+			\begin{tabularx}{\linewidth}{@{}#1}
+				\DetailVariantsBODY
+			\end{tabularx}
+		}
+	}
+}
+
+% `itemize` environment with less spacing, suitable for instruction description section
+\environbodyname\DetailCompactListBODY
+\NewEnviron{DetailCompactList}[1][]{
+	#1
+	\vspace{-6pt}
+	\setlist{leftmargin=1em}
+	\begin{itemize}
+		\setlength\itemsep{-1pt}
+		\DetailCompactListBODY
+	\end{itemize}
+}
+
+
+% ▒█▀▀▀ ▒█▀▀▀ ▒█▀▀▀ ▒█▀▀▀ ▒█▀▀█ ▀▀█▀▀ ▒█▀▀▀█ 　 ▀▀█▀▀ ░█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀ 
+% ▒█▀▀▀ ▒█▀▀▀ ▒█▀▀▀ ▒█▀▀▀ ▒█░░░ ░▒█░░ ░▀▀▀▄▄ 　 ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ 
+% ▒█▄▄▄ ▒█░░░ ▒█░░░ ▒█▄▄▄ ▒█▄▄█ ░▒█░░ ▒█▄▄▄█ 　 ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄
+
+% renders PV title that also indicates whether the PV indicates parity or overflow; optional parameter:
+% - p = indicate Parity
+% - v = indicate oVerflow
+% - default = just PV
+\newcommand{\DetailParityOverflow}[1]{
+	\IfEqCase{#1}
+	{
+		{p}{
+			\small
+			\begin{tikzpicture}[baseline=(p.base), plain/.style={}]
+				\node (p) [plain] {P};
+				\node (v) [plain, right=1.9ex of p.west] {V};
+				\draw (p.center) ++(0,0.2pt) circle(1.3ex);
+			\end{tikzpicture}
+		}
+		{v}{
+			\small
+			\begin{tikzpicture}[baseline=(p.base), plain/.style={}]
+				\node (p) [plain] {P};
+				\node (v) [plain, right=1.95ex of p.west] {V};
+				\draw (v.center) ++(0.2pt,0.5pt) circle(1.3ex);
+			\end{tikzpicture}
+		}
+		{}{PV}
+	}
+}
+
+% effects table for instruction; optional parameter:
+% - p = indicate Parity
+% - v = indicate oVerflow
+% - default = just PV
+\environbodyname\DetailEffectsBODY %spacer
+\NewEnviron{DetailEffects}[1][]{   %|note
+	\vspace{3pt}                   %|||SF      |ZF       |(YF)  |HF       |(XF)  |PV       |NF       |CF       |spacer
+	\begin{tabularx}{\linewidth}{@{}lXC{4.15ex}|C{4.15ex}|C{2ex}|C{4.15ex}|C{2ex}|C{4.15ex}|C{4.15ex}|C{4.15ex}|p{1ex}|@{}}
+		\cline{3-10}
+
+		\multicolumn{2}{@{}X}{\textbf{Effects}} & 
+			\multicolumn{1}{|c|}{SF} & 
+			ZF & 
+			& 
+			HF & 
+			&
+			\DetailParityOverflow{#1}
+			& 
+			NF & 
+			CF \notet\noteb\\[1pt]\cline{3-10}
+
+		\DetailEffectsBODY
+
+	\end{tabularx}
+	\vspace{2pt}
+}
+
+% this is used where additional comments are needed below flags table (actually, technically, from LaTeX point of view, from within the table itself); each item should be provided with `\item` command
+\newcommand{\DetailFlagsComments}[1]{ 
+	& & \multicolumn{9}{p{7.8cm}}{
+		\vspace{-2ex}
+		\setlist{leftmargin=1em}
+		\begin{itemize}
+			\setlength\itemsep{-1pt}
+			#1
+		\end{itemize}	
+	} \\[-3ex]
+}
+
+
+% ▀▀█▀▀ ▀█▀ ▒█▀▄▀█ ▀█▀ ▒█▄░▒█ ▒█▀▀█ 　 ▒█▀▀▀█ ▒█▀▀▀ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 
+% ░▒█░░ ▒█░ ▒█▒█▒█ ▒█░ ▒█▒█▒█ ▒█░▄▄ 　 ░▀▀▀▄▄ ▒█▀▀▀ ▒█░░░ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 
+% ░▒█░░ ▄█▄ ▒█░░▒█ ▄█▄ ▒█░░▀█ ▒█▄▄█ 　 ▒█▄▄▄█ ▒█▄▄▄ ▒█▄▄█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█
+
+% the main timing environment; optional parameter allows specifying the title, defaults to "Timing"
+\environbodyname\DetailTimingBODY
+\NewEnviron{DetailTiming}[1][Timing]{
+	\vspace{1pt}
+	\begin{tabularx}{0.8\textwidth}{@{}lXccrrrr}
+		\multicolumn{2}{@{}X}{\textbf{#1}} & Mc & Ts & 3.5MHz & 7MHz & 14MHz & 28MHz \\[1pt]
+		\DetailTimingBODY
+	\end{tabularx}
+}
+
+% individual time; parameters:
+% - optional description, omit if none (which is the default)
+% - number of machine cycles
+% - number to T states
+% note: the times in microsec are automatically calculated from Ts
+\newcommand{\DetailTimeRegular}[3][]{
+	& #1 & #2 & #3 & 
+		\nprounddigits{1}
+		{\footnotesize {\tt \numprint{\fpeval{#3/3.5}}}$\mu$s} & 
+		\nprounddigits{2}
+		{\footnotesize {\tt \numprint{\fpeval{#3/7}}}$\mu$s} & 
+		\nprounddigits{2}
+		{\footnotesize {\tt \numprint{\fpeval{#3/14}}}$\mu$s} & 
+		\nprounddigits{2}
+		{\footnotesize {\tt \numprint{\fpeval{#3/28}}}$\mu$s} \\
+}
+% same as `DetailTimeRegular` but uses mono font for first (optional) parameter
+\newcommand{\DetailTime}[3][]{\DetailTimeRegular[{\tt #1}]{#2}{#3}}
+
+
+% ▒█▀▄▀█ ▀█▀ ▒█▀▀▀█ ▒█▀▀█ 
+% ▒█▒█▒█ ▒█░ ░▀▀▀▄▄ ▒█░░░ 
+% ▒█░░▒█ ▄█▄ ▒█▄▄▄█ ▒█▄▄█
+
+% notes with additional information about instruction; optional parameter: if not empty, it is interpretted as size, empty will yield no space (this is used for multiple successive notes so that they are more compact vertically)
+\newcommand{\DetailNote}[2][1.5ex]{
+	\IfEq{#1}{}{
+		% if empty, no spacing should be applied
+	}{
+		% otherwise interpret #1 as size and use for vertical spacing
+		\vspace*{#1}
+	}
+	% either way, print note in smaller font
+	{\small \normalfont{#2}}
+}
+
+% references to multiple items from other pages; parameters:
+% - items description
+% - page references (from `label` command)
+\newcommand{\DetailItemsRef}[2]{
+	\vspace*{-1.5em}
+	\desclabelstyle{\pushlabel}
+	\DetailMnemonic{#1}
+	\desclabelstyle{\multilinelabel}
+	\DetailNote{#2}
+}
+% reference to single item from another page
+\newcommand{\DetailItemRef}[2]{
+	\DetailItemsRef{#1}{See page \pageref{#2}}
+}

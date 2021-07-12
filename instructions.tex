@@ -1,0 +1,867 @@
+% ──────────────────────────────────────────────────────────
+% ─██████████████─████████──████████─██████──────────██████─
+% ─██░░░░░░░░░░██─██░░░░██──██░░░░██─██░░██████████████░░██─
+% ─██░░██████████─████░░██──██░░████─██░░░░░░░░░░░░░░░░░░██─
+% ─██░░██───────────██░░░░██░░░░██───██░░██████░░██████░░██─
+% ─██░░██████████───████░░░░░░████───██░░██──██░░██──██░░██─
+% ─██░░░░░░░░░░██─────████░░████─────██░░██──██░░██──██░░██─
+% ─██████████░░██───────██░░██───────██░░██──██████──██░░██─
+% ─────────██░░██───────██░░██───────██░░██──────────██░░██─
+% ─██████████░░██───────██░░██───────██░░██──────────██░░██─
+% ─██░░░░░░░░░░██───────██░░██───────██░░██──────────██░░██─
+% ─██████████████───────██████───────██████──────────██████─
+% ──────────────────────────────────────────────────────────
+
+
+% ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀▀ ▀█▀ ▒█▄░▒█ ▀█▀ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ ▒█▀▀▀█ 
+% ▒█░▒█ ▒█▀▀▀ ▒█▀▀▀ ▒█░ ▒█▒█▒█ ▒█░ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ ░▀▀▀▄▄ 
+% ▒█▄▄▀ ▒█▄▄▄ ▒█░░░ ▄█▄ ▒█░░▀█ ▄█▄ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
+
+% common declarations used within symbol definitions below; allow reuse of symbols but with different aesthetic later on
+
+% tab declaration that's used for all symbolic operation macros
+\newcommand{\SymTab}{~~}
+
+% drawing declaration that's used for all symbolic operation macros; allows redeclaring so that all drawings may be repositioned or resized for example; allows one optional argument that is used for vertical spacing by default (but can be reused for something else in redeclaration)
+\newcommand{\SymDrawing}[2][-10pt]{
+	\scriptsize
+	\vspace*{#1}	% this will center drawings better
+	#2
+}
+
+% ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀▀ ▒█▀▀█ ░█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ ▒█▀▀▀█ 
+% ▒█░░▒█ ▒█▄▄█ ▒█▀▀▀ ▒█▄▄▀ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ ░▀▀▀▄▄ 
+% ▒█▄▄▄█ ▒█░░░ ▒█▄▄▄ ▒█░▒█ ▒█░▒█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
+
+\newcommand{\SymADD}[2]{#1$\leftarrow$#1+#2}
+
+\newcommand{\SymADC}[2]{#1$\leftarrow$#1+#2+CF}
+
+\newcommand{\SymAND}[1]{A$\leftarrow$A$\wedge$#1}
+
+\newcommand{\SymBIT}[1]{ZF$\leftarrow\mathtt{\overline{#1_b}}$}
+
+\newcommand{\SymBRLC}[1][]{\ignorespaces
+	\IfEqCase{#1}{
+		{0}{DE$\leftarrow$DE<<(B$\wedge$\$0F {\normalfont or}}
+		{1}{DE$\leftarrow$DE>>(16-B$\wedge$\$0F)}
+		{}{\SymBRLC[0]\\\SymBRLC[1]}
+	}
+}
+
+\newcommand{\SymBSLA}[1][]{ % we don't need parameters here, but keep it so it's similar to other BSxx instructions
+	DE$\leftarrow$DE<<(B$\wedge$\$1F)
+}
+
+\newcommand{\SymBSRA}[1][]{\ignorespaces
+	\IfEqCase{#1}{
+		{0}{DE$\leftarrow$signed(DE)}
+		{1}{>>(B$\wedge$\$1F)}
+		{}{\SymBSRA[0]>>\SymBSRA[1]}
+	}
+}
+
+\newcommand{\SymBSRF}[1][]{\ignorespaces
+	\IfEqCase{#1}{
+		{0}{DE$\leftarrow\sim$(unsigned($\sim$DE)}
+		{1}{>>(B$\wedge$\$1F))}
+		{}{\SymBSRF[0]\SymBSRF[1]}
+	}
+}
+
+\newcommand{\SymBSRL}[1][]{\ignorespaces
+	\IfEqCase{#1}{
+		{0}{DE$\leftarrow$unsigned(DE)}
+		{1}{>>(B$\wedge$\$1F)}
+		{}{\SymBSRL[0]\SymBSRL[1]}
+	}
+}
+
+\newcommand{\SymCALL}[2][]{
+	\IfEqCase{#1}{
+		{0}{(SP-1)$\leftarrow$PC\High}
+		{1}{(SP-2)$\leftarrow$PC\Low}
+		{2}{SP$\leftarrow$SP-2}
+		{3}{PC$\leftarrow$#2}
+		{}{\SymCALL[0]{#2}\\\SymCALL[1]{#2}\\\SymCALL[2]{#2}\\\SymCALL[3]{#2}}
+	}
+}
+
+\newcommand{\SymCALLc}[1]{
+	if c=true:~CALL #1
+}
+
+\newcommand{\SymCCF}{CF$\leftarrow\mathtt{\overline{CF}}$}
+
+\newcommand{\SymCP}[1]{A-#1}
+
+\newcommand{\SymCPD}[1][]{
+	\IfEqCase{#1}{
+		{0}{A-(HL)}
+		{1}{HL$\leftarrow$HL-1}
+		{2}{BC$\leftarrow$BC-1}
+		{}{\SymCPD[0]\\\SymCPD[1]\\\SymCPD[2]}
+	}
+}
+
+\newcommand{\SymCPDR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do CPD}
+		{1}{while A$\neq$(HL)$\wedge$BC>0}
+		{}{\SymCPDR[0]\\\SymCPDR[1]}
+	}
+}
+
+\newcommand{\SymCPI}[1][]{
+	\IfEqCase{#1}{
+		{0}{A-(HL)}
+		{1}{HL$\leftarrow$HL+1}
+		{2}{BC$\leftarrow$BC-1}
+		{}{\SymCPI[0]\\\SymCPI[1]\\\SymCPI[2]}
+	}
+}
+
+\newcommand{\SymCPIR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do CPI}
+		{1}{while A$\neq$(HL)$\wedge$BC>0}
+		{}{\SymCPIR[0]\\\SymCPIR[1]}
+	}
+}
+
+\newcommand{\SymCPL}{A$\leftarrow\mathtt{\overline{A}}$}
+
+\newcommand{\SymDEC}[1]{#1$\leftarrow$#1-1}
+
+\newcommand{\SymDI}[1][]{
+	\IfEqCase{#1}{
+		{0}{IFF1$\leftarrow$0}
+		{1}{IFF2$\leftarrow$0}
+		{}{\SymDI[0]\\\SymDI[1]}
+	}
+}
+
+\newcommand{\SymDJNZ}[2][]{
+	\IfEqCase{#1}{
+		{0}{B$\leftarrow$B-1}
+		{1}{if B$\neq$0:~JR #2}
+		{}{\SymDJNZ[0]{#2}\\\SymDJNZ[1]{#2}}
+	}
+}
+
+\newcommand{\SymEI}[1][]{
+	\IfEqCase{#1}{
+		{0}{IFF1$\leftarrow$1}
+		{1}{IFF2$\leftarrow$1}
+		{}{\SymEI[0]\\\SymEI[1]}
+	}
+}
+
+\newcommand{\SymEX}[2]{#1$\leftrightarrow$#2}
+
+\newcommand{\SymEXX}[1][]{
+	\IfEqCase{#1}{
+		{0}{\SymEX{BC}{BC'}}
+		{1}{\SymEX{DE}{DE'}}
+		{2}{\SymEX{HL}{HL'}}
+		{}{\SymEXX[0]\\\SymEXX[1]\\\SymEXX[2]}
+	}
+}
+
+\newcommand{\SymIN}[2]{#1$\leftarrow$(#2)}
+
+\newcommand{\SymINC}[1]{#1$\leftarrow$#1+1}
+
+\newcommand{\SymIND}[1][]{
+	\IfEqCase{#1}{
+		{0}{(HL)$\leftarrow$(BC)}
+		{1}{HL$\leftarrow$HL-1}
+		{2}{B$\leftarrow$B-1}
+		{}{\SymIND[0]\\\SymIND[1]\\\SymIND[2]}
+	}
+}
+
+\newcommand{\SymINDR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do IND}
+		{1}{while B>0}
+		{}{\SymINDR[0]\\\SymINDR[1]}
+	}
+}
+
+\newcommand{\SymINI}[1][]{
+	\IfEqCase{#1}{
+		{0}{(HL)$\leftarrow$(BC)}
+		{1}{HL$\leftarrow$HL+1}
+		{2}{B$\leftarrow$B-1}
+		{}{\SymINI[0]\\\SymINI[1]\\\SymINI[2]}
+	}
+}
+
+\newcommand{\SymINIR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do INI}
+		{1}{while B>0}
+		{}{\SymINIR[0]\\\SymINIR[1]}
+	}
+}
+
+\newcommand{\SymJP}[1]{PC$\leftarrow$#1}
+
+\newcommand{\SymJPc}[1]{if c=true:~JP #1}
+
+\newcommand{\SymJPC}{PC$\leftarrow$PC$\wedge$\$C000+IN(C)<<6}
+
+\newcommand{\SymJR}[1]{PC$\leftarrow$PC+#1}
+
+\newcommand{\SymJRc}[2]{if #1=true:~JR #2}
+
+\newcommand{\SymLD}[2]{#1$\leftarrow$#2}
+
+\newcommand{\SymLDD}[1][]{
+	\IfEqCase{#1}{
+		{0}{(DE)$\leftarrow$(HL)}
+		{1}{DE$\leftarrow$DE-1}
+		{2}{HL$\leftarrow$HL-1}
+		{3}{BC$\leftarrow$BC-1}
+		{}{\SymLDD[0]\\\SymLDD[1]\\\SymLDD[2]\\\SymLDD[3]}
+	}
+}
+
+\newcommand{\SymLDDR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do LDD}
+		{1}{while BC>0}
+		{}{\SymLDDR[0]\\\SymLDDR[1]}
+	}
+}
+
+\newcommand{\SymLDDX}[1][]{
+	\IfEqCase{#1}{
+		{0}{if (HL)$\neq$A:~(DE)$\leftarrow$(HL)}
+		{1}{DE$\leftarrow$DE+1}
+		{2}{HL$\leftarrow$HL-1}
+		{3}{BC$\leftarrow$BC+1}
+		{}{\SymLDDX[0]\\\SymLDDX[1]\\\SymLDDX[2]\\\SymLDDX[3]}
+	}
+}
+
+\newcommand{\SymLDI}[1][]{
+	\IfEqCase{#1}{
+		{0}{(DE)$\leftarrow$(HL)}
+		{1}{DE$\leftarrow$DE+1}
+		{2}{HL$\leftarrow$HL+1}
+		{3}{BC$\leftarrow$BC-1}
+		{}{\SymLDI[0]\\\SymLDI[1]\\\SymLDI[2]\\\SymLDI[3]}
+	}
+}
+
+\newcommand{\SymLDIR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do LDI}
+		{1}{while BC>0}
+		{}{\SymLDIR[0]\\\SymLDIR[1]}
+	}
+}
+
+\newcommand{\SymLDIX}[1][]{
+	\IfEqCase{#1}{
+		{0}{if (HL)$\neq$A: (DE)$\leftarrow$(HL)}
+		{1}{DE$\leftarrow$DE+1}
+		{2}{HL$\leftarrow$HL+1}
+		{3}{BC$\leftarrow$BC-1}
+		{}{\SymLDIX[0]\\\SymLDIX[1]\\\SymLDIX[2]\\\SymLDIX[3]}
+	}
+}
+
+\newcommand{\SymLDIRX}[1][]{
+	\IfEqCase{#1}{
+		{0}{do LDIX}
+		{1}{while BC>0}
+		{}{\SymLDIRX[0]\\\SymLDIRX[1]}
+	}
+}
+
+\newcommand{\SymLDPIRX}[1][]{
+	\IfEqCase{#1}{
+		{0}{do}
+		{1}{\SymTab{}t$\leftarrow$(HL$\wedge$\$FFF8+E$\wedge$7)}
+		{2}{\SymTab{}if t$\neq$A: (DE)$\leftarrow$t}
+		{3}{\SymTab{}DE$\leftarrow$DE+1}
+		{4}{\SymTab{}BC$\leftarrow$BC-1}
+		{5}{while BC>0}
+		{}{\SymLDPIRX[0]\\\SymLDPIRX[1]\\\SymLDPIRX[2]\\\SymLDPIRX[3]\\\SymLDPIRX[4]\\\SymLDPIRX[5]}
+	}
+}
+
+\newcommand{\SymLDWS}[1][]{
+	\IfEqCase{#1}{
+		{0}{(DE)$\leftarrow$(HL)}
+		{1}{INC L}
+		{2}{INC D}
+		{}{\SymLDWS[0]\\\SymLDWS[1]\\\SymLDWS[2]}
+	}
+}
+
+\newcommand{\SymMIRROR}[1]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+				
+			\node[plain] (reg) {\tt #1};
+			\node[framed, right=0.2em of reg] (hi) {7654};
+			\node[framed, right=0em of hi] (lo) {3210};
+				
+			\draw[arrow] (hi.148) |- +(0.1,0.5) -| (lo.32);
+			\draw[arrow] (hi.118) |- +(0.1,0.4) -| (lo.65);
+			\draw[arrow] (hi.64) |- +(0.1,0.3) -| (lo.118);
+			\draw[arrow] (hi.34) |- +(0.1,0.2) -| (lo.148);
+				
+			\draw[arrow] (lo.-148) |- +(-0.1,-0.2) -| (hi.-32);
+			\draw[arrow] (lo.-118) |- +(-0.1,-0.3) -| (hi.-65);
+			\draw[arrow] (lo.-34) |- +(-0.1,-0.5) -| (hi.-148);
+			\draw[arrow] (lo.-64) |- +(-0.1,-0.4) -| (hi.-118);
+		\end{tikzpicture}
+	}
+}
+
+\newcommand{\SymMUL}{DE$\leftarrow$D$\times$E}
+
+\newcommand{\SymNEG}{A$\leftarrow$-A}
+
+\newcommand{\SymNEXTREG}[1]{HwNextReg[n]$\leftarrow$#1}
+
+\newcommand{\SymOR}[1]{A$\leftarrow$A$\vee$#1}
+
+\newcommand{\SymOUT}[2]{(#1)$\leftarrow$#2}
+
+\newcommand{\SymOUTINB}[1][]{
+	\IfEqCase{#1}{
+		{0}{(BC)$\leftarrow$(HL)}
+		{1}{HL$\leftarrow$HL+1}
+		{}{\SymOUTINB[0]\\\SymOUTINB[1]}
+	}
+}
+
+\newcommand{\SymOUTD}[1][]{
+	\IfEqCase{#1}{
+		{0}{(BC)$\leftarrow$(HL)}
+		{1}{HL$\leftarrow$HL-1}
+		{2}{B$\leftarrow$B-1}
+		{}{\SymOUTD[0]\\\SymOUTD[1]\\\SymOUTD[2]}
+	}
+}
+
+\newcommand{\SymOUTI}[1][]{
+	\IfEqCase{#1}{
+		{0}{B$\leftarrow$B-1}
+		{1}{(BC)$\leftarrow$(HL)}
+		{2}{HL$\leftarrow$HL+1}
+		{}{\SymOUTI[0]\\\SymOUTI[1]\\\SymOUTI[2]}
+	}
+}
+
+\newcommand{\SymOTDR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do OUTD}
+		{1}{while B>0}
+		{}{\SymOTDR[0]\\\SymOTDR[1]}
+	}
+}
+
+\newcommand{\SymOTIR}[1][]{
+	\IfEqCase{#1}{
+		{0}{do OUTI}
+		{1}{while B>0}
+		{}{\SymOTIR[0]\\\SymOTIR[1]}
+	}
+}
+
+\newcommand{\SymPIXELAD}[1][]{\ignorespaces
+	\IfEqCase{#1}{
+		{0}{HL$\leftarrow$\$4000}
+		{1}{+((D$\wedge$\$C0)<<5)}
+		{2}{+((D$\wedge$\$07)<<8)}
+		{3}{+((D$\wedge$\$38)<<2)}
+		{4}{+(E>>3)}
+		{}{\SymPIXELAD[0]\SymPIXELAD[1]\SymPIXELAD[2]\SymPIXELAD[3]\SymPIXELAD[4]}
+	}
+}
+
+\newcommand{\SymPIXELDN}[1][]{\ignorespaces
+	\IfEqCase{#1}{
+		{0}{if~(HL$\wedge$\$700)$\neq$\$700}
+		{1}{\SymTab{}HL$\leftarrow$HL+256}
+		{2}{else~if~(HL$\wedge$\$E0)$\neq$\$E0}
+		{3}{\SymTab{}HL$\leftarrow$HL$\wedge$\$F8FF+\$20}
+		{4}{else}
+		{5}{\SymTab{}HL$\leftarrow$HL$\wedge$\$F81F+\$800}
+		{}{\SymPIXELDN[0]\\\SymPIXELDN[1]\\\SymPIXELDN[2]\\\SymPIXELDN[3]\\\SymPIXELDN[4]\\\SymPIXELDN[5]}
+	}
+}
+
+\newcommand{\SymPOP}[2][]{
+	\IfEqCase{#1}{
+		{0}{#2\High$\leftarrow$(SP+1)}
+		{1}{#2\Low$\leftarrow$(SP)}
+		{2}{SP$\leftarrow$SP+2}
+		{10}{#2$\leftarrow$(SP+1)}
+		{11}{#2$\leftarrow$(SP)}
+		{12}{SP$\leftarrow$SP+2}
+		{}{\SymPOP[0]{#2}\\\SymPOP[1]{#2}\\\SymPOP[2]{#2}}
+	}
+}
+
+\newcommand{\SymPUSHnn}[3][]{
+	\IfEqCase{#1}{
+		{0}{(SP-2)$\leftarrow$#3}
+		{1}{(SP-1)$\leftarrow$#2}
+		{2}{SP$\leftarrow$SP-2}
+		{}{\SymPUSHnn[0]{#2}{#3}\\\SymPUSHnn[1]{#2}{#3}\\\SymPUSHnn[2]{#2}{#3}}
+	}
+}
+
+\newcommand{\SymPUSH}[2][]{
+	\SymPUSHnn[#1]{#2\High}{#2\Low}
+}
+
+\newcommand{\SymRES}[1]{$\mathtt{#1_b}\leftarrow$0}
+
+\newcommand{\SymRET}[1][]{
+	\IfEqCase{#1}{
+		{0}{PC\Low$\leftarrow$(SP)}
+		{1}{PC\High$\leftarrow$(SP+1)}
+		{2}{SP$\leftarrow$SP+2}
+		{}{\SymRET[0]\\\SymRET[1]\\\SymRET[2]}
+	}
+}
+
+\newcommand{\SymRETc}[1]{
+	if #1=true:~RET
+}
+
+\newcommand{\SymRETI}[1][]{
+	\IfEqCase{#1}{
+		{0}{PC\Low$\leftarrow$(SP)}
+		{1}{PC\High$\leftarrow$(SP+1)}
+		{2}{SP$\leftarrow$SP+2}
+		{}{\SymRETI[0]\\\SymRETI[1]\\\SymRETI[2]}
+	}
+}
+
+\newcommand{\SymRETN}[1][]{
+	\IfEqCase{#1}{
+		{0}{PC\Low$\leftarrow$(SP)}
+		{1}{PC\High$\leftarrow$(SP+1)}
+		{2}{SP$\leftarrow$SP+2}
+		{3}{IFF1$\leftarrow$IFF2}
+		{}{\SymRETN[0]\\\SymRETN[1]\\\SymRETN[2]\\\SymRETN[3]}
+	}
+}
+
+\newcommand{\SymRL}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={ rectangle, draw=black, inner sep=1 },
+			arrow/.style={thin,->,-latex}]
+
+			\node[framed] (cf) {\tt CF};
+			\node[framed] (bits) at([xshift=3em]cf) {7$\leftarrow$0};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node(reg) at([yshift=-1em]bits) {\tt #2};}
+			}
+
+			\draw[arrow] (bits) -- (cf);
+			\draw[arrow] (cf.west) |- +(-0.12,0) |- +(1.6,0.25) |- (bits.east);
+		\end{tikzpicture}
+	}
+}
+
+\newcommand{\SymRLC}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			arrow/.style={thin,->,-latex}]
+				
+			\node[framed] (cf) {\tt CF};
+			\node[framed, right=1.1em of cf] (bits) {7$\leftarrow$0};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+				
+			\draw[arrow] (bits) -- (cf);
+			\draw[arrow] (bits.west) |- +(-0.1,0) |- +(0.9,0.25) |- (bits.east);
+		\end{tikzpicture}
+	}
+}
+
+\newcommand{\SymRLCu}[3][]{
+	\IfEqCase{#1}{
+		{0}{#2$\leftarrow$(#3+d)}
+		{1}{RLC #2}
+		{2}{(#3+d)$\leftarrow$#2}
+		{}{\SymRLCu[0]{#2}{#3}\\\SymRLCu[1]{#2}{#3}\\\SymRLCu[2]{#2}{#3}}
+	}
+}
+
+\newcommand{\SymRLD}{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1, outer sep=0},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+			
+			\node[plain] (a) {\tt A};
+			
+			\node[framed, right=0.5ex of a] (bitsAhi) {7-4};
+			\node[framed, right=0ex of bitsAhi] (bitsAlo) {3-0};
+
+			\node[framed, right=1ex of bitsAlo] (bitsHLhi) {7-4};
+			\node[framed, right=0ex of bitsHLhi] (bitsHLlo) {3-0};
+ 			
+			\node[plain, right=0.5ex of bitsHLlo] (hl) {\tt (HL)};
+			
+			\draw[arrow] (bitsHLlo.south) |- +(-0.2,-0.2) -| (bitsHLhi.310);
+			\draw[arrow] (bitsHLhi.240) |- +(-0.2,-0.2) -| (bitsAlo.south);
+			\draw[arrow] (bitsAlo.north) |- +(0.2,0.2) -| (bitsHLlo.north);
+		\end{tikzpicture}
+	}
+}
+
+\newcommand{\SymRR}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={ rectangle, draw=black, inner sep=1 },
+			arrow/.style={thin,->,-latex}]
+
+			\node[framed] (bits) {7$\rightarrow$0};
+			\node[framed, right=1em of bits] (cf) {\tt CF};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+
+			\draw[arrow] (bits) -- (cf);
+			\draw[arrow] (cf.east) |- +(0.12,0) |- +(-1.6,0.25) |- (bits.west);
+		\end{tikzpicture}
+	}
+}
+
+\newcommand{\SymRRC}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			arrow/.style={thin,->,-latex}]
+			
+			\node[framed] (bits) {7$\rightarrow$0};
+			\node[framed, right=1.1em of bits] (cf) {\tt CF};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+			
+			\draw[arrow] (bits) -- (cf);
+			\draw[arrow] (bits.east) |- +(0.1,0) |- +(-0.9,0.25) |- (bits.west);
+		\end{tikzpicture}
+	}
+}
+
+\newcommand{\SymRRD}{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1, outer sep=0},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+			
+			\node[plain] (a) {\tt A};
+			
+			\node[framed, right=0.5ex of a] (bitsAhi) {7-4};
+			\node[framed, right=0ex of bitsAhi] (bitsAlo) {3-0};
+
+			\node[framed, right=1ex of bitsAlo] (bitsHLhi) {7-4};
+			\node[framed, right=0ex of bitsHLhi] (bitsHLlo) {3-0};
+ 			
+			\node[plain, right=0.5ex of bitsHLlo] (hl) {\tt (HL)};
+			
+			\draw[arrow] (bitsHLlo.south) |- +(-0.2,-0.2) -| (bitsAlo.south);
+			\draw[arrow] (bitsAlo.north) |- +(0.2,0.2) -| (bitsHLhi.120);
+			\draw[arrow] (bitsHLhi.60) |- +(0.2,0.2) -| (bitsHLlo.north);
+		\end{tikzpicture}
+	}
+}
+
+\newcommand{\SymRST}[2][]{
+	\IfEqCase{#1}{
+		{0}{(SP-1)$\leftarrow$PC\High}
+		{1}{(SP-2)$\leftarrow$PC\Low}
+		{2}{SP$\leftarrow$SP-2}
+		{3}{PC$\leftarrow$#2}
+		{}{\SymRST[0]{#2}\\\SymRST[1]{#2}\\\SymRST[2]{#2}\\\SymRST[3]{#2}}
+	}
+}
+
+\newcommand{\SymSET}[1]{$\mathtt{#1_b}\leftarrow$1}
+
+\newcommand{\SymSETu}[3][]{
+	\IfEqCase{#1}{
+		{0}{#2$\leftarrow$(#3+d)}
+		{1}{$\mathtt{#2_b}\leftarrow$1}
+		{2}{(#3+d)$\leftarrow$#2}
+		{}{\SymSETu[0]{#2}{#3}\\\SymSETu[1]{#2}{#3}\\\SymSETu[2]{#2}{#3}}
+	}
+}
+
+\newcommand{\SymSBC}[2]{#1$\leftarrow$#1-#2-CF}
+
+\newcommand{\SymSCF}{CF$\leftarrow$1}
+
+\newcommand{\SymSETAE}{A$\leftarrow$unsigned(\$80)>>(E$\wedge$7)}
+
+\newcommand{\SymSLA}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+
+			\node[framed] (cf) {\tt CF};
+			\node[framed, right=1em of cf] (bits) {7$\leftarrow$0};
+			\node[plain, right=1em of bits] (zero) {\tt 0};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+
+			\draw[arrow] (zero) -- (bits);
+			\draw[arrow] (bits) -- (cf);
+		\end{tikzpicture}
+	}
+}
+
+\newcommand{\SymSLI}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+
+			\node[framed] (cf) {\tt CF};
+			\node[framed, right=1em of cf] (bits) {7$\leftarrow$0};
+			\node[plain, right=1em of bits] (one) {\tt 1};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+
+			\draw[arrow] (one) -- (bits);
+			\draw[arrow] (bits) -- (cf);
+		\end{tikzpicture}
+	}
+}
+
+\newcommand{\SymSRA}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			arrow/.style={thin,->,-latex}]
+				
+			\node[framed] (bits) {7$\rightarrow$0};
+			\node[framed, right=1em of bits] (cf) {\tt CF};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+				
+			\draw[arrow] (bits) -- (cf);
+			\draw[arrow] (bits.211) |- +(-0.35,-0.1) |- (bits.west);
+		\end{tikzpicture}
+	}
+}
+
+\newcommand{\SymSRL}[2][]{
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+			
+			\node[plain] (zero) {\tt 0};
+			\node[framed, right=1em of zero] (bits) {7$\rightarrow$0};
+			\node[framed, right=1em of bits] (cf) {\tt CF};
+			\IfEqCase{#1} {
+				{0}{}
+				{}{\node[below=-1pt of bits](reg) {\tt #2};}
+			}
+			
+			\draw[arrow] (zero) -- (bits);
+			\draw[arrow] (bits) -- (cf);
+		\end{tikzpicture}
+	}
+}
+
+\newcommand{\SymSUB}[1]{A$\leftarrow$A-#1}
+
+\newcommand{\SymSWAPNIB}[1][]{
+	\IfEq{#1}{}{}{\hspace*{-1.6em}}
+	\SymDrawing{
+		\begin{tikzpicture}[
+			framed/.style={rectangle, draw=black, inner sep=1},
+			plain/.style={inner sep=0},
+			arrow/.style={thin,->,-latex}]
+			
+			\node[plain] (a) {\tt A};
+			\node[framed, right=0.2em of a] (hi) {7654};
+			\node[framed, right=0em of hi] (lo) {3210};
+			
+			\draw[arrow] (hi.north) |- +(0.1,0.2) -| (lo.north);
+			\draw[arrow] (lo.south) |- +(-0.1,-0.2) -| (hi.south);
+		\end{tikzpicture}
+	}
+}
+
+\newcommand{\SymTEST}{A$\wedge$n}
+
+\newcommand{\SymXOR}[1]{A$\leftarrow$A$\veebar$#1}
+
+% ────────────────────────────────────────────────────────────────────────────
+% ─██████████████─██████─────────██████████████─██████████████─██████████████─
+% ─██░░░░░░░░░░██─██░░██─────────██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
+% ─██░░██████████─██░░██─────────██░░██████░░██─██░░██████████─██░░██████████─
+% ─██░░██─────────██░░██─────────██░░██──██░░██─██░░██─────────██░░██─────────
+% ─██░░██████████─██░░██─────────██░░██████░░██─██░░██─────────██░░██████████─
+% ─██░░░░░░░░░░██─██░░██─────────██░░░░░░░░░░██─██░░██──██████─██░░░░░░░░░░██─
+% ─██░░██████████─██░░██─────────██░░██████░░██─██░░██──██░░██─██████████░░██─
+% ─██░░██─────────██░░██─────────██░░██──██░░██─██░░██──██░░██─────────██░░██─
+% ─██░░██─────────██░░██████████─██░░██──██░░██─██░░██████░░██─██████████░░██─
+% ─██░░██─────────██░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─
+% ─██████─────────██████████████─██████──██████─██████████████─██████████████─
+% ────────────────────────────────────────────────────────────────────────────
+
+% some common declarations to unify formatting of individual parts; we can then later redefine these macros to change appearance without having to tweak main macros
+\newcommand{\FlagsSee}[1]{\See{#1}}		% footnote declarations
+\newcommand{\FlagsFPP}{\FPP}			% PF=parity indicator
+\newcommand{\FlagsFPV}{\FPV}			% PF=overflow indicator
+\newcommand{\FlagsSmall}[1]{\tiny #1}	% small font size
+\newcommand{\FlagsNoEffect}{}			% text for "no effect"; we don't display anything in tables, but may redeclare to display something in details section
+
+% note: because LaTeX doesn't allow numbers in commands, we use the following notation:
+% r = 8 bit register or number
+% n = 8 bit number (only if we already use r)
+% rr = 16 bit register pair or number
+% nn = 16 bit number (only if we already use rr)
+% note: we need to pass 1 optional parameter to Flags; we need it in details section
+\newcommand{\FlagsADDr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{0}{\FS}}
+\newcommand{\FlagsADDrr}[1][]{\Flags[#1]{\FN}{\FN}{\FX\FlagsSee{2}}{\FN}{0}{\FS\FlagsSee{1}}}
+\newcommand{\FlagsADDrra}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsADDrrnn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsADCr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{0}{\FS}}
+\newcommand{\FlagsADCrr}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FlagsFPV\FlagsSee{1}}{0}{\FS\FlagsSee{1}}}
+\newcommand{\FlagsANDr}[1][]{\Flags[#1]{\FS}{\FS}{1}{\FlagsFPV}{0}{0}}
+\newcommand{\FlagsBITr}[1][]{\Flags[#1]{\FU\FlagsSee{1}}{\FS}{1}{\FU\FlagsSee{1}}{0}{\FN}}
+\newcommand{\FlagsBSLA}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsBSRA}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsBSRL}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsBSRF}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsBRLC}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsCALLnn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsCALLccnn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsCCF}[1][]{\Flags[#1]{\FN}{\FN}{\FX\FlagsSee{2}}{\FN}{0}{\FS}}
+\newcommand{\FlagsCPr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{1}{\FS}}
+\newcommand{\FlagsCPI}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
+\newcommand{\FlagsCPIR}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
+\newcommand{\FlagsCPD}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
+\newcommand{\FlagsCPDR}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
+\newcommand{\FlagsCPL}[1][]{\Flags[#1]{\FN}{\FN}{1}{\FN}{1}{\FN}}
+\newcommand{\FlagsDAA}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPP}{\FN}{\FS}}
+\newcommand{\FlagsDECr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV\FlagsSee{5}}{1}{\FN}}
+\newcommand{\FlagsDECrr}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsDI}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsDJNZ}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsEI}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsEXrr}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsEXaf}[1][]{\Flags[#1]{\FX\FlagsSee{1}}{\FX\FlagsSee{1}}{\FX\FlagsSee{1}}{\FX\FlagsSee{1}}{\FX\FlagsSee{1}}{\FX\FlagsSee{1}}}
+\newcommand{\FlagsEXX}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsHALT}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsIM}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsINan}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsINrc}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FN}}
+\newcommand{\FlagsINc}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FN}}
+\newcommand{\FlagsINCr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV\FlagsSee{4}}{0}{\FN}}
+\newcommand{\FlagsINCrr}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsINI}[1][]{\Flags[#1]{\FX\FlagsSee{5}}{\FX\FlagsSee{4}}{\FX\FlagsSee{5}}{\FX\FlagsSee{5}}{1}{\FN}}
+\newcommand{\FlagsINIR}[1][]{\Flags[#1]{\FX\FlagsSee{5}}{1}{\FX\FlagsSee{5}}{\FX\FlagsSee{5}}{1}{\FN}}
+\newcommand{\FlagsIND}[1][]{\Flags[#1]{\FX\FlagsSee{5}}{\FX\FlagsSee{4}}{\FX\FlagsSee{5}}{\FX\FlagsSee{5}}{1}{\FN}}
+\newcommand{\FlagsINDR}[1][]{\Flags[#1]{\FX\FlagsSee{5}}{1}{\FX\FlagsSee{5}}{\FX\FlagsSee{5}}{1}{\FN}}
+\newcommand{\FlagsJPc}[1][]{\Flags[#1]{\FU}{\FU}{\FU}{\FU}{\FU}{\FU}}
+\newcommand{\FlagsJPnn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsJPccnn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsJPrr}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsJRn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsJRccn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsLDr}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsLDrr}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsLDair}[1][]{\Flags[#1]{\FS}{\FS}{0}{{\FlagsSmall IFF2}}{0}{\FN}}
+\newcommand{\FlagsLDI}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FX\FlagsSee{3}}{0}{\FN}}
+\newcommand{\FlagsLDIR}[1][]{\Flags[#1]{\FN}{\FN}{0}{0\FlagsSee{4}}{0}{\FN}}
+\newcommand{\FlagsLDD}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FX\FlagsSee{3}}{0}{\FN}}
+\newcommand{\FlagsLDDR}[1][]{\Flags[#1]{\FN}{\FN}{0}{0\FlagsSee{4}}{0}{\FN}}
+\newcommand{\FlagsLDDX}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsLDDRX}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsLDIX}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsLDIRX}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsLDPIRX}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsLDWS}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV\FlagsSee{2}}{0}{\FN}}
+\newcommand{\FlagsMIRRORa}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsMULde}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsNEG}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPP}{1}{\FS}}
+\newcommand{\FlagsNEXTREGna}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsNEXTREGnn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsNOP}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsORr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPV}{0}{0}}
+\newcommand{\FlagsOUTna}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsOUTcr}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsOUTc}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsOUTI}[1][]{\Flags[#1]{\FX\FlagsSee{2}}{\FX\FlagsSee{1}}{\FX\FlagsSee{2}}{\FX\FlagsSee{2}}{1}{\FN}}
+\newcommand{\FlagsOTIR}[1][]{\Flags[#1]{\FX\FlagsSee{2}}{1}{\FX\FlagsSee{2}}{\FX\FlagsSee{2}}{1}{\FN}}
+\newcommand{\FlagsOUTD}[1][]{\Flags[#1]{\FX\FlagsSee{2}}{\FX\FlagsSee{1}}{\FX\FlagsSee{2}}{\FX\FlagsSee{2}}{1}{\FN}}
+\newcommand{\FlagsOTDR}[1][]{\Flags[#1]{\FX\FlagsSee{2}}{1}{\FX\FlagsSee{2}}{\FX\FlagsSee{2}}{1}{\FN}}
+\newcommand{\FlagsOUTINB}[1][]{\Flags[#1]{\FU}{\FU}{\FU}{\FU}{\FU}{\FU}}
+\newcommand{\FlagsPIXELAD}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsPIXELDN}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsPOPrr}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsPOPaf}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}}
+\newcommand{\FlagsPUSHrr}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsPUSHnn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsRESr}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsRET}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsRETcc}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsRETI}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsRETN}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsRLr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
+\newcommand{\FlagsRLA}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FN}{0}{\FS}}
+\newcommand{\FlagsRLCr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
+\newcommand{\FlagsRLCA}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FN}{0}{\FS}}
+\newcommand{\FlagsRLD}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FN}}
+\newcommand{\FlagsRRr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
+\newcommand{\FlagsRRA}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FN}{0}{\FS}}
+\newcommand{\FlagsRRCr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
+\newcommand{\FlagsRRCA}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FN}{0}{\FS}}
+\newcommand{\FlagsRRD}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FN}}
+\newcommand{\FlagsRSTn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsSBCr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{1}{\FS}}
+\newcommand{\FlagsSBCrr}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FlagsFPV\FlagsSee{1}}{1}{\FS\FlagsSee{1}}}
+\newcommand{\FlagsSCF}[1][]{\Flags[#1]{\FN}{\FN}{0}{\FN}{0}{1}}
+\newcommand{\FlagsSETr}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsSETAE}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsSLAr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
+\newcommand{\FlagsSLIr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
+\newcommand{\FlagsSRAr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
+\newcommand{\FlagsSRLr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
+\newcommand{\FlagsSUBr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{1}{\FS}}
+\newcommand{\FlagsSWAPNIB}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsTESTn}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{\FU}{\FS}}
+\newcommand{\FlagsXORr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{0}}
