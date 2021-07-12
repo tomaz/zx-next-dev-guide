@@ -3,6 +3,7 @@
 \usepackage{fancyhdr}
 \usepackage{fancyvrb}
 \usepackage{a4wide}
+\usepackage{afterpage}
 \usepackage{amsfonts}
 \usepackage{url}
 \usepackage{array}
@@ -23,8 +24,10 @@
 \usepackage{xfp}
 \usepackage{xurl}
 \usepackage{xstring}
+\usepackage{xparse}
 \usepackage[table]{xcolor}
 \usepackage[nottoc,numbib]{tocbibind}
+\usepackage{tikz}
 \usepackage[
 	a4paper,
 	layout=a4paper,
@@ -33,9 +36,8 @@
 	top=3cm,				% reduce top edge, too big on default settings
 	bottom=2.5cm			% page numbers should be much lower on the page
 ]{geometry}
-\usepackage{afterpage}
-\usepackage{tikz}
-\usetikzlibrary{matrix,fit,positioning,calc}
+
+\usetikzlibrary{matrix,fit,positioning,calc,arrows.meta}
 
 % ASCII text created with https://fsymbols.com/generators/carty/
 % in case it's not obvious - these large titles are nicely visible in minimap¯\_(ツ)_/¯
@@ -93,7 +95,7 @@
 % less tall slash
 \newcommand\scslash{\stretchrel*{$/$}{\textsc{e}}}
 
-% top and bottom "struts" for instruction lines
+% top and bottom "struts" for instruction lines (note different height can be passed in via optional parameter)
 \newcommand{\instrt}[1][2.5ex]{\rule{0pt}{#1}}
 \newcommand{\instrb}[1][-1.4ex]{\rule[#1]{0pt}{0pt}}
 
@@ -111,18 +113,29 @@
 \newcommand{\High}{\textsubscript{h}}
 \newcommand{\Low}{\textsubscript{l}}
 
-% arrows of arbitrary size
-\newcommand{\RArrow}[1]{\parbox{#1}{\tikz{\draw[->,line width=0.5pt](0,0)--(#1,0);}}}
-\newcommand{\LArrow}[1]{\parbox{#1}{\tikz{\draw[<-,line width=0.5pt](0,0)--(#1,0);}}}
-
-\newcommand{\RArrowLine}[1]{\parbox{#1}{\tikz{
+% horizontal arrows of arbitrary size (lehgth specified through parameter)
+\newcommand{\RArrow}[1]{\parbox{#1}{\tikz{
 	\draw[->,line width=0.5pt](0,0)--(#1,0);
-	\draw(#1,-0.1)--(#1,0.1);
 }}}
-\newcommand{\LArrowLine}[1]{\parbox{#1}{\tikz{
-	\draw(0,-0.1)--(0,0.1);
+\newcommand{\LArrow}[1]{\parbox{#1}{\tikz{
 	\draw[<-,line width=0.5pt](0,0)--(#1,0);
 }}}
+
+% horizontal arrows with vertical line on the arrow side; parameters:
+% - mandatory horizontal line width
+% - optional any additional horizontal line styles (dotted, dashed etc)
+% - optional vertical line height (divided by 2), default 0.1
+% - optional arrow scale, default 1
+% - optional line width, default 0.5pt
+\NewDocumentCommand{\RArrowLine}{ m O{} O{0.1} O{1.6} O{0.5pt} }{\parbox{#1}{\tikz{
+	\draw[-{>[scale=#4,length=#4,width=#4]},line width=#5,#2](0,0)--(#1,0);
+	\draw[line width=#5](#1,-#3)--(#1,#3);
+}}}
+\NewDocumentCommand{\LArrowLine}{ m O{} O{0.1} O{1.6} O{0.5pt} }{\parbox{#1}{\tikz{
+	\draw[line width=#5](0,-#3)--(0,#3);
+	\draw[-{>[scale=#4,length=#4,width=#4]},line width=#5,#2](#1,0)--(0,0);
+}}}
+
 % general document info for simpler reuse
 \newcommand{\AuthorName}{Toma\v{z}}
 \newcommand{\AuthorNameSurname}{\AuthorName ~Kragelj}
@@ -811,18 +824,28 @@ All the {\tt RETI/RETN} instructions are the same, all like the {\tt RETN} instr
 
 The undocumented DDCB instructions store the result (if any) of the operation in one of the seven all-purpose registers. Which one depends on the lower 3 bits of the last byte of the opcode (not operand, so not the offset).
 
-\begin{multicols}{2}
-	\begin{tabbing}
-		{\qquad}000\quad\=B\\
-		{\qquad}001\>C\\
-		{\qquad}010\>D\\
-		{\qquad}011\>E\\
-		{\qquad}100\>H\\
-		{\qquad}101\>L\\
-		{\qquad}110\>(none: documented opcode)\\
-		{\qquad}111\>A
-	\end{tabbing}
-\end{multicols}
+{\tt
+	\vspace*{1em}
+
+	\begin{parcolumns}[colwidths={1=0.3\linewidth}]{2}
+		\colchunk{
+			\begin{tabularx}{\linewidth}{p{0.25cm}lX}	% p{0.25} to move left edge inwards
+				& 000 & B \\
+				& 001 & C \\
+				& 010 & D \\
+				& 011 & E \\
+			\end{tabularx}
+		}
+		\colchunk{
+			\begin{tabularx}{\linewidth}{lX}
+				100 & H \\
+				101 & L \\
+				110 & \normalfont{(none: documented opcode)} \\
+				111 & A \\
+			\end{tabularx}
+		}
+	\end{parcolumns}
+}
 
 The documented {\tt DDCB0106} is {\tt RLC (IX+\$01)}. So, clear the lower three bits ({\tt DDCB0100}) and something is done to register B. The result of the RLC (which is stored in (IX+\$01)) is now also stored in register B. Effectively, it does the following:
 
@@ -4580,9 +4603,9 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 \newcommand{\OCTS}[1]{\LArrowLine{0.8ex}#1\hspace*{-0.2ex}\raisebox{0.2ex}{\tiny'}\hspace*{-0.2ex}\RArrowLine{0.7ex}}	% treats par as single letter (for s')
 
 % writes given text embedded into left and right arrows; use instead of OpCode
-\newcommand{\OpRangeTemplate}[3]{\multicolumn{3}{l}{$|#1$ {\tt #2} $#3|$} &}
-\newcommand{\OpRange}[1]{\OpRangeTemplate{\dashleftarrow}{#1}{\dashrightarrow}}
-\newcommand{\OpRangeSmall}[1]{\OpRangeTemplate{\leftarrow}{#1}{\rightarrow}}
+\newcommand{\OpRangeTemplate}[2]{\multicolumn{3}{l}{\hspace*{0.25ex}\LArrowLine{#1}[densely dashed][0.16][1.9] {\tt #2} \RArrowLine{#1}[densely dashed][0.16][1.9]} &}
+\newcommand{\OpRange}[1]{\OpRangeTemplate{1.85em}{#1}}
+\newcommand{\OpRangeSmall}[1]{\OpRangeTemplate{1.3em}{#1}}
 
 % writes hex opcode and number of bytes
 \newcommand{\HexBytes}[1]{\IfEq{#1}{}{}{{\tt #1}{\tiny B}}}
