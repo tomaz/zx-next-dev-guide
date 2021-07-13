@@ -32,7 +32,7 @@
 % these redeclaration allows us to reuse all previously declared flags so changes can only be made in single place
 \renewcommand{\FlagsFPP}{\FS}		% we indicate PF status in header, so use standard in table
 \renewcommand{\FlagsFPV}{\FS}		% we indicate VF status in header, so use standard in table
-\renewcommand{\FlagsSmall}[1]{\small #1}	% larger font than in tables above
+\renewcommand{\FlagsSmall}[1]{\footnotesize #1}	% larger font than in tables above
 \renewcommand{\FlagsSee}[1]{}		% we don't want to display any footnotes in details section, we describe unusual cases below table
 \renewcommand{\FlagsNoEffect}{No effect on flags}   % we do want to show this text in details
 
@@ -48,7 +48,7 @@
 	& 
 	{\tt #5} & 
 	{\tt #6} & 
-	{\tt #7} & \notet\noteb \\\cline{3-10}
+	{\tt #7} \notet\noteb \\\cline{3-10}
 }
 
 
@@ -177,8 +177,8 @@
 % - default = just PV
 \environbodyname\DetailEffectsBODY %spacer
 \NewEnviron{DetailEffects}[1][]{   %|note
-	\vspace{3pt}                   %|||SF      |ZF       |(YF)  |HF       |(XF)  |PV       |NF       |CF       |spacer
-	\begin{tabularx}{\linewidth}{@{}lXC{4.15ex}|C{4.15ex}|C{2ex}|C{4.15ex}|C{2ex}|C{4.15ex}|C{4.15ex}|C{4.15ex}|p{1ex}|@{}}
+	\vspace{3pt}                   %|||SF     |ZF      |(YF)    |HF      |(XF)    |PV      |NF      |CF      |
+	\begin{tabularx}{\linewidth}{@{}lXC{3.8ex}|C{3.8ex}|C{3.6ex}|C{3.8ex}|C{3.6ex}|C{3.8ex}|C{3.8ex}|C{3.8ex}|@{}}
 		\cline{3-10}
 
 		\multicolumn{2}{@{}X}{\textbf{Effects}} & 
@@ -200,7 +200,7 @@
 
 % this is used where additional comments are needed below flags table (actually, technically, from LaTeX point of view, from within the table itself); each item should be provided with `\item` command
 \newcommand{\DetailFlagsComments}[1]{ 
-	& & \multicolumn{9}{p{7.8cm}}{
+	& & \multicolumn{8}{p{7.8cm}}{
 		\vspace{-2ex}
 		\setlist{leftmargin=1em}
 		\begin{itemize}
@@ -219,11 +219,19 @@
 \environbodyname\DetailTimingBODY
 \NewEnviron{DetailTiming}[1][Timing]{
 	\vspace{1pt}
-	\begin{tabularx}{0.8\textwidth}{@{}lXccrrrr}
+	\begin{tabularx}{0.8\textwidth}{@{}lXccrrrr@{}}
 		\multicolumn{2}{@{}X}{\textbf{#1}} & Mc & Ts & 3.5MHz & 7MHz & 14MHz & 28MHz \\[1pt]
 		\DetailTimingBODY
 	\end{tabularx}
 }
+
+% formats individual timing item; parameters
+% - optional: number of digits to round to (defaults to 2)
+% - T states
+% - CPU frequency to adjust to
+% note: this is meant to be used internally by other detail time commands, the only reason for implementing it as its own command is to unify formatting
+% note: command must be single line to avoid spaces being added on either side...
+\newcommand{\DetailTimeItem}[3][2]{\nprounddigits{#1}{\small {\tt \numprint{\fpeval{#2/#3}}}$\mu$s}}
 
 % individual time; parameters:
 % - optional description, omit if none (which is the default)
@@ -232,14 +240,10 @@
 % note: the times in microsec are automatically calculated from Ts
 \newcommand{\DetailTimeRegular}[3][]{
 	& #1 & #2 & #3 & 
-		\nprounddigits{1}
-		{\footnotesize {\tt \numprint{\fpeval{#3/3.5}}}$\mu$s} & 
-		\nprounddigits{2}
-		{\footnotesize {\tt \numprint{\fpeval{#3/7}}}$\mu$s} & 
-		\nprounddigits{2}
-		{\footnotesize {\tt \numprint{\fpeval{#3/14}}}$\mu$s} & 
-		\nprounddigits{2}
-		{\footnotesize {\tt \numprint{\fpeval{#3/28}}}$\mu$s} \\
+		\DetailTimeItem[1]{#3}{3.5} & 
+		\DetailTimeItem{#3}{7} &
+		\DetailTimeItem{#3}{14} &
+		\DetailTimeItem{#3}{28} \\
 }
 % same as `DetailTimeRegular` but uses mono font for first (optional) parameter
 \newcommand{\DetailTime}[3][]{\DetailTimeRegular[{\tt #1}]{#2}{#3}}
