@@ -1,7 +1,6 @@
 \documentclass[12pt,twoside,openright,a4paper]{book}
 
 \usepackage{fancyhdr}
-\usepackage{fancyvrb}
 \usepackage{a4wide}
 \usepackage{afterpage}
 \usepackage{amsfonts}
@@ -10,6 +9,8 @@
 \usepackage{multicol}
 \usepackage{multirow}
 \usepackage{parcolumns}
+\usepackage{listings}
+\usepackage{lstautogobble}
 \usepackage{enumitem}
 \usepackage{etoolbox}
 \usepackage{mdwlist}
@@ -1140,12 +1141,12 @@ A device can place a value on the databus when the interrupt is accepted. Some c
 
 At the end of a maskable interrupt, the interrupts should be enabled again. You can assume that was the state of the IFFs because otherwise the interrupt wasn't accepted. So, an INT routine always ends with an {\tt EI} and a {\tt RET} ({\tt RETI} according to the official documentation, more about that later):
 
-\begin{Verbatim}
+\begin{lstlisting}
 INT:
 	...
 	EI
 	RETI or RET
-\end{Verbatim}
+\end{lstlisting}
 
 Note a fact about {\tt EI}: a maskable interrupt isn't accepted directly after it, so the next opportunity for an interrupt is after the {\tt RETI}. This is very useful; if the INT line is still low, an interrupt is accepted again.  If this happens a lot and the interrupt is generated before the {\tt RETI}, the stack could overflow (since the routine would be called again and again). But this property of {\tt EI} prevents this.
 
@@ -1190,7 +1191,7 @@ During execution of instructions, interrupts won't be accepted. Only {\em betwee
 
 Directly after an {\tt EI} or {\tt DI} instruction, interrupts aren't accepted. They're accepted again after the instruction after the {\tt EI} ({\tt RET} in the following example). So for example, look at this MSX2 routine that reads a scanline from the keyboard:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	LD C, A
 	DI
 	IN A, ($0AA)
@@ -1200,22 +1201,22 @@ Directly after an {\tt EI} or {\tt DI} instruction, interrupts aren't accepted. 
 	EI
 	IN A, ($0A9)
 	RET
-\end{Verbatim}
+\end{lstlisting}
 
 You can assume that there never is an interrupt after the {\tt EI}, before the {\tt IN A,(\$0A9)} - which would be a problem because the MSX interrupt routine reads the keyboard too.
 
 \pagebreak
 Using this feature of {\tt EI}, it is possible to check whether it is true that interrupts are never accepted during instructions:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	DI
-	make sure INT is active
+	|make sure INT is active|
 	EI
-	insert instruction to test
+	|insert instruction to test|
 INT:
-	store PC where INT was accepted
+	|store PC where INT was accepted|
 	RET
-\end{Verbatim}
+\end{lstlisting}
 
 And yes, for all instructions, including the prefixed ones, interrupts are never accepted during an instruction. Only after the tested instruction. Remember that block instructions simply re-execute themselves (by decreasing the PC with 2) so an interrupt is accepted after each iteration.
 
@@ -1643,7 +1644,7 @@ If you are using the standard interrupt handler or OS routines, then any time yo
 
 Example routine for selecting bank on 128K Spectrum (supports standard interrupt handler and OS routines). Routine takes bank number 0-7 as argument in {\tt B}:
 
-\begin{Verbatim}
+\begin{lstlisting}
 switchBank:
 	LD A, ($5B5C)     ; get existing value from port
 	AND %11111000     ; clear bottom 3 bits
@@ -1657,14 +1658,14 @@ switchBank:
 
 	EI                ; enable interrupts
 	RET
-\end{Verbatim}
+\end{lstlisting}
 
 To call the routine use:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	LD B, 2
 	CALL switchBank
-\end{Verbatim}
+\end{lstlisting}
 
 Note: while above routine could be extended to support switching all 127 banks on ZX Spectrum Next by writing top 4 bits to {\tt \$DFFD}, it's much simpler to use Next specific bank switching support as described in section \ref{zx_next_bank_mmu_mode}.
 
@@ -1769,13 +1770,13 @@ MMU selection is set via Next registers:
 
 Each register takes 8-bit page number to be used at memory addresses its slot represents. For example: swapping in 8K bank 10 (so absolute 8K memory range at addresses {\tt \$14000} - {\tt \$15FFF}) to address {\tt \$6000-\$7FFF}, can be as simple as:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	NEXTREG $53, 10
-\end{Verbatim}
+\end{lstlisting}
 
 If we now run this program:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	LD DE, $6000
 	LD A, 0
 	LD B, 20
@@ -1783,7 +1784,7 @@ next:
 	LD (DE), A
 	INC DE
 	DJNZ next
-\end{Verbatim}
+\end{lstlisting}
 
 We are effectively writing 20 bytes into memory {\tt \$14000} - {\tt \$14013}
 
@@ -2007,7 +2008,7 @@ As you can see, X is quite straightforward; we need to take upper 5 bits and fil
 
 Furthermore; each instruction only uses 8 t-states, which is far less than corresponding Z80 assembly program would require. Somewhat naive program for drawing vertical line write from pixel at coordinate (16,32) to (16,50):
 
-\begin{Verbatim}
+\begin{lstlisting}
 	LD DE, $1020      ; Y=16, X=32
 	PIXELAD           ; HL=address of pixel (E,D)
 loop:
@@ -2022,19 +2023,19 @@ loop:
 
 	PIXELDN           ; no, update HL to next line
 	JR loop           ; continue with next pixel
-\end{Verbatim}
+\end{lstlisting}
 
 Note: because we're updating our Y coordinate in {\tt D} register within the loop, we could also use {\tt PIXELAD} instead of {\tt PIXELDN} in line 13. Both instructions require 8 T states for execution, so there's no difference performance wise.
 
 If we instead wanted to check if pixel at given coordinate is set or not, we would use {\tt AND (HL)} instead of {\tt OR (HL)}. For example:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	LD DE, $1020      ; Y=16, X=32
 	PIXELAD           ; HL=address of pixel (E,D)
 	SETAE             ; A=pixel mask
 	AND (HL)          ; we'll read the pixel
 	RET Z             ; exit if pixel is set
-\end{Verbatim}
+\end{lstlisting}
 
 
 \subsection{Attributes memory}
@@ -2086,10 +2087,10 @@ Spectrum only requires 768 bytes to configure colour and attributes for the whol
 Next inherites Spectrum border colour handling through \PortLink{ULA Control Port}{xxFE}. Bottom 3 bits are used to specify one of 8 possible colours (see table on previous page for full list). Example:
 % note: use of "previous page" in parenthesis above - this works as long as colours table will be physically on previous page in printed book, but make sure it's adjusted if additional content it added, or layout changes otherwise in the future ("in previous section" or "above" for example)
 
-\begin{Verbatim}
-	LD A, 1       ; Select blue colour
-	OUT ($FE), A  ; Set border colour from A
-\end{Verbatim}
+\begin{lstlisting}
+	LD A, 1			; Select blue colour
+	OUT ($FE), A	; Set border colour from A
+\end{lstlisting}
 
 Note: border colour is set the same way regardless of graphics mode used. However some Layer 2 modes and Tileset may partially or fully cover border, effectively making it invisible to user.
 
@@ -2190,7 +2191,7 @@ There are several registers involved in palette changes that work together: \Por
 
 Reusable subroutine for copying a number of palette entries defined by {\tt B} from memory addressed by {\tt HL} register into palette selected by Next register {\tt \$43}:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	NEXTREG $43, %00010000    ; Auto increment, L2 first palette for read/write
 	NEXTREG $40, 0            ; Start copying into index 0
 	LD HL, palette            ; Address to copy RRRGGGBB bytes from
@@ -2202,7 +2203,7 @@ copyPalette:
 	INC HL                    ; Increment to next colour entry
 	NEXTREG $41, A            ; Send colour data to Next HW
 	DJNZ copyPalette          ; Repeat until B=0
-\end{Verbatim}
+\end{lstlisting}
 
 
 \pagebreak
@@ -2292,7 +2293,7 @@ This mode is the closest to ULA, resolution wise, so is perhaps the simplest to 
 
 Example of filling the screen with vertical rainbow:
 
-\begin{Verbatim}
+\begin{lstlisting}
 START_16K_BANK  EQU 9
 START_8K_BANK   EQU START_16K_BANK*2
 
@@ -2338,7 +2339,7 @@ nextX:
     LD A, D                   ; A=current Y
     CP 192                    ; Did we just complete last line?
     JP C, nextY               ; No, continue with next linee
-\end{Verbatim}
+\end{lstlisting}
 
 Worth noting: MMU page 6 (next register {\tt \$56}) covers memory {\tt \$C000} - {\tt \$DFFF}. As we swap different 8K banks there, we're effectively changing 8K banks that are readable and writable at those memory addresses. That's why we {\tt OR \$C0} in line 24; we need to convert zero based address to {\tt \$C000} based. See section \ref{zx_next_bank_mmu_mode} for details on MMU paging mode.
 
@@ -2430,7 +2431,7 @@ While 256 lines fit neatly within 1 byte, we need more for addressing all 320 co
 To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to setup clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
 
 
-\begin{Verbatim}
+\begin{lstlisting}
 START_16K_BANK  EQU 9
 START_8K_BANK   EQU START_16K_BANK*2
 
@@ -2486,7 +2487,7 @@ nextY:
 	LD A, B                   ; Copy bank to A
 	CP START_8K_BANK+NUM_BANKS; Did we fill last bank?
 	JP NZ, nextBank           ; No, proceed with next bank
-\end{Verbatim}
+\end{lstlisting}
 
 
 \pagebreak
@@ -2574,7 +2575,7 @@ Also similar to 320x256 mode, we can't represent full extent of columns with 2 b
 
 To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to setup clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
 
-\begin{Verbatim}
+\begin{lstlisting}
 START_16K_BANK  EQU 9
 START_8K_BANK   EQU START_16K_BANK*2
 
@@ -2629,7 +2630,7 @@ nextY:
 	LD A, B                   ; Copy bank to A
 	CP START_8K_BANK+NUM_BANKS; Did we fill last bank?
 	JP NZ, nextBank           ; No, proceed with next bank
-\end{Verbatim}
+\end{lstlisting}
 
 
 \subsection{Layer 2 Registers}
@@ -2993,7 +2994,7 @@ Using tilemaps is very simple. The most challenging part in my experience was fi
 
 Regardless of editor, we need 3 pieces of data: palette, tile definitions and tileset itself. In this example, they are included as binary files:
 
-\begin{Verbatim}
+\begin{lstlisting}
 tilemap:
 	INCBIN "tiles.map"
 tilemapLength: EQU $ - tilemap
@@ -3005,11 +3006,11 @@ tilesLength:   EQU $ - tiles
 palette:
 	INCBIN "tiles.pal"
 paletteLength: EQU $-palette
-\end{Verbatim}
+\end{lstlisting}
 
 With all data in place, we can start setting up tilemap:
 
-\begin{Verbatim}
+\begin{lstlisting}
 START_OF_BANK_5     EQU $4000
 START_OF_TILEMAP    EQU $6000     ; Just after ULA attributes and system vars
 START_OF_TILES      EQU $6600     ; Just after 40x32 tilemap
@@ -3024,14 +3025,14 @@ OFFSET_OF_TILES     EQU (START_OF_TILES - START_OF_BANK_5) >> 8
 	; Tell hardware where to find tiles
 	NEXTREG $6E, OFFSET_OF_MAP   ; MSB of tilemap in bank 5
 	NEXTREG $6F, OFFSET_OF_TILES ; MSB of tilemap definitions
-\end{Verbatim}
+\end{lstlisting}
 
 Above code uses couple neat preprocessing tricks to automatically calculate MSB for tilemap and tile definitions offsets. The rest is simply setting up desired behaviour using Next registers.
 
 \pagebreak
 The only remaining piece is to actually copy all the data to expected memory locations:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	; Setup tilemap palette
 	NEXTREG $43, %00110000       ; Auto increment, select first tilemap palette
 
@@ -3048,11 +3049,11 @@ The only remaining piece is to actually copy all the data to expected memory loc
 	; Copy tilemap to expected memory
 	LD HL, tilemap               ; Addreess of tilemap in memory
 	CALL copyTileMap40x32        ; Copy 40x32 tilemaps
-\end{Verbatim}
+\end{lstlisting}
 
 We already know {\tt copyPalette} routine from Layer 2 chapter, the other two are straightforward {\tt LDIR} loops:
 
-\begin{Verbatim}
+\begin{lstlisting}
 copyTileDefinitions:
 	LD DE, START_OF_TILES
 	LDIR
@@ -3069,7 +3070,7 @@ copyTileMap:
 	LD DE, START_OF_TILEMAP
 	LDIR
 	RET
-\end{Verbatim}
+\end{lstlisting}
 
 
 \pagebreak
@@ -3433,7 +3434,7 @@ Before we can use sprites, we need to load their data into FPGA memory. This exa
 	\item {\tt A} Starting sprite number to copy to
 \end{itemize}
 
-\begin{Verbatim}
+\begin{lstlisting}
 loadSprites:
 	LD BC, $303B            ; Prepare port for sprite index
 	OUT (C), A              ; Load index of first sprite
@@ -3461,7 +3462,7 @@ loadSprites:
 	DB %11001111            ; WR6 load
 	DB %10000111            ; WR6 enable DMA
 .dmaCodeLength:  EQU $-.dmaCode
-\end{Verbatim}
+\end{lstlisting}
 
 Perhaps worth noting: routine uses technique called ``self modifying code''. As the name suggests, this means that the program modifies itself in RAM. In this case it modifies 2 addresses ``marked'' by {\tt .dmaSource} and {\tt .dmaLength} labels. But it's also possible to modify opcodes (in this case {\tt NOP}s are frequently used as placeholders). Either way, careful planning is required to avoid writing over undesired parts.
 
@@ -3473,7 +3474,7 @@ And secondly note use of dot in front of some labels. Many assemblers allow this
 
 Using {\tt loadSprites} routine is very simple. This example assumes you've edited sprites with one of the editors and saved them as {\tt sprites.spr} file in the same folder as the assembler code:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	LD HL, sprites          ; Sprites data source
 	LD BC, 16*16*5          ; Copy 5 sprites, each 16x16 pixels
 	LD A, 0                 ; Start with first sprite
@@ -3481,23 +3482,23 @@ Using {\tt loadSprites} routine is very simple. This example assumes you've edit
 
 sprites:
 	INCBIN "sprites.spr"    ; Sprite sheets file
-\end{Verbatim}
+\end{lstlisting}
 
 
 \subsubsection{Enabling Sprites}
 
 After sprites are loaded into FPGA memory, we need to enable them:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	NEXTREG $15, %01000001		; Sprite 0 on top, SLU, sprites visible
-\end{Verbatim}
+\end{lstlisting}
 
 
 \subsubsection{Displaying a Sprite}
 
 Sprites are now loaded into FPGA memory, they are enabled, so we can start displaying them. This example displays same sprite pattern twice, as two separate sprites:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	NEXTREG $34, 0              ; First sprite
 	NEXTREG $35, 100            ; X=100
 	NEXTREG $36, 80             ; Y=80
@@ -3509,7 +3510,7 @@ Sprites are now loaded into FPGA memory, they are enabled, so we can start displ
 	NEXTREG $36, 80             ; Y=80
 	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
 	NEXTREG $38, %10000000      ; Visible, no byte 4, pattern 0
-\end{Verbatim}
+\end{lstlisting}
 
 
 \pagebreak
@@ -3517,7 +3518,7 @@ Sprites are now loaded into FPGA memory, they are enabled, so we can start displ
 
 Even handling combined sprites is much simpler in practice than in theory! This example combines 4 sprites into single one using unified relative sprites. Note use of ``inc'' register {\tt \$79} which auto-increments sprite index for next sprite:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	NEXTREG $34, 2              ; Select third sprite
 	NEXTREG $35, 150            ; X=150
 	NEXTREG $36, 80             ; Y=80
@@ -3542,18 +3543,18 @@ Even handling combined sprites is much simpler in practice than in theory! This 
 	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
 	NEXTREG $38, %11000100      ; Visible, use byte 4, pattern 4
 	NEXTREG $79, %01000000      ; Relative sprite
-\end{Verbatim}
+\end{lstlisting}
 
 Because we use combined sprite, we only need to update anchor to change all its relatives. And because we set it up as unified relative sprites, even rotation, mirroring and scaling is inherited as if it was a single sprite!
 
-\begin{Verbatim}
+\begin{lstlisting}
 	NEXTREG $34, 1              ; Select second sprite
 	NEXTREG $35, 200            ; X=200
 	NEXTREG $36, 100            ; Y=100
 	NEXTREG $37, %00001010      ; Palette offset, mirror X, rotate
 	NEXTREG $38, %11000001      ; Visible, use byte 4, pattern 1
 	NEXTREG $39, %00101010      ; Anchor with unified relatives, scale X&Y 
-\end{Verbatim}
+\end{lstlisting}
 
 
 \pagebreak
@@ -3845,7 +3846,7 @@ For creating music there are also several options. NextDAW\footnote{\url{https:/
 
 Before we can start playing sounds, we need to enable the sound hardware. While this is usually enabled by default, it's nonetheless good idea to ensure our program will always run under the same conditions.
 
-\begin{Verbatim}
+\begin{lstlisting}
 	; Setup Turbo Sound chip
 	LD BC, $FFFD            ; Turbo Sound Next Control Register
 	LD A, %11111101         ; Enable left+right audio, select AY1
@@ -3854,11 +3855,11 @@ Before we can start playing sounds, we need to enable the sound hardware. While 
 	; Setup mapping of chip channels to stereo channels
 	NEXTREG $08, %00010010  ; Use ABC, enable internal speaker & turbosound
 	NEXTREG $09, %11100000  ; Enable mono for AY1-3
-\end{Verbatim}
+\end{lstlisting}
 
 Programming AY consists of writing various values to its registers. As mentioned, this is two step process: first select register number, then write the value. Multiple writes are required for each tone to set period, volume etc. To make it simpler, I created a subroutine. It takes 2 parameters: {\tt A} for register number ({\tt 0-13}) and {\tt D} with value to write.
 
-\begin{Verbatim}
+\begin{lstlisting}
 writeDToAYReg:
 	; Select desired register
 	LD BC, $FFFD
@@ -3870,7 +3871,7 @@ writeDToAYReg:
 	OUT (C), A
 	
 	RET
-\end{Verbatim}
+\end{lstlisting}
 
 Companion code on github includes expanded code as well as a simple player that plays multiple tones in sequence. For the purposes of this book, I used Remy's AY audio generator website to load one of example effects, then manually copied raw values into source code. Laborious process to say the least, this is not how effects should be handled in real life. But I wanted to learn and demonstrate how to program AY chip, not how to use ready made drivers to play effects or music. Furthermore, my ``player'' blocks the main loop; ideally sound effects and music would play on interrupt handler. Which could be a nice homework for the reader - example in section \ref{zx_next_interrupts} should give you an idea of how to achieve this - happy coding!
 
@@ -4150,7 +4151,7 @@ Keyboard is read from port {\tt \$xxFE} where bits in result are as follows:
 
 If key is pressed, corresponding bit is set to {\tt 0} and vice versa. Example for checking if P or I is pressed:
 	
-\begin{Verbatim}
+\begin{lstlisting}
 	LD BC, $DFFE   ; We want to read keys:   YUIOP
 	IN A, (C)      ; A holds values in bits: 43210
 checkP:
@@ -4162,14 +4163,14 @@ checkI:
 	JR NZ continue ; if bit2=1, I not pressed
 	...            ; I is pressed
 continue:
-\end{Verbatim}
+\end{lstlisting}
 
 We can slightly improve performance if we replace first two lines with:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	LD A, $DF
 	IN ($FE)
-\end{Verbatim}
+\end{lstlisting}
 
 Using 16-bit load requires 10 T states for ``{\tt LD BC,nn}'' + 12 for ``{\tt IN A,(C)}'' whereas later variant requires 7 T states for ``{\tt LD A,nn}'' + 11 for ``{\tt IN (nn)}''. So 22 vs 18. The difference is small, but it can add up as typically keyboard is read multiple times per frame.
 
@@ -4218,7 +4219,7 @@ You can also adjust timing of the interrupts with Next/TBBlue Feature Control Re
 \pagebreak
 Example of setting up custom interrupt vectors with {\tt IM 2}\footnote{Based on \url{http://codersbucket.blogspot.com/2015/04/interrupts-on-zx-spectrum-what-are.html}}:
 
-\begin{Verbatim}
+\begin{lstlisting}
 	DI
 	
 	LD HL, vectorTable  ; HL=address of vector table
@@ -4247,7 +4248,7 @@ IM2Handler:             ; this is called every time IM2 interrupt occurs
 	ORG $F000           ; needs to be on 256 byte boundary
 vectorTable:
 	DEFS 256            ; 128x2
-\end{Verbatim}
+\end{lstlisting}
 
 
 
@@ -11103,20 +11104,20 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		\begin{multicols}{2}
 			{\tt CPIR} = finding first occurrence:
-			\begin{Verbatim}[gobble=3]
+			\begin{lstlisting}[autogobble=true, xrightmargin=1em]
 				LD HL, $0000
 				LD BC, $0999
 				LD A, $AB
 				CPIR
-			\end{Verbatim}
+			\end{lstlisting}
 
 			{\tt CPDR} = finding last occurrence:
-			\begin{Verbatim}[gobble=3]
+			\begin{lstlisting}[autogobble=true]
 				LD HL, $0999
 				LD BC, $0999
 				LD A, $AB
 				CPDR
-			\end{Verbatim}
+			\end{lstlisting}
 		\end{multicols}
 
 		\begin{DetailEffects}
@@ -11403,15 +11404,15 @@ Where possible, multiple variants of same instruction are grouped together and w
 		So these 2 have exactly the same result (though, as mentioned in section \ref{zx_next_keyboard}, variant on the right is slightly faster, 18 vs 22 T states):
 
 		\begin{multicols}{2}
-			\begin{Verbatim}[gobble=3]
+			\begin{lstlisting}[autogobble=true, xrightmargin=1em]
 				LD BC, $DFFE
 				IN A, (C)
-			\end{Verbatim}
+			\end{lstlisting}
 			\columnbreak
-			\begin{Verbatim}[gobble=3]
+			\begin{lstlisting}[autogobble=true]
 				LD A, $DF
 				IN A, ($FE)
-			\end{Verbatim}
+			\end{lstlisting}
 		\end{multicols}
 
 		\begin{DetailEffects}[p]
@@ -11735,16 +11736,13 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\end{tabular}
 		}
 
-		% some vertical spacing between 2 tables results in much nicer visuals
-		\vspace*{1em}
-
+		% while moving effects and timing tables to next page presents a gap below variants, it's nonetheless more readable to keep it all together
+		\pagebreak
 		\begin{DetailEffects}
 			\FlagsLDair[{\tt LD A,I} and {\tt LD A,R}]
 			\FlagsLDr[Other variants]
 		\end{DetailEffects}
 						
-		% while moving this table to next page presents a gap below effects table, it's nonetheless more user friendly to keep it all together; the following instructions could be moved up to this same page too, but they're better kept together as they are related (LDD, LDDR, LDI, LDIR etc)
-		\pagebreak
 		\begin{DetailTiming}
 			\DetailTime[r,r]{1}{4}
 			\DetailTime[SP,HL]{1}{6}
@@ -11847,20 +11845,20 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		\begin{multicols}{2}
 			{\tt LDIR} = copy forward
-			\begin{Verbatim}[gobble=3]
+			\begin{lstlisting}[autogobble=true, xrightmargin=1em]
 				LD HL, source
 				LD DE, destination
 				LD BC, 100
 				LDIR
-			\end{Verbatim}
+			\end{lstlisting}
 			
 			{\tt LDDR} = copy backwards
-			\begin{Verbatim}[gobble=3]
+			\begin{lstlisting}[autogobble=true]
 				LD HL, source+99
 				LD DE, destination+99
 				LD BC, 100
 				LDDR
-			\end{Verbatim}
+			\end{lstlisting}
 		\end{multicols}
 
 		\begin{DetailEffects}
@@ -12672,20 +12670,80 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Performs leftward 12-bit rotation of 4-bit nibbles where 2 least significant nibbles are stored in memory location addressed by {\tt HL} and most significant digit as lower 4 bits of the accumulator {\tt A}.
 		
-		If used with BCD numbers: as shift happens by 1 digit to the left, this effectively results in multiplication with {\tt 10}. {\tt A} acts as a sort of decimal carry in the operation. Example of multiplying BCD encoded number of any length by {\tt 10}:
+		If used with BCD numbers: as shift happens by 1 digit to the left, this effectively results in multiplication with {\tt 10}. {\tt A} acts as a sort of decimal carry in the operation. Example of multiplying multi-digit BCD number by 10:
 
-		\begin{Verbatim}[gobble=2]
-			LD HL, number  ; number to multiply        | progress:
-			LD B, digits   ; number of repeats         | B A number+HL
-			XOR A          ; reset "carry"             | 3 0 0123
-		lp: RLD            ; multiply by 10            |     ^^ 
-			INC HL         ; move to next digit        | 2 0 1023
-			DJNZ lp        ; number = 1230             |      ^^
-			                                           | 1 0 1203
-		number:                                        |       ^^
-			DB 0,1,2,3                                 | 0 0 1230
-		digits = $ - number - 1 ; (3)                  |        ^^
-		\end{Verbatim}
+		\begin{tabular}{m{8cm}p{0.1cm}m{4.3cm}}
+
+			\begin{lstlisting}[autogobble=true]
+			multiplyBy10:		; number=0123
+				LD HL, number+digits-1
+				LD B, digits	; number of repeats
+				XOR A			; reset "carry"
+			lp:	RLD				; multiply by 10 
+				DEC HL			; prev 2 digits
+				DJNZ lp			; number=1230, A=0
+
+			number:
+				DB $01, $23
+			digits: = $ - number ;(2)
+			\end{lstlisting}
+	
+			& &
+   	
+			\newcommand{\HLindicator}[2]{
+				\path (progress-#1-2.south west) --
+					node[xshift=#2, yshift=1.4ex, rotate=90]{$\lbrace$}
+					node[xshift=#2 + 0.1ex, yshift=0.2ex, indicator]{(HL)} (progress-#1-2.south)
+			}
+	
+			\newcommand{\ByteIndicator}[1]{
+				\draw 
+					(progress-#1-2.west) ++(8.5pt,9pt) 
+					|- ++(5pt,-3pt) -| ++(6pt,3pt) 
+					++(1pt,0) 
+					|- ++(5pt,-3pt) -| ++(6pt,3pt);
+			}
+	
+			\begin{tikzpicture}[
+				value/.style={font=\ttfamily},
+				leading/.style={value, inner xsep=8pt, xshift=2pt},
+				indicator/.style={inner sep=0, font=\ttfamily\scriptsize},
+				line/.style={inner sep=6pt, font=\ttfamily\tiny}]
+	
+				\node (title) {Progression};
+	
+				\matrix (progress)  [
+					below=0em of title,
+					matrix of nodes, 
+					column 1/.style={line},
+					column 2/.style={value},
+					column 3/.style={value},
+					column 4/.style={leading}] {
+	
+					line & number & A & B \\
+					\hline
+	
+					2-4 & 0123 & 0 & 2 \\[-1.3ex]
+					$\downarrow$ & ~~~~~ & & \\[0.8em]
+	
+					5-7 & 0130 & 2 & 1 \\[-1.3ex]
+					$\circlearrowright$ & ~~~~~ & & \\[0.8em]
+	
+					5-7 & 1230 & 0 & 0 \\[-1.3ex]
+					$\circlearrowright$ & ~~~~~ & & \\
+				};
+	
+				\ByteIndicator{3};
+				\ByteIndicator{5};
+				\ByteIndicator{7};
+	
+				\HLindicator{3}{3.15ex};
+				\HLindicator{5}{0.8ex};
+				\HLindicator{7}{-1.45ex};
+	
+			\end{tikzpicture}
+
+		\end{tabular}
 
 		\begin{DetailEffects}[p]
 			\FlagsRLD
@@ -12699,7 +12757,6 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\end{DetailItem}
 
-	\pagebreak
 	\begin{DetailItem}{RR s}
 		{\IH{R}otate \IH{R}ight}
 		{\SymRR{s}}
@@ -12833,13 +12890,85 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\end{DetailItem}
 
-	\pagebreak
 	\begin{DetailItem}{RRD}
 		{\IH{R}otate \IH{R}ight bcd \IH{D}igit}
 		{\SymRRD}
 		
-		Similar to {\tt RLD} (page \pageref{DetailRefRLD}) except rotation is to the right. If used with BCD values, this operation effectively divides 3-digit BCD number by {\tt 10} and stores remainder in {\tt A}.
+		Similar to {\tt RLD} (page \pageref{DetailRefRLD}) except rotation is to the right. If used with BCD values, this operation effectively divides 3-digit BCD number by {\tt 10} and stores remainder in {\tt A}. Taking example from {\tt RLD}, we can easily convert it to division by 10 simply by using {\tt RRD}. Note however we also need to change the order - we start from MSB now (which is exactly how division would be performed by hand):
 
+		\begin{tabular}{m{8cm}p{0.1cm}m{4.3cm}}
+
+			\begin{lstlisting}[autogobble=true, belowskip=0pt]
+			divideBy10:
+				LD HL, number	; number=0123
+				LD B, digits	; number of repeats
+				XOR A			; reset "carry"
+			lp:	RRD				; divide by 10 
+				INC HL			; next 2 digits
+				DJNZ lp			; number=0012, A=3
+
+			number:
+				DB $01, $23
+			digits: = $ - number ;(2)
+			\end{lstlisting}
+	
+			& &
+   	
+			\newcommand{\HLindicator}[2]{
+				\path (progress-#1-2.south west) --
+					node[xshift=#2, yshift=1.4ex, rotate=90]{$\lbrace$}
+					node[xshift=#2 + 0.1ex, yshift=0.2ex, indicator]{(HL)} (progress-#1-2.south)
+			}
+
+			\newcommand{\ByteIndicator}[1]{
+				\draw 
+					(progress-#1-2.west) ++(8.5pt,9pt) 
+					|- ++(5pt,-3pt) -| ++(6pt,3pt) 
+					++(1pt,0) 
+					|- ++(5pt,-3pt) -| ++(6pt,3pt);
+			}
+	
+			\begin{tikzpicture}[
+				value/.style={font=\ttfamily},
+				leading/.style={value, inner xsep=8pt, xshift=2pt},
+				indicator/.style={inner sep=0, font=\ttfamily\scriptsize},
+				line/.style={inner sep=6pt, font=\ttfamily\tiny}]
+	
+				\node (title) {Progression};
+	
+				\matrix (progress)  [
+					below=0em of title,
+					matrix of nodes, 
+					column 1/.style={line},
+					column 2/.style={value},
+					column 3/.style={value},
+					column 4/.style={leading}] {
+
+					line & number & A & B \\
+					\hline
+
+					2-4 & 0123 & 0 & 2 \\[-1.3ex]
+					$\downarrow$ & ~~~~~ & & \\[1em]
+
+					5-7 & 0023 & 1 & 1 \\[-1.3ex]
+					$\circlearrowright$ & ~~~~~ & & \\[1em]
+
+					5-7 & 0012 & 3 & 0 \\[-1.3ex]
+					$\circlearrowright$ & ~~~~~  & \\[1em]
+				};
+	
+				\ByteIndicator{3};
+				\ByteIndicator{5};
+				\ByteIndicator{7};
+		
+				\HLindicator{3}{0.8ex};
+				\HLindicator{5}{3.15ex};
+				\HLindicator{7}{5.4ex};
+	
+			\end{tikzpicture}	
+
+		\end{tabular}
+		
 		\begin{DetailEffects}[p]
 			\FlagsRRD
 		\end{DetailEffects}

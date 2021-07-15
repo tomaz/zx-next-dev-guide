@@ -137,10 +137,30 @@
 % ▒█░░░ ▒█░▒█ ░▀▀▀▄▄ ░▒█░░ ▒█░░▒█ ▒█▒█▒█ ▒█░ ░▄▄▄▀▀ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ ░▀▀▀▄▄ 
 % ▒█▄▄█ ░▀▄▄▀ ▒█▄▄▄█ ░▒█░░ ▒█▄▄▄█ ▒█░░▒█ ▄█▄ ▒█▄▄▄█ ▒█░▒█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
 
-% customize Verbatim environment wiht default settings
-\RecustomVerbatimEnvironment{Verbatim}{Verbatim}{
-	numbers=left,
-	xleftmargin=5mm,
+\newcommand{\ExampleBackColour}{\ifdefined\PRINTED black!7 \else yellow!10 \fi}
+
+% define the style for lstlisting
+\lstdefinestyle{Example}{
+	basicstyle=\ttfamily\small,
+	columns=flexible,
+	autogobble=false,
+	aboveskip=1em,
+	belowskip=0.5em,	% smaller because paragraphs have some margin of their own
 	tabsize=4,
-	fontsize=\small
+	frameround=tttt,
+	frame=single,
+	framesep=2pt,
+	framextopmargin=1pt,
+	framexbottommargin=1pt,
+	rulesep=2pt,
+	rulecolor=\color{\ExampleBackColour},
+	rulesepcolor=\color{\ExampleBackColour},
+	backgroundcolor=\color{\ExampleBackColour},
+	numbers=left,
+	numberstyle=\tiny,
+	numbersep=1em,
+	moredelim=[is][\rmfamily\itshape]{|}{|},	% any text within |...| will be roman/italic
 }
+
+% set this style as the default for the whole document
+\lstset{style=Example}
