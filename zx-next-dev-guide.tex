@@ -5243,7 +5243,7 @@ I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://ww
 
 \begin{notestable}
 	\NoteItem{\See{1}YF and XF are copied from register {\tt A}}
-	\NoteItem{\See{2}Original value of CF (before the instruction) is copied to HF}
+	\NoteItem{\See{2}Documentation says original value of CF is copied to HF, but my tests show that {\tt HF} remains unchanged}
 	\NoteItem{\See{3}No interrupts are accepted directly after {\tt EI} or {\tt DI}}
 	\NoteItem{\See{4}This instruction has other undocumented opcodes}
 \end{notestable}
@@ -10937,7 +10937,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\begin{DetailEffects}
 			\FlagsCCF
 			\DetailFlagsComments{
-				\item Original value of {\tt CF}, before the instruction, is copied to {\tt HF}
+				\item Documentation says original value of {\tt CF}, is copied to {\tt HF}, however my tests show that {\tt HF} remains unchanged
 			}
 		\end{DetailEffects}
 		
