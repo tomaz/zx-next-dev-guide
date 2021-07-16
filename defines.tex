@@ -1,0 +1,176 @@
+\newcommand*{\PRINTED}{}	% comment this line for generating online variant
+
+
+% ░█▀▀█ ▒█▀▀█ ▒█▀▀▀█ ▒█░▒█ ▀▀█▀▀ 
+% ▒█▄▄█ ▒█▀▀▄ ▒█░░▒█ ▒█░▒█ ░▒█░░ 
+% ▒█░▒█ ▒█▄▄█ ▒█▄▄▄█ ░▀▄▄▀ ░▒█░░
+
+% general document info for simpler reuse
+\newcommand{\AuthorName}{Toma\v{z}}
+\newcommand{\AuthorNameSurname}{\AuthorName ~Kragelj}
+\newcommand{\BookTitle}{ZX Spectrum Next Assembler Developer Guide}
+\newcommand{\LatestVersion}{1.0}
+\newcommand{\LatestYear}{2021}
+
+% definitions based on whether PDF is generated for book or online.
+\newcommand{\email}[3]{\ifdefined\PRINTED{\tt #1@#2.#3}\else{\tt #1 AT #2 DOT #3}\fi}
+
+
+% ▒█▀▀█ ░█▀▀█ ▒█▀▀█ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▄▀█ ░█▀▀█ ▀▀█▀▀ ▀▀█▀▀ ▀█▀ ▒█▄░▒█ ▒█▀▀█ 
+% ▒█▄▄█ ▒█▄▄█ ▒█░▄▄ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█░░▒█ ▒█▄▄▀ ▒█▒█▒█ ▒█▄▄█ ░▒█░░ ░▒█░░ ▒█░ ▒█▒█▒█ ▒█░▄▄ 
+% ▒█░░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄▄ 　 ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ▒█░░▒█ ▒█░▒█ ░▒█░░ ░▒█░░ ▄█▄ ▒█░░▀█ ▒█▄▄█
+
+% redefine the default "plain" pagestyle (used by chapter pages)
+\fancypagestyle{plain}{
+	\fancyhf{} 
+	\fancyhead{}
+	\fancyfoot[L]{\thepage}
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
+}
+
+% define style used for normal pages
+\fancypagestyle{clean}{
+	\fancyhf{}
+	\fancyhead[RE,LO]{\leftmark}
+	\fancyfoot[RE,LO]{\thepage}
+}
+
+% we can use this for pages that are intentionally left blank
+\newcommand{\IntentionallyEmpty}{
+	\mbox{}
+	\vfill
+	\begin{center}
+	This page intentionally left empty
+	\end{center}
+	\vfill
+	\mbox{}
+}
+
+% empty pages before chapters should use empty style (aka nothing)
+\let\mtcleardoublepage\cleardoublepage
+\renewcommand{\cleardoublepage}{\clearpage{\pagestyle{empty}\mtcleardoublepage}}
+
+% define default paragraph styles
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1.5ex}
+
+% don't stretch content into empty space vertically
+\raggedbottom
+
+% use empty style for first couple pages, until defined otherwise
+\pagestyle{empty}
+
+
+% ▀▀█▀▀ ░█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▄▀█ ░█▀▀█ ▀▀█▀▀ ▀▀█▀▀ ▀█▀ ▒█▄░▒█ ▒█▀▀█ 
+% ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█░░▒█ ▒█▄▄▀ ▒█▒█▒█ ▒█▄▄█ ░▒█░░ ░▒█░░ ▒█░ ▒█▒█▒█ ▒█░▄▄ 
+% ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄ 　 ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ▒█░░▒█ ▒█░▒█ ░▒█░░ ░▒█░░ ▄█▄ ▒█░░▀█ ▒█▄▄█
+
+% same as X and p{size} respectively, but centers text horizontally
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% top and bottom "struts" for instruction lines (note different height can be passed in via optional parameter)
+\newcommand{\instrt}[1][2.5ex]{\rule{0pt}{#1}}
+\newcommand{\instrb}[1][-1.4ex]{\rule[#1]{0pt}{0pt}}
+
+% top and bottom "struts" for note lines
+\newcommand{\notet}{\rule{0pt}{2.4ex}}
+\newcommand{\noteb}{\rule[-1.3ex]{0pt}{0pt}}
+
+
+% ▒█▀▀▀█ ▒█░▒█ ▒█▀▀▀█ ▒█▀▀█ ▀▀█▀▀ ▒█░▒█ ░█▀▀█ ▒█▄░▒█ ▒█▀▀▄ ▒█▀▀▀█ 
+% ░▀▀▀▄▄ ▒█▀▀█ ▒█░░▒█ ▒█▄▄▀ ░▒█░░ ▒█▀▀█ ▒█▄▄█ ▒█▒█▒█ ▒█░▒█ ░▀▀▀▄▄ 
+% ▒█▄▄▄█ ▒█░▒█ ▒█▄▄▄█ ▒█░▒█ ░▒█░░ ▒█░▒█ ▒█░▒█ ▒█░░▀█ ▒█▄▄▀ ▒█▄▄▄█
+
+% less tall slash
+\newcommand\scslash{\stretchrel*{$/$}{\textsc{e}}}
+
+% couple shorthands that can be used throughout the document
+\newcommand{\Deg}{\textsuperscript{o}}
+\newcommand{\ddd}{\makebox[1em][c]{.\hfil.\hfil.}}
+\newcommand{\See}[1]{\textsuperscript{#1}}
+\newcommand{\UNDOC}{\textnormal{\textsuperscript{**}}}
+\newcommand{\ZXN}{\textnormal{\textsuperscript{ZX}}}
+\newcommand{\ZXNS}{\tiny\textnormal{\textsuperscript{ZX}}}
+\newcommand{\High}{\textsubscript{h}}
+\newcommand{\Low}{\textsubscript{l}}
+
+% instruction flags definitions - for unified formatting
+\newcommand{\FS}{$\updownarrow$} % standard effect
+\newcommand{\FN}{-}				% no effect
+\newcommand{\FU}{?}				% unknown effect
+\newcommand{\FX}{$\bullet$}		% special case
+\newcommand{\FPV}{VF}			% PV=Overflow
+\newcommand{\FPP}{PF}			% PV=Parity
+
+% PortLink is short link to port with description and address, suitable for inline use, while PortReference is longer reference with chapter title and section number mostly used for register lists when referring to previously described register
+\newcommand{\PortLink}[2]{{\small \textbf{#1} {\tt \$#2}}}
+\newcommand{\PortReference}[2]{
+	\vspace*{-2ex}
+	See description under #2 chapter, section \ref{#1}.
+}
+
+% other commonly used definitions
+\newcommand{\MemAddr}[1]{{\tt \$#1}}
+
+
+% ▒█▀▀█ ▒█▀▀▀█ ▒█▀▄▀█ ▒█▀▄▀█ ▒█▀▀▀█ ▒█▄░▒█ 　 ▒█▀▀▄ ▒█▀▀█ ░█▀▀█ ▒█░░▒█ ░█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀ ▒█▀▀▀█ 
+% ▒█░░░ ▒█░░▒█ ▒█▒█▒█ ▒█▒█▒█ ▒█░░▒█ ▒█▒█▒█ 　 ▒█░▒█ ▒█▄▄▀ ▒█▄▄█ ▒█▒█▒█ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ ░▀▀▀▄▄ 
+% ▒█▄▄█ ▒█▄▄▄█ ▒█░░▒█ ▒█░░▒█ ▒█▄▄▄█ ▒█░░▀█ 　 ▒█▄▄▀ ▒█░▒█ ▒█░▒█ ▒█▄▀▄█ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄ ▒█▄▄▄█
+
+% horizontal arrows of arbitrary size (lehgth specified through parameter)
+\newcommand{\RArrow}[1]{\parbox{#1}{\tikz{
+	\draw[->,line width=0.5pt](0,0)--(#1,0);
+}}}
+\newcommand{\LArrow}[1]{\parbox{#1}{\tikz{
+	\draw[<-,line width=0.5pt](0,0)--(#1,0);
+}}}
+
+% horizontal arrows with vertical line on the arrow side; parameters:
+% - mandatory horizontal line width
+% - optional any additional horizontal line styles (dotted, dashed etc)
+% - optional vertical line height (divided by 2), default 0.1
+% - optional arrow scale, default 1
+% - optional line width, default 0.5pt
+\NewDocumentCommand{\RArrowLine}{ m O{} O{0.1} O{1.6} O{0.5pt} }{\parbox{#1}{\tikz{
+	\draw[-{>[scale=#4,length=#4,width=#4]},line width=#5,#2](0,0)--(#1,0);
+	\draw[line width=#5](#1,-#3)--(#1,#3);
+}}}
+\NewDocumentCommand{\LArrowLine}{ m O{} O{0.1} O{1.6} O{0.5pt} }{\parbox{#1}{\tikz{
+	\draw[line width=#5](0,-#3)--(0,#3);
+	\draw[-{>[scale=#4,length=#4,width=#4]},line width=#5,#2](#1,0)--(0,0);
+}}}
+
+
+% ▒█▀▀█ ▒█░▒█ ▒█▀▀▀█ ▀▀█▀▀ ▒█▀▀▀█ ▒█▀▄▀█ ▀█▀ ▒█▀▀▀█ ░█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ ▒█▀▀▀█ 
+% ▒█░░░ ▒█░▒█ ░▀▀▀▄▄ ░▒█░░ ▒█░░▒█ ▒█▒█▒█ ▒█░ ░▄▄▄▀▀ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ ░▀▀▀▄▄ 
+% ▒█▄▄█ ░▀▄▄▀ ▒█▄▄▄█ ░▒█░░ ▒█▄▄▄█ ▒█░░▒█ ▄█▄ ▒█▄▄▄█ ▒█░▒█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
+
+\newcommand{\ExampleBackColour}{\ifdefined\PRINTED black!7 \else yellow!10 \fi}
+
+% define the style for lstlisting
+\lstdefinestyle{Example}{
+	basicstyle=\ttfamily\small,
+	columns=flexible,
+	autogobble=false,
+	aboveskip=1em,
+	belowskip=0.5em,	% smaller because paragraphs have some margin of their own
+	tabsize=4,
+	frameround=tttt,
+	frame=single,
+	framesep=2pt,
+	framextopmargin=1pt,
+	framexbottommargin=1pt,
+	rulesep=2pt,
+	rulecolor=\color{\ExampleBackColour},
+	rulesepcolor=\color{\ExampleBackColour},
+	backgroundcolor=\color{\ExampleBackColour},
+	numbers=left,
+	numberstyle=\tiny,
+	numbersep=1em,
+	moredelim=[is][\rmfamily\itshape]{|}{|},	% any text within |...| will be roman/italic
+}
+
+% set this style as the default for the whole document
+\lstset{style=Example}

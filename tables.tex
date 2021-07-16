@@ -1,0 +1,303 @@
+% ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+% ─██████████████─██████████████─██████──────────██████─██████████████─████████████████───██████████████─██████─────────
+% ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░██████████──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───██░░░░░░░░░░██─██░░██─────────
+% ─██░░██████████─██░░██████████─██░░░░░░░░░░██──██░░██─██░░██████████─██░░████████░░██───██░░██████░░██─██░░██─────────
+% ─██░░██─────────██░░██─────────██░░██████░░██──██░░██─██░░██─────────██░░██────██░░██───██░░██──██░░██─██░░██─────────
+% ─██░░██─────────██░░██████████─██░░██──██░░██──██░░██─██░░██████████─██░░████████░░██───██░░██████░░██─██░░██─────────
+% ─██░░██──██████─██░░░░░░░░░░██─██░░██──██░░██──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───██░░░░░░░░░░██─██░░██─────────
+% ─██░░██──██░░██─██░░██████████─██░░██──██░░██──██░░██─██░░██████████─██░░██████░░████───██░░██████░░██─██░░██─────────
+% ─██░░██──██░░██─██░░██─────────██░░██──██░░██████░░██─██░░██─────────██░░██──██░░██─────██░░██──██░░██─██░░██─────────
+% ─██░░██████░░██─██░░██████████─██░░██──██░░░░░░░░░░██─██░░██████████─██░░██──██░░██████─██░░██──██░░██─██░░██████████─
+% ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░██──██████████░░██─██░░░░░░░░░░██─██░░██──██░░░░░░██─██░░██──██░░██─██░░░░░░░░░░██─
+% ─██████████████─██████████████─██████──────────██████─██████████████─██████──██████████─██████──██████─██████████████─
+% ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+% ▒█▀▀█ ▒█▀▀▀█ ▒█▀▀█ ▀▀█▀▀ 　 ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀▀ ▀█▀ ▒█▄░▒█ ▀█▀ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 
+% ▒█▄▄█ ▒█░░▒█ ▒█▄▄▀ ░▒█░░ 　 ▒█░▒█ ▒█▀▀▀ ▒█▀▀▀ ▒█░ ▒█▒█▒█ ▒█░ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 
+% ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ░▒█░░ 　 ▒█▄▄▀ ▒█▄▄▄ ▒█░░░ ▄█▄ ▒█░░▀█ ▄█▄ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█
+
+% declares the table for describing individual bits of a Next port
+\environbodyname\NEXTPORTBODY
+\NewEnviron{NextPort}{
+	\begin{tabularx}{\textwidth}{cX}
+		Bit & Effect \\
+		\hline
+		\NEXTPORTBODY
+	\end{tabularx}
+}
+
+% ▒█▀▀█ ▀█▀ ▀▀█▀▀ 　 ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀█ ▀█▀ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 
+% ▒█▀▀▄ ▒█░ ░▒█░░ 　 ▒█░▒█ ▒█▀▀▀ ░▀▀▀▄▄ ▒█░░░ ▒█▄▄▀ ▒█░ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 
+% ▒█▄▄█ ▄█▄ ░▒█░░ 　 ▒█▄▄▀ ▒█▄▄▄ ▒█▄▄▄█ ▒█▄▄█ ▒█░▒█ ▄█▄ ▒█░░░ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█
+
+% the main macros to use from within `NextPort`, each one for single or a group of bits
+\newcommand{\PortBits}[1]{\tt #1\notet &}
+\newcommand{\PortDesc}[1]{#1 \\}
+
+% if certain bit description extends through multiple lines, use this macro to skip bits column
+\newcommand{\PortDescOnly}[1]{& \PortDesc{#1}}
+
+% ▒█▀▀█ ▀█▀ ▀▀█▀▀ 　 ▒█▀▀█ ▒█▀▀▀█ ▒█▀▄▀█ ▒█▀▀█ ▀█▀ ▒█▄░▒█ ░█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ ▒█▀▀▀█ 
+% ▒█▀▀▄ ▒█░ ░▒█░░ 　 ▒█░░░ ▒█░░▒█ ▒█▒█▒█ ▒█▀▀▄ ▒█░ ▒█▒█▒█ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ ░▀▀▀▄▄ 
+% ▒█▄▄█ ▄█▄ ░▒█░░ 　 ▒█▄▄█ ▒█▄▄▄█ ▒█░░▒█ ▒█▄▄█ ▄█▄ ▒█░░▀█ ▒█░▒█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
+
+% internal table for defining values for specific bit combinations (usually used within `PortDescOnly`)
+\environbodyname\PORTBITTABLEBODY
+\NewEnviron{PortBitConfig}{
+	{
+	\begin{tabularx}{\linewidth}{lX}
+		\PORTBITTABLEBODY
+	\end{tabularx}	
+	}
+}
+
+% declares each line within `PortBitConfig`
+\newcommand{\PortConfig}[2]{{\tt #1} & \PortDesc{#2}}
+
+
+% ▒█▀▀█ ▒█▀▀▀ ▒█▄░▒█ ▒█▀▀▀ ▒█▀▀█ ░█▀▀█ ▒█░░░ 　 ▒█▀▀█ ▀█▀ ▀▀█▀▀ 　 ▀▀█▀▀ ░█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀ ▒█▀▀▀█ 
+% ▒█░▄▄ ▒█▀▀▀ ▒█▒█▒█ ▒█▀▀▀ ▒█▄▄▀ ▒█▄▄█ ▒█░░░ 　 ▒█▀▀▄ ▒█░ ░▒█░░ 　 ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ ░▀▀▀▄▄ 
+% ▒█▄▄█ ▒█▄▄▄ ▒█░░▀█ ▒█▄▄▄ ▒█░▒█ ▒█░▒█ ▒█▄▄█ 　 ▒█▄▄█ ▄█▄ ░▒█░░ 　 ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄ ▒█▄▄▄█
+
+\newcommand{\BitHead}[1]{\footnotesize \textbf{#1}}
+\newcommand{\BitMono}[1]{\tt #1}
+\newcommand{\BitSmall}[1]{\small #1}
+\newcommand{\BitMulti}[2]{\multicolumn{#1}{c|}{#2}}
+\newcommand{\BitStartMulti}[2]{\multicolumn{#1}{|c|}{#2}}
+
+\environbodyname\BITTABLEBODY
+\NewEnviron{BitTableByte}{
+	\begin{tabular}{|c|c|c|c|c|c|c|c|}
+		\hline
+		\BitHead{7} &
+			\BitHead{6} &
+			\BitHead{5} &
+			\BitHead{4} &
+			\BitHead{3} &
+			\BitHead{2} &
+			\BitHead{1} &
+			\BitHead{0} \\
+
+		\hline
+
+		\BITTABLEBODY
+		
+		\hline
+	\end{tabular}
+}
+\NewEnviron{BitTableWord}{
+	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+		\hline
+
+		\multicolumn{8}{|c|}{High Byte} & \multicolumn{8}{c|}{Low Byte} \\
+
+		\hline
+
+		\BitHead{15} &
+			\BitHead{14} &
+			\BitHead{13} &
+			\BitHead{12} &
+			\BitHead{11} & 
+			\BitHead{10} &
+			\BitHead{9} &
+			\BitHead{8} &
+		\BitHead{7} &
+			\BitHead{6} &
+			\BitHead{5} &
+			\BitHead{4} &
+			\BitHead{3} &
+			\BitHead{2} &
+			\BitHead{1} &
+			\BitHead{0} \\
+
+		\hline
+		
+		\BITTABLEBODY
+		\hline
+	\end{tabular}
+}
+
+
+% ────────────────────────────────────────────────────────────────────────────────────
+% ─██████████─██████──────────██████─██████████████─██████████████─████████████████───
+% ─██░░░░░░██─██░░██████████──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
+% ─████░░████─██░░░░░░░░░░██──██░░██─██░░██████████─██████░░██████─██░░████████░░██───
+% ───██░░██───██░░██████░░██──██░░██─██░░██─────────────██░░██─────██░░██────██░░██───
+% ───██░░██───██░░██──██░░██──██░░██─██░░██████████─────██░░██─────██░░████████░░██───
+% ───██░░██───██░░██──██░░██──██░░██─██░░░░░░░░░░██─────██░░██─────██░░░░░░░░░░░░██───
+% ───██░░██───██░░██──██░░██──██░░██─██████████░░██─────██░░██─────██░░██████░░████───
+% ───██░░██───██░░██──██░░██████░░██─────────██░░██─────██░░██─────██░░██──██░░██─────
+% ─████░░████─██░░██──██░░░░░░░░░░██─██████████░░██─────██░░██─────██░░██──██░░██████─
+% ─██░░░░░░██─██░░██──██████████░░██─██░░░░░░░░░░██─────██░░██─────██░░██──██░░░░░░██─
+% ─██████████─██████──────────██████─██████████████─────██████─────██████──██████████─
+% ────────────────────────────────────────────────────────────────────────────────────
+
+
+% ▀█▀ ▒█▄░▒█ ▒█▀▀▀█ ▀▀█▀▀ ▒█▀▀█ ▒█░▒█ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 　 ▀▀█▀▀ ░█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀ ▒█▀▀▀█ 
+% ▒█░ ▒█▒█▒█ ░▀▀▀▄▄ ░▒█░░ ▒█▄▄▀ ▒█░▒█ ▒█░░░ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 　 ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ ░▀▀▀▄▄ 
+% ▄█▄ ▒█░░▀█ ▒█▄▄▄█ ░▒█░░ ▒█░▒█ ░▀▄▄▀ ▒█▄▄█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ 　 ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄ ▒█▄▄▄█
+
+% this is internal definition for instruction table that takes 2 arguments: first 2 column definitions and body. It should only be used by NewEnviron macros, not intended as general purpose macro by itself (it could be used, but then tables would not be defined with begin/end)
+\newcommand{\InstrTableBody}[3]{
+	{
+		\footnotesize
+		\setlength{\fboxsep}{0.25mm}
+		\setlength{\tabcolsep}{0.75mm}
+	
+		\begin{tabularx}{\textwidth}{#1ccccccp{1pt}C{2.5ex}C{3.8ex}C{3.8ex}ccp{1pt}ccp{1pt}l}
+			\hline
+		
+			% top header line
+			\notet & 
+			Symbolic &
+			\multicolumn{6}{c}{Flags} & &
+			\multicolumn{3}{c}{Opcode} &
+			& \\
+	
+			% bottom header line
+			Mnemonic & 
+			Operation &
+			SF & ZF & HF & PV & NF & CF & &
+			{\tt 76} & {\tt 543} & {\tt 210} & 
+			Hex & B & & 
+			Mc & Ts & &
+			Comments \\
+	
+			\hline
+	
+			#2
+
+			#3
+
+		\end{tabularx}
+	}
+}
+
+% similar to `InstrTableBody` except that it adds bottom line
+\newcommand{\InstrTableBodyBottomLine}[2]{
+	\InstrTableBody{#1}{#2}{
+		\\ % we need this newline in here otherwise \hline below will end in error; it's because hline can only be inserted after \\ - even though \\ will be present by the time table is generated with instruction macros, compiler requires it at this point as well. Consequently, the last instruction in table should use lastinstruction macro to compensate - so far I wasn't able to get better solution (interestingly, this similar approach works for notestable ¯\_(ツ)_/¯)
+		
+		\hline
+	}
+}
+
+% concrete environments for instruction tables (uses above 2 macros and unifies parameters)
+
+% the most generic of the tables, this should suffice for most tables, mnemonic and symbolic operation columns are same width
+\environbodyname\INSTRTABLEBODY
+\NewEnviron{instrtable}{\InstrTableBodyBottomLine{p{8em}X}{\INSTRTABLEBODY}}
+
+% this table doesn't use bottom line, it's mainly here for alphabetical tables use. Note it also uses less space for instruction - we don't include undocumented instructions at the moment and they do require additional space for mnemonic from `instrtable`
+\NewEnviron{instrtablesimple}{\InstrTableBody{p{7em}X}{\INSTRTABLEBODY}{}}
+
+
+% ▀█▀ ▒█▄░▒█ ▒█▀▀▀█ ▀▀█▀▀ ▒█▀▀█ ▒█░▒█ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ ▒█▀▀▀█ 
+% ▒█░ ▒█▒█▒█ ░▀▀▀▄▄ ░▒█░░ ▒█▄▄▀ ▒█░▒█ ▒█░░░ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ ░▀▀▀▄▄ 
+% ▄█▄ ▒█░░▀█ ▒█▄▄▄█ ░▒█░░ ▒█░▒█ ░▀▄▄▀ ▒█▄▄█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
+
+% defines instruction environment that embeds each instruction. Instruction mnemonic is taken as parameter, mainly to show it when environment is collapsed in editor. Note this needs to use \xdef and be an ugly mess of oneliner otherwise mnemonic will be right aligned...
+\environbodyname\INSTRBODY
+\NewEnviron{instruction}[1]{\xdef\instructionbody{\unexpanded{{\tt #1}\instrt&}\unexpanded\expandafter{\INSTRBODY}\unexpanded{\instrb\\}}
+\aftergroup\instructionbody
+}
+
+% same as `instruction` except this should be used for last instruction in `instrtable` so that spacing below instruction and above bottom line is smaller
+\NewEnviron{lastinstruction}[1]{\xdef\instructionbody{\unexpanded{{\tt #1}\instrt&}\unexpanded\expandafter{\INSTRBODY}\unexpanded{\instrb}}
+\aftergroup\instructionbody
+}
+
+
+% ▀█▀ ▒█▄░▒█ ▒█▀▀▀█ ▀▀█▀▀ ▒█▀▀█ ▒█░▒█ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 　 ▒█▀▀█ ░█▀▀█ ▒█▀▀█ ▀▀█▀▀ ▒█▀▀▀█ 
+% ▒█░ ▒█▒█▒█ ░▀▀▀▄▄ ░▒█░░ ▒█▄▄▀ ▒█░▒█ ▒█░░░ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 　 ▒█▄▄█ ▒█▄▄█ ▒█▄▄▀ ░▒█░░ ░▀▀▀▄▄ 
+% ▄█▄ ▒█░░▀█ ▒█▄▄▄█ ░▒█░░ ▒█░▒█ ░▀▄▄▀ ▒█▄▄█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ 　 ▒█░░░ ▒█░▒█ ▒█░▒█ ░▒█░░ ▒█▄▄▄█
+
+% symbolic operation (for the moment nothing special, but we may change it in the future and it will automatically be applied for all items); variant with S with add 3 dots after argument and one with P will add them in front; for multiline expressions
+\newcommand{\Symbol}[1]{\scriptsize {\tt #1} &}
+\newcommand{\SymbolS}[1]{\scriptsize {\tt #1}\ddd &}
+\newcommand{\SymbolP}[1]{\scriptsize \ddd{\tt #1} &}
+
+% flags section + couple shorthands for symbolic flags; note we only really need 6 parameters in this section, but we do need all 7 later on, hence we set first one optional and not use it
+\newcommand{\Flags}[7][]{{\tt #2} & {\tt #3} & {\tt #4} & {\tt #5} & {\tt #6} & {\tt #7} & &}
+
+% bitwise opcodes section
+\newcommand{\OpCode}[3]{{\tt #1} & {\tt #2} & {\tt #3} &}
+
+% bitwise opcode part with template; top one should be used as much as possible, it will automatically chose the type based on how many letters template has (2 letters will use as is but underline it, 1 letter will assume it's for all 3 bits and will add arrows in front and end)
+\newcommand{\OCT}[1]{\StrLen{#1}[\ParLen]\IfEq{\ParLen}{2}{\underline{#1}}{\LArrowLine{1ex}#1\RArrowLine{1ex}}}
+% `OCTS` is exactly the same as `OCT` except it will always treat template as single letter, even if 2 letters are used - this is here to nicely wrap s' type of symbols (S=small arrows)
+\newcommand{\OCTS}[1]{\LArrowLine{0.8ex}#1\hspace*{-0.2ex}\raisebox{0.2ex}{\tiny'}\hspace*{-0.2ex}\RArrowLine{0.7ex}}
+
+% use `OpRange` and `OpRangeSmall` instead of `OpCode` when you want to have 8 bit "range" instead (for 8-bit values for example). The difference is that `OpRangeSmall` assumes parameter is multiple letters while `OpRange` works best for single letters (small = because arrows are smaller)
+\newcommand{\OpRangeTemplate}[2]{\multicolumn{3}{l}{\hspace*{0.25ex}\LArrowLine{#1}[densely dashed][0.16][1.9] {\tt #2} \RArrowLine{#1}[densely dashed][0.16][1.9]} &}
+\newcommand{\OpRange}[1]{\OpRangeTemplate{1.85em}{#1}}
+\newcommand{\OpRangeSmall}[1]{\OpRangeTemplate{1.3em}{#1}}
+
+% hex opcode and number of bytes
+\newcommand{\HexBytes}[1]{\IfEq{#1}{}{}{{\tt #1}{\tiny B}}}
+\newcommand{\Hex}[2]{{\tt #1} & \HexBytes{#2} & &}
+
+% machine cycles and T states
+\newcommand{\Cycles}[2]{{\tt #1} & {\tt #2} & &}
+
+% comment in the right column
+\newcommand{\Comment}[1]{\scriptsize #1}
+
+% skips all columns from first up until symbol; for use when extending instruction into multiple lines and we want to have symbolic operation in next line as well
+\newcommand{\SkipToSymbol}{\\ &}
+
+% skips all columns from `Symbol` up until `OpCode` (or `OpRange`); useful when we don't have anything to write in between, but we do want to have opcode
+\newcommand{\FromSymbolToOpCode}{& \multicolumn{6}{l}{} &}
+
+% skips all columns from first up until the opcodes part. difference between the 2 is insertion of new line before; use `StartWithOpCode` variant for empty line, the other inside instruction block
+% note that compiler is not happy with `StartWithOpCode` without using something in front of \multiline hence given solution
+\newcommand{\SkipToOpCode}{\\ \multicolumn{9}{l}{} &}
+\newcommand{\StartWithOpCode}{& \multicolumn{8}{l}{} &}
+
+% adds an empty line with optional comment in the last column
+% note again that we need to use some char before \multicolmn to keep compiler happy
+\newcommand{\Empty}[1]{& \multicolumn{16}{l}{} & \Comment{#1} \\}
+
+% similar to `Empty` except the gap is smaller - for creating visual separation between groups of instructions; note: this one doesn't support adding a comment (which doesn't make sense here as there's not enough space for text in this line)
+\newcommand{\EmptySeparator}{\\[-6px]}
+
+% writes a table break with vertical spacing so table starts at the same vertical postiion as the one on previous page
+\newcommand{\InstrTableContinue}{
+	\vspace*{-2.5ex}
+	{
+		\scriptsize
+		(continued on next page)
+	}
+}
+
+% ▒█▄░▒█ ▒█▀▀▀█ ▀▀█▀▀ ▒█▀▀▀ ▒█▀▀▀█ 　 ▀▀█▀▀ ░█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀ ▒█▀▀▀█ 
+% ▒█▒█▒█ ▒█░░▒█ ░▒█░░ ▒█▀▀▀ ░▀▀▀▄▄ 　 ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ ░▀▀▀▄▄ 
+% ▒█░░▀█ ▒█▄▄▄█ ░▒█░░ ▒█▄▄▄ ▒█▄▄▄█ 　 ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄ ▒█▄▄▄█
+
+% defines table for notes; unfortunately I wasn't able to add notes to the same table created using above macros, so we need to use separate one. 
+% Note: you should embed both tables into minipage to keep them together; while we could create macro for that too, we'd lose ability to collapse in editor
+\environbodyname\NOTEBODY
+\NewEnviron{notestable}{
+	{
+		\scriptsize
+		\setlength{\fboxsep}{1pt}	% keep fboxes tight to keep notes vertically short
+		\renewcommand{\arraystretch}{1}
+		
+		\begin{tabularx}{\textwidth}{lX}
+			Notes:
+
+			\NOTEBODY
+
+			\hline
+
+		\end{tabularx}
+	}
+}
+
+% note item
+\newcommand{\NoteItem}[1]{& #1 \\}
+
+% add this above `NoteItem` when there's only single item in the table; in such case compiler creates almost 1 item empty gap on top for some reason... I couldn't find better solution unfortunately and couldn't figure out why this happens
+\newcommand{\NoteTableSingleItemSpaceCorrection}{
+	\vspace*{-1ex}	% single notes table results in some vertical spacing, so we need to manually move it upwards a bit...
+}
