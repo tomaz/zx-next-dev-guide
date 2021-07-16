@@ -199,7 +199,7 @@ github repository also includes companion source code. Sample projects were crea
 	\footnotesize
 
 	\begin{description}[topsep=1pt,itemsep=1pt,labelindent=0pt,leftmargin=0pt]		
-		\item[Note:] you need to have CSpect launched before you can run the samples. I created couple tasks\footnotemark~for it: open VS Code commands panel ({\tt Ctrl+Shift+P} shortcut on my installation) and select \textit{Tasks: Run Task} option, then select \textit{Launch CSpect} from list. This is only needed once, afterwards use \textit{Run \textgreater ~Start Debugging} from main menu to compile and launch the program.
+		\item[Note:] you need to have CSpect launched before you can run the samples. I created couple tasks\footnotemark~for it: open VS Code command palette ({\tt Ctrl+Shift+P} shortcut on my installation) and select \textit{Tasks: Run Task} option, then select \textit{Launch CSpect} from list. This is only needed once, afterwards use \textit{Run \textgreater ~Start Debugging} from main menu to compile and launch the program.
 
 		\item[Note:] default DeZog port of 11000 doesn't work on my computer, so I changed it to 13000. This needs to be managed in 2 places: {\tt .vscode/launch.json} and on plugin side. Companion code repository already includes the setup needed, including {\tt DeZogPlugin.dll.config} file, so it should work out of the box.
 	
@@ -208,7 +208,7 @@ github repository also includes companion source code. Sample projects were crea
 }
 
 \footnotetext{
-	Unfortunately with latest VS Code versions, workspace tasks stopped working. However there is a workaround: open {\tt .vscode/tasks.json} file from any of the sample projects, scroll down a little and copy {\tt Launch CSpect} and {\tt Launch ZEsarUX} tasks to user tasks. You can do this all from within VS Code. To open user tasks file, open command pannel and start typing {\tt open user tasks}, then select the option from drop down menu.
+	Unfortunately with latest VS Code versions, workspace tasks stopped working. However there is a workaround: open {\tt .vscode/tasks.json} file from any of the sample projects, scroll down a little and copy {\tt Launch CSpect} and {\tt Launch ZEsarUX} tasks to user tasks. You can do this all from within VS Code. To open user tasks file, open command palette and start typing {\tt open user tasks}, then select the option from drop down menu.
 }
 
 
@@ -1930,23 +1930,19 @@ Pixel memory is not linear, but is instead divided to fill character rows line b
 	\begin{tabularx}{0.9\linewidth}{lccXlccXlcccX}
 		\addtolength{\tabcolsep}{-2pt}
 		\PixelTitle & & \PixelTitle & & \PixelTitle & & \\
-		\PixelData{4000}{0}{0}{0} & & \PixelData{4100}{1}{1}{0} & & \PixelData{4200}{2}{2}{0} & & \multirow{8}{*}{\ddd} \\
-		\PixelData{4020}{8}{0}{1} & & \PixelData{4120}{9}{1}{1} & & \PixelData{4220}{10}{2}{1} & & \\
-		\PixelData{4040}{16}{0}{2} & & \PixelData{4140}{17}{1}{2} & & \PixelData{4240}{18}{2}{2} & & \\
-		\PixelData{4060}{24}{0}{3} & & \PixelData{4160}{25}{1}{3} & & \PixelData{4260}{26}{2}{3} & & \\
-		\PixelData{4080}{32}{0}{4} & & \PixelData{4180}{32}{1}{4} & & \PixelData{4280}{33}{2}{4} & & \\
-		\PixelData{40A0}{40}{0}{5} & & \PixelData{41A0}{41}{1}{5} & & \PixelData{42A0}{42}{2}{5} & & \\
-		\PixelData{40C0}{48}{0}{6} & & \PixelData{41C0}{49}{1}{6} & & \PixelData{42C0}{50}{2}{6} & & \\
-		\PixelData{40E0}{56}{0}{7} & & \PixelData{41E0}{57}{1}{7} & & \PixelData{42E0}{58}{2}{7} & & \\[1ex]
-		\multicolumn{4}{l}{\textbf{Ln.} Screen line (0-255)} & \multicolumn{9}{l}{\textbf{Ch.} Character {\tt <row>}/{\tt <line>} (0-31/0-7)} \\
+		\PixelData{4000}{0}{0}{0} & & \PixelData{4100}{1}{0}{1} & & \PixelData{4200}{2}{0}{2} & & \multirow{8}{*}{\ddd} \\
+		\PixelData{4020}{8}{1}{0} & & \PixelData{4120}{9}{1}{1} & & \PixelData{4220}{10}{1}{2} & & \\
+		\PixelData{4040}{16}{2}{0} & & \PixelData{4140}{17}{2}{1} & & \PixelData{4240}{18}{2}{2} & & \\
+		\PixelData{4060}{24}{3}{0} & & \PixelData{4160}{25}{3}{1} & & \PixelData{4260}{26}{3}{2} & & \\
+		\PixelData{4080}{32}{4}{0} & & \PixelData{4180}{32}{4}{1} & & \PixelData{4280}{33}{4}{2} & & \\
+		\PixelData{40A0}{40}{5}{0} & & \PixelData{41A0}{41}{5}{1} & & \PixelData{42A0}{42}{5}{2} & & \\
+		\PixelData{40C0}{48}{6}{0} & & \PixelData{41C0}{49}{6}{1} & & \PixelData{42C0}{50}{6}{2} & & \\
+		\PixelData{40E0}{56}{7}{0} & & \PixelData{41E0}{57}{7}{1} & & \PixelData{42E0}{58}{7}{2} & & \\[1ex]
+		\multicolumn{4}{l}{\textbf{Ln.} Screen line (0-191)} & \multicolumn{9}{l}{\textbf{Ch.} Character {\tt <row>}/{\tt <line>} (0-23/0-7)} \\
 	\end{tabularx}
 }
 
-This may lead you to believe the formula for calculating memory location address for the first pixel in a particular screen line could be:
-
-{\tt memory(Y) = \$4000 + (Y<<3)$\times$\$20 - (Y>>3)$\times$\$7E0}
-
-It seems to work nicely, but this is not the end of peculiarities of Spectrum ULA mode; the formula yields \MemAddr{47E0} for screen line 63, however then wraps back to \MemAddr{4100} for line 64 which is clearly not correct. Reason is, ULA mode divides screen into 3 banks. Each bank covers 8 character rows, so 8*8*32 or 2048 bytes:
+But this is not the end of peculiarities of Spectrum ULA mode. If you attempt to fill the screen memory byte by byte, you'll realize top third of the screen fills in first, then middle third and lastly bottom third. Reason is, ULA mode divides screen into 3 banks. Each bank covers 8 character rows, so 8*8*32 or 2048 bytes:
 
 \begin{tabular}{ccc}
 	Memory Range & Screen Lines & Char. Rows \\
@@ -1958,10 +1954,10 @@ It seems to work nicely, but this is not the end of peculiarities of Spectrum UL
 		{\tt ~9} - {\tt 16} \\
 	\MemAddr{5000} - \MemAddr{57FF} & 
 		{\tt 128} - {\tt 191} & 
-		{\tt 17} - {\tt 24} \\
+		{\tt 17} - {\tt 23} \\
 \end{tabular}
 
-In fact, to calculate the address of memory for any given (x,y) coordinates, we'd need to prepare 16-bit value like this:
+In fact, to calculate the address of memory for any given (x,y) coordinate, we'd need to prepare 16-bit value like this:
 
 \begin{BitTableWord}
 	\BitMono{0} &
