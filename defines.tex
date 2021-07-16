@@ -104,6 +104,16 @@
 \newcommand{\FPV}{VF}			% PV=Overflow
 \newcommand{\FPP}{PF}			% PV=Parity
 
+% PortLink is short link to port with description and address, suitable for inline use, while PortReference is longer reference with chapter title and section number mostly used for register lists when referring to previously described register
+\newcommand{\PortLink}[2]{{\small \textbf{#1} {\tt \$#2}}}
+\newcommand{\PortReference}[2]{
+	\vspace*{-2ex}
+	See description under #2 chapter, section \ref{#1}.
+}
+
+% other commonly used definitions
+\newcommand{\MemAddr}[1]{{\tt \$#1}}
+
 
 % ▒█▀▀█ ▒█▀▀▀█ ▒█▀▄▀█ ▒█▀▄▀█ ▒█▀▀▀█ ▒█▄░▒█ 　 ▒█▀▀▄ ▒█▀▀█ ░█▀▀█ ▒█░░▒█ ░█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀ ▒█▀▀▀█ 
 % ▒█░░░ ▒█░░▒█ ▒█▒█▒█ ▒█▒█▒█ ▒█░░▒█ ▒█▒█▒█ 　 ▒█░▒█ ▒█▄▄▀ ▒█▄▄█ ▒█▒█▒█ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ ░▀▀▀▄▄ 

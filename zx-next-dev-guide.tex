@@ -525,9 +525,9 @@ This section might be relevant even if you don't do anything with hardware; it m
 \subsection{Power on Defaults}
 \label{pon}
 
-Matt\footnote{\email{redflame}{xmission}{com}} has done some excellent research on this. He found that AF and SP are always set to {\tt \$FFFF} after a reset, and all other registers are undefined (different depending on how long the CPU has been powered off, different for different Z80 chips). Of course the PC should be set to 0 after a reset, and so should the IFF1 and IFF2 flags (otherwise strange things could happen). Also since the Z80 is 8080 compatible, interrupt mode is probably 0.
+Matt\footnote{\email{redflame}{xmission}{com}} has done some excellent research on this. He found that AF and SP are always set to \MemAddr{FFFF} after a reset, and all other registers are undefined (different depending on how long the CPU has been powered off, different for different Z80 chips). Of course the PC should be set to 0 after a reset, and so should the IFF1 and IFF2 flags (otherwise strange things could happen). Also since the Z80 is 8080 compatible, interrupt mode is probably 0.
 
-Probably the best way to simulate this in an emulator is set PC, IFF1, IFF2, IM to 0 and set all other registers to {\tt \$FFFF}.
+Probably the best way to simulate this in an emulator is set PC, IFF1, IFF2, IM to 0 and set all other registers to \MemAddr{FFFF}.
 
 
 \section{Undocumented Opcodes}
@@ -1111,7 +1111,7 @@ Both types of interrupts increase the R register by one, when accepted.
 
 When a NMI is accepted, IFF1 is reset. At the end of the routine, IFF1 must be restored (so the running program is not affected). That's why IFF2 is there; to keep a copy of IFF1.
 
-An NMI is accepted when the NMI pin on the Z80 is made low (edge-triggered). The Z80 responds to the change of the line from +5 to 0 - so the interrupt line doesn't have a state, it's just a pulse. When this happens, a call is done to address {\tt \$0066} and IFF1 is reset so the routine isn't bothered by maskable interrupts. The routine should end with an {\tt RETN} (RETurn from Nmi) which is just a usual RET, but also copies IFF2 to IFF1, so the IFFs are the same as before the interrupt.
+An NMI is accepted when the NMI pin on the Z80 is made low (edge-triggered). The Z80 responds to the change of the line from +5 to 0 - so the interrupt line doesn't have a state, it's just a pulse. When this happens, a call is done to address \MemAddr{0066} and IFF1 is reset so the routine isn't bothered by maskable interrupts. The routine should end with an {\tt RETN} (RETurn from Nmi) which is just a usual RET, but also copies IFF2 to IFF1, so the IFFs are the same as before the interrupt.
 
 You can check whether interrupts were disabled or not during an NMI by using the {\tt LD A,I} or {\tt LD A,R} instruction. These instructions copy IFF2 to the PV flag.
 
@@ -1247,7 +1247,7 @@ The R register is increased at every first machine cycle (M1). Bit 7 of the regi
 
 Instructions without a prefix increase R by one. Instructions with an ED, CB, DD, FD prefix, increase R by two, and so do the DDCBxxxx and FDCBxxxx instructions (weird enough). Just a stray DD or FD increases the R by one. {\tt LD A,R} and {\tt LD R,A} access the R register after it is increased by the instruction itself. 
 
-Remember that block instructions simply decrement the PC with two, so the instructions are re-executed. So LDIR increases R by BC $\times$ 2 (note that in the case of BC = 0, R is increased by {\tt \$10000} $\times$ 2, effectively 0).
+Remember that block instructions simply decrement the PC with two, so the instructions are re-executed. So LDIR increases R by BC $\times$ 2 (note that in the case of BC = 0, R is increased by \MemAddr{10000} $\times$ 2, effectively 0).
 
 Accepting a maskable or non-maskable interrupt increases the R by one.
 
@@ -1319,12 +1319,6 @@ Note: In zilog's own z80cpu\_um.pdf document, there are a lot of errors, some ar
 % █░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░██░░░░░░░░█████░░░░░░█████
 % █████████████████████████████████████████████████████████████████████████
 
-% PortLink is short link to port with description and address, suitable for inline use, while PortReference is longer reference with chapter title and section number mostly used for register lists when referring to previously described register
-\newcommand{\PortLink}[2]{{\small \textbf{#1} {\tt \$#2}}}
-\newcommand{\PortReference}[2]{
-	\vspace*{-2ex}
-	See description under #2 chapter, section \ref{#1}.
-}
 
 With modern I/O ports, increased CPU speeds, more memory, better graphics, hardware sprites and tiles, to mention just the most obvious, ZX Spectrum Next is exciting platform for retro programmer.
 
@@ -1584,7 +1578,8 @@ Specific features of the Next are controlled via these register numbers, accesse
 % ─██████──────────██████─██████████████─██████──────────██████─
 % ──────────────────────────────────────────────────────────────
 
-\newcommand{\colnoline}[1]{\multicolumn{1}{c}{#1}}
+\newcommand{\MemEmpty}{\multicolumn{1}{c}{}}
+\newcommand{\MemArrow}[1]{\multicolumn{1}{c}{\IfEq{#1}{<}{\LArrowLine{1em}}{\RArrowLine{1em}}}}
 
 ZX Spectrum Next comes with 1024K (expanded with 2048K) of memory. On the other hand, it's an 8-bit computer with 16-bit address bus. This means it can access up to 2\textsuperscript{16} = 65.536 bytes or 64K of memory at any given time. In order to get access to the whole available memory, a technique called ``paging'' is used. 
 
@@ -1608,23 +1603,23 @@ Next inherits 128K and +3 paging modes that divide 64K addressable memory into 1
 			\multicolumn{3}{|c}{16K} &
 			\multicolumn{3}{|c|}{16K} \\
 		\hline
-		\colnoline{$\leftarrow$}\notet & \colnoline{\tt \$0000} & \colnoline{} &
-			\colnoline{$\leftarrow$} & \colnoline{\tt \$4000} & \colnoline{} &
-			\colnoline{$\leftarrow$} & \colnoline{\tt \$8000} & \colnoline{} &
-			\colnoline{$\leftarrow$} & \colnoline{\tt \$C000} & \colnoline{} \\
-		\colnoline{} & \colnoline{\tt \$3FFF} & \colnoline{$\rightarrow$} &
-			\colnoline{} & \colnoline{\tt \$7FFF} & \colnoline{$\rightarrow$} &
-			\colnoline{} & \colnoline{\tt \$BFFF} & \colnoline{$\rightarrow$} &
-			\colnoline{} & \colnoline{\tt \$FFFF} & \colnoline{$\rightarrow$} \\
+		\MemArrow{<}\notet & \MemAddr{0000} & \MemEmpty &
+			\MemArrow{<} & \MemAddr{4000} & \MemEmpty &
+			\MemArrow{<} & \MemAddr{8000} & \MemEmpty &
+			\MemArrow{<} & \MemAddr{C000} & \MemEmpty \\
+		\MemEmpty & \MemAddr{3FFF} & \MemArrow{>} &
+			\MemEmpty & \MemAddr{7FFF} & \MemArrow{>} &
+			\MemEmpty & \MemAddr{BFFF} & \MemArrow{>} &
+			\MemEmpty & \MemAddr{FFFF} & \MemArrow{>} \\
 	\end{tabular}
 \endgroup
 
 \subsubsection{128K Mode}
 
-Allows selecting 16K ROM to be visible in the bottom 16K slot (memory addresses {\tt \$0000}-{\tt \$3FFF}) from 2 possible banks and 16K RAM to be visible in top 16K slot (memory addresses {\tt \$C000}-{\tt \$FFFF}) from 8 possible banks. In other words:
+Allows selecting 16K ROM to be visible in the bottom 16K slot (memory addresses \MemAddr{0000}-\MemAddr{3FFF}) from 2 possible banks and 16K RAM to be visible in top 16K slot (memory addresses \MemAddr{C000}-\MemAddr{FFFF}) from 8 possible banks. In other words:
 
 \begin{tabular}{ccccl}
-	{\tt \$0000} & {\tt \$4000} & {\tt \$8000} & {\tt \$C000} & \\
+	\MemAddr{0000} & \MemAddr{4000} & \MemAddr{8000} & \MemAddr{C000} & \\
 	\hline
 	$\uparrow$ & & & $\uparrow$ & \\
 	\multicolumn{2}{l}{\tt ROM 0-1} & & \multicolumn{2}{l}{{\tt BANK 0-7} on 128K} \\
@@ -1638,9 +1633,9 @@ Registers involved are (see section \ref{zx_next_mappingregister} for details):
 	\item \PortLink{Next Memory Bank Select}{DFFD}
 \end{itemize}
 
-Together 4 bits from {\tt \$DFFD} and 3 from {\tt \$7FFD} form 7 bit bank number.
+Together 4 bits from \MemAddr{DFFD} and 3 from \MemAddr{7FFD} form 7 bit bank number.
 
-If you are using the standard interrupt handler or OS routines, then any time you write to Memory Paging Control {\tt \$7FFD} you should also store the value at {\tt \$5B5C}.
+If you are using the standard interrupt handler or OS routines, then any time you write to Memory Paging Control \MemAddr{7FFD} you should also store the value at \MemAddr{5B5C}.
 
 Example routine for selecting bank on 128K Spectrum (supports standard interrupt handler and OS routines). Routine takes bank number 0-7 as argument in {\tt B}:
 
@@ -1667,7 +1662,7 @@ To call the routine use:
 	CALL switchBank
 \end{lstlisting}
 
-Note: while above routine could be extended to support switching all 127 banks on ZX Spectrum Next by writing top 4 bits to {\tt \$DFFD}, it's much simpler to use Next specific bank switching support as described in section \ref{zx_next_bank_mmu_mode}.
+Note: while above routine could be extended to support switching all 127 banks on ZX Spectrum Next by writing top 4 bits to \MemAddr{DFFD}, it's much simpler to use Next specific MMU bank switching, as described in section \ref{zx_next_bank_mmu_mode}.
 
 \pagebreak
 \subsubsection{+3 ``AllRam'' Mode}
@@ -1675,7 +1670,7 @@ Note: while above routine could be extended to support switching all 127 banks o
 +3 mode allows selecting all 16K slots of 64K bank from limited selection of arrangements. In normal mode, everything works as in 128K mode, except that we can select from 4 instead of just 2 ROMs:
 
 \begin{tabular}{ccccl}
-	{\tt \$0000} & {\tt \$4000} & {\tt \$8000} & {\tt \$C000} & \\
+	\MemAddr{0000} & \MemAddr{4000} & \MemAddr{8000} & \MemAddr{C000} & \\
 	\hline
 	\multirow{2}{*}{$\Big\uparrow$} & & & $\uparrow$ & \\
 	& & & {\tt BANK 0-7} \\
@@ -1686,16 +1681,16 @@ Note: while above routine could be extended to support switching all 127 banks o
 			{\tt 10} = & +3 DOS \\
 			{\tt 11} = & 48K BASIC \\
 			\multirow{2}{*}{$\Big\downarrow$}$\downarrow$ & \\
-			\multicolumn{2}{l}{~~Lo bit = bit 2 from {\tt \$1DDF}} \\
-			\multicolumn{2}{l}{Hi bit = bit 4 from {\tt \$7FFD}} \\
+			\multicolumn{2}{l}{~~Lo bit = bit 2 from \MemAddr{1DDF}} \\
+			\multicolumn{2}{l}{Hi bit = bit 4 from \MemAddr{7FFD}} \\
 		\end{tabular}
 	} \\
 \end{tabular}
 
-However, this changes when special mode is enabled by setting bit 0 of {\tt \$1DDF}. In special mode all 4 banks can be changed in the following arrangement:
+However, this changes when special mode is enabled by setting bit 0 of \MemAddr{1DDF}. In special mode all 4 banks can be changed in the following arrangement:
 
 \begin{tabular}{lcccc}
-	& {\tt \$0000} & {\tt \$4000} & {\tt \$8000} & {\tt \$C000} \\
+	& \MemAddr{0000} & \MemAddr{4000} & \MemAddr{8000} & \MemAddr{C000} \\
 	\hline
 	& $\uparrow$ & $\uparrow$ & $\uparrow$ & $\uparrow$\\
 	{\tt 00} = & {\tt BANK 0} & {\tt BANK 1} & {\tt BANK 2} & {\tt BANK 3} \\
@@ -1703,8 +1698,8 @@ However, this changes when special mode is enabled by setting bit 0 of {\tt \$1D
 	{\tt 10} = & {\tt BANK 4} & {\tt BANK 5} & {\tt BANK 6} & {\tt BANK 3} \\
 	{\tt 11} = & {\tt BANK 4} & {\tt BANK 7} & {\tt BANK 6} & {\tt BANK 3} \\
 	\multirow{2}{*}{$\Big\downarrow$}$\downarrow$ & & & & \\
-	\multicolumn{5}{l}{~~Lo bit = bit 1 from {\tt \$1DDF}} \\
-	\multicolumn{5}{l}{Hi bit = bit 2 from {\tt \$1DDF}} \\
+	\multicolumn{5}{l}{~~Lo bit = bit 1 from \MemAddr{1DDF}} \\
+	\multicolumn{5}{l}{Hi bit = bit 2 from \MemAddr{1DDF}} \\
 \end{tabular}
 
 The following registers control paging in this mode (see section \ref{zx_next_mappingregister} for details):
@@ -1715,7 +1710,7 @@ The following registers control paging in this mode (see section \ref{zx_next_ma
 	\item \PortLink{Next Memory Bank Select}{DFFD}
 \end{itemize}
 
-Any time you write to \PortLink{Plus 3 Memory Paging Control}{1FFD} you should also store the same value at {\tt \$5B67}.
+Any time you write to \PortLink{Plus 3 Memory Paging Control}{1FFD} you should also store the same value at \MemAddr{5B67}.
 
 \pagebreak
 \subsection{MMU-based Mode}
@@ -1736,22 +1731,22 @@ Next unique \textbf{MMU-based Mode} is much more flexible in that it allows mapp
 			\multicolumn{4}{|c}{MMU6} & 
 			\multicolumn{4}{|c|}{MMU7} \\
 		\hline
-		\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$0000} & \colnoline{} &
-			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$2000} & \colnoline{} &
-			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$4000} & \colnoline{} &
-			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$6000} & \colnoline{} &
-			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$8000} & \colnoline{} &
-			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$A000} & \colnoline{} &
-			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$C000} & \colnoline{} &
-			\colnoline{$\leftarrow$}\notet & \multicolumn{2}{c}{\tt \$E000} & \colnoline{} \\
-		\colnoline{} & \multicolumn{2}{c}{\tt \$1FFF} & \colnoline{$\rightarrow$} &
-			\colnoline{} & \multicolumn{2}{c}{\tt \$3FFF} & \colnoline{$\rightarrow$} &
-			\colnoline{} & \multicolumn{2}{c}{\tt \$5FFF} & \colnoline{$\rightarrow$} &
-			\colnoline{} & \multicolumn{2}{c}{\tt \$7FFF} & \colnoline{$\rightarrow$} &
-			\colnoline{} & \multicolumn{2}{c}{\tt \$9FFF} & \colnoline{$\rightarrow$} &
-			\colnoline{} & \multicolumn{2}{c}{\tt \$BFFF} & \colnoline{$\rightarrow$} &
-			\colnoline{} & \multicolumn{2}{c}{\tt \$DFFF} & \colnoline{$\rightarrow$} &
-			\colnoline{} & \multicolumn{2}{c}{\tt \$FFFF} & \colnoline{$\rightarrow$} \\
+		\MemArrow{<}\notet & \multicolumn{2}{c}{\MemAddr{0000}} & \MemEmpty &
+			\MemArrow{<}\notet & \multicolumn{2}{c}{\MemAddr{2000}} & \MemEmpty &
+			\MemArrow{<}\notet & \multicolumn{2}{c}{\MemAddr{4000}} & \MemEmpty &
+			\MemArrow{<}\notet & \multicolumn{2}{c}{\MemAddr{6000}} & \MemEmpty &
+			\MemArrow{<}\notet & \multicolumn{2}{c}{\MemAddr{8000}} & \MemEmpty &
+			\MemArrow{<}\notet & \multicolumn{2}{c}{\MemAddr{A000}} & \MemEmpty &
+			\MemArrow{<}\notet & \multicolumn{2}{c}{\MemAddr{C000}} & \MemEmpty &
+			\MemArrow{<}\notet & \multicolumn{2}{c}{\MemAddr{E000}} & \MemEmpty \\
+		\MemEmpty & \multicolumn{2}{c}{\MemAddr{1FFF}} & \MemArrow{>} &
+			\MemEmpty & \multicolumn{2}{c}{\MemAddr{3FFF}} & \MemArrow{>} &
+			\MemEmpty & \multicolumn{2}{c}{\MemAddr{5FFF}} & \MemArrow{>} &
+			\MemEmpty & \multicolumn{2}{c}{\MemAddr{7FFF}} & \MemArrow{>} &
+			\MemEmpty & \multicolumn{2}{c}{\MemAddr{9FFF}} & \MemArrow{>} &
+			\MemEmpty & \multicolumn{2}{c}{\MemAddr{BFFF}} & \MemArrow{>} &
+			\MemEmpty & \multicolumn{2}{c}{\MemAddr{DFFF}} & \MemArrow{>} &
+			\MemEmpty & \multicolumn{2}{c}{\MemAddr{FFFF}} & \MemArrow{>} \\
 	\end{tabular}
 \endgroup
 
@@ -1768,7 +1763,7 @@ MMU selection is set via Next registers:
 	\item \PortLink{Memory management slot 7 bank}{57}
 \end{itemize}
 
-Each register takes 8-bit page number to be used at memory addresses its slot represents. For example: swapping in 8K bank 10 (so absolute 8K memory range at addresses {\tt \$14000} - {\tt \$15FFF}) to address {\tt \$6000-\$7FFF}, can be as simple as:
+Each register takes 8-bit page number to be used at memory addresses its slot represents. For example: swapping in 8K bank 10 (so absolute 8K memory range at addresses \MemAddr{14000}-\MemAddr{15FFF}) to address \MemAddr{6000}-\MemAddr{7FFF}, can be as simple as:
 
 \begin{lstlisting}
 	NEXTREG $53, 10
@@ -1786,7 +1781,7 @@ next:
 	DJNZ next
 \end{lstlisting}
 
-We are effectively writing 20 bytes into memory {\tt \$14000} - {\tt \$14013}
+We are effectively writing 20 bytes into memory \MemAddr{14000} - \MemAddr{14013}
 
 \pagebreak
 \subsection{Interaction Between Paging Modes}
@@ -1824,20 +1819,20 @@ Keep in mind that single 16K bank is covered by 2 8K banks, therefore we need to
 
 \subsection{Paging Out ROM}
 
-ROM can be paged out by using +3 ``AllRam'' or Next MMU-based mode. Beware though that some programs may expect to find ROM routines at fixed addresses between {\tt \$0000} and {\tt \$3FFF}. And if default interrupt mode (IM 1) is set, Z80 will jump PC to {\tt \$0038} expecting to find interrupt handler there.
+ROM can be paged out by using +3 ``AllRam'' or Next MMU-based mode. Beware though that some programs may expect to find ROM routines at fixed addresses between \MemAddr{0000} and \MemAddr{3FFF}. And if default interrupt mode (IM 1) is set, Z80 will jump PC to \MemAddr{0038} expecting to find interrupt handler there.
 
 
 \pagebreak
 \subsection{Mapping Mode Registers}
 \label{zx_next_mappingregister}
 
-\subsubsection{+3 Memory Paging Control {\tt \$1FFD}}
+\subsubsection{+3 Memory Paging Control \MemAddr{1FFD}}
 
 \begin{NextPort}
 	\PortBits{7-3}
 		\PortDesc{Unused, use 0}
 	\PortBits{2}
-		\PortDesc{In normal mode high bit of ROM selection. With low bit from bit 4 of {\tt \$7FFD}:}
+		\PortDesc{In normal mode high bit of ROM selection. With low bit from bit 4 of \MemAddr{7FFD}:}
 		\PortDescOnly{
 			\begin{PortBitConfig}
 				\PortConfig{00}{ROM0 = 128K editor and menu system}
@@ -1853,7 +1848,7 @@ ROM can be paged out by using +3 ``AllRam'' or Next MMU-based mode. Beware thoug
 		\PortDesc{Paging mode: 0 = normal, 1 = special}
 \end{NextPort}
 
-\subsubsection{Memory Paging Control {\tt \$7FFD}}
+\subsubsection{Memory Paging Control \MemAddr{7FFD}}
 
 \begin{NextPort}
 	\PortBits{7-6}
@@ -1866,10 +1861,10 @@ ROM can be paged out by using +3 ``AllRam'' or Next MMU-based mode. Beware thoug
 	\PortBits{3}
 		\PortDesc{ULA layer shadow screen toggle (0 = bank 5, 1 = bank 7)}
 	\PortBits{2-0}
-		\PortDesc{Bank number for slot 4 ({\tt \$C000})}
+		\PortDesc{Bank number for slot 4 (\MemAddr{C000})}
 \end{NextPort}
 
-\subsubsection{Next Memory Bank Select {\tt \$DFFD}}
+\subsubsection{Next Memory Bank Select \MemAddr{DFFD}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -1899,7 +1894,7 @@ ROM can be paged out by using +3 ``AllRam'' or Next MMU-based mode. Beware thoug
 
 Original ZX Spectrum didn't have dedicated graphics chip. To keep price as low as possible, screen rendering was performed by ULA (``Uncommitted Logic Array'') chip.
 
-ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode is 256x192 pixels. If we translate this to characters which are 8x8 pixels, this gives us 32 character columns in 24 character rows. Memory dedicated to ULA resides in second 16K slot at addresses {\tt \$4000-\$5AFF}. And similar to memory configuration of other contemporary computers, pixel memory is separate from attributes/colour memory:
+ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode is 256x192 pixels. If we translate this to characters which are 8x8 pixels, this gives us 32 character columns in 24 character rows. Memory dedicated to ULA resides in second 16K slot at addresses \MemAddr{4000}-\MemAddr{5AFF}. And similar to memory configuration of other contemporary computers, pixel memory is separate from attributes/colour memory:
 
 \begingroup
 	\setlength{\tabcolsep}{5pt}
@@ -1913,9 +1908,9 @@ ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode is
 				\arrayrulecolor{gray}
 				\hline
 				Pixels & Attributes & ... \\
-				{\tt \$4000}-{\tt \$57FF} & 
-					{\tt \$5800}-{\tt \$5AFF} &
-					{\tt \$5B00}-{\tt \$7FFF} \\
+				\MemAddr{4000}-\MemAddr{57FF} & 
+					\MemAddr{5800}-\MemAddr{5AFF} &
+					\MemAddr{5B00}-\MemAddr{7FFF} \\
 			\end{tabular}
 		& & \\
 		\hline
@@ -1951,17 +1946,17 @@ This may lead you to believe the formula for calculating memory location address
 
 {\tt memory(Y) = \$4000 + (Y<<3)$\times$\$20 - (Y>>3)$\times$\$7E0}
 
-It seems to work nicely, but this is not the end of peculiarities of Spectrum ULA mode; the formula yields {\tt \$47E0} for screen line 63, however then wraps back to {\tt \$4100} for line 64 which is clearly not correct. Reason is, ULA mode divides screen into 3 banks. Each bank covers 8 character rows, so 8*8*32 or 2048 bytes:
+It seems to work nicely, but this is not the end of peculiarities of Spectrum ULA mode; the formula yields \MemAddr{47E0} for screen line 63, however then wraps back to \MemAddr{4100} for line 64 which is clearly not correct. Reason is, ULA mode divides screen into 3 banks. Each bank covers 8 character rows, so 8*8*32 or 2048 bytes:
 
 \begin{tabular}{ccc}
 	Memory Range & Screen Lines & Char. Rows \\
-	{\tt \$4000} - {\tt \$47FF} & 
+	\MemAddr{4000} - \MemAddr{47FF} & 
 		{\tt ~~0} - {\tt 63~} & 
 		{\tt ~0} - {\tt 8~} \\
-	{\tt \$4800} - {\tt \$4FFF} & 
+	\MemAddr{4800} - \MemAddr{4FFF} & 
 		{\tt ~64} - {\tt 127} & 
 		{\tt ~9} - {\tt 16} \\
-	{\tt \$5000} - {\tt \$57FF} & 
+	\MemAddr{5000} - \MemAddr{57FF} & 
 		{\tt 128} - {\tt 191} & 
 		{\tt 17} - {\tt 24} \\
 \end{tabular}
@@ -2040,7 +2035,7 @@ If we instead wanted to check if pixel at given coordinate is set or not, we wou
 
 \subsection{Attributes memory}
 
-Now that we know how to draw individual pixels, it's time to handle colour. Memory wise, it's stored immediately after pixel RAM, at memory locations {\tt \$5800} - {\tt \$5AFF}. Each byte represents colour and attributes for 8x8 pixel block on screen. Byte contents are as follows:
+Now that we know how to draw individual pixels, it's time to handle colour. Memory wise, it's stored immediately after pixel RAM, at memory locations \MemAddr{5800} - \MemAddr{5AFF}. Each byte represents colour and attributes for 8x8 pixel block on screen. Byte contents are as follows:
 
 \begin{BitTableByte}
 	\BitSmall{$F$} &
@@ -2160,7 +2155,7 @@ By default, Layer 2 will use 256x192 with 256 colours, which is supported accros
 
 After Layer 2 is enabled, we can start writing into memory banks. As mentioned above, Layer 2 requires 3-5 contiguous 16K banks. While Next initializes default configuration during boot, it's nonetheless good idea to set it up manually to ensure our code will work across all devices. \PortLink{Layer 2 Ram Page Register}{12} is used to setup bank number where Layer 2 video memory begins. Note it's always good idea to store previous bank setup so we can restore it afterwards.
 
-Paging can be implemented using any supported mode, as described in section \ref{zx_next_memorypaging}, by swapping in bank numbers to 16K slot at {\tt \$C000}. The simplest and most versatile is MMU mode; MMU6 and MMU7 registers correspond to 2 8K slots starting at {\tt \$C000}.
+Paging can be implemented using any supported mode, as described in section \ref{zx_next_memorypaging}, by swapping in bank numbers to 16K slot at \MemAddr{C000}. The simplest and most versatile is MMU mode; MMU6 and MMU7 registers correspond to 2 8K slots starting at \MemAddr{C000}.
 
 \pagebreak
 \subsection{Drawing}
@@ -2341,7 +2336,7 @@ nextX:
     JP C, nextY               ; No, continue with next linee
 \end{lstlisting}
 
-Worth noting: MMU page 6 (next register {\tt \$56}) covers memory {\tt \$C000} - {\tt \$DFFF}. As we swap different 8K banks there, we're effectively changing 8K banks that are readable and writable at those memory addresses. That's why we {\tt OR \$C0} in line 24; we need to convert zero based address to {\tt \$C000} based. See section \ref{zx_next_bank_mmu_mode} for details on MMU paging mode.
+Worth noting: MMU page 6 (next register {\tt \$56}) covers memory \MemAddr{C000} - \MemAddr{DFFF}. As we swap different 8K banks there, we're effectively changing 8K banks that are readable and writable at those memory addresses. That's why we {\tt OR \$C0} in line 24; we need to convert zero based address to \MemAddr{C000} based. See section \ref{zx_next_bank_mmu_mode} for details on MMU paging mode.
 
 Also note we don't have to handle bank swapping on every iteration, once per 32 rows would do for this example. But the code is more versatile this way and could be easily converted into reusable pixel setting routine.
 
@@ -2636,7 +2631,7 @@ nextY:
 \subsection{Layer 2 Registers}
 \label{zx_next_layer2_registers}
 
-\subsubsection{Layer 2 Access Port {\tt \$123B}}
+\subsubsection{Layer 2 Access Port \MemAddr{123B}}
 
 \begin{NextPort}
 	\PortBits{7-6}
@@ -2951,9 +2946,9 @@ The offset of the tilemap data memory address relative to the start of bank 5 ne
 
 \subsection{Memory Organization}
 
-Tilemap layer is closely tied with ULA. Memory wise, it always exists in 16K slot 5 (memory addresses {\tt \$4000-\$7FFF}).
+Tilemap layer is closely tied with ULA. Memory wise, it always exists in 16K slot 5 (memory addresses \MemAddr{4000}-\MemAddr{7FFF}).
 
-If both ULA and tilemap are used, memory should be arranged to avoid overlap. Given ULA pixel and attributes memory occupied memory addresses {\tt \$4000-\$5AFF}, this leaves {\tt \$5B00-\$7FFF} for tilemap. If we also take into account various system variables that reside on top of ULA attributes, {\tt \$6000} should be used for starting address. This leaves us:
+If both ULA and tilemap are used, memory should be arranged to avoid overlap. Given ULA pixel and attributes memory occupied memory addresses \MemAddr{4000}-\MemAddr{5AFF}, this leaves \MemAddr{5B00}-\MemAddr{7FFF} for tilemap. If we also take into account various system variables that reside on top of ULA attributes, \MemAddr{6000} should be used for starting address. This leaves us:
 
 {
 	\def\arraystretch{1.2}
@@ -2972,7 +2967,7 @@ If both ULA and tilemap are used, memory should be arranged to avoid overlap. Gi
 
 Programmer needs to tell the system where in memory tilemap and tile definitions are stored. \PortLink{Tilemap Base Address Register}{6E} and \PortLink{Tile Definitions Base Address Register}{6F} are used for that.
 
-Both addresses are provided as most significant byte of the offset into memory slot 5 (which starts at {\tt \$4000}). This means we can only store data at multiples of 256 bytes. For example, if data is stored at {\tt \$6000}, the MSB offset value would be {\tt \$20} ({\tt \$6000 - \$4000 = \$\underline{20}00}).
+Both addresses are provided as most significant byte of the offset into memory slot 5 (which starts at \MemAddr{4000}). This means we can only store data at multiples of 256 bytes. For example, if data is stored at \MemAddr{6000}, the MSB offset value would be {\tt \$20} ({\tt \$6000 - \$4000 = \$\underline{20}00}).
 
 Generic formula to calculate MSB of the offset is: {\tt (Address - \$4000) >> 8}.
 
@@ -3561,7 +3556,7 @@ Because we use combined sprite, we only need to update anchor to change all its 
 \subsection{Sprite Registers}
 \label{zx_next_sprite_registers}
 
-\subsubsection{Sprite Status/Slot Select {\tt \$303B}}
+\subsubsection{Sprite Status/Slot Select \MemAddr{303B}}
 
 Write: sets active sprite attribute and pattern slot index used by \PortLink{Sprite Attribute Upload}{xx57} and \PortLink{Sprite Pattern Upload}{xx5B}.
 
@@ -3879,7 +3874,7 @@ Companion code on github includes expanded code as well as a simple player that 
 \pagebreak
 \subsection{Sound Registers}
 
-\subsubsection{Turbo Sound Next Control {\tt \$FFFD}}
+\subsubsection{Turbo Sound Next Control \MemAddr{FFFD}}
 
 When bit {\tt 7} is {\tt 1}:
 
@@ -3914,7 +3909,7 @@ When bit {\tt 7} is {\tt 0}:
 \end{NextPort}
 
 
-\subsubsection{Sound Chip Register Write {\tt \$BFFD}}
+\subsubsection{Sound Chip Register Write \MemAddr{BFFD}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -4086,7 +4081,7 @@ When bit {\tt 7} is {\tt 0}:
 
 \begin{NextPort}
 	\PortBits{7}
-		\PortDesc{{\tt 1} unlock / {\tt 0} lock port {\tt \$7FFD} paging}
+		\PortDesc{{\tt 1} unlock / {\tt 0} lock port \MemAddr{7FFD} paging}
 	\PortBits{6}
 		\PortDesc{{\tt 1} to disable RAM and I/O port contention ({\tt 0} after soft reset)}
 	\PortBits{5}
@@ -4201,7 +4196,7 @@ Maskable interrupts on ZX Spectrum:
 \begin{itemize}
 	\item {\textbf Mode 0}: meant for interrupts triggered by external device. Instruction to be executed needs to be placed on data bus ({\tt RST} or {\tt CALL} for example). On ZX Spectrum this is the mode that is enabled by default when device powers up. However ROM soon sets up mode 1.
 	
-	\item {\textbf Mode 1}: on ZX Spectrum, this interrupt is triggered by vertical blanking if the screen refresh, roughly 50 times per second. When this occurs, current contents of {\tt PC} counter are pushed onto stack {\tt SP}, then address of {\tt \$0038} is loaded and program stored on that location will start running. On ZX Spectrum Next this interrupt is responsible for updating system variable frame counter and scanning the keyboard.
+	\item {\textbf Mode 1}: on ZX Spectrum, this interrupt is triggered by vertical blanking if the screen refresh, roughly 50 times per second. When this occurs, current contents of {\tt PC} counter are pushed onto stack {\tt SP}, then address of \MemAddr{0038} is loaded and program stored on that location will start running. On ZX Spectrum Next this interrupt is responsible for updating system variable frame counter and scanning the keyboard.
 	
 	\item {\textbf Mode 2}: similar to {\tt IM 1} in frequency and handling, but uses vector table to jump to interrupt program instead of executing hard code ROM routine thus allowing user to setup their own interrupt handler.
 \end{itemize}
@@ -4211,7 +4206,7 @@ On ZX Spectrum Next interrupt handler can be replaced by either:
 \begin{itemize}
 	\item Setting Z80 to {\tt IM 2} mode and configuring custom interrupt handler routine
 	
-	\item Page out ROM (as described in section \ref{zx_next_memorypaging}) and replace it with RAM page with custom interrupt routine at address {\tt \$0038}
+	\item Page out ROM (as described in section \ref{zx_next_memorypaging}) and replace it with RAM page with custom interrupt routine at address \MemAddr{0038}
 \end{itemize}
 
 You can also adjust timing of the interrupts with Next/TBBlue Feature Control Registers {\tt \$22} and {\tt \$23}.
@@ -11288,13 +11283,13 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\multicolumn{2}{c}{BEFORE} & & AFTER \\[5pt]
 			Reg & \multicolumn{3}{l}{Value} \\[5pt]
 			{\tt HL} & 
-				{\tt \$ABCD} & 
+				\MemAddr{ABCD} & 
 				\multirow{5}{*}{$\rightarrow$ {\tt EX (SP),HL} $\rightarrow$} & 
-				{\tt \$3412}\\
-			{\tt SP} & {\tt \$0B00} & & {\tt \$0B00}\\[5pt]
+				\MemAddr{3412}\\
+			{\tt SP} & \MemAddr{0B00} & & \MemAddr{0B00}\\[5pt]
 			Mem & Value \\[5pt]
-			{\tt \$0B00} & {\tt \$12} & & {\tt \$CD}\\
-			{\tt \$0B01} & {\tt \$34} & & {\tt \$AB}\\
+			\MemAddr{0B00} & {\tt \$12} & & {\tt \$CD}\\
+			\MemAddr{0B01} & {\tt \$34} & & {\tt \$AB}\\
 		\end{tabular}\\[5pt] % some spacing between table and effects
 
 		\begin{DetailEffects}
