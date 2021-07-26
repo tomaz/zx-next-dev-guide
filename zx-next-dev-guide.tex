@@ -2025,7 +2025,7 @@ If we instead wanted to check if pixel at given coordinate is set or not, we wou
 	PIXELAD           ; HL=address of pixel (E,D)
 	SETAE             ; A=pixel mask
 	AND (HL)          ; we'll read the pixel
-	RET Z             ; exit if pixel is set
+	RET Z             ; exit if pixel is not set
 \end{lstlisting}
 
 
