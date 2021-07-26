@@ -219,9 +219,9 @@ My first computer was ZX Spectrum 48K. Initially it was only used to play games,
 	
 My original intent was to have coil bound list of all ZX Next instructions so I can quickly compare. However after finding Z80 Undocumented online, it felt like a perfect starting point. And with additional information it included, it also encouraged me to extend mere instructions list with Next specific chapters. So in a way this book represents my notes as I was learning those topics. That being said, I did my best to present information as a reference to keep book relevant.
 
-English is not my native tounge. And our own mind is not the best tool to correct our own work either. Since I can't afford professional proofreader, mistakes are a matter of fact I'm afraid. If you spot something, or want to contribute, feel free to open an issue on github. Pull requests are also welcome! If you want to contribute, but are unsure of what, check accompanying readme file on github for ideas. If you want to discuss in advance, or for anything else, you can find me on email \email{tkragelj}{gmail}{com} or Twitter {\tt @tomsbarks}.
+English is not my native tongue. And our own mind is not the best tool to correct our own work either. Since I can't afford professional proofreader, mistakes are a matter of fact I'm afraid. If you spot something, or want to contribute, feel free to open an issue on github. Pull requests are also welcome! If you want to contribute, but are unsure of what, check accompanying readme file on github for ideas. If you want to discuss in advance, or for anything else, you can find me on email \email{tkragelj}{gmail}{com} or Twitter {\tt @tomsbarks}.
 
-That being said, I hope you'll enjoy reading this document as much as I did writting it!
+That being said, I hope you'll enjoy reading this document as much as I did writing it!
 
 Sincerely, \AuthorName
 
@@ -266,7 +266,7 @@ If interested, you can find it at \url{http://www.myquest.nl/z80undocumented/}.
 	Corrected a textual typo in the R register and memory refresh section, thanks to David Aubespin. Corrected the contradiction in the {\tt DAA} section saying the {\tt NF} flag was both affected and unchanged :) thanks to Dan Meir.Added an error in official documentation about that way Interrupt Mode 2 works, thanks to Aaldert Dekker.
 	
 	\item[15th Juni 2005 (version 0.9)]
-	Corrected improper notation of {\tt JP x,nn} mnemonics in opcode list, thanks to Laurens Holst. Corrected a mistake in the {\tt INI}, {\tt INIR}, {\tt IND}, {\tt INDR} section and documented a mistake in offical Z80 documentation concerning Interrupt Mode 2, thanks to Boris Donko. Thanks to Aaldert Dekker for his ideas, for verifying many assumptions and writing instruction exercisers for various instruction groups.
+	Corrected improper notation of {\tt JP x,nn} mnemonics in opcode list, thanks to Laurens Holst. Corrected a mistake in the {\tt INI}, {\tt INIR}, {\tt IND}, {\tt INDR} section and documented a mistake in official Z80 documentation concerning Interrupt Mode 2, thanks to Boris Donko. Thanks to Aaldert Dekker for his ideas, for verifying many assumptions and writing instruction exercisers for various instruction groups.
 
 	\item[18th May 2005 (version 0.8)]
 	Added an alphabetical list of instructions for easy reference and corrected an error in the 16-bit arithmetic section, {\tt SBC HL,nn} sets the NF flag just like other subtraction instructions, thanks to Fredrik Olssen for pointing that out.
@@ -508,7 +508,7 @@ This section might be relevant even if you don't do anything with hardware; it m
 	{\em Read} (output, active low, 3-state). Indicates that the CPU wants to read data from memory or an I/O device. The addressed I/O device or memory should use this signal to place data onto the data bus.
 
 	\item[$\mathtt{\overline{RESET}}$]
-	{\em Reset} (input, active low). Initializes the CPU as follows: it resets the interrupt flip-flops, clears the PC and IR registes, and set the interrupt mode to 0. During reset time, the address bus and data bus go to a high-impedance state, and all control output signals go to the inactive state. Note that $\mathtt{\overline{RESET}}$ must be active for a minimum of three full clock cycles before the reset operation is complete. Note that Matt found that SP and AF are set to \$FFFF.
+	{\em Reset} (input, active low). Initializes the CPU as follows: it resets the interrupt flip-flops, clears the PC and IR registers, and set the interrupt mode to 0. During reset time, the address bus and data bus go to a high-impedance state, and all control output signals go to the inactive state. Note that $\mathtt{\overline{RESET}}$ must be active for a minimum of three full clock cycles before the reset operation is complete. Note that Matt found that SP and AF are set to \$FFFF.
 
 	\item[$\mathtt{\overline{RFSH}}$]
 	{\em Refresh} (output, active low). $\mathtt{\overline{RFSH}}$, together with $\mathtt{\overline{MREQ}}$, indicates that the IR registers are on the address bus (note that only the lower 7 bits are useful) and can be used for the refresh of dynamic memories.
