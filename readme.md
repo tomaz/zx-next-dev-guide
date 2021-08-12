@@ -55,7 +55,7 @@ Couple ideas for new content:
 - Description for other relevant ZX Spectrum / Next port
 - Add DMA chapter
 - Add sample project for interrupts
-- Split LaTeX source into multiple files, one per chapter with `include` (or `includeonly` for quicker compiling when working on individual chapters)
+- ~Split LaTeX source into multiple files, one per chapter with `include` (or `includeonly` for quicker compiling when working on individual chapters)~
 
 # License
 

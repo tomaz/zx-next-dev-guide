@@ -1,0 +1,128 @@
+\section{General-Purpose Arithmetic and CPU Control}
+
+\begin{minipage}{\textwidth}
+
+\begin{instrtable}
+
+    \begin{instruction}{DAA}
+        \Symbol{}
+            \FlagsDAA
+            \OpCode{00}{100}{111}
+            \Hex{27}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \begin{instruction}{CPL} 
+        \Symbol{\SymCPL}
+            \FlagsCPL
+            \OpCode{00}{101}{111}
+            \Hex{2F}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \begin{instruction}{NEG} 
+        \Symbol{\SymNEG}
+            \FlagsNEG
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{01}{000}{100}
+            \Hex{44}{}
+    \end{instruction}
+
+    \begin{instruction}{CCF\See{1}} 
+        \Symbol{\SymCCF}
+            \FlagsCCF
+            \OpCode{00}{111}{111}
+            \Hex{3F}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \begin{instruction}{SCF\See{1}} 
+        \Symbol{\SymSCF}
+            \FlagsSCF
+            \OpCode{00}{110}{111}
+            \Hex{37}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \begin{instruction}{NOP}
+        \Symbol{}
+            \FlagsNOP
+            \OpCode{00}{000}{000}
+            \Hex{00}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \begin{instruction}{HALT}
+        \Symbol{}
+            \FlagsHALT
+            \OpCode{01}{110}{110}
+            \Hex{76}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \begin{instruction}{DI\See{3}} 
+        \Symbol{\SymDI[0]}
+            \FlagsDI
+            \OpCode{11}{110}{011}
+            \Hex{F3}{1}
+            \Cycles{1}{4}
+        \SkipToSymbol
+            \Symbol{\SymDI[1]}
+    \end{instruction}
+
+    \begin{instruction}{EI\See{3}} 
+        \Symbol{\SymEI[0]}
+            \FlagsEI
+            \OpCode{11}{111}{011}
+            \Hex{FB}{1}
+            \Cycles{1}{4}
+        \SkipToSymbol
+            \Symbol{\SymEI[1]}
+    \end{instruction}
+
+    \begin{instruction}{IM 0\See{4}}
+        \Symbol{}
+            \FlagsIM
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{01}{000}{110}
+            \Hex{46}{}
+    \end{instruction}
+
+    \begin{instruction}{IM 1\See{4}}
+        \Symbol{}
+            \FlagsIM
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{01}{010}{110}
+            \Hex{56}{}
+    \end{instruction}
+
+    \begin{lastinstruction}{IM 2\See{4}}
+        \Symbol{}
+            \FlagsIM
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{01}{011}{110}
+            \Hex{5E}{}
+    \end{lastinstruction}
+	
+\end{instrtable}
+
+\begin{notestable}
+    \NoteItem{\See{1}YF and XF are copied from register {\tt A}}
+    \NoteItem{\See{2}Documentation says original value of CF is copied to HF, but my tests show that {\tt HF} remains unchanged}
+    \NoteItem{\See{3}No interrupts are accepted directly after {\tt EI} or {\tt DI}}
+    \NoteItem{\See{4}This instruction has other undocumented opcodes}
+\end{notestable}
+	
+\end{minipage}

@@ -1,0 +1,79 @@
+\section{Exchange}
+
+\begin{minipage}{\textwidth}
+	
+\begin{instrtable}	
+
+    \begin{instruction}{EX AF,AF'} 
+        \Symbol{\SymEX{AF}{AF'}}
+            \FlagsEXaf
+            \OpCode{00}{001}{000}
+            \Hex{08}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \begin{instruction}{EX DE,HL} 
+        \Symbol{\SymEX{DE}{HL}}
+            \FlagsEXrr
+            \OpCode{11}{101}{011}
+            \Hex{EB}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \begin{instruction}{EX (SP),HL} 
+        \Symbol{\SymEX{H}{(SP+1)}}
+            \FlagsEXrr
+            \OpCode{11}{100}{011}
+            \Hex{E3}{1}
+            \Cycles{5}{19}
+        \SkipToSymbol 
+            \Symbol{\SymEX{L}{(SP)}}
+    \end{instruction}
+
+    \begin{instruction}{EX (SP),IX} 
+        \Symbol{\SymEX{IX\High}{(SP+1)}}
+            \FlagsEXrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{2}
+            \Cycles{6}{2}
+        \SkipToSymbol
+            \Symbol{\SymEX{IX\Low}{(SP)}}
+            \FromSymbolToOpCode
+            \OpCode{11}{100}{011}
+            \Hex{E3}{}
+    \end{instruction}
+
+    \begin{instruction}{EX (SP),IY} 
+        \Symbol{\SymEX{IY\High}{(SP+1)}}
+            \FlagsEXrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2}
+            \Cycles{6}{23}
+        \SkipToSymbol
+            \Symbol{\SymEX{IY\Low}{(SP)}}
+            \FromSymbolToOpCode
+            \OpCode{11}{100}{011}
+            \Hex{E3}{}
+    \end{instruction}
+
+    \begin{lastinstruction}{EXX} 
+        \Symbol{\SymEXX[0]}
+            \FlagsEXX
+            \OpCode{11}{011}{001}
+            \Hex{D9}{1}
+            \Cycles{1}{4}
+        \SkipToSymbol
+            \Symbol{\SymEXX[1]}
+        \SkipToSymbol
+            \Symbol{\SymEXX[2]}
+    \end{lastinstruction}
+	
+\end{instrtable}
+
+\NoteTableSingleItemSpaceCorrection
+
+\begin{notestable}
+    \NoteItem{\See{1}Flags set directly from the value of {\tt F'}}
+\end{notestable}
+
+\end{minipage}

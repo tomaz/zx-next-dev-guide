@@ -1,0 +1,758 @@
+\section{Layer 2}
+\label{zx_next_layer2}
+
+% ───────────────────────────────
+% ─██████─────────██████████████─
+% ─██░░██─────────██░░░░░░░░░░██─
+% ─██░░██─────────██████████░░██─
+% ─██░░██─────────────────██░░██─
+% ─██░░██─────────██████████░░██─
+% ─██░░██─────────██░░░░░░░░░░██─
+% ─██░░██─────────██░░██████████─
+% ─██░░██─────────██░░██─────────
+% ─██░░██████████─██░░██████████─
+% ─██░░░░░░░░░░██─██░░░░░░░░░░██─
+% ─██████████████─██████████████─
+% ───────────────────────────────
+
+As we saw in previous section, drawing with ULA graphics is much simplified on Next. But it can't eliminate the colour clash. Well, not with ULA mode at least. However, Next brings couple brand new graphic modes to the table, hidden behind somewhat casual name ``Layer 2''. But don't let its name deceive you; Layer 2 raises Next graphics capabilities to a whole new level!
+
+Layer 2 may appear behind or above ULA layer. It supports different resolutions with every pixel coloured independently and memory organized sequentially, line by line, pixel by pixel. Consequently, Layer 2 requires more memory compared to ULA; each mode needs multiple 16K banks. But of course, Next has far more memory than original Speccy ever did!
+
+\begin{tabularx}{\textwidth}{cccX}
+    \BitHead{Resolution} & \BitHead{Colours} & \BitHead{BPP} & \BitHead{Memory Organization} \\
+    256x192 & 256 & 8 & 48K, 3 horizontal banks of 64 lines \\
+    320x256 & 256 & 8 & 80K, 5 vertical banks of 64 columns\footnote{Core 3.0.6+ only} \\
+    640x256 & 16 & 4 & 80K, 5 vertical banks of 128 columns\footnotemark[\value{footnote}] \\
+\end{tabularx}
+
+
+\subsection{Initialization}
+
+Drawing on Layer 2 is much simpler than using ULA mode. But in contrast with ULA which is always ``on'', Layer 2 needs to be explicitly enabled. This is done by setting bit {\tt 1} of \PortLink{Layer 2 Access Port}{123B}.
+
+By default, Layer 2 will use 256x192 with 256 colours, which is supported accross all Next core versions. To select another resolution, \PortLink{Layer 2 Control Register}{70} is used. 320x256 and 640x256 modes also require setting up clip window correctly with \PortLink{Clip Window Layer 2 Register}{18}.
+
+
+\subsection{Paging}
+
+After Layer 2 is enabled, we can start writing into memory banks. As mentioned above, Layer 2 requires 3-5 contiguous 16K banks. While Next initializes default configuration during boot, it's nonetheless good idea to set it up manually to ensure our code will work across all devices. \PortLink{Layer 2 Ram Page Register}{12} is used to setup bank number where Layer 2 video memory begins. Note it's always good idea to store previous bank setup so we can restore it afterwards.
+
+Paging can be implemented using any supported mode, as described in section \ref{zx_next_memorypaging}, by swapping in bank numbers to 16K slot at \MemAddr{C000}. The simplest and most versatile is MMU mode; MMU6 and MMU7 registers correspond to 2 8K slots starting at \MemAddr{C000}.
+
+\pagebreak
+\subsection{Drawing}
+
+In general, drawing pixels requires programmer to:
+
+\begin{itemize}[topsep=1pt,itemsep=1pt]
+    \item Determine and select bank to write to
+    \item Calculate address of the pixel within the bank
+    \item Write byte with colour data
+\end{itemize}
+
+See specific modes in following pages for examples of writing pixel data.
+
+
+\subsection{Effects}
+
+\PortLink{Global Transparency Register}{14} can be used to alter transparent colour of Layer 2. This same register also affects ULA, LoRes and 1-bit (``text mode'') tilemap.
+
+Scrolling effects can be achieved by writing pixel offsets to \PortLink{Layer 2 X Offset Register}{16}, \PortLink{Layer 2 X Offset MSB Register}{71} and \PortLink{Layer 2 Y Offset Register}{17}.
+
+
+\subsection{Palette}
+
+Pixel colour data is specified as palette indexes in all modes. Default palette is setup by Next automatically, but if needed, we can change it whole, or just partially to custom colours. This can be used to change specific entries to efficiently achieve different effects such as fade to/from black, animate transition from day to night, animate water etc.
+
+There are several registers involved in palette changes that work together: \PortLink{Enhanced Ula Control Register}{43} is used to select palette, \PortLink{Palette Index Register}{40} to set the index and finally \PortLink{Palette Value Register}{41} to change the entry.
+
+Reusable subroutine for copying a number of palette entries defined by {\tt B} from memory addressed by {\tt HL} register into palette selected by Next register {\tt \$43}:
+
+\begin{lstlisting}
+    NEXTREG $43, %00010000    ; Auto increment, L2 first palette for read/write
+    NEXTREG $40, 0            ; Start copying into index 0
+    LD HL, palette            ; Address to copy RRRGGGBB bytes from
+    LD B, 255                 ; Copy 255 bytes
+    CALL copyPalette
+    ...
+copyPalette:
+    LD A, (HL)                ; Load RRRGGGBB into A
+    INC HL                    ; Increment to next colour entry
+    NEXTREG $41, A            ; Send colour data to Next HW
+    DJNZ copyPalette          ; Repeat until B=0
+\end{lstlisting}
+
+
+\pagebreak
+\subsection{256x192 256 Colour Mode}
+
+\begin{multicols}{2}
+    3 horizontal banks:
+
+    \begin{tabularx}{0.455\textwidth}{c|YY|YY|}
+        \multicolumn{1}{l}{} & 
+            \multicolumn{1}{l}{0} &
+            \multicolumn{2}{c}{\dots} &
+            \multicolumn{1}{r}{255} \\
+        \cline{2-5}
+            0 & 
+            \multicolumn{2}{l|}{16K BANK 0} & 
+            \multicolumn{2}{l|}{8K BANK 0} \\
+        \multirow{2}{*}{\vdots} & & & 
+            \multicolumn{2}{l|}{0\dots 31} \\
+        \cline{4-5}
+            & & & \multicolumn{2}{l|}{8K BANK 1} \\
+            63 & & & \multicolumn{2}{l|}{32 \dots 63} \\
+        \cline{2-5}
+            64 & 
+            \multicolumn{2}{l|}{16K BANK 1} & 
+            \multicolumn{2}{l|}{8K BANK 2} \\
+        \multirow{2}{*}{\vdots} & & & 
+            \multicolumn{2}{l|}{64 \dots 95} \\
+        \cline{4-5}
+            & & & \multicolumn{2}{l|}{8K BANK 3} \\
+            127 & & & \multicolumn{2}{l|}{96 \dots 127} \\
+        \cline{2-5}
+            128 & 
+            \multicolumn{2}{l|}{16K BANK 2} & 
+            \multicolumn{2}{l|}{8K BANK 4} \\
+        \multirow{2}{*}{\vdots} & & & 
+            \multicolumn{2}{l|}{128 \dots 159} \\
+        \cline{4-5}
+            & & & \multicolumn{2}{l|}{8K BANK 5} \\
+            191 & & & \multicolumn{2}{l|}{160 \dots 191} \\
+        \cline{2-5}
+    \end{tabularx}
+
+    \columnbreak
+    8BPP:\\
+
+    \begin{BitTableByte}
+        \BitSmall{$I_7$} & 
+            \BitSmall{$I_6$} & 
+            \BitSmall{$I_5$} &
+            \BitSmall{$I_4$} &
+            \BitSmall{$I_3$} & 
+            \BitSmall{$I_2$} &
+            \BitSmall{$I_1$} &
+            \BitSmall{$I_0$} \\
+        \hline
+        \BitStartMulti{8}{Colour index} \\
+    \end{BitTableByte}
+
+    Banking Setup:
+
+    \begin{tabularx}{0.445\textwidth}{|c|c|c|c|Y|}
+        \hline
+        \BitHead{15} & 
+            \BitHead{14} & 
+            \BitHead{13} &
+            \BitHead{12-8} &
+            \BitHead{7-0} \\
+        \hline
+        \BitStartMulti{4}{$Y$} & 
+            \BitMulti{1}{$X$} \\
+        \hline
+        \BitStartMulti{2}{16K} &
+            \BitMulti{2}{$Y_{5-0}$} &
+            \BitMulti{1}{$X$} \\
+        \hline
+        \BitStartMulti{3}{8K} &
+            \BitMulti{1}{$Y_{4-0}$} &
+            \BitMulti{1}{$X$} \\
+        \hline
+    \end{tabularx}
+\end{multicols}
+
+This mode is the closest to ULA, resolution wise, so is perhaps the simplest to grasp. It's also supported accross all Next core versions. Pixels are layed out from left to right and top to bottom. Each pixel takes 1 byte representing 8-bit index into palette. 3 16K banks are needed to cover the whole screen, each holding data for 64 lines. Or alternatively 6 8K banks, 32 lines each. Combined, colour data requires 48K of memory.
+
+16-bits are needed to represent (x,y) coordinate pair. If upper byte is used for Y and lower for X coordinate, together they will form exact memory location offset from top of first bank. But to account for bank swapping; for 16K banks, most significat 2 bits of Y correspond to bank number and for 8K banks, top 3 bits. The rest of Y + X is memory location within the bank.
+
+Example of filling the screen with vertical rainbow:
+
+\begin{lstlisting}
+START_16K_BANK  EQU 9
+START_8K_BANK   EQU START_16K_BANK*2
+
+    ; Enable Layer 2
+    LD BC, $123B
+    LD A, 2
+    OUT (C), A
+    
+    ; Setup starting Layer2 16K bank
+    NEXTREG $12, START_16K_BANK
+    
+    LD D, 0                   ; D=Y, start at top of the screen
+    
+nextY:
+    ; Calculate bank number and swap it in
+    LD A, D                   ; Copy current Y to A
+    AND %11100000             ; 32100000 (3MSB = bank number)
+    RLCA                      ; 21000003
+    RLCA                      ; 10000032
+    RLCA                      ; 00000321
+    ADD A, START_8K_BANK      ; A=bank number to swap in
+    NEXTREG $56, A            ; Swap bank
+    
+    ; Convert DE (yx) to screen memory location starting at $C000
+    PUSH DE                   ; (DE) will be changed to bank offset
+    LD A, D                   ; Copy current Y to A
+    AND %00011111             ; Discard bank number
+    OR $C0                    ; Screen starts at $C000
+    LD D, A                   ; D=high byte for $C000 screen memory
+
+    ; Loop X through 0..255; we don't have to deal with bank swapping
+    ; here because it only occurs when changing Y
+    LD E, 0
+nextX:
+    LD A, E                   ; A=current X
+    LD (DE), A                ; Use X as colour index
+    INC E                     ; Increment to next X
+    JR NZ, nextX              ; Repeat until E rolls over
+    
+    ; Continue with next line or exit
+    POP DE                    ; Restore DE to coordinates
+    INC D                     ; Increment to next Y
+    LD A, D                   ; A=current Y
+    CP 192                    ; Did we just complete last line?
+    JP C, nextY               ; No, continue with next linee
+\end{lstlisting}
+
+Worth noting: MMU page 6 (next register {\tt \$56}) covers memory \MemAddr{C000} - \MemAddr{DFFF}. As we swap different 8K banks there, we're effectively changing 8K banks that are readable and writable at those memory addresses. That's why we {\tt OR \$C0} in line 24; we need to convert zero based address to \MemAddr{C000} based. See section \ref{zx_next_bank_mmu_mode} for details on MMU paging mode.
+
+Also note we don't have to handle bank swapping on every iteration, once per 32 rows would do for this example. But the code is more versatile this way and could be easily converted into reusable pixel setting routine.
+
+
+\pagebreak
+\subsection{320x256 256 Colour Mode}
+
+\begin{multicols}{2}
+    5 vertical banks:
+
+    \begin{tabularx}{0.455\textwidth}{l|X|X|X|X|X|X|X|X|X|X|}
+        \multicolumn{1}{l}{} &
+            \multicolumn{1}{l}{0} &
+            \multicolumn{7}{X}{} &
+            \multicolumn{2}{r}{319} \\
+        \cline{2-11}
+        \rotatebox[origin=c]{90}{~~~~~~~~~~~~~~0} &
+            \multicolumn{2}{X|}{\rotatebox[origin=c]{90}{~16K BANK 0~}} &
+            \multicolumn{2}{X|}{\rotatebox[origin=c]{90}{16K BANK 1}} &
+            \multicolumn{2}{X|}{\rotatebox[origin=c]{90}{16K BANK 2}} &
+            \multicolumn{2}{X|}{\rotatebox[origin=c]{90}{16K BANK 3}} &
+            \multicolumn{2}{X|}{\rotatebox[origin=c]{90}{16K BANK 4}} \\
+        \cline{2-11}
+        \rotatebox[origin=c]{90}{255~~~~~~~~~~~} &
+            \rotatebox[origin=c]{90}{~8K BANK 0~} &
+            \rotatebox[origin=c]{90}{8K BANK 1} &
+            \rotatebox[origin=c]{90}{8K BANK 2} &
+            \rotatebox[origin=c]{90}{8K BANK 3} &
+            \rotatebox[origin=c]{90}{8K BANK 4} &
+            \rotatebox[origin=c]{90}{8K BANK 5} &
+            \rotatebox[origin=c]{90}{8K BANK 6} &
+            \rotatebox[origin=c]{90}{8K BANK 7} &
+            \rotatebox[origin=c]{90}{8K BANK 8} &
+            \rotatebox[origin=c]{90}{8K BANK 9} \\
+        \cline{2-11}
+        \multicolumn{1}{c}{} & \multicolumn{10}{c}{} \\[-5pt]
+        \multicolumn{1}{c}{} & 
+            \multicolumn{10}{l}{16K bank contains 64 columns} \\
+        \multicolumn{1}{c}{} & 
+            \multicolumn{10}{l}{8K bank contains 32 columns} \\
+    \end{tabularx}
+
+    \columnbreak
+    8BPP:\\
+
+    \begin{BitTableByte}
+        \BitSmall{$I_7$} & 
+            \BitSmall{$I_6$} & 
+            \BitSmall{$I_5$} &
+            \BitSmall{$I_4$} &
+            \BitSmall{$I_3$} & 
+            \BitSmall{$I_2$} &
+            \BitSmall{$I_1$} &
+            \BitSmall{$I_0$} \\
+        \hline
+        \BitStartMulti{8}{Colour index} \\
+    \end{BitTableByte}
+
+    Banking Setup:
+
+    \begin{tabularx}{0.445\textwidth}{|c|c|c|c|Y|}
+        \hline
+        \BitHead{15} & 
+            \BitHead{14} & 
+            \BitHead{13} &
+            \BitHead{12-8} &
+            \BitHead{7-0} \\
+        \hline
+        \BitStartMulti{4}{$X$} & 
+            \BitMulti{1}{$Y$} \\
+        \hline
+        \BitStartMulti{2}{16K} &
+            \BitMulti{2}{$X_{5-0}$} &
+            \BitMulti{1}{$Y$} \\
+        \hline
+        \BitStartMulti{3}{8K} &
+            \BitMulti{1}{$X_{4-0}$} &
+            \BitMulti{1}{$Y$} \\
+        \hline
+    \end{tabularx}
+\end{multicols}
+
+320x256 mode is only available on Next core 3.0.6 or later. Pixels are layed out from top to bottom and left to right. Each pixel takes 1 byte representing 8-bit index into palette. To cover whole scren, 5 16K banks of 64 columns or 10 8K banks of 32 columns are needed. Together colour data requires 80K of memory. In contrast with 256x192, this modes covers the whole screen, including border.
+
+While 256 lines fit neatly within 1 byte, we need more for addressing all 320 columns. However, we can still address all pixels with 16-bits within each individual bank though. If upper byte is used for X and lower for Y, then most significant 2 bits correspond to 16K and top 3 bits to 8K bank. The rest of the X + Y is memory location within the bank.
+
+To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to setup clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
+
+
+\begin{lstlisting}
+START_16K_BANK  EQU 9
+START_8K_BANK   EQU START_16K_BANK*2
+
+RESOLUTION_X    EQU 320
+RESOLUTION_Y    EQU 256
+
+BANK_8K_SIZE    EQU 8192
+NUM_BANKS       EQU RESOLUTION_X * RESOLUTION_Y / BANK_8K_SIZE
+BANK_X          EQU BANK_8K_SIZE / RESOLUTION_Y
+
+    ; Enable Layer 2
+    LD BC, $123B
+    LD A, 2
+    OUT (C), A
+
+    ; Setup starting Layer2 16K bank
+    NEXTREG $12, START_16K_BANK
+    NEXTREG $70, %00010000    ; 320x256 256 colour mode
+
+    ; Setup window clip for 320x256 resolution
+    NEXTREG $1C, 1            ; Reset Layer 2 clip window reg index
+    NEXTREG $18, 0            ; X1; X2 next line
+    NEXTREG $18, RESOLUTION_X / 2 - 1
+    NEXTREG $18, 0            ; Y1; Y2 next line
+    NEXTREG $18, RESOLUTION_Y - 1
+
+    LD B, START_8K_BANK       ; Bank number
+    LD H, 0                   ; Colour index
+nextBank:
+    ; Swap to next bank, exit once all 5 are done
+    LD A, B                   ; Copy current bank number to A
+    NEXTREG $56, A            ; Switch to bank
+
+    ; Fill in current bank
+    LD DE, $C000              ; Prepare starting address
+nextY:
+    ; Fill in 256 pixels of current line
+    LD A, H                   ; Copy colour index to A
+    LD (DE), A                ; Write colour index into memory
+    INC E                     ; Increment Y
+    JR NZ, nextY              ; Continue with next Y until we wrap to next X
+
+    ; Prepare for next line until bank is full
+    INC H                     ; Increment colour
+    INC D                     ; Increment X
+    LD A, D                   ; Copy X to A
+    AND %00111111             ; Clear $C0 to get pure X coordinate
+    CP BANK_X                 ; Did we reach next bank?
+    JP NZ, nextY              ; No, continue with next Y
+
+    ; Prepare for next bank
+    INC B                     ; Increment to next bank
+    LD A, B                   ; Copy bank to A
+    CP START_8K_BANK+NUM_BANKS; Did we fill last bank?
+    JP NZ, nextBank           ; No, proceed with next bank
+\end{lstlisting}
+
+
+\pagebreak
+\subsection{640x256 16 Colour Mode}
+
+\begin{multicols}{2}
+    5 vertical banks:
+
+    \begin{tabularx}{0.455\textwidth}{l|X|X|X|X|X|X|X|X|X|X|}
+        \multicolumn{1}{l}{} &
+            \multicolumn{1}{l}{0} &
+            \multicolumn{7}{X}{} &
+            \multicolumn{2}{r}{639} \\
+        \cline{2-11}
+        \rotatebox[origin=c]{90}{~~~~~~~~~~~~~~0} &
+            \multicolumn{2}{X|}{\rotatebox[origin=c]{90}{~16K BANK 0~}} &
+            \multicolumn{2}{X|}{\rotatebox[origin=c]{90}{16K BANK 1}} &
+            \multicolumn{2}{X|}{\rotatebox[origin=c]{90}{16K BANK 2}} &
+            \multicolumn{2}{X|}{\rotatebox[origin=c]{90}{16K BANK 3}} &
+            \multicolumn{2}{X|}{\rotatebox[origin=c]{90}{16K BANK 4}} \\
+        \cline{2-11}
+        \rotatebox[origin=c]{90}{255~~~~~~~~~~~} &
+            \rotatebox[origin=c]{90}{~8K BANK 0~} &
+            \rotatebox[origin=c]{90}{8K BANK 1} &
+            \rotatebox[origin=c]{90}{8K BANK 2} &
+            \rotatebox[origin=c]{90}{8K BANK 3} &
+            \rotatebox[origin=c]{90}{8K BANK 4} &
+            \rotatebox[origin=c]{90}{8K BANK 5} &
+            \rotatebox[origin=c]{90}{8K BANK 6} &
+            \rotatebox[origin=c]{90}{8K BANK 7} &
+            \rotatebox[origin=c]{90}{8K BANK 8} &
+            \rotatebox[origin=c]{90}{8K BANK 9} \\
+        \cline{2-11}
+        \multicolumn{1}{c}{} & \multicolumn{10}{c}{} \\[-5pt]
+        \multicolumn{1}{c}{} & 
+            \multicolumn{10}{l}{16K bank contains 128 columns} \\
+        \multicolumn{1}{c}{} & 
+            \multicolumn{10}{l}{8K bank contains 64 columns} \\
+    \end{tabularx}
+
+    \columnbreak
+    4BPP:\\
+
+    \begin{BitTableByte}
+        \BitSmall{$I_3$} & 
+            \BitSmall{$I_2$} & 
+            \BitSmall{$I_1$} &
+            \BitSmall{$I_0$} &
+            \BitSmall{$I_3$} & 
+            \BitSmall{$I_2$} &
+            \BitSmall{$I_1$} &
+            \BitSmall{$I_0$} \\
+        \hline
+        \BitStartMulti{4}{Colour 1} &
+            \BitMulti{4}{Colour 2} \\
+    \end{BitTableByte}
+
+    Banking Setup:
+
+    \begin{tabularx}{0.395\textwidth}{|c|c|c|c|Y|}
+        \hline
+        \BitHead{15} & 
+            \BitHead{14} & 
+            \BitHead{13} &
+            \BitHead{12-8} &
+            \BitHead{7-0} \\
+        \hline
+        \BitStartMulti{4}{$X*2$} & 
+            \BitMulti{1}{$Y$} \\
+        \hline
+        \BitStartMulti{2}{16K} &
+            \BitMulti{2}{$X_{5-0}*2$} &
+            \BitMulti{1}{$Y$} \\
+        \hline
+        \BitStartMulti{3}{8K} &
+            \BitMulti{1}{$X_{4-0}*2$} &
+            \BitMulti{1}{$Y$} \\
+        \hline
+    \end{tabularx}
+\end{multicols}
+
+640x256 mode is very similar to 320x256, except that each byte represents 2 colours instead of 1. It's also available on Next core 3.0.6 or later only. Pixels are layed out from top to bottom and left to right. Each pixel takes 4 bits, so each byte contains data for 2 pixels. To cover the whole scren, 5 16K banks of 128 columns or 10 8K banks of 64 columns are needed. Together colour data requires 80K of memory. Similar to 320x256, this mode also covers the whole screen, including border.
+
+Also similar to 320x256 mode, we can't represent full extent of columns with 2 bytes. However, we can still represent all pixels within each individual bank. If upper byte is used for X and lower for Y, then most significant 2 bits correspond to 16K and top 3 bits to 8K bank. The rest of the X + Y is memory location within the bank.
+
+To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to setup clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
+
+\begin{lstlisting}
+START_16K_BANK  EQU 9
+START_8K_BANK   EQU START_16K_BANK*2
+
+RESOLUTION_X    EQU 640
+RESOLUTION_Y    EQU 256
+
+BANK_8K_SIZE    EQU 8192
+NUM_BANKS       EQU RESOLUTION_X * RESOLUTION_Y / BANK_8K_SIZE / 2
+BANK_X          EQU BANK_8K_SIZE / RESOLUTION_Y
+
+    ; Enable Layer 2
+    LD BC, $123B
+    LD A, 2
+    OUT (C), A
+
+    ; Setup starting Layer2 16K bank
+    NEXTREG $12, START_16K_BANK
+    NEXTREG $70, %00100000    ; 640x256 256 colour mode
+
+    NEXTREG $1C, 1            ; Reset Layer 2 clip window reg index
+    NEXTREG $18, 0
+    NEXTREG $18, RESOLUTION_X / 4 - 1
+    NEXTREG $18, 0
+    NEXTREG $18, RESOLUTION_Y - 1
+
+    LD B, START_8K_BANK       ; Bank number
+    LD H, 0                   ; Colour index for 2 pixels
+nextBank:
+    ; Swap to next bank, exit once all 5 are done
+    LD A, B                   ; Copy current bank number to A
+    NEXTREG $56, A            ; Switch to bank
+
+    ; Fill in current bank
+    LD DE, $C000              ; Prepare starting address
+nextY:
+    ; Fill in 256 pixels of current line
+    LD A, H                   ; Copy colour indexes for 2 pixels to A
+    LD (DE), A                ; Write colour indexes into memory
+    INC E                     ; Increment Y
+    JR NZ, nextY              ; Continue with next Y until we wrap to next X
+
+    ; Prepare for next line until bank is full
+    INC H                     ; Increment colour index for both colours
+    INC D                     ; Increment X
+    LD A, D                   ; Copy X to A
+    AND %00111111             ; Clear $C0 to get pure X coordinate
+    CP BANK_X                 ; Did we reach next bank?
+    JP NZ, nextY              ; No, continue with next Y
+
+    ; Prepare for next bank
+    INC B                     ; Increment to next bank
+    LD A, B                   ; Copy bank to A
+    CP START_8K_BANK+NUM_BANKS; Did we fill last bank?
+    JP NZ, nextBank           ; No, proceed with next bank
+\end{lstlisting}
+
+
+\subsection{Layer 2 Registers}
+\label{zx_next_layer2_registers}
+
+\subsubsection{Layer 2 Access Port \MemAddr{123B}}
+
+\begin{NextPort}
+    \PortBits{7-6}
+        \PortDesc{Video RAM bank select}
+        \PortDescOnly{
+            \begin{PortBitConfig}
+                \PortConfig{00}{First 16K of layer 2 in the bottom 16K}
+                \PortConfig{01}{Second 16K of layer 2 in the bottom 16K}
+                \PortConfig{10}{Third 16K of layer 2 in the bottom 16K}
+                \PortConfig{11}{First 48K of layer 2 in the bottom 48K (core 3.0+)}
+            \end{PortBitConfig}
+        }
+    \PortBits{5}
+        \PortDesc{Reserved, use {\tt 0}}
+    \PortBits{4}
+        \PortDesc{{\tt 0} (see below)}
+    \PortBits{3}
+        \PortDesc{Use Shadow Layer 2 for paging}
+        \PortDescOnly{
+            \begin{PortBitConfig}
+                \PortConfig{0}{Map \PortLink{Layer 2 RAM Page Register}{12}}
+                \PortConfig{1}{Map \PortLink{Layer 2 RAM Shadow Page}{13}}
+            \end{PortBitConfig}
+        }
+    \PortBits{2}
+        \PortDesc{Enable Layer 2 read-only paging}
+    \PortBits{1}
+        \PortDesc{Layer 2 visible, see \PortLink{Layer 2 RAM Page Register}{12}}
+        \PortDescOnly{Since core 3.0 this bit has mirror in \PortLink{Display Control 1 Register}{69}}
+    \PortBits{0}
+        \PortDesc{Enable Layer 2 write-only paging}
+\end{NextPort}
+
+Since core 3.0.7, write with bit {\tt 4} set was also added:
+
+\begin{NextPort}
+    \PortBits{7-5}
+        \PortDesc{Reserved, use {\tt 0}}
+    \PortBits{4}
+        \PortDesc{{\tt 1}}
+    \PortBits{3}
+        \PortDesc{Reserved, use {\tt 0}}
+    \PortBits{2-0}
+        \PortDesc{16K bank relative offset (+0..+7) applied to Layer 2 memory mapping}
+\end{NextPort}
+
+
+\subsubsection{Layer 2 Ram Page Register {\tt \$12}}
+
+\begin{NextPort}
+    \PortBits{7}
+        \PortDesc{Reserved, must be {\tt 0}}
+    \PortBits{6-0}
+        \PortDesc{Starting 16K bank of Layer 2}
+\end{NextPort}
+
+Default 256x192 mode requires 3 16K banks while new, 320x256 and 640x256 modes require 5 16K banks. Banks need to be contiguous in memory, so here we only specify the first one. Valid bank numbers are therefore {\tt 0} - {\tt 45} ({\tt 109} for 2MB RAM models) for standard mode and {\tt 0} - {\tt 43} ({\tt 107} for 2MB RAM models) for new modes.
+
+Note: this register uses 16K bank numbers; if you're using 8K banks, you need to multiply this value by 2. For example, 16K bank 9 corresponds to 8K banks 18 and 19.
+
+
+\pagebreak
+\subsubsection{Layer 2 X Offset Register {\tt \$16}}
+
+\begin{NextPort}
+    \PortBits{7-0}
+        \PortDesc{Writes or reads X pixel offset used for drawing Layer 2 graphics on the screen.}
+\end{NextPort}
+
+This can be used for creating scrolling effects. For 320x256 and 640x256 modes, 9 bits are required; use \PortLink{Layer 2 X Offset MSB Register}{71} to set it up.
+
+
+\subsubsection{Layer 2 Y Offset Register {\tt \$17}}
+
+\begin{NextPort}
+    \PortBits{7-0}
+        \PortDesc{Writes or reads Y pixel offset used for drawing Layer 2 graphics on the screen.}
+\end{NextPort}
+
+Valid range is:
+
+\begin{itemize}[topsep=1pt,itemsep=1pt]
+    \item 256x192: {\tt 191}
+    \item 320x256: {\tt 255}
+    \item 640x256: {\tt 255}
+\end{itemize}
+
+
+\subsubsection{Clip Window Layer 2 Register {\tt \$18}}
+
+\begin{NextPort}
+    \PortBits{7-0}
+        \PortDesc{Reads and writes clip-window coordinates for Layer 2}
+\end{NextPort}
+
+4 coordinates need to be set: X1, X2, Y1 and Y2. Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset index to {\tt 0} in \PortLink{Clip Window Control Register}{1C}, then write all 4 coordinates in succession. Positions are inclusive. Furthermore X positions are doubled for 320x256 mode, quadrupled for 640x256. Therefore, to view the whole of Layer 2, the values are:
+
+\begin{tabular}{cllll}
+    & & 
+        \BitHead{256x192} & 
+        \BitHead{320x256} & 
+        \BitHead{640x256} \\
+    0 & X1 position & \BitMono{0}   & \BitMono{0}   & \BitMono{0} \\
+    1 & X2 position & \BitMono{255} & \BitMono{159} & \BitMono{159} \\
+    2 & Y1 position & \BitMono{0}   & \BitMono{0}   & \BitMono{0} \\
+    3 & Y2 position & \BitMono{191} & \BitMono{255} & \BitMono{255} \\
+\end{tabular}
+
+\pagebreak
+\subsubsection{Clip Window Control Register {\tt \$1C}}
+
+Write:
+
+\begin{NextPort}
+    \PortBits{7-4}
+        \PortDesc{Reserved, must be {\tt 0}}
+    \PortBits{3}
+        \PortDesc{{\tt 1} to reset Tilemap clip-window register index}
+    \PortBits{2}
+        \PortDesc{{\tt 1} to reset ULA/LoRes clip-window register index}
+    \PortBits{1}
+        \PortDesc{{\tt 1} to reset Sprite clip-window register index}
+    \PortBits{0}
+        \PortDesc{{\tt 1} to reset Layer 2 clip-window register index}
+\end{NextPort}
+
+Read:
+
+\begin{NextPort}
+    \PortBits{7-6}
+        \PortDesc{Current Tilemap clip-window register index}
+    \PortBits{5-4}
+        \PortDesc{Current ULA/LoRes clip-window register index}
+    \PortBits{3-2}
+        \PortDesc{Current Sprite clip-window register index}
+    \PortBits{1-0}
+        \PortDesc{Current Layer 2 clip-window register index}
+\end{NextPort}
+
+
+\subsubsection{Palette Index Register {\tt \$40}}
+
+\begin{NextPort}
+    \PortBits{7-0}
+        \PortDesc{Reads or writes palette index to be manipulated}
+\end{NextPort}
+
+Writing an index {\tt 0-255} associates it with colour set through \PortLink{Palette Value Register}{41} of currently selected pallette in \PortLink{Enhanced Ula Control Register}{43}.
+
+
+\subsubsection{Palette Value Register {\tt \$41}}
+
+\begin{NextPort}
+    \PortBits{7-0}
+        \PortDesc{Reads or writes 8-bit colour data}
+\end{NextPort}
+
+Format is:
+
+\begin{BitTableByte}
+    \BitSmall{$R_2$} &
+        \BitSmall{$R_1$} &
+        \BitSmall{$R_0$} &
+        \BitSmall{$G_2$} &
+        \BitSmall{$G_1$} &
+        \BitSmall{$G_0$} &
+        \BitSmall{$B_1$} &
+        \BitSmall{$B_0$} \\
+    \hline
+    \BitStartMulti{3}{Red} &
+        \BitMulti{3}{Green} &
+        \BitMulti{2}{Blue} \\
+\end{BitTableByte}
+
+Least significant bit of blue is set to {\tt OR} between $B_1$ and $B_0$.
+
+Writing the value will automatically increment index in \PortLink{Palette Index Register}{40}, if auto-increment is enabled in \PortLink{Enhanced Ula Control Register}{43}. Read doesn't auto-increment index.
+
+
+\subsubsection{Enhanced Ula Control Register {\tt \$43}}
+
+\begin{NextPort}
+    \PortBits{7}
+        \PortDesc{{\tt 1} to disable palette index auto-increment, {\tt 0} to enable}
+    \PortBits{6-4}
+        \PortDesc{Selects palette for read or write}
+        \PortDescOnly{
+            \begin{PortBitConfig}
+                \PortConfig{000}{ULA first palette}
+                \PortConfig{100}{ULA second palette}
+                \PortConfig{001}{Layer 2 first palette}
+                \PortConfig{101}{Layer 2 second palette}
+                \PortConfig{010}{Sprites first palette}
+                \PortConfig{110}{Sprites second palette}
+                \PortConfig{011}{Tilemap first palette}
+                \PortConfig{111}{Tilemap second palette}
+            \end{PortBitConfig}
+        }
+    \PortBits{3}
+        \PortDesc{Selects active Sprites palette ({\tt 0} = first palette, {\tt 1} = second palette)}
+    \PortBits{2}
+        \PortDesc{Selects active Layer 2 palette ({\tt 0} = first palette, {\tt 1} = second palette)}
+    \PortBits{1}
+        \PortDesc{Selects active ULA palette ({\tt 0} = first palette, {\tt 1} = second palette)}
+    \PortBits{0}
+        \PortDesc{Enables ULANext mode if {\tt 1} ({\tt 0} after reset)}
+\end{NextPort}
+
+
+\subsubsection{Layer 2 Control Register {\tt \$70}}
+
+\begin{NextPort}
+    \PortBits{7-6}
+        \PortDesc{Reserved, must be {\tt 0}}
+    \PortBits{5-4}
+        \PortDesc{Layer 2 resolution ({\tt 0} after soft reset)}
+        \PortDescOnly{
+            \begin{PortBitConfig}
+                \PortConfig{00}{256x192, 8BPP}
+                \PortConfig{01}{320x256, 8BPP}
+                \PortConfig{10}{640x256, 4BPP}
+            \end{PortBitConfig}
+        }
+    \PortBits{3-0}
+        \PortDesc{Palette offset ({\tt 0} after soft reset)}
+\end{NextPort}
+
+
+\subsubsection{Layer 2 X Offset MSB Register {\tt \$71}}
+
+\begin{NextPort}
+    \PortBits{7-1}
+        \PortDesc{Reserved, must be {\tt 0}}
+    \PortBits{0}
+        \PortDesc{MSB for X pixel offset}
+\end{NextPort}
+
+This is only used for 320x256 and 640x256 modes. Together with \PortLink{Layer 2 X Offset Register}{16} full 319 pixels offsets are available. For 640x256 only 2 pixel offsets are possible.
+
+
+\pagebreak

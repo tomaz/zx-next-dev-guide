@@ -1,0 +1,159 @@
+\section{Call and Return}
+
+\begin{minipage}{\textwidth}
+	
+\begin{instrtable}
+
+    \begin{instruction}{CALL nm} 
+        \Symbol{\SymCALL[0]{nm}}
+            \FlagsCALLnn
+            \OpCode{11}{001}{101}
+            \Hex{CD}{3}
+            \Cycles{5}{17}
+        \SkipToSymbol
+            \Symbol{\SymCALL[1]{nm}}
+            \FromSymbolToOpCode
+            \OpRange{m} 
+            \Hex{..}{}
+        \SkipToSymbol
+            \Symbol{\SymCALL[2]{nm}}
+            \FromSymbolToOpCode
+            \OpRange{n} 
+            \Hex{..}{}
+        \SkipToSymbol
+            \Symbol{\SymCALL[3]{nm}}
+    \end{instruction}
+
+    \begin{instruction}{CALL c,nm} 
+        \Symbol{\SymCALLc{nm}}
+            \FlagsCALLccnn
+            \OpCode{11}{\OCT{c}}{100}
+            \Hex{..}{3}
+            \Cycles{3}{10}
+            \Comment{if {\tt c}=false}
+        \SkipToOpCode
+            \OpRange{m} 
+            \Hex{..}{}
+            \Cycles{5}{17}
+            \Comment{if {\tt c}=true}
+        \SkipToOpCode
+            \OpRange{n} 
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{RET} 
+        \Symbol{\SymRET[0]}
+            \FlagsRET
+            \OpCode{11}{001}{001}
+            \Hex{C9}{1}
+            \Cycles{3}{10}
+        \SkipToSymbol
+            \Symbol{\SymRET[1]}
+        \SkipToSymbol
+            \Symbol{\SymRET[2]}
+    \end{instruction}
+
+    \begin{instruction}{RET c} 
+        \Symbol{\SymRETc{c}}
+            \FlagsRETcc
+            \OpCode{11}{\OCT{c}}{000}
+            \Hex{..}{1}
+            \Cycles{1}{5}
+            \Comment{if {\tt c}=false}
+        \SkipToOpCode
+            \OpCode{}{}{}
+            \Hex{}{}
+            \Cycles{3}{11}
+            \Comment{if {\tt c}=true}
+    \end{instruction}
+
+    \begin{instruction}{RETI\See{1}} 
+        \Symbol{\SymRETI[0]}
+            \FlagsRETI
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{14}
+            \Comment{
+                \multirow{7}{*}{
+                    \tt
+                    \begin{tabular}{ll}
+                        c & \OCT{c} \\
+                        \hline
+                        NZ & 000 \\
+                        Z & 001 \\
+                        NC & 010 \\
+                        C & 011 \\
+                        PO & 100 \\
+                        PE & 101 \\
+                        P & 110 \\
+                        M & 111 \\
+                    \end{tabular}
+                }
+            }
+        \SkipToSymbol
+            \Symbol{\SymRETI[1]}
+            \FromSymbolToOpCode
+            \OpCode{01}{001}{101}
+            \Hex{4D}{}
+        \SkipToSymbol
+            \Symbol{\SymRETI[2]}
+    \end{instruction}
+
+    \begin{instruction}{RETN\See{2}} 
+        \Symbol{\SymRETN[0]}
+            \FlagsRETN
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{14}
+        \SkipToSymbol
+            \Symbol{\SymRETN[1]}
+            \FromSymbolToOpCode
+            \OpCode{01}{000}{101}
+            \Hex{45}{}
+        \SkipToSymbol
+            \Symbol{\SymRETN[2]}
+        \SkipToSymbol
+            \Symbol{\SymRETN[3]}
+    \end{instruction}
+
+    \begin{lastinstruction}{RST p} 
+        \Symbol{\SymRST[0]{p}}
+            \FlagsRSTn
+            \OpCode{11}{\OCT{p}}{111}
+            \Hex{..}{1}
+            \Cycles{3}{11}
+            \Comment{
+                \multirow{7}{*}{
+                    \tt
+                    \begin{tabular}{ll}
+                        p & \OCT{p} \\
+                        \hline
+                        \$0 & 000 \\
+                        \$8 & 001 \\
+                        \$10 & 010 \\
+                        \$18 & 011 \\
+                        \$20 & 100 \\
+                        \$28 & 101 \\
+                        \$30 & 110 \\
+                        \$38 & 111 \\
+                    \end{tabular}
+                }
+            }
+        \SkipToSymbol
+            \Symbol{\SymRST[1]{p}}
+        \SkipToSymbol
+            \Symbol{\SymRST[2]{p}}
+        \SkipToSymbol
+            \Symbol{\SymRST[3]{p}}
+    \end{lastinstruction}
+
+    \\[7ex] % note we need to add some manual spacing after this instruction so that tt/p comment table is visible in full (we don't have enough rows for multirow command)
+
+\end{instrtable}
+
+\begin{notestable}
+    \NoteItem{\See{1}{\tt RETI} also copies {\tt IFF2} into {\tt IFF1}, like {\tt RETN}}
+    \NoteItem{\See{2}This instruction has other undocumented opcodes}
+\end{notestable}
+
+\end{minipage}

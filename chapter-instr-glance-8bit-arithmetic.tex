@@ -1,0 +1,267 @@
+\section{8-Bit Arithmetic and Logical}
+
+\begin{minipage}{\textwidth}
+
+\begin{instrtable}
+
+    \begin{instruction}{ADD A,r}
+        \Symbol{\SymADD{A}{r}}
+            \FlagsADDr
+            \OpCode{10}{\fbox{000}}{\OCT{r}}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+            \Comment{
+                \tt
+                \multirow{6}{*}{
+                    \begin{tabular}{ll}
+                        r & \OCT{r} \\
+                        \hline
+                        B & 000 \\
+                        C & 001 \\
+                        D & 010 \\
+                        E & 011 \\
+                        H & 100 \\
+                        L & 101 \\
+                        A & 111 \\
+                    \end{tabular}
+                }
+            }
+    \end{instruction}
+
+    \begin{instruction}{ADD A,p}
+        \Symbol{\SymADD{A}{p}}
+            \FlagsADDr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{2} 
+            \Cycles{2}{8}
+        \SkipToOpCode
+            \OpCode{10}{\fbox{000}}{\OCT{p}}
+            \Hex{..}{}
+            \Cycles{}{}
+    \end{instruction}
+
+    \begin{instruction}{ADD A,q} 
+        \Symbol{\SymADD{A}{q}}
+            \FlagsADDr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode
+            \OpCode{10}{\fbox{000}}{\OCT{q}}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{ADD A,n}
+        \Symbol{\SymADD{A}{n}}
+            \FlagsADDr
+            \OpCode{11}{\fbox{000}}{110}
+            \Hex{C6}{2}
+            \Cycles{2}{7}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{ADD A,(HL)}
+        \Symbol{\SymADD{A}{(HL)}}
+            \FlagsADDr
+            \OpCode{10}{\fbox{000}}{110}
+            \Hex{86}{1} 
+            \Cycles{2}{7}
+            \Comment{
+                \multirow{8}{*}{
+                    \tt
+                    \begin{tabular}{ll}
+                        p & \OCT{p} \\
+                        \hline
+                        B & 000 \\
+                        C & 001 \\
+                        D & 010 \\
+                        E & 011 \\
+                        IX\High & 100 \\
+                        IX\Low & 101 \\
+                        A & 111 \\
+                    \end{tabular}
+                }
+            }
+    \end{instruction}
+
+    \begin{instruction}{ADD A,(IX+d)}
+        \Symbol{\SymADD{A}{(IX+d)}}
+            \FlagsADDr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{\fbox{000}}{110}
+            \Hex{86}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{ADD A,(IY+d)}
+        \Symbol{\SymADD{A}{(IY+d)}}
+            \FlagsADDr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{\fbox{000}}{110}
+            \Hex{86}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+
+    \StartWithOpCode\OpCode{}{$\uparrow$}{}\\
+
+    \begin{instruction}{ADC A,s\See{2}}
+        \Symbol{\SymADC{A}{s}}
+        \FlagsADCr
+        \OpCode{..}{\fbox{001}}{...} 
+        \Hex{}{}
+        \Cycles{}{}
+        \Comment{
+            \multirow{8}{*}{
+                \tt
+                \begin{tabular}{ll}
+                    q & \OCT{q} \\
+                    \hline
+                    B & 000 \\
+                    C & 001 \\
+                    D & 010 \\
+                    E & 011 \\
+                    IY\High & 100 \\
+                    IY\Low & 101 \\
+                    A & 111 \\
+                \end{tabular}
+            }
+        }
+    \end{instruction}
+
+    \begin{instruction}{SUB s\See{2}}
+        \Symbol{\SymSUB{s}}
+            \FlagsSUBr
+            \OpCode{..}{\fbox{010}}{...}
+    \end{instruction}
+
+    \begin{instruction}{SBC A,s\See{2}}
+        \Symbol{\SymSBC{A}{s}}
+            \FlagsSBCr
+            \OpCode{..}{\fbox{011}}{...}
+    \end{instruction}
+
+    \begin{instruction}{AND s\See{2}}
+        \Symbol{\SymAND{s}}
+            \FlagsANDr
+            \OpCode{..}{\fbox{100}}{...}
+    \end{instruction}
+
+    \begin{instruction}{XOR s\See{2}}
+        \Symbol{\SymXOR{s}}
+            \FlagsXORr
+            \OpCode{..}{\fbox{101}}{...}
+    \end{instruction}
+
+    \begin{instruction}{OR s\See{2}}
+        \Symbol{\SymOR{s}}
+            \FlagsORr
+            \OpCode{..}{\fbox{110}}{...}
+    \end{instruction}
+
+    \begin{instruction}{CP s\See{1,2}}
+        \Symbol{\SymCP{s}}
+            \FlagsCPr
+            \OpCode{..}{\fbox{111}}{...}
+    \end{instruction}
+
+    \Empty{}
+
+    \begin{instruction}{INC r} 
+        \Symbol{\SymINC{r}}
+            \FlagsINCr
+            \OpCode{00}{\OCT{r}}{\fbox{100}}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \begin{instruction}{INC p}
+        \Symbol{\SymINC{p}}
+            \FlagsINCr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode
+            \OpCode{00}{\OCT{p}}{\fbox{100}}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{INC q}
+        \Symbol{\SymINC{q}}
+            \FlagsINCr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2}
+            \Hex{2}{8}
+        \SkipToOpCode
+            \OpCode{00}{\OCT{q}}{\fbox{100}}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{INC (HL)}
+        \Symbol{\SymINC{(HL)}}
+            \FlagsINCr
+            \OpCode{00}{110}{\fbox{100}}
+            \Hex{34}{1}
+            \Cycles{3}{11}
+    \end{instruction}
+
+    \begin{instruction}{INC (IX+d)}
+        \Symbol{\SymINC{(IX+d)}}
+            \FlagsINCr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{6}{23}
+        \SkipToOpCode
+            \OpCode{00}{110}{\fbox{100}}
+            \Hex{34}{}
+        \SkipToOpCode
+            \OpRange{d}
+    \end{instruction}
+
+    \begin{instruction}{INC (IY+d)}
+        \Symbol{\SymINC{(IY+d)}}
+            \FlagsINCr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{6}{23}
+        \SkipToOpCode
+            \OpCode{00}{110}{\fbox{100}}
+            \Hex{34}{}
+        \SkipToOpCode
+            \OpRange{d}
+    \end{instruction}
+
+    \StartWithOpCode\OpCode{}{}{$\uparrow$} \\
+
+    \begin{lastinstruction}{DEC m\See{3}}
+        \Symbol{\SymDEC{m}}
+            \FlagsDECr
+            \OpCode{..}{...}{\fbox{101}}
+    \end{lastinstruction}
+
+\end{instrtable}
+
+\begin{notestable}
+    \NoteItem{\See{1}YF and XF flags are copied from the operand {\tt s}, not the result {\tt A-s}}
+
+    \NoteItem{\See{2}{\tt s} is any of {\tt r}, {\tt p}, {\tt q}, {\tt n}, {\tt (HL)}, {\tt (IX+d)}, {\tt (IY+d)} as shown for {\tt ADD}. Replace \fbox{{\tt 000}} in the {\tt ADD} set above. Ts also the same}
+
+    \NoteItem{\See{3}{\tt m} is any of {\tt r}, {\tt p}, {\tt q}, {\tt n}, {\tt (HL)}, {\tt (IX+d)}, {\tt (IY+d)} as shown for {\tt INC}. Replace \fbox{{\tt 100}} with \fbox{{\tt 101}} in opcode. Ts also the same}
+
+    \NoteItem{\See{4}PV set if value was {\tt \$7F} before incrementing}
+
+    \NoteItem{\See{5}PV set if value was {\tt \$80} before decrementing}
+\end{notestable}
+
+\end{minipage}

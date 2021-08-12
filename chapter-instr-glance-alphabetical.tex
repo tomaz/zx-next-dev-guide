@@ -1,0 +1,3222 @@
+% Alphabetical section only really makes sense for printed book; online PDF can be searched to get to specific instructions. TBH, the whole "in a glance" chapter only truly comes to life on paper, for online version, details chapter is more suitable, combined with sorted by mnemonic if actual machine codes are needed. But for now I'm only stripping alphabetical section out...
+\ifdefined\PRINTED
+
+\section{Alphabetical}
+
+\renewcommand{\FlagsSee}[1]{}	% we don't want to display any footnotes in alphabetical list; it would result in too many notes as instructions are not grouped by their resemblance
+
+% note we don't need `lastinstruction` here because we don't use bottom hline; however it's still useful in cases where last instruction in the table would otherwise cause vertical gap before next table
+
+\begin{instrtablesimple}
+
+    \begin{instruction}{ADC A,r}
+        \Symbol{\SymADC{A}{r}}
+            \FlagsADCr
+            \OpCode{10}{001}{\OCT{r}}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \begin{instruction}{ADC A,n}
+        \Symbol{\SymADC{A}{n}}
+            \FlagsADCr
+            \OpCode{11}{001}{110}
+            \Hex{CE}{2}
+            \Cycles{2}{7}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{ADC A,(HL)}
+        \Symbol{\SymADC{A}{(HL)}}
+            \FlagsADCr
+            \OpCode{10}{001}{110}
+            \Hex{8E}{1} 
+            \Cycles{2}{7}
+    \end{instruction}
+	
+    \begin{instruction}{ADC A,(IX+d)}
+        \Symbol{\SymADC{A}{(IX+d)}}
+            \FlagsADCr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{001}{110}
+            \Hex{8E}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+		
+    \begin{instruction}{ADC A,(IY+d)}
+        \Symbol{\SymADC{A}{(IY+d)}}
+            \FlagsADCr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{001}{110}
+            \Hex{8E}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{ADC HL,rr} 
+        \Symbol{\SymADC{HL}{rr}}
+            \FlagsADCrr
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode
+            \OpCode{01}{\OCT{rr}1}{010}
+            \Hex{..}{}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{ADD A,r}
+        \Symbol{\SymADD{A}{r}}
+            \FlagsADDr
+            \OpCode{10}{000}{\OCT{r}}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+	
+    \begin{instruction}{ADD A,n}
+        \Symbol{\SymADD{A}{n}}
+            \FlagsADDr
+            \OpCode{11}{000}{110}
+            \Hex{C6}{2}
+            \Cycles{2}{7}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+		
+    \begin{instruction}{ADD A,(HL)}
+        \Symbol{\SymADD{A}{(HL)}}
+            \FlagsADDr
+            \OpCode{10}{000}{110}
+            \Hex{86}{1} 
+            \Cycles{2}{7}
+    \end{instruction}
+		
+    \begin{instruction}{ADD A,(IX+d)}
+        \Symbol{\SymADD{A}{(IX+d)}}
+            \FlagsADDr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{000}{110}
+            \Hex{86}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+			
+    \begin{instruction}{ADD A,(IY+d)}
+        \Symbol{\SymADD{A}{(IY+d)}}
+            \FlagsADDr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{000}{110}
+            \Hex{86}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{ADD HL,rr} 
+        \Symbol{\SymADD{HL}{rr}}
+            \FlagsADDrr
+            \OpCode{00}{\OCT{rr}1}{001}
+            \Hex{..}{1}
+            \Cycles{3}{11}
+    \end{instruction}
+	
+    \begin{instruction}{ADD IX,rr} 
+        \Symbol{\SymADD{IX}{rr}}
+            \FlagsADDrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode
+            \OpCode{00}{\OCT{rr}1}{001}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{ADD IY,rr} 
+        \Symbol{\SymADD{IY}{rr}}
+            \FlagsADDrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode
+            \OpCode{00}{\OCT{rr}1}{001}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{ADD rr,A\ZXNS} 
+        \Symbol{\SymADD{rr}{A}}
+            \FlagsADDrra
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{00}{110}{0\OCT{rr}}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{ADD rr,nm\ZXNS} 
+        \Symbol{\SymADD{rr}{nm}}
+            \FlagsADDrrnn
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToOpCode 
+            \OpCode{00}{110}{1\OCT{rr}}
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{m} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{} 
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{AND A,r}
+        \Symbol{\SymAND{r}}
+            \FlagsANDr
+            \OpCode{10}{100}{\OCT{r}}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+	
+    \begin{instruction}{AND A,n}
+        \Symbol{\SymAND{n}}
+            \FlagsANDr
+            \OpCode{11}{100}{110}
+            \Hex{E6}{2}
+            \Cycles{2}{7}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+		
+    \begin{instruction}{AND A,(HL)}
+        \Symbol{\SymAND{(HL)}}
+            \FlagsANDr
+            \OpCode{10}{100}{110}
+            \Hex{A6}{}
+            \Cycles{2}{7}
+    \end{instruction}
+		
+    \begin{instruction}{AND A,(IX+d)}
+        \Symbol{\SymAND{(IX+d)}}
+            \FlagsANDr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{100}{110}
+            \Hex{A6}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+			
+    \begin{instruction}{AND A,(IY+d)}
+        \Symbol{\SymAND{(IY+d)}}
+            \FlagsANDr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{100}{110}
+            \Hex{A6}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+			
+\end{instrtablesimple}
+
+% first page has title, so we offset successive page a bit to achieve perfect fit.
+\vspace*{0.55cm}
+
+\begin{instrtablesimple}
+	
+    \begin{instruction}{BIT b,r} 
+        \Symbol{\SymBIT{r}}
+            \FlagsBITr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{01}{\OCT{b}}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{BIT b,(HL)} 
+        \Symbol{\SymBIT{(HL)}}
+            \FlagsBITr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{3}{12}
+        \SkipToOpCode 
+            \OpCode{01}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{BIT b,(IX+d)} 
+        \Symbol{\SymBIT{(IX+d)}}
+            \FlagsBITr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{5}{20}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{01}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{BIT b,(IY+d)} 
+        \Symbol{\SymBIT{(IY+d)}}
+            \FlagsBITr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{5}{20}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{01}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+		
+    \begin{instruction}{BRLC DE,B\ZXNS} 
+        \Symbol{\SymBRLC[0]}
+            \FlagsBRLC
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToSymbol
+            \Symbol{\SymBRLC[1]}
+            \FromSymbolToOpCode
+            \OpCode{00}{101}{100}
+            \Hex{2C}{}
+    \end{instruction}
+
+    \begin{instruction}{BSLA DE,B\ZXNS} 
+        \Symbol{\SymBSLA[0]}
+            \FlagsBSLA
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{00}{101}{000}
+            \Hex{28}{}
+    \end{instruction}
+
+    \begin{instruction}{BSRA DE,B\ZXNS} 
+        \SymbolS{\SymBSRA[0]}
+            \FlagsBSRA
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToSymbol
+            \SymbolP{\SymBSRA[1]}
+            \FromSymbolToOpCode
+            \OpCode{00}{101}{001}
+            \Hex{29}{}
+    \end{instruction}
+
+    \begin{instruction}{BSRL DE,B\ZXNS} 
+        \SymbolS{\SymBSRL[0]}
+            \FlagsBSRL
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToSymbol
+            \SymbolP{\SymBSRL[1]}
+            \FromSymbolToOpCode
+            \OpCode{00}{101}{010}
+            \Hex{2A}{}
+    \end{instruction}
+
+    \begin{instruction}{BSRF DE,B\ZXNS} 
+        \SymbolS{\SymBSRF[0]}
+            \FlagsBSRF
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToSymbol
+            \SymbolP{\SymBSRF[1]}
+            \FromSymbolToOpCode
+            \OpCode{00}{101}{011}
+            \Hex{2B}{}
+            \Cycles{}{}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+	
+    \begin{instruction}{CALL nm} 
+        \Symbol{\SymCALL[0]{nm}}
+            \FlagsCALLnn
+            \OpCode{11}{001}{101}
+            \Hex{CD}{3}
+            \Cycles{5}{17}
+        \SkipToSymbol
+            \Symbol{\SymCALL[1]{nm}}
+            \FromSymbolToOpCode
+            \OpRange{m} 
+            \Hex{..}{}
+        \SkipToSymbol
+            \Symbol{\SymCALL[2]{nm}}
+            \FromSymbolToOpCode
+            \OpRange{n} 
+            \Hex{..}{}
+        \SkipToSymbol
+            \Symbol{\SymCALL[3]{nm}}
+    \end{instruction}
+	
+    \begin{instruction}{CALL c,nm} 
+        \Symbol{\SymCALLc{nm}}
+            \FlagsCALLccnn
+            \OpCode{11}{\OCT{c}}{100}
+            \Hex{..}{3}
+            \Cycles{3}{10}
+            \Comment{if {\tt c}=false}
+        \SkipToOpCode
+            \OpRange{m} 
+            \Hex{..}{}
+            \Cycles{5}{17}
+            \Comment{if {\tt c}=true}
+        \SkipToOpCode
+            \OpRange{n} 
+            \Hex{..}{}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+	
+    \begin{instruction}{CCF} 
+        \Symbol{\SymCCF}
+            \FlagsCCF
+            \OpCode{00}{111}{111}
+            \Hex{3F}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{CP r}
+        \Symbol{\SymCP{r}}
+            \FlagsCPr
+            \OpCode{10}{111}{\OCT{r}}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+	
+    \begin{instruction}{CP n}
+        \Symbol{\SymCP{n}}
+            \FlagsCPr
+            \OpCode{11}{111}{110}
+            \Hex{FE}{2}
+            \Cycles{2}{7}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+		
+    \begin{instruction}{CP (HL)}
+        \Symbol{\SymCP{(HL)}}
+            \FlagsCPr
+            \OpCode{10}{111}{110}
+            \Hex{BE}{1} 
+            \Cycles{2}{7}
+    \end{instruction}
+		
+    \begin{instruction}{CP (IX+d)}
+        \Symbol{\SymCP{(IX+d)}}
+            \FlagsCPr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{111}{110}
+            \Hex{BE}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+			
+    \begin{instruction}{CP (IY+d)}
+        \Symbol{\SymCP{(IY+d)}}
+            \FlagsCPr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{111}{110}
+            \Hex{BE}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+
+\end{instrtablesimple}
+
+\begin{instrtablesimple}
+	
+    \begin{instruction}{CPD} 
+        \Symbol{\SymCPD[0]}
+            \FlagsCPD
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymCPD[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{101}{001}
+            \Hex{A9}{}
+        \SkipToSymbol
+            \Symbol{\SymCPD[2]}
+    \end{instruction}
+
+    \begin{instruction}{CPDR} 
+        \Symbol{\SymCPDR[0]}
+            \FlagsCPDR
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt A=(HL)}}
+        \SkipToSymbol
+            \Symbol{\SymCPDR[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{111}{001}
+            \Hex{B9}{}
+            \Cycles{}{}
+            \Comment{or {\tt BC}=0}
+        \SkipToOpCode
+            \OpCode{}{}{}
+            \Hex{}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt A}$\neq${\tt (HL)}}
+        \SkipToOpCode
+            \OpCode{}{}{}
+            \Hex{}{}
+            \Cycles{}{}
+            \Comment{and {\tt BC}$\neq${\tt 0}}
+    \end{instruction}
+
+    \begin{instruction}{CPI} 
+        \Symbol{\SymCPI[0]}
+            \FlagsCPI
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymCPI[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{100}{001}
+            \Hex{A1}{}
+        \SkipToSymbol
+            \Symbol{\SymCPI[2]}
+    \end{instruction}
+	
+    \begin{instruction}{CPIR} 
+        \Symbol{\SymCPIR[0]}
+            \FlagsCPIR
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt A=(HL)}}
+        \SkipToSymbol
+            \Symbol{\SymCPIR[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{110}{001}
+            \Hex{B1}{}
+            \Cycles{}{}
+            \Comment{or {\tt BC}=0}
+        \SkipToOpCode
+            \OpCode{}{}{}
+            \Hex{}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt A}$\neq${\tt (HL)}}
+        \SkipToOpCode
+            \OpCode{}{}{}
+            \Hex{}{}
+            \Cycles{}{}
+            \Comment{and {\tt BC}$\neq$0}
+    \end{instruction}
+
+    %-------------------------------------------
+	
+    \begin{instruction}{CPL} 
+        \Symbol{\SymCPL}
+            \FlagsCPL
+            \OpCode{00}{101}{111}
+            \Hex{2F}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    %-------------------------------------------
+
+    \begin{instruction}{DAA}
+        \Symbol{}
+            \FlagsDAA
+            \OpCode{00}{100}{111}
+            \Hex{27}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{DEC r}
+        \Symbol{\SymDEC{r}}
+            \FlagsDECr
+            \OpCode{00}{\OCT{r}}{101}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+		
+    \begin{instruction}{DEC (HL)}
+        \Symbol{\SymDEC{(HL)}}
+            \FlagsDECr
+            \OpCode{00}{110}{101}
+            \Hex{35}{1} 
+            \Cycles{3}{11}
+    \end{instruction}
+		
+    \begin{instruction}{DEC (IX+d)}
+        \Symbol{\SymDEC{(IX+d)}}
+            \FlagsDECr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{00}{110}{101}
+            \Hex{35}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+			
+    \begin{instruction}{DEC (IY+d)}
+        \Symbol{\SymDEC{(IY+d)}}
+            \FlagsDECr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{00}{110}{101}
+            \Hex{35}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{DEC rr} 
+        \Symbol{\SymDEC{rr}}
+            \FlagsDECrr
+            \OpCode{00}{\OCT{rr}1}{011}
+            \Hex{..}{1}
+            \Cycles{1}{6}
+    \end{instruction}
+	
+    \begin{instruction}{DEC IX} 
+        \Symbol{\SymDEC{IX}}
+            \FlagsDECrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{2}
+            \Cycles{2}{10}
+        \SkipToOpCode
+            \OpCode{00}{101}{011}
+            \Hex{2B}{}
+    \end{instruction}
+	
+    \begin{instruction}{DEC IY} 
+        \Symbol{\SymDEC{IY}}
+            \FlagsDECrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2}
+            \Cycles{2}{10}
+        \SkipToOpCode
+            \OpCode{00}{101}{011}
+            \Hex{2B}{}
+    \end{instruction}
+
+    \EmptySeparator	
+	
+    %-------------------------------------------
+
+    \begin{instruction}{DI} 
+        \Symbol{\SymDI[0]}
+            \FlagsDI
+            \OpCode{11}{110}{011}
+            \Hex{F3}{1}
+            \Cycles{1}{4}
+        \SkipToSymbol
+            \Symbol{\SymDI[1]}
+    \end{instruction}
+
+    %-------------------------------------------
+
+    \begin{instruction}{DJNZ e} 
+        \Symbol{\SymDJNZ[0]{e}}
+            \FlagsDJNZ
+            \OpCode{00}{010}{000}
+            \Hex{10}{2}
+            \Cycles{2}{8}
+            \Comment{if {\tt B}=0}
+        \SkipToSymbol
+            \Symbol{\SymDJNZ[1]{e}}
+            \FromSymbolToOpCode
+            \OpRangeSmall{e-2}
+            \Hex{..}{}
+            \Cycles{3}{13}
+            \Comment{if {\tt B}$\neq$0}
+    \end{instruction}
+
+    %-------------------------------------------
+
+    \begin{instruction}{EI} 
+        \Symbol{\SymEI[0]}
+            \FlagsEI
+            \OpCode{11}{111}{011}
+            \Hex{FB}{1}
+            \Cycles{1}{4}
+        \SkipToSymbol
+            \Symbol{\SymEI[1]}
+    \end{instruction}
+
+    %-------------------------------------------
+
+    \begin{instruction}{EX AF,AF'} 
+        \Symbol{\SymEX{AF}{AF'}}
+            \FlagsEXaf
+            \OpCode{00}{001}{000}
+            \Hex{08}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+	
+    \begin{instruction}{EX DE,HL} 
+        \Symbol{\SymEX{DE}{HL}}
+            \FlagsEXrr
+            \OpCode{11}{101}{011}
+            \Hex{EB}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+	
+    \begin{instruction}{EX (SP),HL} 
+        \Symbol{\SymEX{H}{(SP+1)}}
+            \FlagsEXrr
+            \OpCode{11}{100}{011}
+            \Hex{E3}{1}
+            \Cycles{5}{19}
+        \SkipToSymbol 
+            \Symbol{\SymEX{L}{(SP)}}
+    \end{instruction}
+	
+    \begin{instruction}{EX (SP),IX} 
+        \Symbol{\SymEX{IX\High}{(SP+1)}}
+            \FlagsEXrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{2}
+            \Cycles{6}{2}
+        \SkipToSymbol
+            \Symbol{\SymEX{IX\Low}{(SP)}}
+            \FromSymbolToOpCode
+            \OpCode{11}{100}{011}
+            \Hex{E3}{}
+    \end{instruction}
+	
+    \begin{instruction}{EX (SP),IY} 
+        \Symbol{\SymEX{IY\High}{(SP+1)}}
+            \FlagsEXrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2}
+            \Cycles{6}{23}
+        \SkipToSymbol
+            \Symbol{\SymEX{IY\Low}{(SP)}}
+            \FromSymbolToOpCode
+            \OpCode{11}{100}{011}
+            \Hex{E3}{}
+    \end{instruction}
+	
+\end{instrtablesimple}
+
+\begin{instrtablesimple}
+	
+    \begin{instruction}{EXX} 
+        \Symbol{\SymEXX[0]}
+            \FlagsEXX
+            \OpCode{11}{011}{001}
+            \Hex{D9}{1}
+            \Cycles{1}{4}
+        \SkipToSymbol
+            \Symbol{\SymEXX[1]}
+        \SkipToSymbol
+            \Symbol{\SymEXX[2]}
+    \end{instruction}
+
+    %-------------------------------------------
+
+    \begin{instruction}{HALT}
+        \Symbol{}
+            \FlagsHALT
+            \OpCode{01}{110}{110}
+            \Hex{76}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{IM 0\See{4}}
+        \Symbol{}
+            \FlagsIM
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{01}{000}{110}
+            \Hex{46}{}
+    \end{instruction}
+	
+    \begin{instruction}{IM 1\See{4}}
+        \Symbol{}
+            \FlagsIM
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{01}{010}{110}
+            \Hex{56}{}
+    \end{instruction}
+	
+    \begin{instruction}{IM 2\See{4}}
+        \Symbol{}
+            \FlagsIM
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{01}{011}{110}
+            \Hex{5E}{}
+    \end{instruction}
+
+    \EmptySeparator
+	
+    %-------------------------------------------
+
+    \begin{instruction}{IN A,(n)}
+        \Symbol{\SymIN{A}{n}}
+            \FlagsINan
+            \OpCode{11}{011}{011}
+            \Hex{DB}{2}
+            \Cycles{3}{11}
+        \SkipToOpCode	
+            \OpRange{n} 
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{IN r,(C)}
+        \Symbol{\SymIN{r}{BC}}
+            \FlagsINrc
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{3}{12}
+        \SkipToOpCode 
+            \OpCode{01}{\OCT{r}}{000}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{IN (C)}
+        \Symbol{(BC)}
+            \FlagsINc
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{3}{12}
+        \SkipToOpCode 
+            \OpCode{01}{110}{000}
+            \Hex{70}{}
+    \end{instruction}
+
+    \EmptySeparator
+	
+    %-------------------------------------------
+
+    \begin{instruction}{INC r}
+        \Symbol{\SymINC{r}}
+            \FlagsINCr
+            \OpCode{00}{\OCT{r}}{100}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+			
+    \begin{instruction}{INC (HL)}
+        \Symbol{\SymINC{(HL)}}
+            \FlagsINCr
+            \OpCode{00}{110}{100}
+            \Hex{34}{1} 
+            \Cycles{3}{11}
+    \end{instruction}
+			
+    \begin{instruction}{INC (IX+d)}
+        \Symbol{\SymINC{(IX+d)}}
+            \FlagsINCr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{00}{110}{100}
+            \Hex{34}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+				
+    \begin{instruction}{INC (IY+d)}
+        \Symbol{\SymINC{(IY+d)}}
+            \FlagsINCr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{00}{110}{100}
+            \Hex{34}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{INC rr} 
+        \Symbol{\SymINC{rr}}
+            \FlagsINCrr
+            \OpCode{00}{\OCT{rr}0}{011}
+            \Hex{..}{1}
+            \Cycles{1}{6}
+    \end{instruction}
+		
+    \begin{instruction}{INC IX} 
+        \Symbol{\SymINC{IX}}
+            \FlagsINCrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{2}
+            \Cycles{2}{10}
+        \SkipToOpCode
+            \OpCode{00}{100}{011}
+            \Hex{23}{}
+    \end{instruction}
+		
+    \begin{instruction}{INC IY} 
+        \Symbol{\SymINC{IY}}
+            \FlagsINCrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2}
+            \Cycles{2}{10}
+        \SkipToOpCode
+            \OpCode{00}{100}{011}
+            \Hex{23}{}
+    \end{instruction}
+
+    \EmptySeparator	
+		
+    %-------------------------------------------
+
+    \begin{instruction}{IND} 
+        \Symbol{\SymIND[0]}
+            \FlagsIND
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymIND[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{101}{010}
+            \Hex{AA}{}
+        \SkipToSymbol
+            \Symbol{\SymIND[2]}
+    \end{instruction}
+	
+    \begin{instruction}{INDR} 
+        \Symbol{\SymINDR[0]}
+            \FlagsINDR
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt B}=0}
+        \SkipToSymbol
+            \Symbol{\SymINDR[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{111}{010}
+            \Hex{BA}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt B}$\neq$0}
+    \end{instruction}
+	
+    \begin{instruction}{INI} 
+        \Symbol{\SymINI[0]}
+            \FlagsINI
+            \OpCode{11}{101}{101} 
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymINI[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{100}{010}
+            \Hex{A2}{}
+        \SkipToSymbol
+            \Symbol{\SymINI[2]}
+    \end{instruction}
+	
+    \begin{instruction}{INIR} 
+        \Symbol{\SymINIR[0]}
+            \FlagsINIR
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt B}=0}
+        \SkipToSymbol
+            \Symbol{\SymINIR[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{110}{010}
+            \Hex{B2}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt B}$\neq$0}
+    \end{instruction}
+
+    \EmptySeparator
+	
+    %-------------------------------------------
+
+    \begin{instruction}{JP nm} 
+        \Symbol{\SymJP{nm}}
+            \FlagsJPnn
+            \OpCode{11}{000}{011}
+            \Hex{C3}{3}
+            \Cycles{3}{10}
+        \SkipToOpCode 
+            \OpRange{m} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{}
+    \end{instruction}
+
+	
+\end{instrtablesimple}
+
+\begin{instrtablesimple}
+
+    \begin{instruction}{JP (HL)}
+        \Symbol{\SymJP{HL}}
+            \FlagsJPrr
+            \OpCode{11}{101}{001}
+            \Hex{E9}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \begin{instruction}{JP (IX)} 
+        \Symbol{\SymJP{IX}}
+            \FlagsJPrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{11}{101}{001}
+            \Hex{E9}{}
+    \end{instruction}
+
+    \begin{instruction}{JP (IY)} 
+        \Symbol{\SymJP{IY}}
+            \FlagsJPrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{11}{101}{001}
+            \Hex{E9}{}
+    \end{instruction}
+
+    \begin{instruction}{JP (C)\ZXNS} 
+        \Symbol{\SymJPC}
+            \FlagsJPc
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{3}{13}
+        \SkipToOpCode
+            \OpCode{10}{011}{000}
+            \Hex{98}{}
+    \end{instruction}
+
+    \begin{instruction}{JP c,nm} 
+        \Symbol{\SymJPc{nm}}
+            \FlagsJPccnn
+            \OpCode{11}{\OCT{c}}{010}
+            \Hex{..}{3}
+            \Cycles{3}{10}
+        \SkipToOpCode
+            \OpRange{m}
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{JR e} 
+        \Symbol{\SymJR{e}}
+            \FlagsJRn
+            \OpCode{00}{011}{000}
+            \Hex{18}{2}
+            \Cycles{3}{12}
+        \SkipToOpCode 
+            \OpRangeSmall{e-2}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{JR c,e} 
+        \Symbol{\SymJRc{c}{e}}
+            \FlagsJRccn
+            \OpCode{00}{1\OCT{cc}}{000}
+            \Hex{..}{2}
+            \Cycles{2}{7}
+            \Comment{if {\tt p}=false}
+        \SkipToOpCode
+            \OpRangeSmall{e-2}
+            \Hex{..}{}
+            \Cycles{3}{12}
+            \Comment{if {\tt p}=true}
+    \end{instruction}
+
+    \EmptySeparator
+	
+    %-------------------------------------------
+
+    \begin{instruction}{LD r,r'}
+        \Symbol{\SymLD{r}{r'}}
+            \FlagsLDr
+            \OpCode{01}{\OCT{r}}{\OCTS{r}}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \begin{instruction}{LD r,n}
+        \Symbol{\SymLD{r}{n}}
+            \FlagsLDr
+            \OpCode{00}{\OCT{r}}{110}
+            \Hex{..}{2} 
+            \Cycles{2}{7}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{LD r,(HL)}
+        \Symbol{\SymLD{r}{(HL)}}
+            \FlagsLDr
+            \OpCode{01}{\OCT{r}}{110}
+            \Hex{..}{1}
+            \Cycles{2}{7}
+    \end{instruction}
+	
+    \begin{instruction}{LD r,(IX+d)}
+        \Symbol{\SymLD{r}{(IX+d)}}
+            \FlagsLDr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{01}{\OCT{r}}{110}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{LD r,(IY+d)}
+        \Symbol{\SymLD{r}{(IY+d)}}
+            \FlagsLDr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{01}{\OCT{r}}{110}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{LD (HL),r}
+        \Symbol{\SymLD{(HL)}{r}}
+            \FlagsLDr
+            \OpCode{01}{110}{\OCT{r}}
+            \Hex{..}{1} 
+            \Cycles{2}{7}
+    \end{instruction}
+	
+    \begin{instruction}{LD (IX+d),r}
+        \Symbol{\SymLD{(IX+d)}{r}}
+            \FlagsLDr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{01}{110}{\OCT{r}}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{LD (IY+d),r}
+        \Symbol{\SymLD{(IY+d)}{r}}
+            \FlagsLDr
+            \OpCode{11}{111}{101} 
+            \Hex{FD}{3} 
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{01}{110}{\OCT{r}}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{LD (HL),n}
+        \Symbol{\SymLD{(HL)}{n}}
+            \FlagsLDr
+            \OpCode{00}{110}{110}
+            \Hex{36}{2}
+            \Cycles{3}{10}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{LD (IX+d),n} 
+        \Symbol{\SymLD{(IX+d)}{n}}
+            \FlagsLDr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{00}{110}{110}
+            \Hex{36}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+		
+    \begin{instruction}{LD (IY+d),n} 
+        \Symbol{\SymLD{(IY+d)}{n}}
+            \FlagsLDr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{00}{110}{110}
+            \Hex{36}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{LD (BC),A} 
+        \Symbol{\SymLD{(BC)}{A}}
+            \FlagsLDr
+            \OpCode{00}{000}{010}
+            \Hex{02}{1}
+            \Cycles{2}{7}
+    \end{instruction}
+	
+    \begin{instruction}{LD (DE),A} 
+        \Symbol{\SymLD{(DE)}{A}}
+            \FlagsLDr
+            \OpCode{00}{010}{010}
+            \Hex{12}{1}
+            \Cycles{2}{7}
+    \end{instruction}
+	
+    \begin{lastinstruction}{LD (nm),A} 
+        \Symbol{\SymLD{(nm)}{A}}
+            \FlagsLDr
+            \OpCode{00}{110}{010}
+            \Hex{32}{3}
+            \Cycles{4}{13}
+        \SkipToOpCode
+            \OpRange{m}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{lastinstruction}
+	
+\end{instrtablesimple}
+
+\begin{instrtablesimple}
+			
+    \begin{instruction}{LD A,(BC)} 
+        \Symbol{\SymLD{A}{(BC)}}
+            \FlagsLDr
+            \OpCode{00}{001}{010}
+            \Hex{0A}{1}
+            \Cycles{2}{7}
+    \end{instruction}
+		
+    \begin{instruction}{LD A,(DE)} 
+        \Symbol{\SymLD{A}{(DE)}}
+            \FlagsLDr
+            \OpCode{00}{011}{01}
+            \Hex{1A}{1}
+            \Cycles{2}{7}
+    \end{instruction}
+		
+    \begin{instruction}{LD A,(nm)} 
+        \Symbol{\SymLD{A}{(nm)}}
+            \FlagsLDr
+            \OpCode{00}{111}{010}
+            \Hex{3A}{3}
+            \Cycles{4}{13}
+        \SkipToOpCode
+            \OpRange{m}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{LD A,I} 
+        \Symbol{\SymLD{A}{I}}
+            \FlagsLDair
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{9}
+        \SkipToOpCode
+            \OpCode{01}{010}{111}
+            \Hex{57}{}
+    \end{instruction}
+	
+    \begin{instruction}{LD A,R} 
+        \Symbol{\SymLD{A}{R}}
+            \FlagsLDair
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{9}
+        \SkipToOpCode
+            \OpCode{01}{011}{111}
+            \Hex{5F}{}
+    \end{instruction}
+	
+    \begin{instruction}{LD I,A} 
+        \Symbol{\SymLD{I}{A}}
+            \FlagsLDr
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{9}
+        \SkipToOpCode
+            \OpCode{01}{000}{111}
+            \Hex{47}{}
+    \end{instruction}
+	
+    \begin{instruction}{LD R,A} 
+        \Symbol{\SymLD{R}{A}}
+            \FlagsLDr
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{9}
+        \SkipToOpCode
+            \OpCode{01}{001}{111}
+            \Hex{4F}{}
+    \end{instruction}
+
+    \begin{instruction}{LD rr,nm} 
+        \Symbol{\SymLD{rr}{nm}}
+            \FlagsLDrr
+            \OpCode{00}{\OCT{rr}0}{001} 
+            \Hex{..}{3} 
+            \Cycles{3}{10}
+        \SkipToOpCode 
+            \OpRange{m} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{} 
+    \end{instruction}
+	
+    \begin{instruction}{LD IX,nm} 
+        \Symbol{\SymLD{IX}{nm}}
+            \FlagsLDrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{4}{14}
+        \SkipToOpCode 
+            \OpCode{00}{100}{001}
+            \Hex{21}{}
+        \SkipToOpCode 
+            \OpRange{m} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{LD IY,nm} 
+        \Symbol{\SymLD{IX}{nm}}
+            \FlagsLDrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{4}{14}
+        \SkipToOpCode 
+            \OpCode{00}{100}{001}
+            \Hex{21}{}
+        \SkipToOpCode 
+            \OpRange{m} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{} 
+    \end{instruction}
+	
+    \begin{instruction}{LD SP,HL} 
+        \Symbol{\SymLD{SP}{HL}}
+            \FlagsLDrr
+            \OpCode{11}{111}{001}
+            \Hex{F9}{1}
+            \Cycles{1}{6}
+    \end{instruction}
+		
+    \begin{instruction}{LD SP,IX} 
+        \Symbol{\SymLD{SP}{IX}}
+            \FlagsLDrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{2}
+            \Cycles{2}{10}
+        \SkipToOpCode 
+            \OpCode{11}{111}{001}
+            \Hex{F9}{}
+    \end{instruction}
+		
+    \begin{instruction}{LD SP,IY} 
+        \Symbol{\SymLD{SP}{IY}}
+            \FlagsLDrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2}
+            \Cycles{2}{10}
+        \SkipToOpCode 
+            \OpCode{11}{111}{001}
+            \Hex{F9}{}
+    \end{instruction}
+	
+    \begin{instruction}{LD HL,(nm)} 
+        \Symbol{\SymLD{H}{(nm+1)}}
+            \FlagsLDrr
+            \OpCode{00}{101}{010}
+            \Hex{2A}{3}
+            \Cycles{5}{16}
+        \SkipToSymbol
+            \Symbol{\SymLD{L}{(nm)}}
+            \FromSymbolToOpCode
+            \OpRange{m}
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{} 
+    \end{instruction}
+	
+    \begin{instruction}{LD rr,(nm)} 
+        \Symbol{\SymLD{rr\High}{(nm+1)}}
+            \FlagsLDrr
+            \OpCode{11}{101}{101}
+            \Hex{ED}{4}
+            \Cycles{6}{20}
+        \SkipToSymbol
+            \Symbol{\SymLD{rr\Low}{(nm)}}
+            \FromSymbolToOpCode
+            \OpCode{01}{\OCT{rr}1}{011}
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{m} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{} 
+    \end{instruction}
+	
+    \begin{instruction}{LD IX,(nm)}
+        \Symbol{\SymLD{IX\High}{(nm+1)}}
+            \FlagsLDrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{20}
+        \SkipToSymbol
+            \Symbol{\SymLD{IX\Low}{(nm)}}
+            \FromSymbolToOpCode
+            \OpCode{00}{101}{010}
+            \Hex{2A}{}
+        \SkipToOpCode
+            \OpRange{m}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{LD IY,(nm)}
+        \Symbol{\SymLD{IY\High}{(nm+1)}}
+            \FlagsLDrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{20}
+        \SkipToSymbol
+            \Symbol{\SymLD{IY\Low}{(nn)}}
+            \FromSymbolToOpCode
+            \OpCode{00}{101}{010}
+            \Hex{2A}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{} 
+    \end{instruction}
+	
+\end{instrtablesimple}
+
+\begin{instrtablesimple}
+	
+    \begin{instruction}{LD (nm),HL}
+        \Symbol{\SymLD{(nn+1)}{H}}
+            \FlagsLDrr
+            \OpCode{00}{100}{010}
+            \Hex{22}{3} 
+            \Cycles{5}{16}
+        \SkipToSymbol
+            \Symbol{\SymLD{(nm)}{L}}
+            \FromSymbolToOpCode
+            \OpRange{m} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{} 
+    \end{instruction}
+		
+    \begin{instruction}{LD (nm),rr} 
+        \Symbol{\SymLD{(nm+1)}{rr\High}}
+            \FlagsLDrr
+            \OpCode{11}{101}{101}
+            \Hex{ED}{4}
+            \Cycles{6}{20}
+        \SkipToSymbol
+            \Symbol{\SymLD{(nm)}{rr\Low}}
+            \FromSymbolToOpCode
+            \OpCode{01}{\OCT{rr}0}{011}
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{m} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{} 
+    \end{instruction}
+		
+    \begin{instruction}{LD (nm),IX} 
+        \Symbol{\SymLD{(nm+1)}{IX\High}}
+            \FlagsLDrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{20}
+        \SkipToSymbol
+            \Symbol{\SymLD{(nm)}{IX\Low}}
+            \FromSymbolToOpCode
+            \OpCode{00}{100}{010}
+            \Hex{22}{}
+        \SkipToOpCode 
+            \OpRange{m}
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{n}
+            \Hex{..}{} 
+    \end{instruction}
+		
+    \begin{instruction}{LD (nm),IY} 
+        \Symbol{\SymLD{(nm+1)}{IY\High}}
+            \FlagsLDrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{20}
+        \SkipToSymbol
+            \Symbol{\SymLD{(nm)}{IY\Low}}
+            \FromSymbolToOpCode
+            \OpCode{00}{100}{010}
+            \Hex{22}{}
+        \SkipToOpCode 
+            \OpRange{m} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{} 
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{LDD} 
+        \Symbol{\SymLDD[0]}
+            \FlagsLDD
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymLDD[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{101}{000}
+            \Hex{A8}{}
+        \SkipToSymbol
+            \Symbol{\SymLDD[2]}
+        \SkipToSymbol
+            \Symbol{\SymLDD[3]}
+    \end{instruction}
+	
+    \begin{instruction}{LDDR} 
+        \Symbol{\SymLDDR[0]}
+            \FlagsLDDR
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt BC=0}}
+        \SkipToSymbol
+            \Symbol{\SymLDDR[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{111}{000}
+            \Hex{B8}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt BC$\neq$0}}
+    \end{instruction}
+
+    \begin{instruction}{LDDX\ZXNS} 
+        \Symbol{\SymLDDX[0]}
+            \FlagsLDDX
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymLDDX[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{101}{100}
+            \Hex{AC}{}
+        \SkipToSymbol
+            \Symbol{\SymLDDX[2]}
+        \SkipToSymbol
+            \Symbol{\SymLDDX[3]}
+    \end{instruction}
+
+    \begin{instruction}{LDDRX\ZXNS} 
+        \Symbol{do LDDX}
+            \FlagsLDDRX
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt BC}=0}
+        \SkipToSymbol
+            \Symbol{while BC>0}
+            \FromSymbolToOpCode
+            \OpCode{10}{111}{100}
+            \Hex{BC}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt BC}$\neq$0}
+    \end{instruction}
+
+    \begin{instruction}{LDI}
+        \Symbol{\SymLDI[0]}
+            \FlagsLDI
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymLDI[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{100}{000}
+            \Hex{A0}{}
+        \SkipToSymbol
+            \Symbol{\SymLDI[2]}
+        \SkipToSymbol
+            \Symbol{\SymLDI[3]}
+    \end{instruction}
+	
+    \begin{instruction}{LDIR} 
+        \Symbol{\SymLDIR[0]}
+            \FlagsLDIR
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt BC=0}}
+        \SkipToSymbol
+            \Symbol{\SymLDIR[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{110}{000}
+            \Hex{B0}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt BC$\neq$0}}
+    \end{instruction}
+
+    \begin{instruction}{LDIX\ZXNS} 
+        \Symbol{\SymLDIX[0]}
+            \FlagsLDIX
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymLDIX[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{100}{100}
+            \Hex{A4}{}
+        \SkipToSymbol
+            \Symbol{\SymLDIX[2]}
+        \SkipToSymbol
+            \Symbol{\SymLDIX[3]}
+    \end{instruction}
+	
+    \begin{instruction}{LDIRX\ZXNS} 
+        \Symbol{\SymLDIRX[0]}
+            \FlagsLDIRX
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt BC}=0}
+        \SkipToSymbol
+            \Symbol{\SymLDIRX[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{110}{100}
+            \Hex{B4}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt BC}$\neq$0}
+    \end{instruction}
+
+    \begin{instruction}{LDPIRX\ZXNS} 
+        \Symbol{\SymLDPIRX[0]}
+            \FlagsLDPIRX
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt BC}=0}
+        \SkipToSymbol
+            \Symbol{\SymLDPIRX[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{110}{111}
+            \Hex{B7}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt BC}$\neq$0}
+        \SkipToSymbol
+            \Symbol{\SymLDPIRX[2]}
+        \SkipToSymbol
+            \Symbol{\SymLDPIRX[3]}
+        \SkipToSymbol
+            \Symbol{\SymLDPIRX[4]}
+        \SkipToSymbol
+            \Symbol{\SymLDPIRX[5]}
+    \end{instruction}
+	
+    \begin{lastinstruction}{LDWS\ZXNS} 
+        \Symbol{\SymLDWS[0]}
+            \FlagsLDWS
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymLDWS[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{100}{101}
+            \Hex{A5}{}
+        \SkipToSymbol
+            \Symbol{\SymLDWS[2]}
+    \end{lastinstruction}
+					
+\end{instrtablesimple}
+
+\begin{instrtablesimple}
+	
+    % we need some extra spacing to accomodate the image; it's negative because \\ adds a line, but we don't need full line of space...
+    \\[-10pt]
+
+    \begin{instruction}{MIRROR A}
+        \Symbol{\multirow{2}{*}{\SymMIRROR{A}}}
+            \FlagsMIRRORa
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{00}{100}{100}
+            \Hex{24}{}
+    \end{instruction}
+
+    % we need some extra spacing to accomodate the image from MIRROR
+    \\[0ex]
+
+    %-------------------------------------------
+
+    \begin{instruction}{MUL D,E} 
+        \Symbol{\SymMUL}
+            \FlagsMULde
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{00}{110}{000}
+            \Hex{30}{}
+    \end{instruction}
+
+    %-------------------------------------------
+
+    \begin{instruction}{NEG} 
+        \Symbol{\SymNEG}
+            \FlagsNEG
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{01}{000}{100}
+            \Hex{44}{}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{NEXTREG n,A} 
+        \Symbol{\SymNEXTREG{A}}
+            \FlagsNEXTREGna
+            \OpCode{11}{101}{101} 
+            \Hex{ED}{3}
+            \Cycles{4}{17}
+        \SkipToOpCode 
+            \OpCode{10}{010}{010}
+            \Hex{92}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{NEXTREG n,m}
+        \Symbol{\SymNEXTREG{m}}
+            \FlagsNEXTREGnn
+            \OpCode{11}{101}{101}
+            \Hex{ED}{3}
+            \Cycles{5}{20}
+        \SkipToOpCode 
+            \OpCode{10}{010}{001}
+            \Hex{91}{}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{m} 
+            \Hex{..}{}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{NOP}
+        \Symbol{}
+            \FlagsNOP
+            \OpCode{00}{000}{000}
+            \Hex{00}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{OR r}
+        \Symbol{\SymOR{r}}
+            \FlagsORr
+            \OpCode{10}{110}{\OCT{r}}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+		
+    \begin{instruction}{OR n}
+        \Symbol{\SymOR{n}}
+            \FlagsORr
+            \OpCode{11}{110}{110}
+            \Hex{F6}{2}
+            \Cycles{2}{7}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+			
+    \begin{instruction}{OR (HL)}
+        \Symbol{\SymOR{(HL)}}
+            \FlagsORr
+            \OpCode{10}{110}{110}
+            \Hex{B6}{1} 
+            \Cycles{2}{7}
+    \end{instruction}
+			
+    \begin{instruction}{OR (IX+d)}
+        \Symbol{\SymOR{(IX+d)}}
+            \FlagsORr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{110}{110}
+            \Hex{B6}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+				
+    \begin{instruction}{OR (IY+d)}
+        \Symbol{\SymOR{(IY+d)}}
+            \FlagsORr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{110}{110}
+            \Hex{B6}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{OTDR} 
+        \Symbol{\SymOTDR[0]}
+            \FlagsOTDR
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt B}=0}
+        \SkipToSymbol
+            \Symbol{\SymOTDR[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{111}{011}
+            \Hex{BB}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt B}$\neq$0}
+    \end{instruction}
+
+    \begin{instruction}{OTIR} 
+        \Symbol{\SymOTIR[0]}
+            \FlagsOTIR
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt B}=0}
+        \SkipToSymbol
+            \Symbol{\SymOTIR[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{110}{011}
+            \Hex{B3}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt B}$\neq$0}
+    \end{instruction}
+
+    \begin{instruction}{OUT (n),A} 
+        \Symbol{\SymOUT{n}{A}}
+            \FlagsOUTna
+            \OpCode{11}{010}{011}
+            \Hex{D3}{2}
+            \Cycles{3}{11}
+        \SkipToOpCode 
+            \OpRange{n} 
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{OUT (C),r} 
+        \Symbol{\SymOUT{BC}{r}}
+            \FlagsOUTcr
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{3}{12}
+        \SkipToOpCode 
+            \OpCode{01}{\OCT{r}}{001}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{OUT (C),0} 
+        \Symbol{\SymOUT{BC}{0}}
+            \FlagsOUTc
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{3}{12}
+        \SkipToOpCode 
+            \OpCode{01}{110}{001}
+            \Hex{71}{}
+    \end{instruction}
+
+    \begin{instruction}{OUTD} 
+        \Symbol{\SymOUTD[0]}
+            \FlagsOUTI
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymOUTD[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{101}{011}
+            \Hex{AB}{}
+        \SkipToSymbol
+            \Symbol{\SymOUTD[2]}
+    \end{instruction}
+
+    \begin{instruction}{OUTI} 
+        \Symbol{\SymOUTI[0]}
+            \FlagsOUTI
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymOUTI[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{100}{011}
+            \Hex{A3}{}
+        \SkipToSymbol
+            \Symbol{\SymOUTI[2]}
+    \end{instruction}
+	
+    \begin{instruction}{OUTINB\ZXNS} 
+        \Symbol{\SymOUTINB[0]}
+            \FlagsOUTINB
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymOUTINB[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{010}{000}
+            \Hex{90}{}
+    \end{instruction}
+	
+\end{instrtablesimple}
+	
+\begin{instrtablesimple}
+	
+    \begin{instruction}{PIXELAD\ZXNS} 
+        \SymbolS{\SymPIXELAD[0]}
+            \FlagsPIXELAD
+            \OpCode{11}{101}{101}
+            \Hex{ED}{3}
+            \Cycles{2}{8}
+        \SkipToSymbol
+            \SymbolP{\SymPIXELAD[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{010}{100}
+            \Hex{94}{}
+        \SkipToSymbol
+            \SymbolP{\SymPIXELAD[2]}
+        \SkipToSymbol
+            \SymbolP{\SymPIXELAD[3]}
+        \SkipToSymbol
+            \SymbolP{\SymPIXELAD[4]}
+    \end{instruction}
+	
+    \begin{instruction}{PIXELDN\ZXNS} 
+        \Symbol{\SymPIXELDN[0]}
+            \FlagsPIXELDN
+            \OpCode{11}{101}{101}
+            \Hex{ED}{3}
+            \Cycles{2}{8}
+        \SkipToSymbol
+            \Symbol{\SymPIXELDN[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{010}{011}
+            \Hex{93}{}
+        \SkipToSymbol
+            \Symbol{\SymPIXELDN[2]}
+        \SkipToSymbol
+            \Symbol{\SymPIXELDN[3]}
+        \SkipToSymbol
+            \Symbol{\SymPIXELDN[4]}
+        \SkipToSymbol
+            \Symbol{\SymPIXELDN[5]}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{POP rr} 
+        \Symbol{\SymPOP[0]{rr}}
+            \FlagsPOPrr
+            \OpCode{11}{\OCT{rr}0}{001}
+            \Hex{..}{1}
+            \Cycles{3}{10}
+        \SkipToSymbol
+            \Symbol{\SymPOP[1]{rr}}
+        \SkipToSymbol
+            \Symbol{\SymPOP[2]{rr}}
+    \end{instruction}
+	
+    \begin{instruction}{POP AF} 
+        \Symbol{\SymPOP[10]{A}}
+            \FlagsPOPaf
+            \OpCode{11}{110}{001}
+            \Hex{F1}{1}
+            \Cycles{3}{10}
+        \SkipToSymbol
+            \Symbol{\SymPOP[11]{F}}
+        \SkipToSymbol
+            \Symbol{\SymPOP[12]{}}
+    \end{instruction}
+	
+    \begin{instruction}{POP IX} 
+        \Symbol{\SymPOP[0]{IX}}
+            \FlagsPOPrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{2}
+            \Cycles{4}{14}
+        \SkipToSymbol
+            \Symbol{\SymPOP[1]{IX}}
+            \FromSymbolToOpCode
+            \OpCode{11}{100}{001}
+            \Hex{E1}{}
+        \SkipToSymbol
+            \Symbol{\SymPOP[2]{IX}}
+    \end{instruction}
+	
+    \begin{instruction}{POP IY}
+        \Symbol{\SymPOP[0]{IY}}
+            \FlagsPOPrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2}
+            \Cycles{4}{14}
+        \SkipToSymbol
+            \Symbol{\SymPOP[1]{IY}}
+            \FromSymbolToOpCode
+            \OpCode{11}{100}{001}
+            \Hex{E1}{}
+        \SkipToSymbol
+            \Symbol{\SymPOP[2]{IY}}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{PUSH rr} 
+        \Symbol{\SymPUSH[0]{rr}}
+            \FlagsPUSHrr
+            \OpCode{11}{\OCT{rr}0}{101}
+            \Hex{..}{1}
+            \Cycles{3}{11}
+        \SkipToSymbol
+            \Symbol{\SymPUSH[1]{rr}}
+        \SkipToSymbol
+            \Symbol{\SymPUSH[2]{rr}}
+    \end{instruction}
+		
+    \begin{instruction}{PUSH IX} 
+        \Symbol{\SymPUSH[0]{IX}}
+            \FlagsPUSHrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{2}
+            \Cycles{4}{15}
+        \SkipToSymbol
+            \Symbol{\SymPUSH[1]{IX}}
+            \FromSymbolToOpCode
+            \OpCode{11}{100}{101}
+            \Hex{E5}{}
+        \SkipToSymbol
+            \Symbol{\SymPUSH[2]{IX}}
+    \end{instruction}
+		
+    \begin{instruction}{PUSH IY} 
+        \Symbol{\SymPUSH[0]{IY}}
+            \FlagsPUSHrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2}
+            \Cycles{4}{15}
+        \SkipToSymbol
+            \Symbol{\SymPUSH[1]{IY}}
+            \FromSymbolToOpCode
+            \OpCode{11}{100}{101}
+            \Hex{E5}{}
+        \SkipToSymbol
+            \Symbol{\SymPUSH[2]{IY}}
+    \end{instruction}
+
+    \begin{instruction}{PUSH nm\ZXNS}
+        \Symbol{\SymPUSHnn[0]{n}{m}}
+            \FlagsPUSHnn
+            \OpCode{11}{101}{101}
+            \Hex{ED}{3}
+            \Cycles{6}{23}
+        \SkipToSymbol
+            \Symbol{\SymPUSHnn[1]{n}{m}}
+            \FromSymbolToOpCode
+            \OpCode{10}{001}{010}
+            \Hex{8A}{}
+        \SkipToSymbol
+            \Symbol{\SymPUSHnn[2]{n}{m}}
+            \FromSymbolToOpCode
+            \OpRange{n} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpRange{m} 
+            \Hex{..}{}
+    \end{instruction}
+
+    \EmptySeparator
+	
+    %-------------------------------------------
+
+    \begin{instruction}{RES b,r} 
+        \Symbol{\SymRES{r}}
+            \FlagsRESr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{10}{\OCT{b}}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{RES b,(HL)} 
+        \Symbol{\SymRES{(HL)}}
+            \FlagsRESr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode 
+            \OpCode{10}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{RES b,(IX+d)} 
+        \Symbol{\SymRES{(IX+d)}}
+            \FlagsRESr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{10}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{lastinstruction}{RES b,(IY+d)} 
+        \Symbol{\SymRES{(IY+d)}}
+            \FlagsRESr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{10}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{lastinstruction}
+	
+\end{instrtablesimple}
+
+% even `lastinstrucion` in above table still pushes this one too low, so we manually move it up
+\vspace*{-1.7em}
+
+\begin{instrtablesimple}
+	
+    \begin{instruction}{RET} 
+        \Symbol{\SymRET[0]}
+            \FlagsRET
+            \OpCode{11}{001}{001}
+            \Hex{C9}{1}
+            \Cycles{3}{10}
+        \SkipToSymbol
+            \Symbol{\SymRET[1]}
+        \SkipToSymbol
+            \Symbol{\SymRET[2]}
+    \end{instruction}
+	
+    \begin{instruction}{RET c} 
+        \Symbol{\SymRETc{c}}
+            \FlagsRETcc
+            \OpCode{11}{\OCT{c}}{000}
+            \Hex{..}{1}
+            \Cycles{1}{5}
+            \Comment{if {\tt c}=false}
+        \SkipToOpCode
+            \OpCode{}{}{}
+            \Hex{}{}
+            \Cycles{3}{11}
+            \Comment{if {\tt c}=true}
+    \end{instruction}
+
+    \begin{instruction}{RETI} 
+        \Symbol{\SymRETI[0]}
+            \FlagsRETI
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{14}
+        \SkipToSymbol
+            \Symbol{\SymRETI[1]}
+            \FromSymbolToOpCode
+            \OpCode{01}{001}{101}
+            \Hex{4D}{}
+        \SkipToSymbol
+            \Symbol{\SymRETI[2]}
+    \end{instruction}
+	
+    \begin{instruction}{RETN} 
+        \Symbol{\SymRETN[0]}
+            \FlagsRETN
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{14}
+        \SkipToSymbol
+            \Symbol{\SymRETN[1]}
+            \FromSymbolToOpCode
+            \OpCode{01}{000}{101}
+            \Hex{45}{}
+        \SkipToSymbol
+            \Symbol{\SymRETN[2]}
+        \SkipToSymbol
+            \Symbol{\SymRETN[3]}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{RL r}
+        \Symbol{\SymRL[0]{r}}
+            \FlagsRLr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{00}{010}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{RL (HL)}
+        \Symbol{\SymRL[0]{(HL)}}
+            \FlagsRLr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode 
+            \OpCode{00}{010}{110}
+            \Hex{16}{}
+    \end{instruction}
+
+    \begin{instruction}{RL (IX+d)}
+        \Symbol{\SymRL[0]{(IX+d)}}
+            \FlagsRLr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{010}{110}
+            \Hex{16}{}
+    \end{instruction}
+
+    \begin{instruction}{RL (IY+d)}
+        \Symbol{\SymRL[0]{(IY+d)}}
+            \FlagsRLr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{010}{110}
+            \Hex{16}{}
+    \end{instruction}
+	
+    \begin{instruction}{RLA}
+        \Symbol{\SymRL[0]{A}}
+            \FlagsRLA
+            \OpCode{00}{010}{111}
+            \Hex{17}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \EmptySeparator
+	
+    %-------------------------------------------
+
+    \begin{instruction}{RLC r}
+        \Symbol{\SymRLC[0]{r}}
+            \FlagsRLCr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{00}{000}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{RLC (HL)}
+        \Symbol{\SymRLC[0]{(HL)}}
+            \FlagsRLCr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode 
+            \OpCode{00}{000}{110}
+            \Hex{06}{}
+    \end{instruction}
+	
+    \begin{instruction}{RLC (IX+d)}
+        \Symbol{\SymRLC[0]{(IX+d)}}
+            \FlagsRLCr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{000}{110}
+            \Hex{06}{}
+    \end{instruction}
+	
+    \begin{instruction}{RLC (IY+d)}
+        \Symbol{\SymRLC[0]{(IY+d)}}
+            \FlagsRLCr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{000}{110}
+            \Hex{06}{}
+    \end{instruction}
+	
+    \begin{instruction}{RLCA}
+        \Symbol{\SymRLC[0]{A}}
+            \FlagsRLCA
+            \OpCode{00}{000}{111}
+            \Hex{07}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{RLD}
+        \Symbol{\vspace*{-12pt}\hspace*{-0.8cm}\SymRLD}
+            \FlagsRLD 
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{5}{18}
+        \SkipToOpCode 
+            \OpCode{01}{101}{111}
+            \Hex{6F}{}
+            \Cycles{}{}
+    \end{instruction}
+			
+    \begin{instruction}{RRD}
+        \Symbol{\vspace*{-12pt}\hspace*{-0.8cm}\SymRRD}
+            \FlagsRRD
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{5}{18}
+        \SkipToOpCode 
+            \OpCode{01}{100}{111}
+            \Hex{67}{}
+    \end{instruction}
+
+    \EmptySeparator
+
+\end{instrtablesimple}
+
+\begin{instrtablesimple}
+
+    % we need slightly more vertical space to accomodate symbolic operation drawing for RR; it's negative because we only need a fraction of what new line produces
+    \\[-10pt]
+
+    \begin{instruction}{RR r}
+        \Symbol{\SymRR[0]{r}}
+            \FlagsRRr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{00}{011}{\OCT{r}}
+            \Hex{..}{}
+            \Cycles{}{}
+    \end{instruction}
+	
+    \begin{instruction}{RR (HL)}
+        \Symbol{\SymRR[0]{(HL)}}
+            \FlagsRRr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode 
+            \OpCode{00}{011}{110}
+            \Hex{1E}{}
+            \Cycles{}{}
+    \end{instruction}
+	
+    \begin{instruction}{RR (IX+d)}
+        \Symbol{\SymRR[0]{(IX+d)}}
+            \FlagsRRr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{011}{110}
+            \Hex{1E}{}
+            \Cycles{}{}
+    \end{instruction}
+	
+    \begin{instruction}{RR (IY+d)}
+        \Symbol{\SymRR[0]{(IY+d)}}
+            \FlagsRRr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{011}{110}
+            \Hex{1E}{}
+            \Cycles{}{}
+    \end{instruction}
+	
+    \begin{instruction}{RRA}
+        \Symbol{\SymRR[0]{A}}
+            \FlagsRRA
+            \OpCode{00}{011}{111}
+            \Hex{1F}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+	
+    \begin{instruction}{RRC r}
+        \Symbol{\SymRRC[0]{r}}
+            \FlagsRRCr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{00}{001}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{RRC (HL)}
+        \Symbol{\SymRRC[0]{(HL)}}
+            \FlagsRRCr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode 
+            \OpCode{00}{001}{110}
+            \Hex{0E}{}
+    \end{instruction}
+	
+    \begin{instruction}{RRC (IX+d)}
+        \Symbol{\SymRRC[0]{(IX+d)}}
+            \FlagsRRCr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{001}{110}
+            \Hex{0E}{}
+    \end{instruction}
+	
+    \begin{instruction}{RRC (IY+d)}
+        \Symbol{\SymRRC[0]{(IY+d)}}
+            \FlagsRRCr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{001}{110}
+            \Hex{0E}{}
+    \end{instruction}
+	
+    \begin{instruction}{RRCA}
+        \Symbol{\SymRRC[0]{A}}
+            \FlagsRRCA
+            \OpCode{00}{001}{111}
+            \Hex{0F}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \EmptySeparator
+	
+    %-------------------------------------------
+
+    \begin{instruction}{RST n} 
+        \Symbol{\SymRST[0]{n}}
+            \FlagsRSTn
+            \OpCode{11}{\OCT{n}}{111}
+            \Hex{..}{1}
+            \Cycles{3}{11}
+        \SkipToSymbol
+            \Symbol{\SymRST[1]{n}}
+        \SkipToSymbol
+            \Symbol{\SymRST[2]{n}}
+        \SkipToSymbol
+            \Symbol{\SymRST[3]{n}}
+    \end{instruction}
+
+    \EmptySeparator
+
+    %-------------------------------------------
+
+    \begin{instruction}{SBC A,r}
+        \Symbol{\SymSBC{A}{r}}
+            \FlagsSBCr
+            \OpCode{10}{011}{\OCT{r}}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+	
+    \begin{instruction}{SBC A,n}
+        \Symbol{\SymSBC{A}{n}}
+            \FlagsSBCr
+            \OpCode{11}{011}{110}
+            \Hex{DE}{2}
+            \Cycles{2}{7}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+		
+    \begin{instruction}{SBC A,(HL)}
+        \Symbol{\SymSBC{A}{(HL)}}
+            \FlagsSBCr
+            \OpCode{10}{011}{110}
+            \Hex{9E}{1} 
+            \Cycles{2}{7}
+    \end{instruction}
+		
+    \begin{instruction}{SBC A,(IX+d)}
+        \Symbol{\SymSBC{A}{(IX+d)}}
+            \FlagsSBCr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{011}{110}
+            \Hex{9E}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+			
+    \begin{instruction}{SBC A,(IY+d)}
+        \Symbol{\SymSBC{A}{(IY+d)}}
+            \FlagsSBCr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{011}{110}
+            \Hex{9E}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{SBC HL,rr} 
+        \Symbol{\SymSBC{HL}{rr}}
+            \FlagsSBCrr
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode
+            \OpCode{01}{\OCT{rr}0}{010}
+            \Hex{..}{}
+    \end{instruction}
+
+    \EmptySeparator
+	
+    %-------------------------------------------
+
+    \begin{instruction}{SCF} 
+        \Symbol{\SymSCF}
+            \FlagsSCF
+            \OpCode{00}{110}{111}
+            \Hex{37}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    %-------------------------------------------
+
+\end{instrtablesimple}
+
+\begin{instrtablesimple}
+
+    \begin{instruction}{SET b,r} 
+        \Symbol{\SymSET{r}}
+            \FlagsSETr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{11}{\OCT{b}}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{SET b,(HL)} 
+        \Symbol{\SymSET{(HL)}}
+            \FlagsSETr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode 
+            \OpCode{11}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{SET b,(IX+d)} 
+        \Symbol{\SymSET{(IX+d)}}
+            \FlagsSETr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{11}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{SET b,(IY+d)} 
+        \Symbol{\SymSET{(IY+d)}}
+            \FlagsSETr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{11}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+
+    \EmptySeparator	
+
+    %-------------------------------------------
+
+    \begin{instruction}{SETAE} 
+        \Symbol{\SymSETAE}
+            \FlagsSETAE
+            \OpCode{11}{101}{101}
+            \Hex{ED}{3}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{10}{010}{101}
+            \Hex{95}{}
+    \end{instruction}
+
+    \EmptySeparator
+	
+    %-------------------------------------------
+	
+    \begin{instruction}{SLA r}
+        \Symbol{\SymSLA[0]{r}}
+            \FlagsSLAr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{00}{100}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+		
+    \begin{instruction}{SLA (HL)}
+        \Symbol{\SymSLA[0]{(HL)}}
+            \FlagsSLAr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode 
+            \OpCode{00}{100}{110}
+            \Hex{26}{}
+    \end{instruction}
+		
+    \begin{instruction}{SLA (IX+d)}
+        \Symbol{\SymSLA[0]{(IX+d)}}
+            \FlagsSLAr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{100}{110}
+            \Hex{26}{}
+    \end{instruction}
+		
+    \begin{instruction}{SLA (IY+d)}
+        \Symbol{\SymSLA[0]{(IY+d)}}
+            \FlagsSLAr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{100}{110}
+            \Hex{26}{}	
+    \end{instruction}
+
+    \EmptySeparator
+		
+    %-------------------------------------------
+	
+    \begin{instruction}{SLI r}
+        \Symbol{\SymSLI[0]{r}}
+            \FlagsSLIr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{00}{110}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+			
+    \begin{instruction}{SLI (HL)\UNDOC}
+        \Symbol{\SymSLI[0]{(HL)}}
+            \FlagsSLIr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode 
+            \OpCode{00}{110}{110}
+            \Hex{36}{}
+    \end{instruction}
+			
+    \begin{instruction}{SLI (IX+d)\UNDOC}
+        \Symbol{\SymSLI[0]{(IX+d)}}
+            \FlagsSLIr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{110}{110}
+            \Hex{36}{}
+    \end{instruction}
+			
+    \begin{instruction}{SLI (IY+d)\UNDOC}
+        \Symbol{\SymSLI[0]{(IY+d)}}
+            \FlagsSLIr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{110}{110}
+            \Hex{36}{}
+    \end{instruction}
+
+    \EmptySeparator
+	
+\end{instrtablesimple}
+
+\begin{instrtablesimple}
+
+    % we need slightly more vertical space to accomodate symbolic operation drawing for SRA; it's negative because we only need a fraction of what new line produces
+    \\[-10pt]
+	
+    \begin{instruction}{SRA r}
+        \Symbol{\SymSRA[0]{r}}
+            \FlagsSRAr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{00}{101}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+			
+    \begin{instruction}{SRA (HL)}
+        \Symbol{\SymSRA[0]{(HL)}}
+            \FlagsSRAr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode
+            \OpCode{00}{101}{110}
+            \Hex{2E}{}
+    \end{instruction}
+			
+    \begin{instruction}{SRA (IX+d)}
+        \Symbol{\SymSRA[0]{(IX+d)}}
+            \FlagsSRAr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpCode{00}{101}{110}
+            \Hex{2E}{}
+    \end{instruction}
+			
+    \begin{instruction}{SRA (IY+d)}
+        \Symbol{\SymSRA[0]{(IY+d)}}
+            \FlagsSRAr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpCode{00}{101}{110}
+            \Hex{2E}{}
+    \end{instruction}
+
+    \EmptySeparator
+			
+    %-------------------------------------------
+	
+    \begin{instruction}{SRL r}
+        \Symbol{\SymSRL[0]{r}}
+            \FlagsSRLr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{00}{111}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+				
+    \begin{instruction}{SRL (HL)}
+        \Symbol{\SymSRL[0]{(HL)}}
+            \FlagsSRLr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode
+            \OpCode{00}{111}{110}
+            \Hex{3E}{}
+    \end{instruction}
+				
+    \begin{instruction}{SRL (IX+d)}
+        \Symbol{\SymSRL[0]{(IX+d)}}
+            \FlagsSRLr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpCode{00}{111}{110}
+            \Hex{3E}{}
+    \end{instruction}
+				
+    \begin{instruction}{SRL (IY+d)}
+        \Symbol{\SymSRL[0]{(IY+d)}}
+            \FlagsSRLr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpCode{00}{111}{110}
+            \Hex{3E}{}
+    \end{instruction}
+
+    \EmptySeparator
+				
+    %-------------------------------------------
+
+    \begin{instruction}{SUB r}
+        \Symbol{\SymSUB{r}}
+            \FlagsSUBr
+            \OpCode{10}{010}{\OCT{r}}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+		
+    \begin{instruction}{SUB n}
+        \Symbol{\SymSUB{n}}
+            \FlagsSUBr
+            \OpCode{11}{010}{110}
+            \Hex{D6}{2}
+            \Cycles{2}{7}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+			
+    \begin{instruction}{SUB (HL)}
+        \Symbol{\SymSUB{(HL)}}
+            \FlagsSUBr
+            \OpCode{10}{010}{110}
+            \Hex{96}{1}
+            \Cycles{2}{7}
+    \end{instruction}
+			
+    \begin{instruction}{SUB (IX+d)}
+        \Symbol{\SymSUB{(IX+d)}}
+            \FlagsSUBr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{010}{110}
+            \Hex{96}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+				
+    \begin{instruction}{SUB (IY+d)}
+        \Symbol{\SymSUB{(IY+d)}}
+            \FlagsSUBr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{010}{110}
+            \Hex{96}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+
+    \EmptySeparator
+		
+    %-------------------------------------------
+
+    \begin{instruction}{SWAPNIB}
+        \Symbol{\multirow[b]{1}{*}{\SymSWAPNIB[0]}}
+            \FlagsSWAPNIB
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{00}{100}{011}
+            \Hex{23}{}
+            \Cycles{}{}
+    \end{instruction}
+
+    \EmptySeparator
+	
+    %-------------------------------------------
+
+    \begin{instruction}{TEST n} 
+        \Symbol{\SymTEST}
+            \FlagsTESTn
+            \OpCode{11}{101}{101}
+            \Hex{ED}{3}
+            \Cycles{3}{11}
+        \SkipToOpCode 
+            \OpCode{00}{100}{111}
+            \Hex{27}{}
+            \Cycles{}{}
+    \end{instruction}
+
+    \EmptySeparator
+	
+\end{instrtablesimple}
+
+\begin{instrtablesimple}
+
+    \begin{instruction}{XOR r}
+        \Symbol{\SymXOR{r}}
+            \FlagsXORr
+            \OpCode{10}{101}{\OCT{r}}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+			
+    \begin{instruction}{XOR n}
+        \Symbol{\SymXOR{n}}
+            \FlagsXORr
+            \OpCode{11}{101}{110}
+            \Hex{EE}{2}
+            \Cycles{2}{7}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+				
+    \begin{instruction}{XOR (HL)}
+        \Symbol{\SymXOR{(HL)}}
+            \FlagsXORr
+            \OpCode{10}{101}{110}
+            \Hex{AE}{1}
+            \Cycles{2}{7}
+    \end{instruction}
+				
+    \begin{instruction}{XOR (IX+d)}
+        \Symbol{\SymXOR{(IX+d)}}
+            \FlagsXORr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{101}{110}
+            \Hex{AE}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+					
+    \begin{instruction}{XOR (IY+d)}
+        \Symbol{\SymXOR{(IY+d)}}
+            \FlagsXORr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{10}{101}{110}
+            \Hex{AE}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+
+    \EmptySeparator
+	
+\end{instrtablesimple}
+
+\fi

@@ -1,0 +1,354 @@
+\section{8-Bit Load}
+
+\begin{instrtable}	
+
+    \begin{instruction}{LD r,r'}
+        \Symbol{\SymLD{r}{r'}}
+            \FlagsLDr
+            \OpCode{01}{\OCT{r}}{\OCTS{r}}
+            \Hex{..}{1}
+            \Cycles{1}{4}
+            \Comment{
+                \tt
+                \multirow{6}{*}{
+                    \begin{tabular}{ll}
+                        r & \OCT{r} \\
+                        r' & \OCTS{r} \\
+                        \hline
+                        B & 000 \\
+                        C & 001 \\
+                        D & 010 \\
+                        E & 011 \\
+                        H & 100 \\
+                        L & 101 \\
+                        A & 111 \\
+                    \end{tabular}
+                }
+            }
+    \end{instruction}
+		
+    \begin{instruction}{LD p,p'}
+        \Symbol{\SymLD{p}{p'}}
+            \FlagsLDr
+            \OpCode{11}{011}{101} 
+            \Hex{DD}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode
+            \OpCode{01}{\OCT{p}}{\OCTS{p}}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{LD q,q'}
+        \Symbol{\SymLD{q}{q'}}
+            \FlagsLDr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2} 
+            \Cycles{2}{8}
+        \SkipToOpCode
+            \OpCode{01}{\OCT{q}}{\OCTS{q}}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{LD r,n}
+        \Symbol{\SymLD{r}{n}}
+            \FlagsLDr
+            \OpCode{00}{\OCT{r}}{110}
+            \Hex{..}{2} 
+            \Cycles{2}{7}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{LD p,n}
+        \Symbol{\SymLD{p}{n}}
+            \FlagsLDr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3} 
+            \Cycles{3}{11}
+            \Comment{
+                \multirow{6}{*}{
+                    \tt
+                    \begin{tabular}{ll}
+                        p & \OCT{p} \\
+                        p' & \OCTS{p} \\
+                        \hline
+                        B & 000 \\
+                        C & 001 \\
+                        D & 010 \\
+                        E & 011 \\
+                        IX\High & 100 \\
+                        IX\Low & 101 \\
+                        A & 111 \\
+                    \end{tabular}
+                }
+            }
+        \SkipToOpCode
+            \OpCode{00}{\OCT{p}}{110}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{LD q,n}
+        \Symbol{\SymLD{q}{n}} 
+            \FlagsLDr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{3}{11}
+        \SkipToOpCode
+            \OpCode{00}{\OCT{q}}{110}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{LD r,(HL)}
+        \Symbol{\SymLD{r}{(HL)}}
+            \FlagsLDr
+            \OpCode{01}{\OCT{r}}{110}
+            \Hex{..}{1}
+            \Cycles{2}{7}
+    \end{instruction}
+
+    \begin{instruction}{LD r,(IX+d)}
+        \Symbol{\SymLD{r}{(IX+d)}}
+            \FlagsLDr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+            \Comment{
+                \multirow{6}{*}{
+                    \tt
+                    \begin{tabular}{ll}
+                        q & \OCT{q} \\
+                        q' & \OCTS{q} \\
+                        \hline
+                        B & 000 \\
+                        C & 001 \\
+                        D & 010 \\
+                        E & 011 \\
+                        IY\High & 100 \\
+                        IY\Low & 101\\
+                        A & 111 \\
+                    \end{tabular}
+                }
+            }
+        \SkipToOpCode
+            \OpCode{01}{\OCT{r}}{110}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{LD r,(IY+d)}
+        \Symbol{\SymLD{r}{(IY+d)}}
+            \FlagsLDr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{01}{\OCT{r}}{110}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{LD (HL),r}
+        \Symbol{\SymLD{(HL)}{r}}
+            \FlagsLDr
+            \OpCode{01}{110}{\OCT{r}}
+            \Hex{..}{1} 
+            \Cycles{2}{7}
+    \end{instruction}
+
+    \begin{instruction}{LD (IX+d),r}
+        \Symbol{\SymLD{(IX+d)}{r}}
+            \FlagsLDr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{3}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{01}{110}{\OCT{r}}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{LD (IY+d),r}
+        \Symbol{\SymLD{(IY+d)}{r}}
+            \FlagsLDr
+            \OpCode{11}{111}{101} 
+            \Hex{FD}{3} 
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{01}{110}{\OCT{r}}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{LD (HL),n}
+        \Symbol{\SymLD{(HL)}{n}}
+            \FlagsLDr
+            \OpCode{00}{110}{110}
+            \Hex{36}{2}
+            \Cycles{3}{10}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{LD (IX+d),n} 
+        \Symbol{\SymLD{(IX+d)}{n}}
+            \FlagsLDr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{00}{110}{110}
+            \Hex{36}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+	
+    \begin{instruction}{LD (IY+d),n} 
+        \Symbol{\SymLD{(IY+d)}{n}}
+            \FlagsLDr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{5}{19}
+        \SkipToOpCode
+            \OpCode{00}{110}{110}
+            \Hex{36}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+		
+    \begin{instruction}{LD A,(BC)} 
+        \Symbol{\SymLD{A}{(BC)}}
+            \FlagsLDr
+            \OpCode{00}{001}{010}
+            \Hex{0A}{1}
+            \Cycles{2}{7}
+    \end{instruction}
+	
+    \begin{instruction}{LD A,(DE)} 
+        \Symbol{\SymLD{A}{(DE)}}
+            \FlagsLDr
+            \OpCode{00}{011}{01}
+            \Hex{1A}{1}
+            \Cycles{2}{7}
+    \end{instruction}
+	
+    \begin{lastinstruction}{LD A,(nm)} 
+        \Symbol{\SymLD{A}{(nm)}}
+            \FlagsLDr
+            \OpCode{00}{111}{010}
+            \Hex{3A}{3}
+            \Cycles{4}{13}
+        \SkipToOpCode
+            \OpRange{m}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{lastinstruction}
+			
+\end{instrtable}
+
+\InstrTableContinue
+\pagebreak
+\vspace*{0.4cm}
+
+\begin{instrtable}
+
+    \begin{instruction}{LD (BC),A} 
+        \Symbol{\SymLD{(BC)}{A}}
+            \FlagsLDr
+            \OpCode{00}{000}{010}
+            \Hex{02}{1}
+            \Cycles{2}{7}
+    \end{instruction}
+
+    \begin{instruction}{LD (DE),A} 
+        \Symbol{\SymLD{(DE)}{A}}
+            \FlagsLDr
+            \OpCode{00}{010}{010}
+            \Hex{12}{1}
+            \Cycles{2}{7}
+    \end{instruction}
+
+    \begin{instruction}{LD (nm),A} 
+        \Symbol{\SymLD{(nm)}{A}}
+            \FlagsLDr
+            \OpCode{00}{110}{010}
+            \Hex{32}{3}
+            \Cycles{4}{13}
+        \SkipToOpCode
+            \OpRange{m}
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpRange{n}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{LD A,I} 
+        \Symbol{\SymLD{A}{I}}
+            \FlagsLDair
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{9}
+        \SkipToOpCode
+            \OpCode{01}{010}{111}
+            \Hex{57}{}
+    \end{instruction}
+
+    \begin{instruction}{LD A,R} 
+        \Symbol{\SymLD{A}{R}}
+            \FlagsLDair
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{9}
+        \SkipToOpCode
+            \OpCode{01}{011}{111}
+            \Hex{5F}{}
+    \end{instruction}
+
+    \begin{instruction}{LD I,A} 
+        \Symbol{\SymLD{I}{A}}
+            \FlagsLDr
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{9}
+        \SkipToOpCode
+            \OpCode{01}{000}{111}
+            \Hex{47}{}
+    \end{instruction}
+
+    \begin{lastinstruction}{LD R,A} 
+        \Symbol{\SymLD{R}{A}}
+            \FlagsLDr
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{2}{9}
+        \SkipToOpCode
+            \OpCode{01}{001}{111}
+            \Hex{4F}{}
+    \end{lastinstruction}
+
+\end{instrtable}

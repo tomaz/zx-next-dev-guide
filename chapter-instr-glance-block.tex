@@ -1,0 +1,164 @@
+\section{Block Transfer, Search}
+
+\begin{minipage}{\textwidth}
+	
+\begin{instrtable}
+
+    \begin{instruction}{CPD} 
+        \Symbol{\SymCPD[0]}
+            \FlagsCPD
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymCPD[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{101}{001}
+            \Hex{A9}{}
+        \SkipToSymbol
+            \Symbol{\SymCPD[2]}
+    \end{instruction}
+
+    \begin{instruction}{CPDR} 
+        \Symbol{\SymCPDR[0]}
+            \FlagsCPDR
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt A=(HL)}}
+        \SkipToSymbol
+            \Symbol{\SymCPDR[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{111}{001}
+            \Hex{B9}{}
+            \Cycles{}{}
+            \Comment{or {\tt BC}=0}
+        \SkipToOpCode
+            \OpCode{}{}{}
+            \Hex{}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt A}$\neq${\tt (HL)}}
+        \SkipToOpCode
+            \OpCode{}{}{}
+            \Hex{}{}
+            \Cycles{}{}
+            \Comment{and {\tt BC}$\neq${\tt 0}}
+    \end{instruction}
+
+    \begin{instruction}{CPI} 
+        \Symbol{\SymCPI[0]}
+            \FlagsCPI
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymCPI[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{100}{001}
+            \Hex{A1}{}
+        \SkipToSymbol
+            \Symbol{\SymCPI[2]}
+    \end{instruction}
+	
+    \begin{instruction}{CPIR} 
+        \Symbol{\SymCPIR[0]}
+            \FlagsCPIR
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt A=(HL)}}
+        \SkipToSymbol
+            \Symbol{\SymCPIR[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{110}{001}
+            \Hex{B1}{}
+            \Cycles{}{}
+            \Comment{or {\tt BC}=0}
+        \SkipToOpCode
+            \OpCode{}{}{}
+            \Hex{}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt A}$\neq${\tt (HL)}}
+        \SkipToOpCode
+            \OpCode{}{}{}
+            \Hex{}{}
+            \Cycles{}{}
+            \Comment{and {\tt BC}$\neq$0}
+    \end{instruction}
+
+    \begin{instruction}{LDD} 
+        \Symbol{\SymLDD[0]}
+            \FlagsLDD
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymLDD[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{101}{000}
+            \Hex{A8}{}
+        \SkipToSymbol
+            \Symbol{\SymLDD[2]}
+        \SkipToSymbol
+            \Symbol{\SymLDD[3]}
+    \end{instruction}
+
+    \begin{instruction}{LDDR} 
+        \Symbol{\SymLDDR[0]}
+            \FlagsLDDR
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt BC=0}}
+        \SkipToSymbol
+            \Symbol{\SymLDDR[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{111}{000}
+            \Hex{B8}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt BC$\neq$0}}
+    \end{instruction}
+
+    \begin{instruction}{LDI}
+        \Symbol{\SymLDI[0]}
+            \FlagsLDI
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+        \SkipToSymbol
+            \Symbol{\SymLDI[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{100}{000}
+            \Hex{A0}{}
+        \SkipToSymbol
+            \Symbol{\SymLDI[2]}
+        \SkipToSymbol
+            \Symbol{\SymLDI[3]}
+    \end{instruction}
+
+    \begin{lastinstruction}{LDIR} 
+        \Symbol{\SymLDIR[0]}
+            \FlagsLDIR
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{4}{16}
+            \Comment{if {\tt BC=0}}
+        \SkipToSymbol
+            \Symbol{\SymLDIR[1]}
+            \FromSymbolToOpCode
+            \OpCode{10}{110}{000}
+            \Hex{B0}{}
+            \Cycles{5}{21}
+            \Comment{if {\tt BC$\neq$0}}
+    \end{lastinstruction}
+
+\end{instrtable}
+
+\begin{notestable}
+    \NoteItem{\See{1}See section \ref{block_mem} for a description}
+    \NoteItem{\See{2}ZF is {\tt 1} if {\tt A=(HL)}, otherwise {\tt 0}}
+    \NoteItem{\See{3}PV is {\tt 1} if {\tt BC$\neq$0} after execution, otherwise {\tt 0}}
+    \NoteItem{\See{4}PV is {\tt 0} only at the completion of the instruction}
+\end{notestable}
+
+\end{minipage}

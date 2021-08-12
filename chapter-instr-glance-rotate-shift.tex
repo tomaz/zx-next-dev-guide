@@ -1,0 +1,240 @@
+\section{Rotate and Shift}
+
+\begin{minipage}{\textwidth}
+	
+\begin{instrtable}
+    % we need slightly more vertical space to accomodate symbolic operation drawing for RLC; it's negative because we only need a fraction of what new line produces
+    \\[-10pt]
+
+    \begin{instruction}{RLC r}
+        \Symbol{\SymRLC[0]{r}}
+            \FlagsRLCr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+            \Comment{
+                \multirow{6}{*}{
+                    \tt
+                    \begin{tabular}{ll}
+                        r & \OCT{r} \\
+                        \hline
+                        B & 000 \\
+                        C & 001 \\
+                        D & 010 \\
+                        E & 011 \\
+                        H & 100 \\
+                        L & 101 \\
+                        A & 111 \\
+                    \end{tabular}
+                }
+            }
+        \SkipToOpCode 
+            \OpCode{00}{\fbox{000}}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{RLC (HL)}
+        \Symbol{\SymRLC[0]{(HL)}}
+            \FlagsRLCr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode 
+            \OpCode{00}{\fbox{000}}{110}
+            \Hex{06}{}
+    \end{instruction}
+
+    \begin{instruction}{RLC (IX+d)}
+        \Symbol{\SymRLC[0]{(IX+d)}}
+            \FlagsRLCr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{\fbox{000}}{110}
+            \Hex{06}{}
+    \end{instruction}
+
+    \begin{instruction}{RLC (IY+d)}
+        \Symbol{\SymRLC[0]{(IY+d)}}
+            \FlagsRLCr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{\fbox{000}}{110}
+            \Hex{06}{}
+    \end{instruction}
+
+    \begin{instruction}{RLC r,(IX+d)}
+        \Symbol{\SymRLCu[0]{r}{IX}}
+            \FlagsRLCr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToSymbol
+            \Symbol{\SymRLCu[1]{r}{IX}}
+            \FromSymbolToOpCode
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToSymbol
+            \Symbol{\SymRLCu[2]{r}{IX}}
+            \FromSymbolToOpCode
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{00}{\fbox{000}}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{RLC r,(IY+d)}
+        \Symbol{\SymRLCu[0]{r}{IY}}
+            \FlagsRLCr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToSymbol
+            \Symbol{\SymRLCu[1]{r}{IY}}
+            \FromSymbolToOpCode
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToSymbol
+            \Symbol{\SymRLCu[2]{r}{IY}}
+            \FromSymbolToOpCode
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode
+            \OpCode{00}{\fbox{000}}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+
+    \StartWithOpCode\OpCode{}{$\uparrow$}{} \\
+
+    \begin{instruction}{RRC m\See{1}}
+        \Symbol{\SymRRC[0]{m}}
+            \FlagsRRCr
+            \OpCode{..}{\fbox{001}}{...}
+    \end{instruction}
+
+    \begin{instruction}{RL m\See{1}}
+        \Symbol{\SymRL[0]{m}}
+            \FlagsRLr
+            \OpCode{..}{\fbox{010}}{...}
+    \end{instruction}
+
+    \begin{instruction}{RR m\See{1}}
+        \Symbol{\SymRR[0]{m}}
+            \FlagsRRr
+            \OpCode{..}{\fbox{011}}{...}
+    \end{instruction}
+
+    \begin{instruction}{SLA m\See{1}}
+        \Symbol{\vspace*{2pt}\SymSLA[0]{m}}
+            \FlagsSLAr
+            \OpCode{..}{\fbox{100}}{...}
+    \end{instruction}
+
+    \begin{instruction}{SRA m\See{1}}
+        \Symbol{\vspace*{3pt}\SymSRA[0]{m}}
+            \FlagsSRAr
+            \OpCode{..}{\fbox{101}}{...}
+    \end{instruction}
+
+    \begin{instruction}{SLI m\See{1,2}}
+        \Symbol{\vspace*{2pt}\SymSLI[0]{m}}
+            \FlagsSLIr
+            \OpCode{..}{\fbox{110}}{...}
+    \end{instruction}
+
+    \begin{instruction}{SRL m\See{1}}
+        \Symbol{\vspace*{2pt}\SymSRL[0]{m}}
+            \FlagsSRLr
+            \OpCode{..}{\fbox{111}}{...}
+    \end{instruction}
+
+    \begin{instruction}{SLL m\See{3}}
+    \end{instruction}
+
+    \Empty{}
+	
+    \begin{instruction}{RLA}
+        \Symbol{\SymRL[0]{A}}
+            \FlagsRLA
+            \OpCode{00}{010}{111}
+            \Hex{17}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+	
+    \begin{instruction}{RLCA}
+        \Symbol{\SymRLC[0]{A}}
+            \FlagsRLCA
+            \OpCode{00}{000}{111}
+            \Hex{07}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+	
+    \begin{instruction}{RRA}
+        \Symbol{\SymRR[0]{A}}
+            \FlagsRRA
+            \OpCode{00}{011}{111}
+            \Hex{1F}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+	
+    \begin{instruction}{RRCA}
+        \Symbol{\SymRRC[0]{A}}
+            \FlagsRRCA
+            \OpCode{00}{001}{111}
+            \Hex{0F}{1}
+            \Cycles{1}{4}
+    \end{instruction}
+
+    \Empty{}
+
+    \begin{instruction}{RLD}
+        \Symbol{\vspace*{-12pt}\hspace*{-0.8cm}\SymRLD}
+            \FlagsRLD 
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{5}{18}
+        \SkipToOpCode 
+            \OpCode{01}{101}{111}
+            \Hex{6F}{}
+    \end{instruction}
+			
+    \begin{lastinstruction}{RRD}
+        \Symbol{\vspace*{-12pt}\hspace*{-0.8cm}\SymRRD}
+            \FlagsRRD
+            \OpCode{11}{101}{101}
+            \Hex{ED}{2}
+            \Cycles{5}{18}
+        \SkipToOpCode 
+            \OpCode{01}{100}{111}
+            \Hex{67}{}
+    \end{lastinstruction}
+			
+\end{instrtable}
+
+\NoteTableSingleItemSpaceCorrection
+
+\begin{notestable}
+    \NoteItem{\See{1}{\tt m} is one of {\tt r}, {\tt (HL)}, {\tt (IX+d)}, {\tt (IY+d)}. To form new opcode replace \fbox{000} of {\tt RLC}s with shown code. Ts also the same\rule{0pt}{3.5ex}}
+
+    \NoteItem{\See{2}Some assemblers may also allow {\tt SL1} to be used instead of {\tt SLI}}
+
+    \NoteItem{\See{3}Shift Left Logical; no associated opcode, there is no difference between logical and arithmetic shift left, use {\tt SLA} for both. Some assemblers will allow {\tt SLL} as equivalent, but unfortunately some will assemble it as {\tt SLI}, so it's best avoiding}
+\end{notestable}
+
+\end{minipage}

@@ -1,0 +1,210 @@
+\section{Bit Set, Reset and Test}
+
+\begin{minipage}{\textwidth}
+
+\begin{instrtable}
+
+    \begin{instruction}{BIT b,r} 
+        \Symbol{\SymBIT{r}}
+            \FlagsBITr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+            \Comment{
+                \multirow{6}{*}{
+                    \tt
+                    \begin{tabular}{ll}
+                        r & \OCT{r} \\
+                        \hline
+                        B & 000 \\
+                        C & 001 \\
+                        D & 010 \\
+                        E & 011 \\
+                        H & 100 \\
+                        L & 101 \\
+                        A & 111 \\
+                    \end{tabular}
+                }
+            }
+        \SkipToOpCode 
+            \OpCode{01}{\OCT{b}}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{BIT b,(HL)} 
+        \Symbol{\SymBIT{(HL)}}
+            \FlagsBITr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{3}{12}
+        \SkipToOpCode 
+            \OpCode{01}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{BIT b,(IX+d)\See{2}} 
+        \Symbol{\SymBIT{(IX+d)}}
+            \FlagsBITr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{5}{20}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode
+            \OpRange{d}
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{01}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{BIT b,(IY+d)\See{2}} 
+        \Symbol{\SymBIT{(IY+d)}}
+            \FlagsBITr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{5}{20}
+            \Comment{
+                \multirow{7}{*}{
+                    \tt
+                    \begin{tabular}{ll}
+                        b & \OCT{b} \\
+                        \hline
+                        0 & 000 \\
+                        1 & 001 \\
+                        2 & 010 \\
+                        3 & 011 \\
+                        4 & 100 \\
+                        5 & 101 \\
+                        6 & 110 \\
+                        7 & 111 \\
+                    \end{tabular}
+                }
+            }
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{01}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{SET b,r} 
+        \Symbol{\SymSET{r}}
+            \FlagsSETr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{2}{8}
+        \SkipToOpCode 
+            \OpCode{\fbox{11}}{\OCT{b}}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{SET b,(HL)} 
+        \Symbol{\SymSET{(HL)}}
+            \FlagsSETr
+            \OpCode{11}{001}{011}
+            \Hex{CB}{2}
+            \Cycles{4}{15}
+        \SkipToOpCode 
+            \OpCode{\fbox{11}}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{SET b,(IX+d)} 
+        \Symbol{\SymSET{(IX+d)}}
+            \FlagsSETr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{\fbox{11}}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{SET b,(IY+d)} 
+        \Symbol{\SymSET{(IY+d)}}
+            \FlagsSETr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToOpCode 
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToOpCode 
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{\fbox{11}}{\OCT{b}}{110}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{SET b,(IX+d),r} 
+        \Symbol{\SymSETu[0]{r}{IX}}
+            \FlagsSETr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{4}
+            \Cycles{6}{23}
+        \SkipToSymbol
+            \Symbol{\SymSETu[1]{r}{IX}}
+            \FromSymbolToOpCode
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToSymbol
+            \Symbol{\SymSETu[2]{r}{IX}}
+            \FromSymbolToOpCode
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{\fbox{11}}{\OCT{b}}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+
+    \begin{instruction}{SET b,(IY+d),r} 
+        \Symbol{\SymSETu[0]{r}{IY}}
+            \FlagsSETr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{4}
+            \Cycles{6}{23}
+        \SkipToSymbol 
+            \Symbol{\SymSETu[1]{r}{IY}}
+            \FromSymbolToOpCode
+            \OpCode{11}{001}{011}
+            \Hex{CB}{}
+        \SkipToSymbol
+            \Symbol{\SymSETu[2]{r}{IY}}
+            \FromSymbolToOpCode
+            \OpRange{d} 
+            \Hex{..}{}
+        \SkipToOpCode 
+            \OpCode{\fbox{11}}{\OCT{b}}{\OCT{r}}
+            \Hex{..}{}
+    \end{instruction}
+
+    \StartWithOpCode\OpCode{$\uparrow$}{}{} \\
+
+    \begin{lastinstruction}{RES b,m\See{3}} 
+        \Symbol{\SymRES{m}}
+            \FlagsRESr
+            \OpCode{\fbox{10}}{...}{...}
+    \end{lastinstruction} 
+						
+\end{instrtable}
+
+\begin{notestable}
+    \NoteItem{\See{1}See section \ref{bit_flags} for complete description\noteb}
+    \NoteItem{\See{2}Instruction has other undocumented opcodes\noteb}
+    \NoteItem{\See{3}{\tt m} is one of {\tt r}, {\tt (HL)}, {\tt (IX+d)}, {\tt (IY+d)}. To form RES instruction, replace \fbox{{\tt 11}} with \fbox{{\tt 10}}. Ts also the same}
+\end{notestable}
+
+\end{minipage}

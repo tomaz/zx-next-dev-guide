@@ -1,0 +1,136 @@
+\section{Stack}
+
+\begin{minipage}{\textwidth}
+	
+\begin{instrtable}
+
+    \begin{instruction}{POP pp} 
+        \Symbol{\SymPOP[0]{pp}}
+            \FlagsPOPrr
+            \OpCode{11}{\OCT{pp}0}{001}
+            \Hex{..}{1}
+            \Cycles{3}{10}
+            \Comment{
+                \multirow{3}{*}{
+                    \tt
+                    \begin{tabular}{ll}
+                        pp & \OCT{pp} \\
+                        \hline
+                        BC & 00 \\
+                        DE & 01 \\
+                        HL & 10 \\
+                    \end{tabular}
+                }
+            }
+        \SkipToSymbol
+            \Symbol{\SymPOP[1]{pp}}
+        \SkipToSymbol
+            \Symbol{\SymPOP[2]{pp}}
+    \end{instruction}
+
+    \begin{instruction}{POP AF} 
+        \Symbol{\SymPOP[10]{A}}
+            \FlagsPOPaf
+            \OpCode{11}{110}{001}
+            \Hex{F1}{1}
+            \Cycles{3}{10}
+        \SkipToSymbol
+            \Symbol{\SymPOP[11]{F}}
+        \SkipToSymbol
+            \Symbol{\SymPOP[12]{}}
+    \end{instruction}
+
+    \begin{instruction}{POP IX} 
+        \Symbol{\SymPOP[0]{IX}}
+            \FlagsPOPrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{2}
+            \Cycles{4}{14}
+        \SkipToSymbol
+            \Symbol{\SymPOP[1]{IX}}
+            \FromSymbolToOpCode
+            \OpCode{11}{100}{001}
+            \Hex{E1}{}
+        \SkipToSymbol
+            \Symbol{\SymPOP[2]{IX}}
+    \end{instruction}
+
+    \begin{instruction}{POP IY}
+        \Symbol{\SymPOP[0]{IY}}
+            \FlagsPOPrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2}
+            \Cycles{4}{14}
+        \SkipToSymbol
+            \Symbol{\SymPOP[1]{IY}}
+            \FromSymbolToOpCode
+            \OpCode{11}{100}{001}
+            \Hex{E1}{}
+        \SkipToSymbol
+            \Symbol{\SymPOP[2]{IY}}
+    \end{instruction}
+
+    \begin{instruction}{PUSH rr} 
+        \Symbol{\SymPUSH[0]{rr}}
+            \FlagsPUSHrr
+            \OpCode{11}{\OCT{rr}0}{101}
+            \Hex{..}{1}
+            \Cycles{3}{11}
+            \Comment{
+                \multirow{4}{*}{
+                    \tt
+                    \begin{tabular}{ll}
+                        rr & \OCT{rr} \\
+                        \hline
+                        BC & 00 \\
+                        DE & 01 \\
+                        HL & 10 \\
+                        AF & 11 \\
+                    \end{tabular}
+                }
+            }
+        \SkipToSymbol
+            \Symbol{\SymPUSH[1]{rr}}
+        \SkipToSymbol
+            \Symbol{\SymPUSH[2]{rr}}
+    \end{instruction}
+	
+    \begin{instruction}{PUSH IX} 
+        \Symbol{\SymPUSH[0]{IX}}
+            \FlagsPUSHrr
+            \OpCode{11}{011}{101}
+            \Hex{DD}{2}
+            \Cycles{4}{15}
+        \SkipToSymbol
+            \Symbol{\SymPUSH[1]{IX}}
+            \FromSymbolToOpCode
+            \OpCode{11}{100}{101}
+            \Hex{E5}{}
+        \SkipToSymbol
+            \Symbol{\SymPUSH[2]{IX}}
+    \end{instruction}
+	
+    \begin{lastinstruction}{PUSH IY} 
+        \Symbol{\SymPUSH[0]{IY}}
+            \FlagsPUSHrr
+            \OpCode{11}{111}{101}
+            \Hex{FD}{2}
+            \Cycles{4}{15}
+        \SkipToSymbol
+            \Symbol{\SymPUSH[1]{IY}}
+            \FromSymbolToOpCode
+            \OpCode{11}{100}{101}
+            \Hex{E5}{}
+        \SkipToSymbol
+            \Symbol{\SymPUSH[2]{IY}}
+    \end{lastinstruction}
+	
+\end{instrtable}
+
+\NoteTableSingleItemSpaceCorrection
+
+\begin{notestable}
+    \NoteItem{\See{1}Flags set directly to low 8-bits of the value from stack SP}
+\end{notestable}
+
+\end{minipage}
