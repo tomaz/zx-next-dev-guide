@@ -219,9 +219,9 @@ My first computer was ZX Spectrum 48K. Initially it was only used to play games,
 	
 My original intent was to have coil bound list of all ZX Next instructions so I can quickly compare. However after finding Z80 Undocumented online, it felt like a perfect starting point. And with additional information it included, it also encouraged me to extend mere instructions list with Next specific chapters. So in a way this book represents my notes as I was learning those topics. That being said, I did my best to present information as a reference to keep book relevant.
 
-English is not my native tounge. And our own mind is not the best tool to correct our own work either. Since I can't afford professional proofreader, mistakes are a matter of fact I'm afraid. If you spot something, or want to contribute, feel free to open an issue on github. Pull requests are also welcome! If you want to contribute, but are unsure of what, check accompanying readme file on github for ideas. If you want to discuss in advance, or for anything else, you can find me on email \email{tkragelj}{gmail}{com} or Twitter {\tt @tomsbarks}.
+English is not my native tongue. And our own mind is not the best tool to correct our own work either. Since I can't afford professional proofreader, mistakes are a matter of fact I'm afraid. If you spot something, or want to contribute, feel free to open an issue on github. Pull requests are also welcome! If you want to contribute, but are unsure of what, check accompanying readme file on github for ideas. If you want to discuss in advance, or for anything else, you can find me on email \email{tkragelj}{gmail}{com} or Twitter {\tt @tomsbarks}.
 
-That being said, I hope you'll enjoy reading this document as much as I did writting it!
+That being said, I hope you'll enjoy reading this document as much as I did writing it!
 
 Sincerely, \AuthorName
 
@@ -266,7 +266,7 @@ If interested, you can find it at \url{http://www.myquest.nl/z80undocumented/}.
 	Corrected a textual typo in the R register and memory refresh section, thanks to David Aubespin. Corrected the contradiction in the {\tt DAA} section saying the {\tt NF} flag was both affected and unchanged :) thanks to Dan Meir.Added an error in official documentation about that way Interrupt Mode 2 works, thanks to Aaldert Dekker.
 	
 	\item[15th Juni 2005 (version 0.9)]
-	Corrected improper notation of {\tt JP x,nn} mnemonics in opcode list, thanks to Laurens Holst. Corrected a mistake in the {\tt INI}, {\tt INIR}, {\tt IND}, {\tt INDR} section and documented a mistake in offical Z80 documentation concerning Interrupt Mode 2, thanks to Boris Donko. Thanks to Aaldert Dekker for his ideas, for verifying many assumptions and writing instruction exercisers for various instruction groups.
+	Corrected improper notation of {\tt JP x,nn} mnemonics in opcode list, thanks to Laurens Holst. Corrected a mistake in the {\tt INI}, {\tt INIR}, {\tt IND}, {\tt INDR} section and documented a mistake in official Z80 documentation concerning Interrupt Mode 2, thanks to Boris Donko. Thanks to Aaldert Dekker for his ideas, for verifying many assumptions and writing instruction exercisers for various instruction groups.
 
 	\item[18th May 2005 (version 0.8)]
 	Added an alphabetical list of instructions for easy reference and corrected an error in the 16-bit arithmetic section, {\tt SBC HL,nn} sets the NF flag just like other subtraction instructions, thanks to Fredrik Olssen for pointing that out.
@@ -318,7 +318,7 @@ In 1969 Intel was approached by a Japanese company called Busicom to produce  ch
 
 Intel went on to improve the design and produced the 4040 (an improved 4-bit design) the 8008 (the first 8-bit microprocessor) and then in 1974 the 8080. This last one turned out to be a very useful and popular design and was used in the first home computer, the Altair 8800, and CP/M. 
 
-In 1975 Federico Faggin who had had worked at Intel on the 4004 and its successors left the company and joined forces with Masatoshi Shima to from Zilog. At their new company Faggin and Shima designed a microprocessor that was compatible with Intel's 8080 (it ran all 78 instructions of the 8080 in almost the same way that Intel's chip did)\footnote{Thanks to Jim Battle (\email{frustum}{pacbell}{net}): the 8080 always puts the parity in the PF flag; VF does not exist and the timing is different. Possibly there are other differences.} but had many more abilities (an extra 120 instructions, many more registers, simplified connection to hardware). Thus was born the mighty Z80, and thus was the empire forged!
+In 1975 Federico Faggin who had had worked at Intel on the 4004 and its successors left the company and joined forces with Masatoshi Shima to form Zilog. At their new company Faggin and Shima designed a microprocessor that was compatible with Intel's 8080 (it ran all 78 instructions of the 8080 in almost the same way that Intel's chip did)\footnote{Thanks to Jim Battle (\email{frustum}{pacbell}{net}): the 8080 always puts the parity in the PF flag; VF does not exist and the timing is different. Possibly there are other differences.} but had many more abilities (an extra 120 instructions, many more registers, simplified connection to hardware). Thus was born the mighty Z80, and thus was the empire forged!
 
 The original Z80 was first released in July 1976, coincidentally Jan was born in the very same month. Since then newer versions have appeared with much of the same architecture but running at higher speeds. The original Z80 ran with a clock rate of 2.5MHz, the Z80A runs at 4MHz, the Z80B at 6MHz and the Z80H at 8Mhz. 
 
@@ -508,7 +508,7 @@ This section might be relevant even if you don't do anything with hardware; it m
 	{\em Read} (output, active low, 3-state). Indicates that the CPU wants to read data from memory or an I/O device. The addressed I/O device or memory should use this signal to place data onto the data bus.
 
 	\item[$\mathtt{\overline{RESET}}$]
-	{\em Reset} (input, active low). Initializes the CPU as follows: it resets the interrupt flip-flops, clears the PC and IR registes, and set the interrupt mode to 0. During reset time, the address bus and data bus go to a high-impedance state, and all control output signals go to the inactive state. Note that $\mathtt{\overline{RESET}}$ must be active for a minimum of three full clock cycles before the reset operation is complete. Note that Matt found that SP and AF are set to \$FFFF.
+	{\em Reset} (input, active low). Initializes the CPU as follows: it resets the interrupt flip-flops, clears the PC and IR registers, and set the interrupt mode to 0. During reset time, the address bus and data bus go to a high-impedance state, and all control output signals go to the inactive state. Note that $\mathtt{\overline{RESET}}$ must be active for a minimum of three full clock cycles before the reset operation is complete. Note that Matt found that SP and AF are set to \$FFFF.
 
 	\item[$\mathtt{\overline{RFSH}}$]
 	{\em Refresh} (output, active low). $\mathtt{\overline{RFSH}}$, together with $\mathtt{\overline{MREQ}}$, indicates that the IR registers are on the address bus (note that only the lower 7 bits are useful) and can be used for the refresh of dynamic memories.
@@ -2025,7 +2025,7 @@ If we instead wanted to check if pixel at given coordinate is set or not, we wou
 	PIXELAD           ; HL=address of pixel (E,D)
 	SETAE             ; A=pixel mask
 	AND (HL)          ; we'll read the pixel
-	RET Z             ; exit if pixel is set
+	RET Z             ; exit if pixel is not set
 \end{lstlisting}
 
 
@@ -2102,7 +2102,7 @@ ZX Spectrum Next also supports several enhanced ULA modes like Timex Sinclair Do
 	\PortBits{4}
 		\PortDesc{EAR output (connected to internal speaker)}
 	\PortBits{3}
-		\PortDesc{Use Shadow Layer 2 for paging}
+		\PortDesc{MIC output (saving to tape via audio jack)}
 	\PortBits{2-0}
 		\PortDesc{Border colour}
 \end{NextPort}
@@ -2356,7 +2356,7 @@ Also note we don't have to handle bank swapping on every iteration, once per 32 
 			\multicolumn{2}{X|}{\rotatebox[origin=c]{90}{16K BANK 3}} &
 			\multicolumn{2}{X|}{\rotatebox[origin=c]{90}{16K BANK 4}} \\
 		\cline{2-11}
-		\rotatebox[origin=c]{90}{254~~~~~~~~~~~} &
+		\rotatebox[origin=c]{90}{255~~~~~~~~~~~} &
 			\rotatebox[origin=c]{90}{~8K BANK 0~} &
 			\rotatebox[origin=c]{90}{8K BANK 1} &
 			\rotatebox[origin=c]{90}{8K BANK 2} &
@@ -2500,7 +2500,7 @@ nextY:
 			\multicolumn{2}{X|}{\rotatebox[origin=c]{90}{16K BANK 3}} &
 			\multicolumn{2}{X|}{\rotatebox[origin=c]{90}{16K BANK 4}} \\
 		\cline{2-11}
-		\rotatebox[origin=c]{90}{254~~~~~~~~~~~} &
+		\rotatebox[origin=c]{90}{255~~~~~~~~~~~} &
 			\rotatebox[origin=c]{90}{~8K BANK 0~} &
 			\rotatebox[origin=c]{90}{8K BANK 1} &
 			\rotatebox[origin=c]{90}{8K BANK 2} &
