@@ -760,7 +760,7 @@
 \newcommand{\FlagsADDrrnn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsADCr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{0}{\FS}}
 \newcommand{\FlagsADCrr}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FS\FlagsSee{2}}{\FlagsFPV\FlagsSee{1}}{0}{\FS\FlagsSee{1}}}
-\newcommand{\FlagsANDr}[1][]{\Flags[#1]{\FS}{\FS}{1}{\FlagsFPV}{0}{0}}
+\newcommand{\FlagsANDr}[1][]{\Flags[#1]{\FS}{\FS}{1}{\FlagsFPP}{0}{0}}
 \newcommand{\FlagsBITr}[1][]{\Flags[#1]{\FU\FlagsSee{1}}{\FS}{1}{\FU\FlagsSee{1}}{0}{\FN}}
 \newcommand{\FlagsBSLA}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsBSRA}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
@@ -821,7 +821,7 @@
 \newcommand{\FlagsNEXTREGna}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsNEXTREGnn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsNOP}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsORr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPV}{0}{0}}
+\newcommand{\FlagsORr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{0}}
 \newcommand{\FlagsOUTna}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsOUTcr}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsOUTc}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
@@ -863,5 +863,5 @@
 \newcommand{\FlagsSRLr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
 \newcommand{\FlagsSUBr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{1}{\FS}}
 \newcommand{\FlagsSWAPNIB}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsTESTn}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{\FU}{\FS}}
+\newcommand{\FlagsTESTn}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPP}{\FU}{\FS}}
 \newcommand{\FlagsXORr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{0}}
