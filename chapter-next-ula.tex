@@ -17,7 +17,7 @@
 
 Original ZX Spectrum didn't have dedicated graphics chip. To keep price as low as possible, screen rendering was performed by ULA (``Uncommitted Logic Array'') chip.
 
-ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode is 256x192 pixels. If we translate this to characters which are 8x8 pixels, this gives us 32 character columns in 24 character rows. Memory dedicated to ULA resides in second 16K slot at addresses \MemAddr{4000}-\MemAddr{5AFF}. And similar to memory configuration of other contemporary computers, pixel memory is separate from attributes/colour memory:
+ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode is 256$\times$192 pixels. If we translate this to characters which are 8$\times$8 pixels, this gives us 32 character columns in 24 character rows. Memory dedicated to ULA resides in second 16K slot at addresses \MemAddr{4000}-\MemAddr{5AFF}. And similar to memory configuration of other contemporary computers, pixel memory is separate from attributes/colour memory:
 
 \begingroup
     \setlength{\tabcolsep}{5pt}
@@ -65,7 +65,7 @@ Pixel memory is not linear, but is instead divided to fill character rows line b
     \end{tabularx}
 }
 
-But this is not the end of peculiarities of Spectrum ULA mode. If you attempt to fill the screen memory byte by byte, you'll realize top third of the screen fills in first, then middle third and lastly bottom third. Reason is, ULA mode divides screen into 3 banks. Each bank covers 8 character rows, so 8*8*32 or 2048 bytes:
+But this is not the end of peculiarities of Spectrum ULA mode. If you attempt to fill the screen memory byte by byte, you'll realize top third of the screen fills in first, then middle third and lastly bottom third. Reason is, ULA mode divides screen into 3 banks. Each bank covers 8 character rows, so 8$\times$8$\times$32 or 2048 bytes:
 
 \begin{tabular}{ccc}
     Memory Range & Screen Lines & Char. Rows \\
@@ -154,7 +154,7 @@ If we instead wanted to check if pixel at given coordinate is set or not, we wou
 
 \subsection{Attributes memory}
 
-Now that we know how to draw individual pixels, it's time to handle colour. Memory wise, it's stored immediately after pixel RAM, at memory locations \MemAddr{5800} - \MemAddr{5AFF}. Each byte represents colour and attributes for 8x8 pixel block on screen. Byte contents are as follows:
+Now that we know how to draw individual pixels, it's time to handle colour. Memory wise, it's stored immediately after pixel RAM, at memory locations \MemAddr{5800} - \MemAddr{5AFF}. Each byte represents colour and attributes for 8$\times$8 pixel block on screen. Byte contents are as follows:
 
 \begin{BitTableByte}
     \BitSmall{$F$} &
