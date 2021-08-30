@@ -4,122 +4,122 @@
 
 \begin{instrtable}
 
-    \begin{instruction}{OUT (n),A} 
-        \Symbol{\SymOUT{n}{A}}
-            \FlagsOUTna
-            \OpCode{11}{010}{011}
-            \Hex{D3}{2}
-            \Cycles{3}{11}
-            \Comment{
-                \multirow{7}{*}{
-                    \tt
-                    \begin{tabular}{ll}
-                        r & \OCT{r} \\
-                        \hline
-                        B & 000 \\
-                        C & 001 \\
-                        D & 010 \\
-                        E & 011 \\
-                        H & 100 \\
-                        L & 101 \\
-                        A & 111 \\
-                    \end{tabular}
-                }
-            }
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{OUT (n),A} 
+		\Symbol{\SymOUT{n}{A}}
+			\FlagsOUTna
+			\OpCode{11}{010}{011}
+			\Hex{D3}{2}
+			\Cycles{3}{11}
+			\Comment{
+				\multirow{7}{*}{
+					\tt
+					\begin{tabular}{ll}
+						r & \OCT{r} \\
+						\hline
+						B & 000 \\
+						C & 001 \\
+						D & 010 \\
+						E & 011 \\
+						H & 100 \\
+						L & 101 \\
+						A & 111 \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{OUT (C),r} 
-        \Symbol{\SymOUT{BC}{r}}
-            \FlagsOUTcr
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{3}{12}
-        \SkipToOpCode 
-            \OpCode{01}{\OCT{r}}{001}
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{OUT (C),r} 
+		\Symbol{\SymOUT{BC}{r}}
+			\FlagsOUTcr
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{3}{12}
+		\SkipToOpCode 
+			\OpCode{01}{\OCT{r}}{001}
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{OUT (C),0} 
-        \Symbol{\SymOUT{BC}{0}}
-            \FlagsOUTc
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{3}{12}
-        \SkipToOpCode 
-            \OpCode{01}{110}{001}
-            \Hex{71}{}
-    \end{instruction}
+	\begin{instruction}{OUT (C),0} 
+		\Symbol{\SymOUT{BC}{0}}
+			\FlagsOUTc
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{3}{12}
+		\SkipToOpCode 
+			\OpCode{01}{110}{001}
+			\Hex{71}{}
+	\end{instruction}
 
-    \begin{instruction}{OUTI} 
-        \Symbol{\SymOUTI[0]}
-            \FlagsOUTI
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-        \SkipToSymbol
-            \Symbol{\SymOUTI[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{100}{011}
-            \Hex{A3}{}
-        \SkipToSymbol
-            \Symbol{\SymOUTI[2]}
-    \end{instruction}
+	\begin{instruction}{OUTI} 
+		\Symbol{\SymOUTI[0]}
+			\FlagsOUTI
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{\SymOUTI[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{100}{011}
+			\Hex{A3}{}
+		\SkipToSymbol
+			\Symbol{\SymOUTI[2]}
+	\end{instruction}
 
-    \begin{instruction}{OTIR} 
-        \Symbol{\SymOTIR[0]}
-            \FlagsOTIR
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-            \Comment{if {\tt B}=0}
-        \SkipToSymbol
-            \Symbol{\SymOTIR[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{110}{011}
-            \Hex{B3}{}
-            \Cycles{5}{21}
-            \Comment{if {\tt B}$\neq$0}
-    \end{instruction}
+	\begin{instruction}{OTIR} 
+		\Symbol{\SymOTIR[0]}
+			\FlagsOTIR
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+			\Comment{if {\tt B}=0}
+		\SkipToSymbol
+			\Symbol{\SymOTIR[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{110}{011}
+			\Hex{B3}{}
+			\Cycles{5}{21}
+			\Comment{if {\tt B}$\neq$0}
+	\end{instruction}
 
-    \begin{instruction}{OUTD} 
-        \Symbol{\SymOUTD[0]}
-            \FlagsOUTI
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-        \SkipToSymbol
-            \Symbol{\SymOUTD[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{101}{011}
-            \Hex{AB}{}
-        \SkipToSymbol
-            \Symbol{\SymOUTD[2]}
-    \end{instruction}
+	\begin{instruction}{OUTD} 
+		\Symbol{\SymOUTD[0]}
+			\FlagsOUTI
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{\SymOUTD[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{101}{011}
+			\Hex{AB}{}
+		\SkipToSymbol
+			\Symbol{\SymOUTD[2]}
+	\end{instruction}
 
-    \begin{lastinstruction}{OTDR} 
-        \Symbol{\SymOTDR[0]}
-            \FlagsOTDR
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-            \Comment{if {\tt B}=0}
-        \SkipToSymbol
-            \Symbol{\SymOTDR[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{111}{011}
-            \Hex{BB}{}
-            \Cycles{5}{21}
-            \Comment{if {\tt B}$\neq$0}
-    \end{lastinstruction}
+	\begin{lastinstruction}{OTDR} 
+		\Symbol{\SymOTDR[0]}
+			\FlagsOTDR
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+			\Comment{if {\tt B}=0}
+		\SkipToSymbol
+			\Symbol{\SymOTDR[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{111}{011}
+			\Hex{BB}{}
+			\Cycles{5}{21}
+			\Comment{if {\tt B}$\neq$0}
+	\end{lastinstruction}
 
 \end{instrtable}
 
 \begin{notestable}
-    \NoteItem{\See{1}Flag is {\tt 1} if {\tt B=0} after execution, otherwise {\tt 0}}
-    \NoteItem{\See{2}On Next this flag is destroyed, for other Z80 computers see section \ref{block_io}.}
+	\NoteItem{\See{1}Flag is {\tt 1} if {\tt B=0} after execution, otherwise {\tt 0}}
+	\NoteItem{\See{2}On Next this flag is destroyed, for other Z80 computers see section \ref{block_io}.}
 \end{notestable}
 	
 \end{minipage}

@@ -4,125 +4,125 @@
 
 \begin{instrtable}
 
-    \begin{instruction}{IN A,(n)\See{1}} 
-        \Symbol{\SymIN{A}{n}}
-            \FlagsINan
-            \OpCode{11}{011}{011}
-            \Hex{DB}{2}
-            \Cycles{3}{11}
-            \Comment{
-                \multirow{7}{*}{
-                    \tt
-                    \begin{tabular}{ll}
-                        r & \OCT{r} \\
-                        \hline
-                        B & 000 \\
-                        C & 001 \\
-                        D & 010 \\
-                        E & 011 \\
-                        H & 100 \\
-                        L & 101 \\
-                        A & 111 \\
-                    \end{tabular}
-                }
-            }
-        \SkipToOpCode	
-            \OpRange{n} 
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{IN A,(n)\See{1}} 
+		\Symbol{\SymIN{A}{n}}
+			\FlagsINan
+			\OpCode{11}{011}{011}
+			\Hex{DB}{2}
+			\Cycles{3}{11}
+			\Comment{
+				\multirow{7}{*}{
+					\tt
+					\begin{tabular}{ll}
+						r & \OCT{r} \\
+						\hline
+						B & 000 \\
+						C & 001 \\
+						D & 010 \\
+						E & 011 \\
+						H & 100 \\
+						L & 101 \\
+						A & 111 \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode	
+			\OpRange{n} 
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{IN r,(C)\See{2}} 
-        \Symbol{\SymIN{r}{BC}}
-            \FlagsINrc
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{3}{12}
-        \SkipToOpCode 
-            \OpCode{01}{\OCT{r}}{000}
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{IN r,(C)\See{2}} 
+		\Symbol{\SymIN{r}{BC}}
+			\FlagsINrc
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{3}{12}
+		\SkipToOpCode 
+			\OpCode{01}{\OCT{r}}{000}
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{IN (C)\See{2,3}} 
-        \Symbol{(BC)}
-            \FlagsINc
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{3}{12}
-        \SkipToOpCode 
-            \OpCode{01}{110}{000}
-            \Hex{70}{}
-    \end{instruction}
+	\begin{instruction}{IN (C)\See{2,3}} 
+		\Symbol{(BC)}
+			\FlagsINc
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{3}{12}
+		\SkipToOpCode 
+			\OpCode{01}{110}{000}
+			\Hex{70}{}
+	\end{instruction}
 
-    \begin{instruction}{IND} 
-        \Symbol{\SymIND[0]}
-            \FlagsIND
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-        \SkipToSymbol
-            \Symbol{\SymIND[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{101}{010}
-            \Hex{AA}{}
-        \SkipToSymbol
-            \Symbol{\SymIND[2]}
-    \end{instruction}
+	\begin{instruction}{IND} 
+		\Symbol{\SymIND[0]}
+			\FlagsIND
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{\SymIND[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{101}{010}
+			\Hex{AA}{}
+		\SkipToSymbol
+			\Symbol{\SymIND[2]}
+	\end{instruction}
 	
-    \begin{instruction}{INDR} 
-        \Symbol{\SymINDR[0]}
-            \FlagsINDR
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-            \Comment{if {\tt B}=0}
-        \SkipToSymbol
-            \Symbol{\SymINDR[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{111}{010}
-            \Hex{BA}{}
-            \Cycles{5}{21}
-            \Comment{if {\tt B}$\neq$0}
-    \end{instruction}
+	\begin{instruction}{INDR} 
+		\Symbol{\SymINDR[0]}
+			\FlagsINDR
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+			\Comment{if {\tt B}=0}
+		\SkipToSymbol
+			\Symbol{\SymINDR[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{111}{010}
+			\Hex{BA}{}
+			\Cycles{5}{21}
+			\Comment{if {\tt B}$\neq$0}
+	\end{instruction}
 
-    \begin{instruction}{INI} 
-        \Symbol{\SymINI[0]}
-            \FlagsINI
-            \OpCode{11}{101}{101} 
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-        \SkipToSymbol
-            \Symbol{\SymINI[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{100}{010}
-            \Hex{A2}{}
-        \SkipToSymbol
-            \Symbol{\SymINI[2]}
-    \end{instruction}
+	\begin{instruction}{INI} 
+		\Symbol{\SymINI[0]}
+			\FlagsINI
+			\OpCode{11}{101}{101} 
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{\SymINI[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{100}{010}
+			\Hex{A2}{}
+		\SkipToSymbol
+			\Symbol{\SymINI[2]}
+	\end{instruction}
 	
-    \begin{lastinstruction}{INIR} 
-        \Symbol{\SymINIR[0]}
-            \FlagsINIR
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-            \Comment{if {\tt B}=0}
-        \SkipToSymbol
-            \Symbol{\SymINIR[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{110}{010}
-            \Hex{B2}{}
-            \Cycles{5}{21}
-            \Comment{if {\tt B}$\neq$0}
-    \end{lastinstruction}	
+	\begin{lastinstruction}{INIR} 
+		\Symbol{\SymINIR[0]}
+			\FlagsINIR
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+			\Comment{if {\tt B}=0}
+		\SkipToSymbol
+			\Symbol{\SymINIR[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{110}{010}
+			\Hex{B2}{}
+			\Cycles{5}{21}
+			\Comment{if {\tt B}$\neq$0}
+	\end{lastinstruction}	
 		
 \end{instrtable}
 
 \begin{notestable}
-    \NoteItem{\See{1}Some assemblers allow {\tt IN (n)} to be used instead of {\tt IN A,(n)}}
-    \NoteItem{\See{2}Some assemblers allow instruction to be written with  {\tt (BC)} instead of {\tt (C)}}
-    \NoteItem{\See{3}Performs the input without storing the result. Some assemblers allow {\tt IN F,(C)} to be used instead of {\tt IN (C)}}
-    \NoteItem{\See{4}Flag is {\tt 1} if {\tt B=0} after execution, otherwise {\tt 0}; similar to {\tt DEC B}}
-    \NoteItem{\See{5}On Next this flag is destroyed, for other Z80 computers see section \ref{block_io}}
+	\NoteItem{\See{1}Some assemblers allow {\tt IN (n)} to be used instead of {\tt IN A,(n)}}
+	\NoteItem{\See{2}Some assemblers allow instruction to be written with  {\tt (BC)} instead of {\tt (C)}}
+	\NoteItem{\See{3}Performs the input without storing the result. Some assemblers allow {\tt IN F,(C)} to be used instead of {\tt IN (C)}}
+	\NoteItem{\See{4}Flag is {\tt 1} if {\tt B=0} after execution, otherwise {\tt 0}; similar to {\tt DEC B}}
+	\NoteItem{\See{5}On Next this flag is destroyed, for other Z80 computers see section \ref{block_io}}
 \end{notestable}
 	
 \end{minipage}

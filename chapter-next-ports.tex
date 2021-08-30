@@ -20,58 +20,58 @@
 \subsection{Mapped Spectrum Ports}
 
 \begingroup
-    \newcommand{\zxport}[4]{
-        \tt {#1} & 
-        {\tt \$#2} & 
-        \IfEq{#3}{}{}{\tt \%#3} &
-        #4\\
-    }
+	\newcommand{\zxport}[4]{
+		\tt {#1} & 
+		{\tt \$#2} & 
+		\IfEq{#3}{}{}{\tt \%#3} &
+		#4\\
+	}
 
-    \setlength{\extrarowheight}{5pt}
+	\setlength{\extrarowheight}{5pt}
 
-    \begin{tabularx}{\textwidth}{lllX}
-        {\tt RW} & Addr & Mask & Description \\
+	\begin{tabularx}{\textwidth}{lllX}
+		{\tt RW} & Addr & Mask & Description \\
 		
-        \hline
+		\hline
 		
-        \zxport{RW}{103B}{0001 0000 0011 1011}{Sets and reads the I2C SCL line}
-        \zxport{RW}{113B}{0001 0001 0011 1011}{Sets and reads the I2C SDA line}
-        \zxport{RW}{123B}{0001 0010 0011 1011}{Enables layer 2 and controls paging of layer 2 screen into lower memory \zxsee{zx_next_layer2}}
-        \zxport{RW}{133B}{0001 0011 0011 1011}{Sends byte to serial port. If read, tells if data is available in RX buffer}
-        \zxport{RW}{143B}{0001 0100 0011 1011}{Reads data from serial port, write sets the baud rate}
-        \zxport{RW}{153B}{0001 0101 0011 1011}{Configuration of UART interfaces}
-        \zxport{-W}{1FFD}{0001 ---- ---- --0-}{Controls ROM paging and special paging options from the +2a/+3 \zxsee{zx_next_memorypaging}}
-        \zxport{RW}{243B}{0010 0100 0011 1011}{Selects active port for TBBlue/Next feature configuration}
-        \zxport{RW}{253B}{0010 0101 0011 1011}{Reads and/or writes the selected TBBlue control register}
-        \zxport{RW}{303B}{0011 0000 0011 1011}{Sets active sprite-attribute index and pattern-slot index, reads sprite status \zxsee{zx_next_sprites}}
-        \zxport{-W}{7FFD}{01-- ---- ---- --0-}{Selects active RAM, ROM, and displayed screen \zxsee{zx_next_memorypaging}}
-        \zxport{-W}{BFFD}{10-- ---- ---- --0-}{Writes to the selected register of the selected sound chip \zxsee{zx_next_sound}}
-        \zxport{-W}{DFFD}{1101 1111 1111 1101}{Provides additional bank select bits for extended memory \zxsee{zx_next_memorypaging}}
-        \zxport{R-}{FADF}{---- ---0 --0- ----}{Reads buttons on Kempston Mouse}
-        \zxport{R-}{FBDF}{---- -0-1 --0- ----}{X coordinate of Kempston Mouse, 0-255}
-        \zxport{R-}{FFDF}{---- -1-1 --0- ----}{Y coordinate of Kempston Mouse, 0-192}
-        \zxport{-W}{FFFD}{11-- ---- ---- --0-}{Controls stereo channels and selects active sound chip and sound chip channel \zxsee{zx_next_sound}}
+		\zxport{RW}{103B}{0001 0000 0011 1011}{Sets and reads the I2C SCL line}
+		\zxport{RW}{113B}{0001 0001 0011 1011}{Sets and reads the I2C SDA line}
+		\zxport{RW}{123B}{0001 0010 0011 1011}{Enables layer 2 and controls paging of layer 2 screen into lower memory \zxsee{zx_next_layer2}}
+		\zxport{RW}{133B}{0001 0011 0011 1011}{Sends byte to serial port. If read, tells if data is available in RX buffer}
+		\zxport{RW}{143B}{0001 0100 0011 1011}{Reads data from serial port, write sets the baud rate}
+		\zxport{RW}{153B}{0001 0101 0011 1011}{Configuration of UART interfaces}
+		\zxport{-W}{1FFD}{0001 ---- ---- --0-}{Controls ROM paging and special paging options from the +2a/+3 \zxsee{zx_next_memorypaging}}
+		\zxport{RW}{243B}{0010 0100 0011 1011}{Selects active port for TBBlue/Next feature configuration}
+		\zxport{RW}{253B}{0010 0101 0011 1011}{Reads and/or writes the selected TBBlue control register}
+		\zxport{RW}{303B}{0011 0000 0011 1011}{Sets active sprite-attribute index and pattern-slot index, reads sprite status \zxsee{zx_next_sprites}}
+		\zxport{-W}{7FFD}{01-- ---- ---- --0-}{Selects active RAM, ROM, and displayed screen \zxsee{zx_next_memorypaging}}
+		\zxport{-W}{BFFD}{10-- ---- ---- --0-}{Writes to the selected register of the selected sound chip \zxsee{zx_next_sound}}
+		\zxport{-W}{DFFD}{1101 1111 1111 1101}{Provides additional bank select bits for extended memory \zxsee{zx_next_memorypaging}}
+		\zxport{R-}{FADF}{---- ---0 --0- ----}{Reads buttons on Kempston Mouse}
+		\zxport{R-}{FBDF}{---- -0-1 --0- ----}{X coordinate of Kempston Mouse, 0-255}
+		\zxport{R-}{FFDF}{---- -1-1 --0- ----}{Y coordinate of Kempston Mouse, 0-192}
+		\zxport{-W}{FFFD}{11-- ---- ---- --0-}{Controls stereo channels and selects active sound chip and sound chip channel \zxsee{zx_next_sound}}
 
-    \end{tabularx}
+	\end{tabularx}
 
-    \pagebreak
-    \vspace*{9ex}
-    \begin{tabularx}{\textwidth}{lllX}
-        {\tt RW} & Addr & Mask & Description \\
+	\pagebreak
+	\vspace*{9ex}
+	\begin{tabularx}{\textwidth}{lllX}
+		{\tt RW} & Addr & Mask & Description \\
 		
-        \hline
+		\hline
 
-        \zxport{RW}{xx0B}{---- ---- 0000 1011}{Controls Z8410 DMA chip via MB02 standard}
-        \zxport{R-}{xx1F}{---- ---- 0001 1111}{Reads movement of joysticks using Kempston interface}
-        \zxport{RW}{xx37}{---- ---- ---- ----}{Kempston interface second joystick variant and controls joystick I/O}
-        \zxport{-W}{xx57}{---- ---- 0101 0111}{Uploads sprite positions, visibility, colour type and effect flags \zxsee{zx_next_sprites}}
-        \zxport{-W}{xx5B}{---- ---- 0101 1011}{Used to upload the pattern of the selected sprite \zxsee{zx_next_sprites}}
-        \zxport{RW}{xx6B}{---- ---- 0110 1011}{Controls zxnDMA chip}
-        \zxport{-W}{xxDF}{---- ---- --01 1111}{Output to SpecDrum DAC}
-        \zxport{RW}{xxFE}{xxxx xxxx ---- ---0}{Reading with particular high bytes returns keyboard status \zxsee{zx_next_keyboard}, write changes border colour and base Spectrum audio settings \zxsee{zx_next_ula}}
-        \zxport{RW}{xxFF}{---- ---- ---- ----}{Controls Timex Sinclair video modes and colours in hi-res mode. Readable when \PortLink{Peripheral 3 Register}{08} bit 2 is set \zxsee{zx_next_sound}}
+		\zxport{RW}{xx0B}{---- ---- 0000 1011}{Controls Z8410 DMA chip via MB02 standard}
+		\zxport{R-}{xx1F}{---- ---- 0001 1111}{Reads movement of joysticks using Kempston interface}
+		\zxport{RW}{xx37}{---- ---- ---- ----}{Kempston interface second joystick variant and controls joystick I/O}
+		\zxport{-W}{xx57}{---- ---- 0101 0111}{Uploads sprite positions, visibility, colour type and effect flags \zxsee{zx_next_sprites}}
+		\zxport{-W}{xx5B}{---- ---- 0101 1011}{Used to upload the pattern of the selected sprite \zxsee{zx_next_sprites}}
+		\zxport{RW}{xx6B}{---- ---- 0110 1011}{Controls zxnDMA chip}
+		\zxport{-W}{xxDF}{---- ---- --01 1111}{Output to SpecDrum DAC}
+		\zxport{RW}{xxFE}{xxxx xxxx ---- ---0}{Reading with particular high bytes returns keyboard status \zxsee{zx_next_keyboard}, write changes border colour and base Spectrum audio settings \zxsee{zx_next_ula}}
+		\zxport{RW}{xxFF}{---- ---- ---- ----}{Controls Timex Sinclair video modes and colours in hi-res mode. Readable when \PortLink{Peripheral 3 Register}{08} bit 2 is set \zxsee{zx_next_sound}}
 
-    \end{tabularx}
+	\end{tabularx}
 \endgroup
 
 
@@ -83,151 +83,151 @@
 Specific features of the Next are controlled via these register numbers, accessed via \PortLink{TBBlue Register Select\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Select}}}{243B} and \PortLink{TBBlue Register Access\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Access}}}{253B}, or via the NEXTREG instruction.
 
 \begingroup
-    \environbodyname\TBBlueBODY
-    \NewEnviron{tbbluereg}{
-        \begin{tabularx}{\textwidth}{llX}
-            {\tt RW} & Port & Description \\
-            \hline
-            \TBBlueBODY
-        \end{tabularx}
-    }
+	\environbodyname\TBBlueBODY
+	\NewEnviron{tbbluereg}{
+		\begin{tabularx}{\textwidth}{llX}
+			{\tt RW} & Port & Description \\
+			\hline
+			\TBBlueBODY
+		\end{tabularx}
+	}
 
-    \newcommand{\nextport}[3]{
-        {\tt #1} & 
-        {\tt \$#2} & 
-        #3 \\
-    }
+	\newcommand{\nextport}[3]{
+		{\tt #1} & 
+		{\tt \$#2} & 
+		#3 \\
+	}
 
-    \setlength{\extrarowheight}{2pt}
+	\setlength{\extrarowheight}{2pt}
 
-    \begin{tbbluereg}
-        \nextport{R-}{0}{Identifies TBBlue board type. Should always be {\tt 10} on Next}
-        \nextport{R-}{1}{Identifies core (FPGA image) version}
-        \nextport{RW}{2}{Identifies type of last reset. Can be written to force reset}
-        \nextport{RW}{3}{Identifies timing and machine type}
-        \nextport{-W}{4}{In config mode, allows RAM to be mapped to ROM area}
-        \nextport{RW}{5}{Sets joystick mode, video frequency and Scandoubler}
-        \nextport{RW}{6}{Enables CPU Speed key, DivMMC, Multiface, Mouse and AY audio}
-        \nextport{RW}{7}{Sets CPU Speed, reads actual speed}
-        \nextport{RW}{8}{ABC/ACB Stereo, Internal Speaker, SpecDrum, Timex Video Modes, Turbo Sound Next, RAM contention and (un)lock 128k paging \zxsee{zx_next_sound}}
-        \nextport{RW}{9}{Sets scanlines, AY mono output, sprite-id lockstep, resets DivMMC mapram and disables HDMI audio \zxsee{zx_next_sprites}}
-        \nextport{RW}{0A}{Mouse buttons and DPI config}
-        \nextport{R-}{0E}{Identifies core (FPGA image) version (sub minor number)}
-        \nextport{RW}{10}{Used within the Anti-brick system}
-        \nextport{RW}{11}{Sets video output timing variant}
-        \nextport{RW}{12}{Sets the bank number where Layer 2 video memory begins \zxsee{zx_next_layer2}}
-        \nextport{RW}{13}{Sets the bank number where the Layer 2 shadow screen begins}
-        \nextport{RW}{14}{Sets the transparent colour for Layer 2, ULA and LoRes pixel data}
-        \nextport{RW}{15}{Enables/disables sprites and Lores Layer, and chooses priority of sprites and Layer 2 \zxsee{zx_next_tilemap}}
-        \nextport{RW}{16}{Sets X pixel offset used for drawing Layer 2 graphics on the screen \zxsee{zx_next_layer2}}
-        \nextport{RW}{17}{Sets Y offset used when drawing Layer 2 graphics on the screen \zxsee{zx_next_layer2}}
-        \nextport{RW}{18}{Sets and reads clip-window for Layer 2 \zxsee{zx_next_layer2}}
-        \nextport{RW}{19}{Sets and reads clip-window for Sprites \zxsee{zx_next_sprites}}
-        \nextport{RW}{1A}{Sets and reads clip-window for ULA/LoRes layer}
-        \nextport{RW}{1B}{Sets and reads clip-window for Tilemap \zxsee{zx_next_tilemap}}
-        \nextport{RW}{1C}{Controls (resets) the clip-window registers indices \zxsee{zx_next_layer2}}
-        \nextport{R-}{1E}{Holds the MSB of the raster line currently being drawn}
-        \nextport{R-}{1F}{Holds the eight LSBs of the raster line currently being drawn}
-        \end{tbbluereg}
+	\begin{tbbluereg}
+		\nextport{R-}{0}{Identifies TBBlue board type. Should always be {\tt 10} on Next}
+		\nextport{R-}{1}{Identifies core (FPGA image) version}
+		\nextport{RW}{2}{Identifies type of last reset. Can be written to force reset}
+		\nextport{RW}{3}{Identifies timing and machine type}
+		\nextport{-W}{4}{In config mode, allows RAM to be mapped to ROM area}
+		\nextport{RW}{5}{Sets joystick mode, video frequency and Scandoubler}
+		\nextport{RW}{6}{Enables CPU Speed key, DivMMC, Multiface, Mouse and AY audio}
+		\nextport{RW}{7}{Sets CPU Speed, reads actual speed}
+		\nextport{RW}{8}{ABC/ACB Stereo, Internal Speaker, SpecDrum, Timex Video Modes, Turbo Sound Next, RAM contention and (un)lock 128k paging \zxsee{zx_next_sound}}
+		\nextport{RW}{9}{Sets scanlines, AY mono output, sprite-id lockstep, resets DivMMC mapram and disables HDMI audio \zxsee{zx_next_sprites}}
+		\nextport{RW}{0A}{Mouse buttons and DPI config}
+		\nextport{R-}{0E}{Identifies core (FPGA image) version (sub minor number)}
+		\nextport{RW}{10}{Used within the Anti-brick system}
+		\nextport{RW}{11}{Sets video output timing variant}
+		\nextport{RW}{12}{Sets the bank number where Layer 2 video memory begins \zxsee{zx_next_layer2}}
+		\nextport{RW}{13}{Sets the bank number where the Layer 2 shadow screen begins}
+		\nextport{RW}{14}{Sets the transparent colour for Layer 2, ULA and LoRes pixel data}
+		\nextport{RW}{15}{Enables/disables sprites and Lores Layer, and chooses priority of sprites and Layer 2 \zxsee{zx_next_tilemap}}
+		\nextport{RW}{16}{Sets X pixel offset used for drawing Layer 2 graphics on the screen \zxsee{zx_next_layer2}}
+		\nextport{RW}{17}{Sets Y offset used when drawing Layer 2 graphics on the screen \zxsee{zx_next_layer2}}
+		\nextport{RW}{18}{Sets and reads clip-window for Layer 2 \zxsee{zx_next_layer2}}
+		\nextport{RW}{19}{Sets and reads clip-window for Sprites \zxsee{zx_next_sprites}}
+		\nextport{RW}{1A}{Sets and reads clip-window for ULA/LoRes layer}
+		\nextport{RW}{1B}{Sets and reads clip-window for Tilemap \zxsee{zx_next_tilemap}}
+		\nextport{RW}{1C}{Controls (resets) the clip-window registers indices \zxsee{zx_next_layer2}}
+		\nextport{R-}{1E}{Holds the MSB of the raster line currently being drawn}
+		\nextport{R-}{1F}{Holds the eight LSBs of the raster line currently being drawn}
+		\end{tbbluereg}
 
-    \pagebreak
+	\pagebreak
 
-    \vspace*{11.4ex}	% this aligns content with previous page vertically
-    \begin{tbbluereg}
-        \nextport{RW}{22}{Controls the timing of raster interrupts and the ULA frame interrupt}
-        \nextport{RW}{23}{Holds the eight LSBs of the line on which a raster interrupt should occur}
-        \nextport{RW}{26}{Pixel X offset ({\tt 0-255}) to use when drawing ULA Layer}
-        \nextport{RW}{27}{Pixel Y offset ({\tt 0-191}) to use when drawing ULA Layer}
-        \nextport{RW}{28}{PS/2 Keymap address MSB, read (pending) first byte of palette colour}
-        \nextport{-W}{29}{PS/2 Keymap address LSB}
-        \nextport{-W}{2A}{High data to PS/2 Keymap (MSB of data in bit 0)}
-        \nextport{-W}{2B}{Low eight LSBs of PS/2 Keymap data}
-        \nextport{RW}{2C}{DAC B mirror, read current I2S left MSB}
-        \nextport{RW}{2D}{SpecDrum port 0xDF / DAC A+D mirror, read current I2S LSB}
-        \nextport{RW}{2E}{DAC C mirror, read current I2S right MSB}
-        \nextport{RW}{2F}{Sets the pixel offset (two high bits) used for drawing Tilemap graphics on the screen \zxsee{zx_next_tilemap}}
-        \nextport{RW}{30}{Sets the pixel offset (eight low bits) used for drawing Tilemap graphics on the screen \zxsee{zx_next_tilemap}}
-        \nextport{RW}{31}{Sets the pixel offset used for drawing Tilemap graphics on the screen \zxsee{zx_next_tilemap}}
-        \nextport{RW}{32}{Pixel X offset ({\tt 0-255}) to use when drawing LoRes Layer}
-        \nextport{RW}{33}{Pixel Y offset ({\tt 0-191}) to use when drawing LoRes Layer}
-        \nextport{RW}{34}{Selects sprite index {\tt 0-127} to be affected by writes to other Sprite ports (and mirrors) \zxsee{zx_next_sprites}}
-        \nextport{-W}{35}{Writes directly into byte 1 of \PortLink{Sprite Attribute Upload}{xx57} \zxsee{zx_next_sprites}}
-        \nextport{-W}{36}{Writes directly into byte 2 of \PortLink{Sprite Attribute Upload}{xx57} \zxsee{zx_next_sprites}}
-        \nextport{-W}{37}{Writes directly into byte 3 of \PortLink{Sprite Attribute Upload}{xx57} \zxsee{zx_next_sprites}}
-        \nextport{-W}{38}{Writes directly into byte 4 of \PortLink{Sprite Attribute Upload}{xx57} \zxsee{zx_next_sprites}}
-        \nextport{-W}{39}{Writes directly into byte 5 of \PortLink{Sprite Attribute Upload}{xx57} \zxsee{zx_next_sprites}}
-        \nextport{RW}{40}{Chooses a palette element (index) to manipulate with \zxsee{zx_next_layer2}}
-        \nextport{RW}{41}{Use to set/read 8-bit colours of the ULANext palette \zxsee{zx_next_layer2}}
-        \nextport{RW}{42}{Specifies mask to extract ink colour from attribute cell value in ULANext mode}
-        \nextport{RW}{43}{Enables or disables Enhanced ULA interpretation of attribute values and toggles active palette \zxsee{zx_next_layer2}}
-    \end{tbbluereg}
+	\vspace*{11.4ex}	% this aligns content with previous page vertically
+	\begin{tbbluereg}
+		\nextport{RW}{22}{Controls the timing of raster interrupts and the ULA frame interrupt}
+		\nextport{RW}{23}{Holds the eight LSBs of the line on which a raster interrupt should occur}
+		\nextport{RW}{26}{Pixel X offset ({\tt 0-255}) to use when drawing ULA Layer}
+		\nextport{RW}{27}{Pixel Y offset ({\tt 0-191}) to use when drawing ULA Layer}
+		\nextport{RW}{28}{PS/2 Keymap address MSB, read (pending) first byte of palette colour}
+		\nextport{-W}{29}{PS/2 Keymap address LSB}
+		\nextport{-W}{2A}{High data to PS/2 Keymap (MSB of data in bit 0)}
+		\nextport{-W}{2B}{Low eight LSBs of PS/2 Keymap data}
+		\nextport{RW}{2C}{DAC B mirror, read current I2S left MSB}
+		\nextport{RW}{2D}{SpecDrum port 0xDF / DAC A+D mirror, read current I2S LSB}
+		\nextport{RW}{2E}{DAC C mirror, read current I2S right MSB}
+		\nextport{RW}{2F}{Sets the pixel offset (two high bits) used for drawing Tilemap graphics on the screen \zxsee{zx_next_tilemap}}
+		\nextport{RW}{30}{Sets the pixel offset (eight low bits) used for drawing Tilemap graphics on the screen \zxsee{zx_next_tilemap}}
+		\nextport{RW}{31}{Sets the pixel offset used for drawing Tilemap graphics on the screen \zxsee{zx_next_tilemap}}
+		\nextport{RW}{32}{Pixel X offset ({\tt 0-255}) to use when drawing LoRes Layer}
+		\nextport{RW}{33}{Pixel Y offset ({\tt 0-191}) to use when drawing LoRes Layer}
+		\nextport{RW}{34}{Selects sprite index {\tt 0-127} to be affected by writes to other Sprite ports (and mirrors) \zxsee{zx_next_sprites}}
+		\nextport{-W}{35}{Writes directly into byte 1 of \PortLink{Sprite Attribute Upload}{xx57} \zxsee{zx_next_sprites}}
+		\nextport{-W}{36}{Writes directly into byte 2 of \PortLink{Sprite Attribute Upload}{xx57} \zxsee{zx_next_sprites}}
+		\nextport{-W}{37}{Writes directly into byte 3 of \PortLink{Sprite Attribute Upload}{xx57} \zxsee{zx_next_sprites}}
+		\nextport{-W}{38}{Writes directly into byte 4 of \PortLink{Sprite Attribute Upload}{xx57} \zxsee{zx_next_sprites}}
+		\nextport{-W}{39}{Writes directly into byte 5 of \PortLink{Sprite Attribute Upload}{xx57} \zxsee{zx_next_sprites}}
+		\nextport{RW}{40}{Chooses a palette element (index) to manipulate with \zxsee{zx_next_layer2}}
+		\nextport{RW}{41}{Use to set/read 8-bit colours of the ULANext palette \zxsee{zx_next_layer2}}
+		\nextport{RW}{42}{Specifies mask to extract ink colour from attribute cell value in ULANext mode}
+		\nextport{RW}{43}{Enables or disables Enhanced ULA interpretation of attribute values and toggles active palette \zxsee{zx_next_layer2}}
+	\end{tbbluereg}
 
-    \pagebreak
+	\pagebreak
 
-    \begin{tbbluereg}
-        \nextport{RW}{44}{Sets 9-bit (2-byte) colours of the Enhanced ULA palette, or to read second byte of colour}
-        \nextport{RW}{4A}{8-bit colour to be used when all layers contain transparent pixel}
-        \nextport{RW}{4B}{Index of transparent colour in sprite palette \zxsee{zx_next_sprites}}
-        \nextport{RW}{4C}{Index of transparent colour in Tilemap palette}
-        \nextport{RW}{50}{Selects the 8k-bank stored in 8k-slot 0 \zxsee{zx_next_memorypaging}}
-        \nextport{RW}{51}{Selects the 8k-bank stored in 8k-slot 1 \zxsee{zx_next_memorypaging}}
-        \nextport{RW}{52}{Selects the 8k-bank stored in 8k-slot 2 \zxsee{zx_next_memorypaging}}
-        \nextport{RW}{53}{Selects the 8k-bank stored in 8k-slot 3 \zxsee{zx_next_memorypaging}}
-        \nextport{RW}{54}{Selects the 8k-bank stored in 8k-slot 4 \zxsee{zx_next_memorypaging}}
-        \nextport{RW}{55}{Selects the 8k-bank stored in 8k-slot 5 \zxsee{zx_next_memorypaging}}
-        \nextport{RW}{56}{Selects the 8k-bank stored in 8k-slot 6 \zxsee{zx_next_memorypaging}}
-        \nextport{RW}{57}{Selects the 8k-bank stored in 8k-slot 7 \zxsee{zx_next_memorypaging}}
-        \nextport{-W}{60}{Used to upload code to the Copper}
-        \nextport{RW}{61}{Holds low byte of Copper control bits}
-        \nextport{RW}{62}{Holds high byte of Copper control flags}
-        \nextport{-W}{63}{Used to upload code to the Copper}
-        \nextport{RW}{64}{Offset numbering of raster lines in copper/interrupt/active register}
-        \nextport{RW}{68}{Disable ULA, controls ULA mixing/blending, enable ULA+ \zxsee{zx_next_tilemap}}
-        \nextport{RW}{69}{Layer2, ULA shadow, Timex {\tt \$FF} port}
-        \nextport{RW}{6A}{LoRes Radastan mode}
-        \nextport{RW}{6B}{Controls Tilemap mode \zxsee{zx_next_tilemap}}
-        \nextport{RW}{6C}{Default tile attribute for 8-bit only maps \zxsee{zx_next_tilemap}}
-        \nextport{RW}{6E}{Base address of the 40x32 or 80x32 tile map \zxsee{zx_next_tilemap}}
-        \nextport{RW}{6F}{Base address of the tiles' graphics \zxsee{zx_next_tilemap}}
-        \nextport{RW}{70}{Layer 2 resolution, palette offset \zxsee{zx_next_layer2}}
-        \nextport{RW}{71}{Sets pixel offset for drawing Layer 2 graphics on the screen \zxsee{zx_next_layer2}}
-        \nextport{-W}{75}{Same as \PortLink{Attribute 0 Register}{35} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
-        \nextport{-W}{76}{Same as \PortLink{Attribute 1 Register}{36} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
-        \nextport{-W}{77}{Same as \PortLink{Attribute 2 Register}{37} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
-        \nextport{-W}{78}{Same as \PortLink{Attribute 3 Register}{38} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
-        \nextport{-W}{79}{Same as \PortLink{Attribute 4 Register}{39} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
-    \end{tbbluereg}
+	\begin{tbbluereg}
+		\nextport{RW}{44}{Sets 9-bit (2-byte) colours of the Enhanced ULA palette, or to read second byte of colour}
+		\nextport{RW}{4A}{8-bit colour to be used when all layers contain transparent pixel}
+		\nextport{RW}{4B}{Index of transparent colour in sprite palette \zxsee{zx_next_sprites}}
+		\nextport{RW}{4C}{Index of transparent colour in Tilemap palette}
+		\nextport{RW}{50}{Selects the 8k-bank stored in 8k-slot 0 \zxsee{zx_next_memorypaging}}
+		\nextport{RW}{51}{Selects the 8k-bank stored in 8k-slot 1 \zxsee{zx_next_memorypaging}}
+		\nextport{RW}{52}{Selects the 8k-bank stored in 8k-slot 2 \zxsee{zx_next_memorypaging}}
+		\nextport{RW}{53}{Selects the 8k-bank stored in 8k-slot 3 \zxsee{zx_next_memorypaging}}
+		\nextport{RW}{54}{Selects the 8k-bank stored in 8k-slot 4 \zxsee{zx_next_memorypaging}}
+		\nextport{RW}{55}{Selects the 8k-bank stored in 8k-slot 5 \zxsee{zx_next_memorypaging}}
+		\nextport{RW}{56}{Selects the 8k-bank stored in 8k-slot 6 \zxsee{zx_next_memorypaging}}
+		\nextport{RW}{57}{Selects the 8k-bank stored in 8k-slot 7 \zxsee{zx_next_memorypaging}}
+		\nextport{-W}{60}{Used to upload code to the Copper}
+		\nextport{RW}{61}{Holds low byte of Copper control bits}
+		\nextport{RW}{62}{Holds high byte of Copper control flags}
+		\nextport{-W}{63}{Used to upload code to the Copper}
+		\nextport{RW}{64}{Offset numbering of raster lines in copper/interrupt/active register}
+		\nextport{RW}{68}{Disable ULA, controls ULA mixing/blending, enable ULA+ \zxsee{zx_next_tilemap}}
+		\nextport{RW}{69}{Layer2, ULA shadow, Timex {\tt \$FF} port}
+		\nextport{RW}{6A}{LoRes Radastan mode}
+		\nextport{RW}{6B}{Controls Tilemap mode \zxsee{zx_next_tilemap}}
+		\nextport{RW}{6C}{Default tile attribute for 8-bit only maps \zxsee{zx_next_tilemap}}
+		\nextport{RW}{6E}{Base address of the 40x32 or 80x32 tile map \zxsee{zx_next_tilemap}}
+		\nextport{RW}{6F}{Base address of the tiles' graphics \zxsee{zx_next_tilemap}}
+		\nextport{RW}{70}{Layer 2 resolution, palette offset \zxsee{zx_next_layer2}}
+		\nextport{RW}{71}{Sets pixel offset for drawing Layer 2 graphics on the screen \zxsee{zx_next_layer2}}
+		\nextport{-W}{75}{Same as \PortLink{Attribute 0 Register}{35} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
+		\nextport{-W}{76}{Same as \PortLink{Attribute 1 Register}{36} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
+		\nextport{-W}{77}{Same as \PortLink{Attribute 2 Register}{37} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
+		\nextport{-W}{78}{Same as \PortLink{Attribute 3 Register}{38} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
+		\nextport{-W}{79}{Same as \PortLink{Attribute 4 Register}{39} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
+	\end{tbbluereg}
 
-    \pagebreak
+	\pagebreak
 
-    \begin{tbbluereg}
-        \nextport{RW}{7F}{8-bit storage for user}
-        \nextport{RW}{80}{Expansion bus enable/config}
-        \nextport{RW}{81}{Expansion bus controls}
-        \nextport{RW}{82}{Enabling internal ports decoding bits 0-7 register}
-        \nextport{RW}{83}{Enabling internal ports decoding bits 8-15 register}
-        \nextport{RW}{84}{Enabling internal ports decoding bits 16-23 register}
-        \nextport{RW}{85}{Enabling internal ports decoding bits 24-31 register}
-        \nextport{RW}{86}{When expansion bus is enabled: internal ports decoding mask bits 0-7}
-        \nextport{RW}{87}{When expansion bus is enabled: internal ports decoding mask bits 8-15}
-        \nextport{RW}{88}{When expansion bus is enabled: internal ports decoding mask bits 16-23}
-        \nextport{RW}{89}{When expansion bus is enabled: internal ports decoding mask bits 24-31}
-        \nextport{RW}{8A}{Monitoring internal I/O or adding external keyboard}
-        \nextport{RW}{8C}{Enable alternate ROM or lock 48k ROM}
-        \nextport{RW}{8E}{Control classic Spectrum memory mapping}
-        \nextport{RW}{90-93}{Enables GPIO pins output}
-        \nextport{RW}{98-9B}{GPIO pins mapped to Next Register}
-        \nextport{RW}{A0}{Enable Pi peripherals: UART, Pi hats, I2C, SPI}
-        \nextport{RW}{A2}{Pi I2S controls}
-        \nextport{RW}{A3}{Pi I2S clock divide in master mode}
-        \nextport{RW}{A8}{ESP WiFi GPIO output}
-        \nextport{RW}{A9}{ESP WiFi GPIO read/write}
-        \nextport{R-}{B0}{Read Next keyboard compound keys separately}
-        \nextport{R-}{B1}{Read Next keyboard compound keys separately}
-        \nextport{RW}{B2}{DivMMC trap configuration}
-        \nextport{RW}{B4}{DivMMC trap configuration}
-        \nextport{-W}{FF}{Turns debug LEDs on and off on TBBlue implementations that have them}
-    \end{tbbluereg}
+	\begin{tbbluereg}
+		\nextport{RW}{7F}{8-bit storage for user}
+		\nextport{RW}{80}{Expansion bus enable/config}
+		\nextport{RW}{81}{Expansion bus controls}
+		\nextport{RW}{82}{Enabling internal ports decoding bits 0-7 register}
+		\nextport{RW}{83}{Enabling internal ports decoding bits 8-15 register}
+		\nextport{RW}{84}{Enabling internal ports decoding bits 16-23 register}
+		\nextport{RW}{85}{Enabling internal ports decoding bits 24-31 register}
+		\nextport{RW}{86}{When expansion bus is enabled: internal ports decoding mask bits 0-7}
+		\nextport{RW}{87}{When expansion bus is enabled: internal ports decoding mask bits 8-15}
+		\nextport{RW}{88}{When expansion bus is enabled: internal ports decoding mask bits 16-23}
+		\nextport{RW}{89}{When expansion bus is enabled: internal ports decoding mask bits 24-31}
+		\nextport{RW}{8A}{Monitoring internal I/O or adding external keyboard}
+		\nextport{RW}{8C}{Enable alternate ROM or lock 48k ROM}
+		\nextport{RW}{8E}{Control classic Spectrum memory mapping}
+		\nextport{RW}{90-93}{Enables GPIO pins output}
+		\nextport{RW}{98-9B}{GPIO pins mapped to Next Register}
+		\nextport{RW}{A0}{Enable Pi peripherals: UART, Pi hats, I2C, SPI}
+		\nextport{RW}{A2}{Pi I2S controls}
+		\nextport{RW}{A3}{Pi I2S clock divide in master mode}
+		\nextport{RW}{A8}{ESP WiFi GPIO output}
+		\nextport{RW}{A9}{ESP WiFi GPIO read/write}
+		\nextport{R-}{B0}{Read Next keyboard compound keys separately}
+		\nextport{R-}{B1}{Read Next keyboard compound keys separately}
+		\nextport{RW}{B2}{DivMMC trap configuration}
+		\nextport{RW}{B4}{DivMMC trap configuration}
+		\nextport{-W}{FF}{Turns debug LEDs on and off on TBBlue implementations that have them}
+	\end{tbbluereg}
 \endgroup
 
 

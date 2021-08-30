@@ -4,163 +4,163 @@
 
 \begin{instrtable}
 
-    \begin{instruction}{ADC HL,rr} 
-        \Symbol{\SymADC{HL}{rr}}
-            \FlagsADCrr
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{15}
-            \Comment{
-                \tt
-                \multirow{4}{*}{
-                    \begin{tabular}{ll}
-                        rr & \OCT{rr} \\
-                        \hline
-                        BC & 00 \\
-                        DE & 01 \\
-                        HL & 10 \\
-                        SP & 11 \\
-                    \end{tabular}
-                }
+	\begin{instruction}{ADC HL,rr} 
+		\Symbol{\SymADC{HL}{rr}}
+			\FlagsADCrr
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{15}
+			\Comment{
+				\tt
+				\multirow{4}{*}{
+					\begin{tabular}{ll}
+						rr & \OCT{rr} \\
+						\hline
+						BC & 00 \\
+						DE & 01 \\
+						HL & 10 \\
+						SP & 11 \\
+					\end{tabular}
+				}
 
-            }
-        \SkipToOpCode
-            \OpCode{01}{\OCT{rr}1}{010}
-            \Hex{..}{}
-    \end{instruction}
+			}
+		\SkipToOpCode
+			\OpCode{01}{\OCT{rr}1}{010}
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{SBC HL,rr} 
-        \Symbol{\SymSBC{HL}{rr}}
-            \FlagsSBCrr
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{15}
-        \SkipToOpCode
-            \OpCode{01}{\OCT{rr}0}{010}
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{SBC HL,rr} 
+		\Symbol{\SymSBC{HL}{rr}}
+			\FlagsSBCrr
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{15}
+		\SkipToOpCode
+			\OpCode{01}{\OCT{rr}0}{010}
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{ADD HL,rr} 
-        \Symbol{\SymADD{HL}{rr}}
-            \FlagsADDrr
-            \OpCode{00}{\OCT{rr}1}{001}
-            \Hex{..}{1}
-            \Cycles{3}{11}
-    \end{instruction}
+	\begin{instruction}{ADD HL,rr} 
+		\Symbol{\SymADD{HL}{rr}}
+			\FlagsADDrr
+			\OpCode{00}{\OCT{rr}1}{001}
+			\Hex{..}{1}
+			\Cycles{3}{11}
+	\end{instruction}
 
-    \begin{instruction}{ADD IX,pp} 
-        \Symbol{\SymADD{IX}{pp}}
-            \FlagsADDrr
-            \OpCode{11}{011}{101}
-            \Hex{DD}{2}
-            \Cycles{4}{15}
-            \Comment{
-                \multirow{4}{*}{
-                    \tt
-                    \begin{tabular}{ll}
-                        pp & \OCT{pp} \\
-                        \hline
-                        BC & 00 \\
-                        DE & 01 \\
-                        IX & 10 \\
-                        SP & 11 \\
-                    \end{tabular}
-                }
-            }
-        \SkipToOpCode
-            \OpCode{00}{\OCT{pp}1}{001}
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{ADD IX,pp} 
+		\Symbol{\SymADD{IX}{pp}}
+			\FlagsADDrr
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{4}{15}
+			\Comment{
+				\multirow{4}{*}{
+					\tt
+					\begin{tabular}{ll}
+						pp & \OCT{pp} \\
+						\hline
+						BC & 00 \\
+						DE & 01 \\
+						IX & 10 \\
+						SP & 11 \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode
+			\OpCode{00}{\OCT{pp}1}{001}
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{ADD IY,qq} 
-        \Symbol{\SymADD{IY}{qq}}
-            \FlagsADDrr
-            \OpCode{11}{111}{101}
-            \Hex{FD}{2}
-            \Cycles{4}{15}
-        \SkipToOpCode
-            \OpCode{00}{\OCT{qq}1}{001}
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{ADD IY,qq} 
+		\Symbol{\SymADD{IY}{qq}}
+			\FlagsADDrr
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{4}{15}
+		\SkipToOpCode
+			\OpCode{00}{\OCT{qq}1}{001}
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{INC rr} 
-        \Symbol{\SymINC{rr}}
-            \FlagsINCrr
-            \OpCode{00}{\OCT{rr}0}{011}
-            \Hex{..}{1}
-            \Cycles{1}{6}
-    \end{instruction}
+	\begin{instruction}{INC rr} 
+		\Symbol{\SymINC{rr}}
+			\FlagsINCrr
+			\OpCode{00}{\OCT{rr}0}{011}
+			\Hex{..}{1}
+			\Cycles{1}{6}
+	\end{instruction}
 
-    \begin{instruction}{INC IX} 
-        \Symbol{\SymINC{IX}}
-            \FlagsINCrr
-            \OpCode{11}{011}{101}
-            \Hex{DD}{2}
-            \Cycles{2}{10}
-            \Comment{
-                \multirow{4}{*}{
-                    \tt
-                    \begin{tabular}{ll}
-                        qq & \OCT{qq} \\
-                        \hline
-                        BC & 00 \\
-                        DE & 01 \\
-                        IY & 10 \\
-                        SP & 11 \\
-                    \end{tabular}
-                }
-            }
-        \SkipToOpCode
-            \OpCode{00}{100}{011}
-            \Hex{23}{}
-    \end{instruction}
+	\begin{instruction}{INC IX} 
+		\Symbol{\SymINC{IX}}
+			\FlagsINCrr
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{2}{10}
+			\Comment{
+				\multirow{4}{*}{
+					\tt
+					\begin{tabular}{ll}
+						qq & \OCT{qq} \\
+						\hline
+						BC & 00 \\
+						DE & 01 \\
+						IY & 10 \\
+						SP & 11 \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode
+			\OpCode{00}{100}{011}
+			\Hex{23}{}
+	\end{instruction}
 
-    \begin{instruction}{INC IY} 
-        \Symbol{\SymINC{IY}}
-            \FlagsINCrr
-            \OpCode{11}{111}{101}
-            \Hex{FD}{2}
-            \Cycles{2}{10}
-        \SkipToOpCode
-            \OpCode{00}{100}{011}
-            \Hex{23}{}
-    \end{instruction}
+	\begin{instruction}{INC IY} 
+		\Symbol{\SymINC{IY}}
+			\FlagsINCrr
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{2}{10}
+		\SkipToOpCode
+			\OpCode{00}{100}{011}
+			\Hex{23}{}
+	\end{instruction}
 
-    \begin{instruction}{DEC rr} 
-        \Symbol{\SymDEC{rr}}
-            \FlagsDECrr
-            \OpCode{00}{\OCT{rr}1}{011}
-            \Hex{..}{1}
-            \Cycles{1}{6}
-    \end{instruction}
+	\begin{instruction}{DEC rr} 
+		\Symbol{\SymDEC{rr}}
+			\FlagsDECrr
+			\OpCode{00}{\OCT{rr}1}{011}
+			\Hex{..}{1}
+			\Cycles{1}{6}
+	\end{instruction}
 
-    \begin{instruction}{DEC IX} 
-        \Symbol{\SymDEC{IX}}
-            \FlagsDECrr
-            \OpCode{11}{011}{101}
-            \Hex{DD}{2}
-            \Cycles{2}{10}
-        \SkipToOpCode
-            \OpCode{00}{101}{011}
-            \Hex{2B}{}
-    \end{instruction}
+	\begin{instruction}{DEC IX} 
+		\Symbol{\SymDEC{IX}}
+			\FlagsDECrr
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{2}{10}
+		\SkipToOpCode
+			\OpCode{00}{101}{011}
+			\Hex{2B}{}
+	\end{instruction}
 
-    \begin{lastinstruction}{DEC IY} 
-        \Symbol{\SymDEC{IY}}
-            \FlagsDECrr
-            \OpCode{11}{111}{101}
-            \Hex{FD}{2}
-            \Cycles{2}{10}
-        \SkipToOpCode
-            \OpCode{00}{101}{011}
-            \Hex{2B}{}
-    \end{lastinstruction}
+	\begin{lastinstruction}{DEC IY} 
+		\Symbol{\SymDEC{IY}}
+			\FlagsDECrr
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{2}{10}
+		\SkipToOpCode
+			\OpCode{00}{101}{011}
+			\Hex{2B}{}
+	\end{lastinstruction}
 
 \end{instrtable}
 
 \begin{notestable}
-    \NoteItem{\See{1}Flag is set by carry from bit 15}
-    \NoteItem{\See{2}Flag is set by carry from bit 11 (half carry in high byte)}
+	\NoteItem{\See{1}Flag is set by carry from bit 15}
+	\NoteItem{\See{2}Flag is set by carry from bit 11 (half carry in high byte)}
 \end{notestable}
 
 \end{minipage}
