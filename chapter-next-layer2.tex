@@ -280,31 +280,35 @@ Also note we don't have to handle bank swapping on every iteration, once per 32 
 
     Banking Setup:
 
-    \begin{tabularx}{0.445\textwidth}{|c|c|c|c|Y|}
+    \begin{tabularx}{0.445\textwidth}{|c|c|c|c|c|Y|}
         \hline
-        \BitHead{15} & 
-            \BitHead{14} & 
+        \BitHead{16} &
+            \BitHead{15} &
+            \BitHead{14} &
             \BitHead{13} &
             \BitHead{12-8} &
             \BitHead{7-0} \\
         \hline
-        \BitStartMulti{4}{$X$} & 
+        \BitStartMulti{1}{$X_{8}$} & 
+            \BitMulti{4}{$X_{7-0}$} &
             \BitMulti{1}{$Y$} \\
         \hline
-        \BitStartMulti{2}{16K} &
+        \BitStartMulti{3}{16K} &
             \BitMulti{2}{$X_{5-0}$} &
             \BitMulti{1}{$Y$} \\
         \hline
-        \BitStartMulti{3}{8K} &
+        \BitStartMulti{4}{8K} &
             \BitMulti{1}{$X_{4-0}$} &
             \BitMulti{1}{$Y$} \\
         \hline
     \end{tabularx}
 \end{multicols}
 
-320$\times$256 mode is only available on Next core 3.0.6 or later. Pixels are layed out from top to bottom and left to right. Each pixel takes 1 byte representing 8-bit index into palette. To cover whole scren, 5 16K banks of 64 columns or 10 8K banks of 32 columns are needed. Together colour data requires 80K of memory. In contrast with 256$\times$192, this mode covers the whole screen, including border.
+320$\times$256 mode is only available on Next core 3.0.6 or later. Pixels are layed out from top to bottom and left to right. Each pixel takes 1 byte representing 8-bit index into palette. To cover the whole scren, 5 16K banks of 64 columns or 10 8K banks of 32 columns are needed. Together colour data requires 80K of memory.
 
-While 256 lines fit neatly within 1 byte, we need more for addressing all 320 columns. However, we can still address all pixels with 16-bits within each individual bank though. If upper byte is used for X and lower for Y, then most significant 2 bits correspond to 16K and top 3 bits to 8K bank. The rest of the X + Y is memory location within the bank.
+In contrast with 256$\times$192, this mode allows drawing to the whole screen, including border. In fact, you can think of it as the regular 256$\times$192 mode with additional 32 pixel border around (32 + 256 + 32 = 320 and 32 + 192 + 32 = 256).
+
+Addressing is more complicated though. As we need 9 bits for X and 8 for Y, we can't address all screen pixels with single 16-bit register pair. However we can use 16-bit register pair to address all pixels within each individual bank. From this perspective, the setup is similar to 256$\times$192 mode, except that X and Y are reversed: if upper byte is used for X and lower for Y, then most significant 2 bits of 16-bit register pair represent lower 2 bits of 16K bank number. And for 8K banks, most significant 3 bits correspond to lower 3 bits of 8K bank number. In either case, most significant bit of bank number arrives from 9th bit of the X coordinate ($X_8$ in table above). The rest of the X + Y is memory location within the bank.
 
 To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to setup clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
 
@@ -425,23 +429,25 @@ nextY:
 
     Banking Setup:
 
-    \begin{tabularx}{0.395\textwidth}{|c|c|c|c|Y|}
+    \begin{tabularx}{0.445\textwidth}{|c|c|c|c|c|Y|}
         \hline
-        \BitHead{15} & 
-            \BitHead{14} & 
+        \BitHead{16} &
+            \BitHead{15} &
+            \BitHead{14} &
             \BitHead{13} &
             \BitHead{12-8} &
             \BitHead{7-0} \\
         \hline
-        \BitStartMulti{4}{$X*2$} & 
+        \BitStartMulti{1}{$X_{8}\times 2$} & 
+            \BitMulti{4}{$X_{7-0}\times 2$} &
             \BitMulti{1}{$Y$} \\
         \hline
-        \BitStartMulti{2}{16K} &
-            \BitMulti{2}{$X_{5-0}*2$} &
+        \BitStartMulti{3}{16K} &
+            \BitMulti{2}{$X_{5-0}\times 2$} &
             \BitMulti{1}{$Y$} \\
         \hline
-        \BitStartMulti{3}{8K} &
-            \BitMulti{1}{$X_{4-0}*2$} &
+        \BitStartMulti{4}{8K} &
+            \BitMulti{1}{$X_{4-0}\times 2$} &
             \BitMulti{1}{$Y$} \\
         \hline
     \end{tabularx}
@@ -449,7 +455,7 @@ nextY:
 
 640$\times$256 mode is very similar to 320$\times$256, except that each byte represents 2 colours instead of 1. It's also available on Next core 3.0.6 or later only. Pixels are layed out from top to bottom and left to right. Each pixel takes 4 bits, so each byte contains data for 2 pixels. To cover the whole scren, 5 16K banks of 128 columns or 10 8K banks of 64 columns are needed. Together colour data requires 80K of memory. Similar to 320$\times$256, this mode also covers the whole screen, including border.
 
-Also similar to 320$\times$256 mode, we can't represent full extent of columns with 2 bytes. However, we can still represent all pixels within each individual bank. If upper byte is used for X and lower for Y, then most significant 2 bits correspond to 16K and top 3 bits to 8K bank. The rest of the X + Y is memory location within the bank.
+Addressing wise, this mode is the same as 230$\times$256. Using 16-bit register pair we can't address all pixels on screen, but we can address all pixels within each individual bank. Again, assuming upper byte of 16-bit register pair is used for X and lower for Y and using 9th bit of X coordinate (bit $X_8$ in table above) as most significant bit of bank number, then most significant 2 bits of 16-bit register pair represent lower 2 bits of 16K bank number. And for 8K banks, most significant 3 bits correspond to lower 3 bits of 8K bank number. The rest of the X + Y is memory location within the bank. Don't forget: each colour byte represents 2 screen pixels, so memory X coordinate (as described above) needs to be multiplied by 2 to convert to screen X coordinate.
 
 To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to setup clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
 
