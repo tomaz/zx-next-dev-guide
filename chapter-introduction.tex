@@ -140,28 +140,33 @@ If interested, you can find it at \url{http://www.myquest.nl/z80undocumented/}.
 
 \begin{description}
 
-	\item[11th May 2021 (Version 1.0)]
+	% when adding versions:
+	% 1. replace `\LatestReleaseDate` with value from macro definition in `defines.tex`
+	% 2. update `\LatestReleaseDate` with new value in `defines.tex`
+	% 3. create new entry here using now updated values (copy item definition from previous version)
+
+	\item[\LatestReleaseDate]
 	Added ZX Spectrum Next information and instructions and restructured text for better maintainability and readability.
 
-	\item[18th September 2005 (version 0.91)]
+	\item[18 September 2005]
 	Corrected a textual typo in the R register and memory refresh section, thanks to David Aubespin. Corrected the contradiction in the {\tt DAA} section saying the {\tt NF} flag was both affected and unchanged :) thanks to Dan Meir.Added an error in official documentation about that way Interrupt Mode 2 works, thanks to Aaldert Dekker.
 	
-	\item[15th Juni 2005 (version 0.9)]
+	\item[15 June 2005]
 	Corrected improper notation of {\tt JP x,nn} mnemonics in opcode list, thanks to Laurens Holst. Corrected a mistake in the {\tt INI}, {\tt INIR}, {\tt IND}, {\tt INDR} section and documented a mistake in official Z80 documentation concerning Interrupt Mode 2, thanks to Boris Donko. Thanks to Aaldert Dekker for his ideas, for verifying many assumptions and writing instruction exercisers for various instruction groups.
 
-	\item[18th May 2005 (version 0.8)]
+	\item[18 May 2005]
 	Added an alphabetical list of instructions for easy reference and corrected an error in the 16-bit arithmetic section, {\tt SBC HL,nn} sets the NF flag just like other subtraction instructions, thanks to Fredrik Olssen for pointing that out.
 
-	\item[4th April 2005 (version 0.7)]
+	\item[4 April 2005]
 	I (Jan \email{jw}{dds}{nl}) will be maintaining this document from this version on. I restyled the document to fix the page numbering issues, corrected an error in the I/O Block Instructions section, added graphics for the {\tt RLD} and {\tt RRD} instructions and corrected the spelling in several places.
 
-	\item[20th November 2003 (version 0.6)]
+	\item[20 November 2003]
 	Again, thanks to Ramsoft, added PV flag to {\tt OUTI}, {\tt INI} and friends. Minor fix to {\tt DAA} tables, other minor fixes.
 
-	\item[13th November 2003 (version 0.5)]
+	\item[13 November 2003]
 	Thanks to Ramsoft, add the correct tables for the {\tt DAA} instruction (section \ref{daa}). Minor corrections \& typos, thanks to Jim Battle, David Sutherland and most of all Fred Limouzin.
 
-	\item[September 2001 (version 0.4)]
+	\item[September 2001]
 	Previous documents I had written were in plain text and Microsoft Word, which I now find very embarrassing, so I decided to combine them all and use {\LaTeX}. Apart from a full re-write, the only changed information is ``Power on defaults'' (section \ref{pon}) and the algorithm for the CF and HF flags for {\tt OTIR} and friends (section \ref{block_io}).
 
 \end{description}
