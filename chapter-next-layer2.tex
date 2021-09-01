@@ -74,13 +74,13 @@ Reusable subroutine for copying a number of palette entries defined by {\tt B} f
 	NEXTREG &40, 0            ; Start copying into index 0
 	LD HL, palette            ; Address to copy RRRGGGBB bytes from
 	LD B, 255                 ; Copy 255 bytes
-	CALL copyPalette
+	CALL CopyPalette
 	...
-copyPalette:
+CopyPalette:
 	LD A, (HL)                ; Load RRRGGGBB into A
 	INC HL                    ; Increment to next colour entry
 	NEXTREG &41, A            ; Send colour data to Next HW
-	DJNZ copyPalette          ; Repeat until B=0
+	DJNZ CopyPalette          ; Repeat until B=0
 \end{tcblisting}
 
 

@@ -41,16 +41,16 @@ Keyboard is read from port {\tt \$xxFE} where bits in result are as follows:
 If key is pressed, corresponding bit is set to {\tt 0} and vice versa. Example for checking if P or I is pressed:
 	
 \begin{tcblisting}{}
-	LD BC, &DFFE   ; We want to read keys:   YUIOP
-	IN A, (C)      ; A holds values in bits: 43210
+	LD BC, &DFFE     ; We want to read keys..... YUIOP
+	IN A, (C)        ; A holds values in bits... 43210
 checkP:
-	BIT 0, A       ; test bit 0 of A (P key)
-	JR NZ checkI   ; if bit0=1, P not pressed
-	...            ; P is pressed
+	BIT 0, A         ; test bit 0 of A (P key)
+	JR NZ checkI     ; if bit0=1, P not pressed
+	...              ; P is pressed
 checkI:
-	BIT 2, A       ; test bit 2 of A (I key)
-	JR NZ continue ; if bit2=1, I not pressed
-	...            ; I is pressed
+	BIT 2, A         ; test bit 2 of A (I key)
+	JR NZ continue   ; if bit2=1, I not pressed
+	...              ; I is pressed
 continue:
 \end{tcblisting}
 
