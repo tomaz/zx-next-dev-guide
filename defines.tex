@@ -20,6 +20,7 @@
 % ▒█▄▄█ ▒█▄▄▄█ ▒█▄▄█ ▒█▄▄▄█ ░▀▄▄▀ ▒█░▒█ ▒█▄▄▄█
 
 \definecolor{PrintableLightGray}{rgb}{0.85, 0.85, 0.85}
+\definecolor{PrintableDarkGray}{rgb}{0.5, 0.5, 0.5}
 
 
 % ▒█▀▀█ ░█▀▀█ ▒█▀▀█ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▄▀█ ░█▀▀█ ▀▀█▀▀ ▀▀█▀▀ ▀█▀ ▒█▄░▒█ ▒█▀▀█ 
@@ -160,11 +161,13 @@
 % define the style for lstlisting
 \lstdefinestyle{CodeStyle}{
 	basicstyle=\ttfamily\small,
+	commentstyle=\color{PrintableDarkGray},
 	columns=flexible,
 	tabsize=4,
 	numbers=left,
 	numberstyle=\ttfamily\tiny,
 	numbersep=1.8em,
+	morecomment=[l]{;},
 	moredelim=[is][\rmfamily\itshape]{|}{|},	% any text within |...| will be roman/italic
 	literate={&}{\$}1							% replace `&` with `$` (to avoid syntax higlight issues)
 }
