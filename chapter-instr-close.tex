@@ -543,20 +543,20 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		\begin{multicols}{2}
 			{\tt CPIR} = finding first occurrence:
-			\begin{lstlisting}[autogobble=true, xrightmargin=1em]
-				LD HL, $0000
-				LD BC, $0999
-				LD A, $AB
-				CPIR
-			\end{lstlisting}
+			\begin{tcblisting}{right skip=1em}
+LD HL, &0000
+LD BC, &0999
+LD A, &AB
+CPIR
+			\end{tcblisting}
 
 			{\tt CPDR} = finding last occurrence:
-			\begin{lstlisting}[autogobble=true]
-				LD HL, $0999
-				LD BC, $0999
-				LD A, $AB
-				CPDR
-			\end{lstlisting}
+			\begin{tcblisting}{}
+LD HL, &0999
+LD BC, &0999
+LD A, &AB
+CPDR
+			\end{tcblisting}
 		\end{multicols}
 
 		\begin{DetailEffects}
@@ -843,15 +843,15 @@ Where possible, multiple variants of same instruction are grouped together and w
 		So these 2 have exactly the same result (though, as mentioned in section \ref{zx_next_keyboard}, variant on the right is slightly faster, 18 vs 22 T states):
 
 		\begin{multicols}{2}
-			\begin{lstlisting}[autogobble=true, xrightmargin=1em]
-				LD BC, $DFFE
-				IN A, (C)
-			\end{lstlisting}
+			\begin{tcblisting}{right skip=1em}
+LD BC, &DFFE
+IN A, (C)
+			\end{tcblisting}
 			\columnbreak
-			\begin{lstlisting}[autogobble=true]
-				LD A, $DF
-				IN A, ($FE)
-			\end{lstlisting}
+			\begin{tcblisting}{}
+LD A, &DF
+IN A, (&FE)
+			\end{tcblisting}
 		\end{multicols}
 
 		\begin{DetailEffects}[p]
@@ -1135,11 +1135,10 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		{
 			\fontsize{9pt}{9pt}	% 9pt results in slightly wider table than the rest of the text, but the larger the font, more readable it is, so I prefer it this way (originally \scripsize was used which makes the table slightly slimer than the rest of the text)
-			\definecolor{llgray}{rgb}{0.9, 0.9, 0.9}
 			\setlength{\tabcolsep}{1pt}
 			% note: OO and ii were chosen simply because the difference is noticable in the table below...
 			\newcommand{\OO}{$\bullet$}
-			\newcommand{\ii}{\cellcolor{llgray}}
+			\newcommand{\ii}{\cellcolor{PrintableLightGray}}
 
 			\begin{tabular}{@{}|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 				\arrayrulecolor{gray}
@@ -1284,20 +1283,20 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		\begin{multicols}{2}
 			{\tt LDIR} = copy forward
-			\begin{lstlisting}[autogobble=true, xrightmargin=1em]
-				LD HL, source
-				LD DE, destination
-				LD BC, 100
-				LDIR
-			\end{lstlisting}
+			\begin{tcblisting}{right skip=1em}
+LD HL, source
+LD DE, destination
+LD BC, 100
+LDIR
+			\end{tcblisting}
 			
 			{\tt LDDR} = copy backwards
-			\begin{lstlisting}[autogobble=true]
-				LD HL, source+99
-				LD DE, destination+99
-				LD BC, 100
-				LDDR
-			\end{lstlisting}
+			\begin{tcblisting}{}
+LD HL, source+99
+LD DE, destination+99
+LD BC, 100
+LDDR
+			\end{tcblisting}
 		\end{multicols}
 
 		\begin{DetailEffects}
@@ -2113,19 +2112,21 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		\begin{tabular}{m{8cm}p{0.1cm}m{4.3cm}}
 
-			\begin{lstlisting}[autogobble=true]
-			multiplyBy10:		; number=0123
-				LD HL, number+digits-1
-				LD B, digits	; number of repeats
-				XOR A			; reset "carry"
-			lp:	RLD				; multiply by 10 
-				DEC HL			; prev 2 digits
-				DJNZ lp			; number=1230, A=0
+			{ % tcblisting must be enclosed within {} inside tabular otherwise latex compiler gets confused
+			\begin{tcblisting}{beforeafter skip=0ex}
+MultiplyBy10:		; number=0123
+	LD HL, number+digits-1
+	LD B, digits	; number of repeats
+	XOR A			; reset "carry"
+lp:	RLD				; multiply by 10 
+	DEC HL			; prev 2 digits
+	DJNZ lp			; number=1230, A=0
 
-			number:
-				DB $01, $23
-			digits: = $ - number ;(2)
-			\end{lstlisting}
+number:
+	DB &01, &23
+digits = &-number   ;(2)
+			\end{tcblisting}
+			}
 	
 			& &
    	
@@ -2337,19 +2338,21 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		\begin{tabular}{m{8cm}p{0.1cm}m{4.3cm}}
 
-			\begin{lstlisting}[autogobble=true, belowskip=0pt]
-			divideBy10:
-				LD HL, number	; number=0123
-				LD B, digits	; number of repeats
-				XOR A			; reset "carry"
-			lp:	RRD				; divide by 10 
-				INC HL			; next 2 digits
-				DJNZ lp			; number=0012, A=3
+			{ % tcblisting must be enclosed within {} inside tabular otherwise latex compiler gets confused
+			\begin{tcblisting}{beforeafter skip=0ex}
+DivideBy10:
+	LD HL, number	; number=0123
+	LD B, digits	; number of repeats
+	XOR A			; reset "carry"
+lp:	RRD				; divide by 10 
+	INC HL			; next 2 digits
+	DJNZ lp			; number=0012, A=3
 
-			number:
-				DB $01, $23
-			digits: = $ - number ;(2)
-			\end{lstlisting}
+number:
+	DB &01, &23
+digits = &-number   ;(2)
+			\end{tcblisting}
+			}
 	
 			& &
    	

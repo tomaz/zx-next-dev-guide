@@ -38,36 +38,36 @@ You can also adjust timing of the interrupts with Next/TBBlue Feature Control Re
 \pagebreak
 Example of setting up custom interrupt vectors with {\tt IM 2}\footnote{Based on \url{http://codersbucket.blogspot.com/2015/04/interrupts-on-zx-spectrum-what-are.html}}:
 
-\begin{lstlisting}
+\begin{tcblisting}{}
 	DI
 	
-	LD HL, vectorTable  ; HL=address of vector table
-	LD DE, IM2Handler   ; DE=address of IM2 handler routine
-	LD B, 128           ; 128 vector addresses
+	LD HL, vectorTable    ; HL=address of vector table
+	LD DE, IM2Handler     ; DE=address of IM2 handler routine
+	LD B, 128             ; 128 vector addresses
 
 	LD A, H
-	LD I, A             ; I=high byte of vector table
+	LD I, A               ; I=high byte of vector table
 
-setupVectorTable:       ; fills in vector table 128x
+setupVectorTable:         ; fills in vector table 128x
 	LD (HL), E
 	INC HL
 	LD (HL), D
 	INC HL
 	DJNZ setupVectorTable 
 
-	IM 2                ; enable mode 2 interrupts
+	IM 2                  ; enable mode 2 interrupts
 	EI
 	RET
 
-IM2Handler:             ; this is called every time IM2 interrupt occurs
-	...                 ; implement interrupt handler here
-	EI                  ; when complete call EI
-	RETI                ; end return from interrupt
+IM2Handler:               ; this is called every time IM2 interrupt occurs
+	...                   ; implement interrupt handler here
+	EI                    ; when complete call EI
+	RETI                  ; end return from interrupt
 
-	ORG $F000           ; needs to be on 256 byte boundary
+	ORG &F000             ; needs to be on 256 byte boundary
 vectorTable:
-	DEFS 256            ; 128x2
-\end{lstlisting}
+	DEFS 256              ; 128x2
+\end{tcblisting}
 
 
 

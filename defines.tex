@@ -15,6 +15,13 @@
 \newcommand{\email}[3]{\ifdefined\PRINTED{\tt #1@#2.#3}\else{\tt #1 AT #2 DOT #3}\fi}
 
 
+% ▒█▀▀█ ▒█▀▀▀█ ▒█░░░ ▒█▀▀▀█ ▒█░▒█ ▒█▀▀█ ▒█▀▀▀█ 
+% ▒█░░░ ▒█░░▒█ ▒█░░░ ▒█░░▒█ ▒█░▒█ ▒█▄▄▀ ░▀▀▀▄▄ 
+% ▒█▄▄█ ▒█▄▄▄█ ▒█▄▄█ ▒█▄▄▄█ ░▀▄▄▀ ▒█░▒█ ▒█▄▄▄█
+
+\definecolor{PrintableLightGray}{rgb}{0.85, 0.85, 0.85}
+
+
 % ▒█▀▀█ ░█▀▀█ ▒█▀▀█ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▄▀█ ░█▀▀█ ▀▀█▀▀ ▀▀█▀▀ ▀█▀ ▒█▄░▒█ ▒█▀▀█ 
 % ▒█▄▄█ ▒█▄▄█ ▒█░▄▄ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█░░▒█ ▒█▄▄▀ ▒█▒█▒█ ▒█▄▄█ ░▒█░░ ░▒█░░ ▒█░ ▒█▒█▒█ ▒█░▄▄ 
 % ▒█░░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄▄ 　 ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ▒█░░▒█ ▒█░▒█ ░▒█░░ ░▒█░░ ▄█▄ ▒█░░▀█ ▒█▄▄█
@@ -150,30 +157,32 @@
 % ▒█░░░ ▒█░▒█ ░▀▀▀▄▄ ░▒█░░ ▒█░░▒█ ▒█▒█▒█ ▒█░ ░▄▄▄▀▀ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ ░▀▀▀▄▄ 
 % ▒█▄▄█ ░▀▄▄▀ ▒█▄▄▄█ ░▒█░░ ▒█▄▄▄█ ▒█░░▒█ ▄█▄ ▒█▄▄▄█ ▒█░▒█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
 
-\newcommand{\ExampleBackColour}{\ifdefined\PRINTED black!7 \else yellow!10 \fi}
-
 % define the style for lstlisting
-\lstdefinestyle{Example}{
+\lstdefinestyle{CodeStyle}{
 	basicstyle=\ttfamily\small,
 	columns=flexible,
-	autogobble=false,
-	aboveskip=1em,
-	belowskip=0.5em,	% smaller because paragraphs have some margin of their own
 	tabsize=4,
-	frameround=tttt,
-	frame=single,
-	framesep=2pt,
-	framextopmargin=1pt,
-	framexbottommargin=1pt,
-	rulesep=2pt,
-	rulecolor=\color{\ExampleBackColour},
-	rulesepcolor=\color{\ExampleBackColour},
-	backgroundcolor=\color{\ExampleBackColour},
 	numbers=left,
-	numberstyle=\tiny,
-	numbersep=1em,
+	numberstyle=\ttfamily\tiny,
+	numbersep=1.8em,
 	moredelim=[is][\rmfamily\itshape]{|}{|},	% any text within |...| will be roman/italic
+	literate={&}{\$}1							% replace `&` with `$` (to avoid syntax higlight issues)
 }
 
-% set this style as the default for the whole document
-\lstset{style=Example}
+% define default settings for all tcolorbox instances
+\tcbset{
+	arc=4pt,			% radius for rounded corners
+	boxrule=0pt,		% no frame around the box
+	boxsep=1.3ex,		% add some spacing between frame and content
+	left=0ex,			% left side should be flush with content
+	right=0ex,			% right side should be flush with content
+	top=-1.5ex,			% less spacing between frame and start of content
+	bottom=-1.5ex,		% less spacing between end of content and frame
+	pad at break=1pt,	% leave some small spacing between content and frame when page break occurs
+	colback=PrintableLightGray,
+	colframe=PrintableLightGray,
+	enhanced,			% only use rounded corners on top and bottom part, not between page breaks
+	breakable,			% allow breaking tcolorbox to multiple pages
+	listing only,		% only show listing
+	listing options={style=CodeStyle},
+}

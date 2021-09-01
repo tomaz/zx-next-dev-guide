@@ -171,15 +171,15 @@ Before we can use sprites, we need to load their data into FPGA memory. This exa
 	\item {\tt A} Starting sprite number to copy to
 \end{itemize}
 
-\begin{lstlisting}
-loadSprites:
-	LD BC, $303B            ; Prepare port for sprite index
+\begin{tcblisting}{}
+LoadSprites:
+	LD BC, &303B            ; Prepare port for sprite index
 	OUT (C), A              ; Load index of first sprite
 	LD (.dmaSource), HL     ; Copy sprite sheet address from HL
 	LD (.dmaLength), BC     ; Copy length in bytes from BC
 	LD HL, .dmaCode         ; Setup source for OTIR
 	LD B, .dmaCodeLength    ; Setup length for OTIR
-	LD C, $6B               ; Setup DMA port
+	LD C, &6B               ; Setup DMA port
 	OTIR                    ; Invoke DMA code
 	RET
 .dmaCode:
@@ -194,12 +194,12 @@ loadSprites:
 	DB %01101000            ; WR2 write B, port B address fixed, B is IO
 	DB %00000010            ; WR2 cycle length B
 	DB %10101101            ; WR4 continuous mode, write destination address
-	DW $5B                  ; Sprite image port $xx5B
+	DW &5B                  ; Sprite image port &xx5B
 	DB %10000010            ; WR5 restart on end of block
 	DB %11001111            ; WR6 load
 	DB %10000111            ; WR6 enable DMA
-.dmaCodeLength:  EQU $-.dmaCode
-\end{lstlisting}
+.dmaCodeLength:  EQU &-.dmaCode
+\end{tcblisting}
 
 Perhaps worth noting: routine uses technique called ``self modifying code''. As the name suggests, this means that the program modifies itself in RAM. In this case it modifies 2 addresses ``marked'' by {\tt .dmaSource} and {\tt .dmaLength} labels. But it's also possible to modify opcodes (in this case {\tt NOP}s are frequently used as placeholders). Either way, careful planning is required to avoid writing over undesired parts.
 
@@ -211,43 +211,43 @@ And secondly note use of dot in front of some labels. Many assemblers allow this
 
 Using {\tt loadSprites} routine is very simple. This example assumes you've edited sprites with one of the editors and saved them as {\tt sprites.spr} file in the same folder as the assembler code:
 
-\begin{lstlisting}
+\begin{tcblisting}{}
 	LD HL, sprites          ; Sprites data source
 	LD BC, 16*16*5          ; Copy 5 sprites, each 16x16 pixels
 	LD A, 0                 ; Start with first sprite
-	CALL loadSprites        ; Load sprites to FPGA
+	CALL LoadSprites        ; Load sprites to FPGA
 
 sprites:
 	INCBIN "sprites.spr"    ; Sprite sheets file
-\end{lstlisting}
+\end{tcblisting}
 
 
 \subsubsection{Enabling Sprites}
 
 After sprites are loaded into FPGA memory, we need to enable them:
 
-\begin{lstlisting}
-	NEXTREG $15, %01000001		; Sprite 0 on top, SLU, sprites visible
-\end{lstlisting}
+\begin{tcblisting}{}
+	NEXTREG &15, %01000001		; Sprite 0 on top, SLU, sprites visible
+\end{tcblisting}
 
 
 \subsubsection{Displaying a Sprite}
 
 Sprites are now loaded into FPGA memory, they are enabled, so we can start displaying them. This example displays same sprite pattern twice, as two separate sprites:
 
-\begin{lstlisting}
-	NEXTREG $34, 0              ; First sprite
-	NEXTREG $35, 100            ; X=100
-	NEXTREG $36, 80             ; Y=80
-	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
-	NEXTREG $38, %10000000      ; Visible, no byte 4, pattern 0
+\begin{tcblisting}{}
+	NEXTREG &34, 0              ; First sprite
+	NEXTREG &35, 100            ; X=100
+	NEXTREG &36, 80             ; Y=80
+	NEXTREG &37, %00000000      ; Palette offset, no mirror, no rotation
+	NEXTREG &38, %10000000      ; Visible, no byte 4, pattern 0
 
-	NEXTREG $34, 1              ; Second sprite
-	NEXTREG $35, 86             ; X=86
-	NEXTREG $36, 80             ; Y=80
-	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
-	NEXTREG $38, %10000000      ; Visible, no byte 4, pattern 0
-\end{lstlisting}
+	NEXTREG &34, 1              ; Second sprite
+	NEXTREG &35, 86             ; X=86
+	NEXTREG &36, 80             ; Y=80
+	NEXTREG &37, %00000000      ; Palette offset, no mirror, no rotation
+	NEXTREG &38, %10000000      ; Visible, no byte 4, pattern 0
+\end{tcblisting}
 
 
 \pagebreak
@@ -255,43 +255,43 @@ Sprites are now loaded into FPGA memory, they are enabled, so we can start displ
 
 Even handling combined sprites is much simpler in practice than in theory! This example combines 4 sprites into single one using unified relative sprites. Note use of ``inc'' register {\tt \$79} which auto-increments sprite index for next sprite:
 
-\begin{lstlisting}
-	NEXTREG $34, 2              ; Select third sprite
-	NEXTREG $35, 150            ; X=150
-	NEXTREG $36, 80             ; Y=80
-	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
-	NEXTREG $38, %11000001      ; Visible, use byte 4, pattern 1
-	NEXTREG $79, %00100000      ; Anchor with unified relatives, no scaling
+\begin{tcblisting}{}
+	NEXTREG &34, 2              ; Select third sprite
+	NEXTREG &35, 150            ; X=150
+	NEXTREG &36, 80             ; Y=80
+	NEXTREG &37, %00000000      ; Palette offset, no mirror, no rotation
+	NEXTREG &38, %11000001      ; Visible, use byte 4, pattern 1
+	NEXTREG &79, %00100000      ; Anchor with unified relatives, no scaling
 
-	NEXTREG $35, 16             ; X=AnchorX+16
-	NEXTREG $36, 0              ; Y=AnchorY+0
-	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
-	NEXTREG $38, %11000010      ; Visible, use byte 4, pattern 2
-	NEXTREG $79, %01000000      ; Relative sprite
+	NEXTREG &35, 16             ; X=AnchorX+16
+	NEXTREG &36, 0              ; Y=AnchorY+0
+	NEXTREG &37, %00000000      ; Palette offset, no mirror, no rotation
+	NEXTREG &38, %11000010      ; Visible, use byte 4, pattern 2
+	NEXTREG &79, %01000000      ; Relative sprite
 
-	NEXTREG $35, 0              ; X=AnchorX+0
-	NEXTREG $36, 16             ; Y=AnchorY+16
-	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
-	NEXTREG $38, %11000011      ; Visible, use byte 4, pattern 3
-	NEXTREG $79, %01000000      ; Relative sprite
+	NEXTREG &35, 0              ; X=AnchorX+0
+	NEXTREG &36, 16             ; Y=AnchorY+16
+	NEXTREG &37, %00000000      ; Palette offset, no mirror, no rotation
+	NEXTREG &38, %11000011      ; Visible, use byte 4, pattern 3
+	NEXTREG &79, %01000000      ; Relative sprite
 
-	NEXTREG $35, 16             ; X=AnchorX+16
-	NEXTREG $36, 16             ; Y=AnchorY+16
-	NEXTREG $37, %00000000      ; Palette offset, no mirror, no rotation
-	NEXTREG $38, %11000100      ; Visible, use byte 4, pattern 4
-	NEXTREG $79, %01000000      ; Relative sprite
-\end{lstlisting}
+	NEXTREG &35, 16             ; X=AnchorX+16
+	NEXTREG &36, 16             ; Y=AnchorY+16
+	NEXTREG &37, %00000000      ; Palette offset, no mirror, no rotation
+	NEXTREG &38, %11000100      ; Visible, use byte 4, pattern 4
+	NEXTREG &79, %01000000      ; Relative sprite
+\end{tcblisting}
 
 Because we use combined sprite, we only need to update anchor to change all its relatives. And because we set it up as unified relative sprites, even rotation, mirroring and scaling is inherited as if it was a single sprite!
 
-\begin{lstlisting}
-	NEXTREG $34, 1              ; Select second sprite
-	NEXTREG $35, 200            ; X=200
-	NEXTREG $36, 100            ; Y=100
-	NEXTREG $37, %00001010      ; Palette offset, mirror X, rotate
-	NEXTREG $38, %11000001      ; Visible, use byte 4, pattern 1
-	NEXTREG $39, %00101010      ; Anchor with unified relatives, scale X&Y 
-\end{lstlisting}
+\begin{tcblisting}{}
+	NEXTREG &34, 1              ; Select second sprite
+	NEXTREG &35, 200            ; X=200
+	NEXTREG &36, 100            ; Y=100
+	NEXTREG &37, %00001010      ; Palette offset, mirror X, rotate
+	NEXTREG &38, %11000001      ; Visible, use byte 4, pattern 1
+	NEXTREG &39, %00101010      ; Anchor with unified relatives, scale X&Y 
+\end{tcblisting}
 
 
 \pagebreak

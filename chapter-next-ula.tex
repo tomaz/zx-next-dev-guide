@@ -122,8 +122,8 @@ As you can see, X is quite straightforward; we need to take upper 5 bits and fil
 
 Furthermore; each instruction only uses 8 t-states, which is far less than corresponding Z80 assembly program would require. Somewhat naive program for drawing vertical line write from pixel at coordinate (16,32) to (16,50):
 
-\begin{lstlisting}
-	LD DE, $1020      ; Y=16, X=32
+\begin{tcblisting}{}
+	LD DE, &1020      ; Y=16, X=32
 	PIXELAD           ; HL=address of pixel (E,D)
 loop:
 	SETAE             ; A=pixel mask
@@ -137,19 +137,19 @@ loop:
 
 	PIXELDN           ; no, update HL to next line
 	JR loop           ; continue with next pixel
-\end{lstlisting}
+\end{tcblisting}
 
 Note: because we're updating our Y coordinate in {\tt D} register within the loop, we could also use {\tt PIXELAD} instead of {\tt PIXELDN} in line 13. Both instructions require 8 T states for execution, so there's no difference performance wise.
 
 If we instead wanted to check if pixel at given coordinate is set or not, we would use {\tt AND (HL)} instead of {\tt OR (HL)}. For example:
 
-\begin{lstlisting}
-	LD DE, $1020      ; Y=16, X=32
+\begin{tcblisting}{}
+	LD DE, &1020      ; Y=16, X=32
 	PIXELAD           ; HL=address of pixel (E,D)
 	SETAE             ; A=pixel mask
 	AND (HL)          ; we'll read the pixel
 	RET Z             ; exit if pixel is not set
-\end{lstlisting}
+\end{tcblisting}
 
 
 \subsection{Attributes memory}
@@ -201,10 +201,10 @@ Spectrum only requires 768 bytes to configure colour and attributes for the whol
 Next inherites Spectrum border colour handling through \PortLink{ULA Control Port}{xxFE}. Bottom 3 bits are used to specify one of 8 possible colours (see table on previous page for full list). Example:
 % note: use of "previous page" in parenthesis above - this works as long as colours table will be physically on previous page in printed book, but make sure it's adjusted if additional content it added, or layout changes otherwise in the future ("in previous section" or "above" for example)
 
-\begin{lstlisting}
+\begin{tcblisting}{}
 	LD A, 1			; Select blue colour
-	OUT ($FE), A	; Set border colour from A
-\end{lstlisting}
+	OUT (&FE), A	; Set border colour from A
+\end{tcblisting}
 
 Note: border colour is set the same way regardless of graphics mode used. However some Layer 2 modes and Tileset may partially or fully cover border, effectively making it invisible to user.
 

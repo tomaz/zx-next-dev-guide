@@ -69,9 +69,9 @@ There are several registers involved in palette changes that work together: \Por
 
 Reusable subroutine for copying a number of palette entries defined by {\tt B} from memory addressed by {\tt HL} register into palette selected by Next register {\tt \$43}:
 
-\begin{lstlisting}
-	NEXTREG $43, %00010000    ; Auto increment, L2 first palette for read/write
-	NEXTREG $40, 0            ; Start copying into index 0
+\begin{tcblisting}{}
+	NEXTREG &43, %00010000    ; Auto increment, L2 first palette for read/write
+	NEXTREG &40, 0            ; Start copying into index 0
 	LD HL, palette            ; Address to copy RRRGGGBB bytes from
 	LD B, 255                 ; Copy 255 bytes
 	CALL copyPalette
@@ -79,9 +79,9 @@ Reusable subroutine for copying a number of palette entries defined by {\tt B} f
 copyPalette:
 	LD A, (HL)                ; Load RRRGGGBB into A
 	INC HL                    ; Increment to next colour entry
-	NEXTREG $41, A            ; Send colour data to Next HW
+	NEXTREG &41, A            ; Send colour data to Next HW
 	DJNZ copyPalette          ; Repeat until B=0
-\end{lstlisting}
+\end{tcblisting}
 
 
 \pagebreak
@@ -171,17 +171,17 @@ This mode is the closest to ULA, resolution wise, so is perhaps the simplest to 
 
 Example of filling the screen with vertical rainbow:
 
-\begin{lstlisting}
+\begin{tcblisting}{}
 START_16K_BANK  EQU 9
 START_8K_BANK   EQU START_16K_BANK*2
 
 	; Enable Layer 2
-	LD BC, $123B
+	LD BC, &123B
 	LD A, 2
 	OUT (C), A
 	
 	; Setup starting Layer2 16K bank
-	NEXTREG $12, START_16K_BANK
+	NEXTREG &12, START_16K_BANK
 	
 	LD D, 0                   ; D=Y, start at top of the screen
 	
@@ -193,14 +193,14 @@ nextY:
 	RLCA                      ; 10000032
 	RLCA                      ; 00000321
 	ADD A, START_8K_BANK      ; A=bank number to swap in
-	NEXTREG $56, A            ; Swap bank
+	NEXTREG &56, A            ; Swap bank
 	
-	; Convert DE (yx) to screen memory location starting at $C000
+	; Convert DE (yx) to screen memory location starting at &C000
 	PUSH DE                   ; (DE) will be changed to bank offset
 	LD A, D                   ; Copy current Y to A
 	AND %00011111             ; Discard bank number
-	OR $C0                    ; Screen starts at $C000
-	LD D, A                   ; D=high byte for $C000 screen memory
+	OR &C0                    ; Screen starts at &C000
+	LD D, A                   ; D=high byte for &C000 screen memory
 
 	; Loop X through 0..255; we don't have to deal with bank swapping
 	; here because it only occurs when changing Y
@@ -217,7 +217,7 @@ nextX:
 	LD A, D                   ; A=current Y
 	CP 192                    ; Did we just complete last line?
 	JP C, nextY               ; No, continue with next linee
-\end{lstlisting}
+\end{tcblisting}
 
 Worth noting: MMU page 6 (next register {\tt \$56}) covers memory \MemAddr{C000} - \MemAddr{DFFF}. As we swap different 8K banks there, we're effectively changing 8K banks that are readable and writable at those memory addresses. That's why we {\tt OR \$C0} in line 24; we need to convert zero based address to \MemAddr{C000} based. See section \ref{zx_next_bank_mmu_mode} for details on MMU paging mode.
 
@@ -313,7 +313,7 @@ Addressing is more complicated though. As we need 9 bits for X and 8 for Y, we c
 To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to setup clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
 
 
-\begin{lstlisting}
+\begin{tcblisting}{}
 START_16K_BANK  EQU 9
 START_8K_BANK   EQU START_16K_BANK*2
 
@@ -325,30 +325,30 @@ NUM_BANKS       EQU RESOLUTION_X * RESOLUTION_Y / BANK_8K_SIZE
 BANK_X          EQU BANK_8K_SIZE / RESOLUTION_Y
 
 	; Enable Layer 2
-	LD BC, $123B
+	LD BC, &123B
 	LD A, 2
 	OUT (C), A
 
 	; Setup starting Layer2 16K bank
-	NEXTREG $12, START_16K_BANK
-	NEXTREG $70, %00010000    ; 320x256 256 colour mode
+	NEXTREG &12, START_16K_BANK
+	NEXTREG &70, %00010000    ; 320x256 256 colour mode
 
 	; Setup window clip for 320x256 resolution
-	NEXTREG $1C, 1            ; Reset Layer 2 clip window reg index
-	NEXTREG $18, 0            ; X1; X2 next line
-	NEXTREG $18, RESOLUTION_X / 2 - 1
-	NEXTREG $18, 0            ; Y1; Y2 next line
-	NEXTREG $18, RESOLUTION_Y - 1
+	NEXTREG &1C, 1            ; Reset Layer 2 clip window reg index
+	NEXTREG &18, 0            ; X1; X2 next line
+	NEXTREG &18, RESOLUTION_X / 2 - 1
+	NEXTREG &18, 0            ; Y1; Y2 next line
+	NEXTREG &18, RESOLUTION_Y - 1
 
 	LD B, START_8K_BANK       ; Bank number
 	LD H, 0                   ; Colour index
 nextBank:
 	; Swap to next bank, exit once all 5 are done
 	LD A, B                   ; Copy current bank number to A
-	NEXTREG $56, A            ; Switch to bank
+	NEXTREG &56, A            ; Switch to bank
 
 	; Fill in current bank
-	LD DE, $C000              ; Prepare starting address
+	LD DE, &C000              ; Prepare starting address
 nextY:
 	; Fill in 256 pixels of current line
 	LD A, H                   ; Copy colour index to A
@@ -360,7 +360,7 @@ nextY:
 	INC H                     ; Increment colour
 	INC D                     ; Increment X
 	LD A, D                   ; Copy X to A
-	AND %00111111             ; Clear $C0 to get pure X coordinate
+	AND %00111111             ; Clear &C0 to get pure X coordinate
 	CP BANK_X                 ; Did we reach next bank?
 	JP NZ, nextY              ; No, continue with next Y
 
@@ -369,7 +369,7 @@ nextY:
 	LD A, B                   ; Copy bank to A
 	CP START_8K_BANK+NUM_BANKS; Did we fill last bank?
 	JP NZ, nextBank           ; No, proceed with next bank
-\end{lstlisting}
+\end{tcblisting}
 
 
 \pagebreak
@@ -459,7 +459,7 @@ Addressing wise, this mode is the same as 230$\times$256. Using 16-bit register 
 
 To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to setup clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
 
-\begin{lstlisting}
+\begin{tcblisting}{}
 START_16K_BANK  EQU 9
 START_8K_BANK   EQU START_16K_BANK*2
 
@@ -471,29 +471,29 @@ NUM_BANKS       EQU RESOLUTION_X * RESOLUTION_Y / BANK_8K_SIZE / 2
 BANK_X          EQU BANK_8K_SIZE / RESOLUTION_Y
 
 	; Enable Layer 2
-	LD BC, $123B
+	LD BC, &123B
 	LD A, 2
 	OUT (C), A
 
 	; Setup starting Layer2 16K bank
-	NEXTREG $12, START_16K_BANK
-	NEXTREG $70, %00100000    ; 640x256 16 colour mode
+	NEXTREG &12, START_16K_BANK
+	NEXTREG &70, %00100000    ; 640x256 16 colour mode
 
-	NEXTREG $1C, 1            ; Reset Layer 2 clip window reg index
-	NEXTREG $18, 0
-	NEXTREG $18, RESOLUTION_X / 4 - 1
-	NEXTREG $18, 0
-	NEXTREG $18, RESOLUTION_Y - 1
+	NEXTREG &1C, 1            ; Reset Layer 2 clip window reg index
+	NEXTREG &18, 0
+	NEXTREG &18, RESOLUTION_X / 4 - 1
+	NEXTREG &18, 0
+	NEXTREG &18, RESOLUTION_Y - 1
 
 	LD B, START_8K_BANK       ; Bank number
 	LD H, 0                   ; Colour index for 2 pixels
 nextBank:
 	; Swap to next bank, exit once all 5 are done
 	LD A, B                   ; Copy current bank number to A
-	NEXTREG $56, A            ; Switch to bank
+	NEXTREG &56, A            ; Switch to bank
 
 	; Fill in current bank
-	LD DE, $C000              ; Prepare starting address
+	LD DE, &C000              ; Prepare starting address
 nextY:
 	; Fill in 256 pixels of current line
 	LD A, H                   ; Copy colour indexes for 2 pixels to A
@@ -505,7 +505,7 @@ nextY:
 	INC H                     ; Increment colour index for both colours
 	INC D                     ; Increment X
 	LD A, D                   ; Copy X to A
-	AND %00111111             ; Clear $C0 to get pure X coordinate
+	AND %00111111             ; Clear &C0 to get pure X coordinate
 	CP BANK_X                 ; Did we reach next bank?
 	JP NZ, nextY              ; No, continue with next Y
 
@@ -514,7 +514,7 @@ nextY:
 	LD A, B                   ; Copy bank to A
 	CP START_8K_BANK+NUM_BANKS; Did we fill last bank?
 	JP NZ, nextBank           ; No, proceed with next bank
-\end{lstlisting}
+\end{tcblisting}
 
 
 \subsection{Layer 2 Registers}

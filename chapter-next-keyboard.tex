@@ -40,8 +40,8 @@ Keyboard is read from port {\tt \$xxFE} where bits in result are as follows:
 
 If key is pressed, corresponding bit is set to {\tt 0} and vice versa. Example for checking if P or I is pressed:
 	
-\begin{lstlisting}
-	LD BC, $DFFE   ; We want to read keys:   YUIOP
+\begin{tcblisting}{}
+	LD BC, &DFFE   ; We want to read keys:   YUIOP
 	IN A, (C)      ; A holds values in bits: 43210
 checkP:
 	BIT 0, A       ; test bit 0 of A (P key)
@@ -52,14 +52,14 @@ checkI:
 	JR NZ continue ; if bit2=1, I not pressed
 	...            ; I is pressed
 continue:
-\end{lstlisting}
+\end{tcblisting}
 
 We can slightly improve performance if we replace first two lines with:
 
-\begin{lstlisting}
-	LD A, $DF
-	IN ($FE)
-\end{lstlisting}
+\begin{tcblisting}{}
+	LD A, &DF
+	IN (&FE)
+\end{tcblisting}
 
 Using 16-bit load requires 10 T states for ``{\tt LD BC,nn}'' + 12 for ``{\tt IN A,(C)}'' whereas later variant requires 7 T states for ``{\tt LD A,nn}'' + 11 for ``{\tt IN (nn)}''. So 22 vs 18. The difference is small, but it can add up as typically keyboard is read multiple times per frame.
 

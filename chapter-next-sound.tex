@@ -38,32 +38,32 @@ For creating music there are also several options. NextDAW\footnote{\url{https:/
 
 Before we can start playing sounds, we need to enable the sound hardware. While this is usually enabled by default, it's nonetheless good idea to ensure our program will always run under the same conditions.
 
-\begin{lstlisting}
+\begin{tcblisting}{}
 	; Setup Turbo Sound chip
-	LD BC, $FFFD            ; Turbo Sound Next Control Register
+	LD BC, &FFFD            ; Turbo Sound Next Control Register
 	LD A, %11111101         ; Enable left+right audio, select AY1
 	OUT (C), A
 	
 	; Setup mapping of chip channels to stereo channels
-	NEXTREG $08, %00010010  ; Use ABC, enable internal speaker & turbosound
-	NEXTREG $09, %11100000  ; Enable mono for AY1-3
-\end{lstlisting}
+	NEXTREG &08, %00010010  ; Use ABC, enable internal speaker & turbosound
+	NEXTREG &09, %11100000  ; Enable mono for AY1-3
+\end{tcblisting}
 
 Programming AY consists of writing various values to its registers. As mentioned, this is two step process: first select register number, then write the value. Multiple writes are required for each tone to set period, volume etc. To make it simpler, I created a subroutine. It takes 2 parameters: {\tt A} for register number ({\tt 0-13}) and {\tt D} with value to write.
 
-\begin{lstlisting}
-writeDToAYReg:
+\begin{tcblisting}{}
+WriteDToAYReg:
 	; Select desired register
-	LD BC, $FFFD
+	LD BC, &FFFD
 	OUT (C), A
 	
 	; Write given value
 	LD A, D
-	LD BC, $BFFD
+	LD BC, &BFFD
 	OUT (C), A
 	
 	RET
-\end{lstlisting}
+\end{tcblisting}
 
 Companion code on github includes expanded code as well as a simple player that plays multiple tones in sequence. For the purposes of this book, I used Remy's AY audio generator website to load one of example effects, then manually copied raw values into source code. Laborious process to say the least, this is not how effects should be handled in real life. But I wanted to learn and demonstrate how to program AY chip, not how to use ready made drivers to play effects or music. Furthermore, my ``player'' blocks the main loop; ideally sound effects and music would play on interrupt handler. Which could be a nice homework for the reader - example in section \ref{zx_next_interrupts} should give you an idea of how to achieve this - happy coding!
 

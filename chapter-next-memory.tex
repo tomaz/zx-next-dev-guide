@@ -76,28 +76,28 @@ If you are using the standard interrupt handler or OS routines, then any time yo
 
 Example routine for selecting bank on 128K Spectrum (supports standard interrupt handler and OS routines). Routine takes bank number 0-7 as argument in {\tt B}:
 
-\begin{lstlisting}
-switchBank:
-	LD A, ($5B5C)     ; get existing value from port
+\begin{tcblisting}{}
+SwitchBank:
+	LD A, (&5B5C)     ; get existing value from port
 	AND %11111000     ; clear bottom 3 bits
 	OR B              ; A now holds the value to be set
 
 	DI                ; interrupts must be disabled
 
-	LD ($5B5C), A     ; write value into $5B5C
-	LD BC, $7FFD
-	OUT (C), A        ; write same value into $7FFD
+	LD (&5B5C), A     ; write value into &5B5C
+	LD BC, &7FFD
+	OUT (C), A        ; write same value into &7FFD
 
 	EI                ; enable interrupts
 	RET
-\end{lstlisting}
+\end{tcblisting}
 
 To call the routine use:
 
-\begin{lstlisting}
+\begin{tcblisting}{}
 	LD B, 2
-	CALL switchBank
-\end{lstlisting}
+	CALL SwitchBank
+\end{tcblisting}
 
 Note: while above routine could be extended to support switching all 127 banks on ZX Spectrum Next by writing top 4 bits to \MemAddr{DFFD}, it's much simpler to use Next specific MMU bank switching, as described in section \ref{zx_next_bank_mmu_mode}.
 
@@ -202,21 +202,21 @@ MMU selection is set via Next registers:
 
 Each register takes 8-bit page number to be used at memory addresses its slot represents. For example: swapping in 8K bank 10 (so absolute 8K memory range at addresses \MemAddr{14000}-\MemAddr{15FFF}) to address \MemAddr{6000}-\MemAddr{7FFF}, can be as simple as:
 
-\begin{lstlisting}
-	NEXTREG $53, 10
-\end{lstlisting}
+\begin{tcblisting}{}
+	NEXTREG &53, 10
+\end{tcblisting}
 
 If we now run this program:
 
-\begin{lstlisting}
-	LD DE, $6000
+\begin{tcblisting}{}
+	LD DE, &6000
 	LD A, 0
 	LD B, 20
 next:
 	LD (DE), A
 	INC DE
 	DJNZ next
-\end{lstlisting}
+\end{tcblisting}
 
 We are effectively writing 20 bytes into memory \MemAddr{14000} - \MemAddr{14013}
 
