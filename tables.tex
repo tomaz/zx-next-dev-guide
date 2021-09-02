@@ -17,14 +17,17 @@
 % ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ░▒█░░ 　 ▒█▄▄▀ ▒█▄▄▄ ▒█░░░ ▄█▄ ▒█░░▀█ ▄█▄ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█
 
 % declares the table for describing individual bits of a Next port
-\environbodyname\NEXTPORTBODY
-\NewEnviron{NextPort}{
-	\begin{tabularx}{\textwidth}{cX}
-		Bit & Effect \\
+% 2 optional parameters:
+% - tabular columns definitions (default `cX`)
+% - Title line (default `Bit & Effect`)
+\NewDocumentEnvironment{NextPort}{ O{cX} O{Bit & Effect} +b }{
+	\begin{tabularx}{\linewidth}{#1}
+		#2 \\
 		\hline
-		\NEXTPORTBODY
+		#3
 	\end{tabularx}
-}
+	\vspace*{-1ex}		% reduce spacing below tabular, it's too much by default
+}{}
 
 % ▒█▀▀█ ▀█▀ ▀▀█▀▀ 　 ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀█ ▀█▀ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 
 % ▒█▀▀▄ ▒█░ ░▒█░░ 　 ▒█░▒█ ▒█▀▀▀ ░▀▀▀▄▄ ▒█░░░ ▒█▄▄▀ ▒█░ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 
