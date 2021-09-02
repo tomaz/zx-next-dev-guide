@@ -144,7 +144,7 @@ The main difference is the hardware will automatically adjust relative sprites X
 
 \subsection{Attributes}
 
-Attributes are 4 or 5 bytes that define where and how sprite is drawn. The data can be setup either by selecting sprite index with \PortLink{Sprite Status/Slot Select}{303B} and then continuously sending bytes to \PortLink{Sprite Attribute Upload}{xx57} (which automatically increments sprite index after all data for single sprite is transfered) or by calling individual direct access Next registers {\tt \$35-\$39} or their auto-increment variants {\tt \$75-\$79}. See registers section for description of individual bytes:
+Attributes are 4 or 5 bytes that define where and how sprite is drawn. The data can be setup either by selecting sprite index with \PortLink{Sprite Status/Slot Select}{303B} and then continuously sending bytes to \PortLink{Sprite Attribute Upload}{xx57} (which automatically increments sprite index after all data for single sprite is transfered) or by calling individual direct access Next registers \MemAddr{35}-\MemAddr{39} or their auto-increment variants \MemAddr{75}-\MemAddr{79}. See registers section for description of individual bytes:
 
 \begin{itemize}[topsep=1pt,itemsep=1pt]
 	\item Byte 0: \PortLink{Sprite port-mirror Attribute 0 Register}{35}
@@ -253,7 +253,7 @@ Sprites are now loaded into FPGA memory, they are enabled, so we can start displ
 \pagebreak
 \subsubsection{Displaying Combined Sprites}
 
-Even handling combined sprites is much simpler in practice than in theory! This example combines 4 sprites into single one using unified relative sprites. Note use of ``inc'' register {\tt \$79} which auto-increments sprite index for next sprite:
+Even handling combined sprites is much simpler in practice than in theory! This example combines 4 sprites into single one using unified relative sprites. Note use of ``inc'' register \MemAddr{79} which auto-increments sprite index for next sprite:
 
 \begin{tcblisting}{}
 	NEXTREG &34, 2              ; Select third sprite
@@ -321,7 +321,7 @@ Read: returns sprite status information
 \end{NextPort}
 
 
-\subsubsection{Sprite Attribute Upload {\tt \$xx57}}
+\subsubsection{Sprite Attribute Upload \MemAddr{xx57}}
 
 Uploads attributes for currently selected sprite slot. Attributes require 4 or 5 bytes. After all bytes are sent, sprite index slot automatically increments. See the following Next registers that directly set the value for specific bytes:
 
@@ -334,7 +334,7 @@ Uploads attributes for currently selected sprite slot. Attributes require 4 or 5
 \end{itemize}
 
 
-\subsubsection{Sprite Pattern Upload {\tt \$xx5B}}
+\subsubsection{Sprite Pattern Upload \MemAddr{xx5B}}
 
 Uploads sprite pattern data. 256 bytes are needed for individual sprite. For 8-bit sprites, each pattern slot contains single sprite. For 4-bit sprites it contains 2 128 byte sprites. After 256 bytes are sent, target pattern slot is auto-incremented.
 
@@ -344,7 +344,7 @@ Uploads sprite pattern data. 256 bytes are needed for individual sprite. For 8-b
 \end{NextPort}
 
 
-\subsubsection{Peripheral 4 Register {\tt \$09}}
+\subsubsection{Peripheral 4 Register \MemAddr{09}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -373,12 +373,12 @@ Uploads sprite pattern data. 256 bytes are needed for individual sprite. For 8-b
 \end{NextPort}
 
 
-\subsubsection{Sprite and Layers System Register {\tt \$15}}
+\subsubsection{Sprite and Layers System Register \MemAddr{15}}
 
 \PortReference{zx_next_tilemap_registers}{Tilemap}
 
 
-\subsubsection{Clip Window Sprites Register {\tt \$19}}
+\subsubsection{Clip Window Sprites Register \MemAddr{19}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -392,12 +392,12 @@ Which coordinate gets set, is determined by index. As each write to this registe
 When ``over border'' mode is enabled (bit 1 of \PortLink{Sprite and Layers System Register}{15}), X coordinates are doubled internally.
 
 
-\subsubsection{Clip Window Control Register {\tt \$1C}}
+\subsubsection{Clip Window Control Register \MemAddr{1C}}
 
 \PortReference{zx_next_layer2_registers}{Layer 2}
 
 
-\subsubsection{Sprite Port-Mirror Index Register {\tt \$34}}
+\subsubsection{Sprite Port-Mirror Index Register \MemAddr{34}}
 
 If sprite id lockstep in \PortLink{Peripheral 4 Register}{09} is enabled, write to this registers has same effect as writing to \PortLink{Sprite Status/Slot Select}{303B}.
 
@@ -409,7 +409,7 @@ If sprite id lockstep in \PortLink{Peripheral 4 Register}{09} is enabled, write 
 \end{NextPort}
 
 
-\subsubsection{Sprite port-mirror Attribute 0 Register {\tt \$35}}
+\subsubsection{Sprite port-mirror Attribute 0 Register \MemAddr{35}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -417,7 +417,7 @@ If sprite id lockstep in \PortLink{Peripheral 4 Register}{09} is enabled, write 
 \end{NextPort}
 
 
-\subsubsection{Sprite port-mirror Attribute 1 Register {\tt \$36}}
+\subsubsection{Sprite port-mirror Attribute 1 Register \MemAddr{36}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -425,7 +425,7 @@ If sprite id lockstep in \PortLink{Peripheral 4 Register}{09} is enabled, write 
 \end{NextPort}
 
 
-\subsubsection{Sprite port-mirror Attribute 2 Register {\tt \$37}}
+\subsubsection{Sprite port-mirror Attribute 2 Register \MemAddr{37}}
 
 \begin{NextPort}
 	\PortBits{7-4}
@@ -442,7 +442,7 @@ If sprite id lockstep in \PortLink{Peripheral 4 Register}{09} is enabled, write 
 \end{NextPort}
 
 
-\subsubsection{Sprite port-mirror Attribute 3 Register {\tt \$38}}
+\subsubsection{Sprite port-mirror Attribute 3 Register \MemAddr{38}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -454,7 +454,7 @@ If sprite id lockstep in \PortLink{Peripheral 4 Register}{09} is enabled, write 
 \end{NextPort}
 
 
-\subsubsection{Sprite port-mirror Attribute 4 Register {\tt \$39}}
+\subsubsection{Sprite port-mirror Attribute 4 Register \MemAddr{39}}
 
 For anchor sprites:
 
@@ -518,15 +518,15 @@ For unified relative sprites
 
 
 \pagebreak
-\subsubsection{Palette Index Register {\tt \$40}}
+\subsubsection{Palette Index Register \MemAddr{40}}
 \vspace*{-2ex}
-\subsubsection{Palette Value Register {\tt \$41}}
+\subsubsection{Palette Value Register \MemAddr{41}}
 \vspace*{-2ex}
-\subsubsection{Enhanced Ula Control Register {\tt \$43}}
+\subsubsection{Enhanced Ula Control Register \MemAddr{43}}
 \PortReference{zx_next_layer2_registers}{Layer 2}
 
 
-\subsubsection{Sprites Transparency Index Register {\tt \$4B}}
+\subsubsection{Sprites Transparency Index Register \MemAddr{4B}}
 
 \begin{NextPort}
 	\PortBits{7-0}\PortDesc{Sets index of transparent colour inside sprites palette.}
@@ -535,9 +535,9 @@ For unified relative sprites
 For 4-bit sprites, low 4 bits of this register are used.
 
 
-\subsubsection{Sprite Port-Mirror Attribute N (With Inc) Register {\tt \$75-\$79}}
+\subsubsection{Sprite Port-Mirror Attribute N (With Inc) Register \MemAddr{75}-\MemAddr{79}}
 
-This set of registers work the same as their non-inc counterpart in {\tt \$35-\$39}; writes byte 0-4 of Sprite attributes for currently selected sprite, except {\tt \$7X} variants also increment \PortLink{Sprite Port-Mirror Index Register}{34} after write. When batch updating multiple sprites, typically the first sprite is selected explicitly, then {\tt \$3X} registers are used until the last write, which occurs through {\tt \$7X} register to also increment sprite index for next iteration.
+This set of registers work the same as their non-inc counterpart in \MemAddr{35}-\MemAddr{39}; writes byte 0-4 of Sprite attributes for currently selected sprite, except \MemAddr{7X} variants also increment \PortLink{Sprite Port-Mirror Index Register}{34} after write. When batch updating multiple sprites, typically the first sprite is selected explicitly, then \MemAddr{3X} registers are used until the last write, which occurs through \MemAddr{7X} register to also increment sprite index for next iteration.
 
 
 \pagebreak

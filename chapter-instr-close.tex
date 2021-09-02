@@ -539,7 +539,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		Repeats {\tt CPI} until either {\tt A=(HL)} or {\tt BC=0}.
 
-		Example, searching for {\tt \$AB} in memory from {\tt \$0000-\$999}:
+		Example, searching for {\tt \$AB} in memory from \MemAddr{0000}-\MemAddr{999}:
 
 		\begin{multicols}{2}
 			{\tt CPIR} = finding first occurrence:
@@ -1073,7 +1073,7 @@ IN A, (&FE)
 
 		Sets bottom 14 bits of current program counter {\tt PC}\See{*} to value read from I/O port: {\tt PC[13-0] = (IN (C) << 6)}. Can be used to execute code block read from a disk stream.
 		
-		\DetailNote[]{\See{*}``Current {\tt PC}'' is address of the next instruction after {\tt JP (C)}; {\tt PC} was already advanced after fetching {\tt JP (C)} instruction from memory. If {\tt JP (C)} instruction is located at the very end of 16K memory block ({\tt \$..FE} or {\tt \$..FF} address), then new {\tt PC} value will land into following 16K block.}
+		\DetailNote[]{\See{*}``Current {\tt PC}'' is address of the next instruction after {\tt JP (C)}; {\tt PC} was already advanced after fetching {\tt JP (C)} instruction from memory. If {\tt JP (C)} instruction is located at the very end of 16K memory block (\MemAddr{..FE} or \MemAddr{..FF} address), then new {\tt PC} value will land into following 16K block.}
 
 		\begin{DetailEffects}
 			\FlagsJPc

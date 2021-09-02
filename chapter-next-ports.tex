@@ -183,7 +183,7 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{-W}{63}{Used to upload code to the Copper}
 		\nextport{RW}{64}{Offset numbering of raster lines in copper/interrupt/active register}
 		\nextport{RW}{68}{Disable ULA, controls ULA mixing/blending, enable ULA+ \zxsee{zx_next_tilemap}}
-		\nextport{RW}{69}{Layer2, ULA shadow, Timex {\tt \$FF} port}
+		\nextport{RW}{69}{Layer2, ULA shadow, Timex \MemAddr{FF} port}
 		\nextport{RW}{6A}{LoRes Radastan mode}
 		\nextport{RW}{6B}{Controls Tilemap mode \zxsee{zx_next_tilemap}}
 		\nextport{RW}{6C}{Default tile attribute for 8-bit only maps \zxsee{zx_next_tilemap}}
@@ -191,11 +191,11 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{RW}{6F}{Base address of the tiles' graphics \zxsee{zx_next_tilemap}}
 		\nextport{RW}{70}{Layer 2 resolution, palette offset \zxsee{zx_next_layer2}}
 		\nextport{RW}{71}{Sets pixel offset for drawing Layer 2 graphics on the screen \zxsee{zx_next_layer2}}
-		\nextport{-W}{75}{Same as \PortLink{Attribute 0 Register}{35} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
-		\nextport{-W}{76}{Same as \PortLink{Attribute 1 Register}{36} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
-		\nextport{-W}{77}{Same as \PortLink{Attribute 2 Register}{37} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
-		\nextport{-W}{78}{Same as \PortLink{Attribute 3 Register}{38} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
-		\nextport{-W}{79}{Same as \PortLink{Attribute 4 Register}{39} plus increments {\tt \$34} \zxsee{zx_next_sprites}}
+		\nextport{-W}{75}{Same as \PortLink{Attribute 0 Register}{35} plus increments \MemAddr{34} \zxsee{zx_next_sprites}}
+		\nextport{-W}{76}{Same as \PortLink{Attribute 1 Register}{36} plus increments \MemAddr{34} \zxsee{zx_next_sprites}}
+		\nextport{-W}{77}{Same as \PortLink{Attribute 2 Register}{37} plus increments \MemAddr{34} \zxsee{zx_next_sprites}}
+		\nextport{-W}{78}{Same as \PortLink{Attribute 3 Register}{38} plus increments \MemAddr{34} \zxsee{zx_next_sprites}}
+		\nextport{-W}{79}{Same as \PortLink{Attribute 4 Register}{39} plus increments \MemAddr{34} \zxsee{zx_next_sprites}}
 	\end{tbbluereg}
 
 	\pagebreak
@@ -222,8 +222,8 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{RW}{A3}{Pi I2S clock divide in master mode}
 		\nextport{RW}{A8}{ESP WiFi GPIO output}
 		\nextport{RW}{A9}{ESP WiFi GPIO read/write}
-		\nextport{R-}{B0}{Read Next keyboard compound keys separately}
-		\nextport{R-}{B1}{Read Next keyboard compound keys separately}
+		\nextport{R-}{B0}{Read Next keyboard compound keys separately \zxsee{zx_next_keyboard}}
+		\nextport{R-}{B1}{Read Next keyboard compound keys separately \zxsee{zx_next_keyboard}}
 		\nextport{RW}{B2}{DivMMC trap configuration}
 		\nextport{RW}{B4}{DivMMC trap configuration}
 		\nextport{-W}{FF}{Turns debug LEDs on and off on TBBlue implementations that have them}

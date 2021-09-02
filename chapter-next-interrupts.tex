@@ -33,7 +33,7 @@ On ZX Spectrum Next interrupt handler can be replaced by either:
 	\item Page out ROM (as described in section \ref{zx_next_memorypaging}) and replace it with RAM page with custom interrupt routine at address \MemAddr{0038}
 \end{itemize}
 
-You can also adjust timing of the interrupts with Next/TBBlue Feature Control Registers {\tt \$22} and {\tt \$23}.
+You can also adjust timing of the interrupts with Next/TBBlue Feature Control Registers \MemAddr{22} and \MemAddr{23}.
 
 \pagebreak
 Example of setting up custom interrupt vectors with {\tt IM 2}\footnote{Based on \url{http://codersbucket.blogspot.com/2015/04/interrupts-on-zx-spectrum-what-are.html}}:

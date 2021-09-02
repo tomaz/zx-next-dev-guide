@@ -67,7 +67,7 @@ Pixel colour data is specified as palette indexes in all modes. Default palette 
 
 There are several registers involved in palette changes that work together: \PortLink{Enhanced Ula Control Register}{43} is used to select palette, \PortLink{Palette Index Register}{40} to set the index and finally \PortLink{Palette Value Register}{41} to change the entry.
 
-Reusable subroutine for copying a number of palette entries defined by {\tt B} from memory addressed by {\tt HL} register into palette selected by Next register {\tt \$43}:
+Reusable subroutine for copying a number of palette entries defined by {\tt B} from memory addressed by {\tt HL} register into palette selected by Next register \MemAddr{43}:
 
 \begin{tcblisting}{}
 	NEXTREG &43, %00010000    ; Auto increment, L2 first palette for read/write
@@ -219,7 +219,7 @@ nextX:
 	JP C, nextY               ; No, continue with next linee
 \end{tcblisting}
 
-Worth noting: MMU page 6 (next register {\tt \$56}) covers memory \MemAddr{C000} - \MemAddr{DFFF}. As we swap different 8K banks there, we're effectively changing 8K banks that are readable and writable at those memory addresses. That's why we {\tt OR \$C0} in line 24; we need to convert zero based address to \MemAddr{C000} based. See section \ref{zx_next_bank_mmu_mode} for details on MMU paging mode.
+Worth noting: MMU page 6 (next register \MemAddr{56}) covers memory \MemAddr{C000} - \MemAddr{DFFF}. As we swap different 8K banks there, we're effectively changing 8K banks that are readable and writable at those memory addresses. That's why we {\tt OR \$C0} in line 24; we need to convert zero based address to \MemAddr{C000} based. See section \ref{zx_next_bank_mmu_mode} for details on MMU paging mode.
 
 Also note we don't have to handle bank swapping on every iteration, once per 32 rows would do for this example. But the code is more versatile this way and could be easily converted into reusable pixel setting routine.
 
@@ -568,7 +568,7 @@ Since core 3.0.7, write with bit {\tt 4} set was also added:
 \end{NextPort}
 
 
-\subsubsection{Layer 2 Ram Page Register {\tt \$12}}
+\subsubsection{Layer 2 Ram Page Register \MemAddr{12}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -583,7 +583,7 @@ Note: this register uses 16K bank numbers; if you're using 8K banks, you need to
 
 
 \pagebreak
-\subsubsection{Layer 2 X Offset Register {\tt \$16}}
+\subsubsection{Layer 2 X Offset Register \MemAddr{16}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -593,7 +593,7 @@ Note: this register uses 16K bank numbers; if you're using 8K banks, you need to
 This can be used for creating scrolling effects. For 320$\times$256 and 640$\times$256 modes, 9 bits are required; use \PortLink{Layer 2 X Offset MSB Register}{71} to set it up.
 
 
-\subsubsection{Layer 2 Y Offset Register {\tt \$17}}
+\subsubsection{Layer 2 Y Offset Register \MemAddr{17}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -609,7 +609,7 @@ Valid range is:
 \end{itemize}
 
 
-\subsubsection{Clip Window Layer 2 Register {\tt \$18}}
+\subsubsection{Clip Window Layer 2 Register \MemAddr{18}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -630,7 +630,7 @@ Valid range is:
 \end{tabular}
 
 \pagebreak
-\subsubsection{Clip Window Control Register {\tt \$1C}}
+\subsubsection{Clip Window Control Register \MemAddr{1C}}
 
 Write:
 
@@ -661,7 +661,7 @@ Read:
 \end{NextPort}
 
 
-\subsubsection{Palette Index Register {\tt \$40}}
+\subsubsection{Palette Index Register \MemAddr{40}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -671,7 +671,7 @@ Read:
 Writing an index {\tt 0-255} associates it with colour set through \PortLink{Palette Value Register}{41} of currently selected pallette in \PortLink{Enhanced Ula Control Register}{43}.
 
 
-\subsubsection{Palette Value Register {\tt \$41}}
+\subsubsection{Palette Value Register \MemAddr{41}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -700,7 +700,7 @@ Least significant bit of blue is set to {\tt OR} between $B_1$ and $B_0$.
 Writing the value will automatically increment index in \PortLink{Palette Index Register}{40}, if auto-increment is enabled in \PortLink{Enhanced Ula Control Register}{43}. Read doesn't auto-increment index.
 
 
-\subsubsection{Enhanced Ula Control Register {\tt \$43}}
+\subsubsection{Enhanced Ula Control Register \MemAddr{43}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -730,7 +730,7 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 \end{NextPort}
 
 
-\subsubsection{Layer 2 Control Register {\tt \$70}}
+\subsubsection{Layer 2 Control Register \MemAddr{70}}
 
 \begin{NextPort}
 	\PortBits{7-6}
@@ -749,7 +749,7 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 \end{NextPort}
 
 
-\subsubsection{Layer 2 X Offset MSB Register {\tt \$71}}
+\subsubsection{Layer 2 X Offset MSB Register \MemAddr{71}}
 
 \begin{NextPort}
 	\PortBits{7-1}

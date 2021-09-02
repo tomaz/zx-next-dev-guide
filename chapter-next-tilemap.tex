@@ -197,7 +197,7 @@ CopyTileMap:
 \subsection{Tilemap Registers}
 \label{zx_next_tilemap_registers}
 
-\subsubsection{Sprite and Layers System Register {\tt \$15}}
+\subsubsection{Sprite and Layers System Register \MemAddr{15}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -230,7 +230,7 @@ CopyTileMap:
 \end{NextPort}
 
 
-\subsubsection{Clip Window Tilemap Register {\tt \$1B}}
+\subsubsection{Clip Window Tilemap Register \MemAddr{1B}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -242,12 +242,12 @@ CopyTileMap:
 Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset index to 0 in \PortLink{Clip Window Control Register}{1C}, then write all 4 coordinates in succession.
 
 
-\subsubsection{Clip Window Control Register {\tt \$1C}}
+\subsubsection{Clip Window Control Register \MemAddr{1C}}
 
 \PortReference{zx_next_layer2_registers}{Layer 2}
 
 
-\subsubsection{Tilemap Offset X MSB Register {\tt \$2F}}
+\subsubsection{Tilemap Offset X MSB Register \MemAddr{2F}}
 
 \begin{NextPort}
 	\PortBits{7-2}
@@ -259,7 +259,7 @@ Which coordinate gets set, is determined by index. As each write to this registe
 In 40x32 mode, meaningful range is {\tt 0-319}, for 80x32 {\tt 0-639}. Low 8-bits are stored in \PortLink{Tilemap Offset X LSB Register}{30}.
 
 
-\subsubsection{Tilemap Offset X LSB Register {\tt \$30}}
+\subsubsection{Tilemap Offset X LSB Register \MemAddr{30}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -269,7 +269,7 @@ In 40x32 mode, meaningful range is {\tt 0-319}, for 80x32 {\tt 0-639}. Low 8-bit
 Tilemap X offset in pixels. Meaningful range is {\tt 0-319} for 40x32 and {\tt 0-639} for 80x32 mode. To write values larger than 255, \PortLink{Tilemap Offset X MSB Register}{2F} is used to store MSB.
 
 
-\subsubsection{Tilemap Offset Y Register {\tt \$31}}
+\subsubsection{Tilemap Offset Y Register \MemAddr{31}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -279,12 +279,12 @@ Tilemap X offset in pixels. Meaningful range is {\tt 0-319} for 40x32 and {\tt 0
 Y offset is {\tt 0-255}.
 
 
-\subsubsection{Enhanced Ula Control Register {\tt \$43}}
+\subsubsection{Enhanced Ula Control Register \MemAddr{43}}
 
 \PortReference{zx_next_layer2_registers}{Layer 2}
 
 
-\subsubsection{ULA Control Register {\tt \$68}}
+\subsubsection{ULA Control Register \MemAddr{68}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -314,7 +314,7 @@ Y offset is {\tt 0-255}.
 See \PortLink{Sprite and Layers System Register}{15} for different priorities and mixing of ULA, Layer 2 and Sprites.
 
 
-\subsubsection{Tilemap Control Register {\tt \$6B}}
+\subsubsection{Tilemap Control Register \MemAddr{6B}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -338,7 +338,7 @@ See \PortLink{Sprite and Layers System Register}{15} for different priorities an
 \See{1}In text mode, tiles are defined as 1-bit B\&W bitmaps, same as original Spectrum UDGs. Each tile only requires 8 bytes. In this mode, tilemap attribute byte is also interpretted differently: bit 0 is still ULA over Tilemap (or 9th bit of tile data index) but top 7 bits are extended palette offset (least significant bit is the value of the pixel itself). In this mode, transparency is checked against \PortLink{Global Transparency Register}{14} colour, not against four bit tilemap colour index.
 
 
-\subsubsection{Default Tilemap Attribute Register {\tt \$6C}}
+\subsubsection{Default Tilemap Attribute Register \MemAddr{6C}}
 
 If single byte tilemap mode is selected (bit 5 of \PortLink{Tilemap Control Register}{6B} set), this register defines attributes for all tiles.
 
@@ -357,7 +357,7 @@ If single byte tilemap mode is selected (bit 5 of \PortLink{Tilemap Control Regi
 \end{NextPort}
 
 
-\subsubsection{Tilemap Base Address Register {\tt \$6E}}
+\subsubsection{Tilemap Base Address Register \MemAddr{6E}}
 
 \begin{NextPort}
 	\PortBits{7-6}
@@ -367,7 +367,7 @@ If single byte tilemap mode is selected (bit 5 of \PortLink{Tilemap Control Regi
 \end{NextPort}
 
 
-\subsubsection{Tile Definitions Base Address Register {\tt \$6F}}
+\subsubsection{Tile Definitions Base Address Register \MemAddr{6F}}
 
 \begin{NextPort}
 	\PortBits{7-6}

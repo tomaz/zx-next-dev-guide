@@ -245,7 +245,7 @@ When bit {\tt 7} is {\tt 0}:
 	\end{tabular}
 \endgroup
 
-\subsubsection{Peripheral 2 Register {\tt \$06}}
+\subsubsection{Peripheral 2 Register \MemAddr{06}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -274,7 +274,7 @@ When bit {\tt 7} is {\tt 0}:
 		}
 \end{NextPort}
 
-\subsubsection{Peripheral 3 Register {\tt \$08}}
+\subsubsection{Peripheral 3 Register \MemAddr{08}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -288,16 +288,18 @@ When bit {\tt 7} is {\tt 0}:
 	\PortBits{3}
 		\PortDesc{Enable 8-bit DACs (A,B,C,D) ({\tt 0} after hard reset)}
 	\PortBits{2}
-		\PortDesc{Enable port {\tt \$FF} Timex video mode read ({\tt 0} after hard reset)}
+		\PortDesc{Enable port \MemAddr{FF} Timex video mode read ({\tt 0} after hard reset)}
 	\PortBits{1}
 		\PortDesc{Enable Turbosound (currently selected AY is frozen when disabled) ({\tt 0} after hard reset)}
 	\PortBits{0}
-		\PortDesc{Implement Issue 2 keyboard (port {\tt \$FE} reads as early ZX boards) ({\tt 0} after hard reset)}
+		\PortDesc{Implement Issue 2 keyboard (port \MemAddr{FE} reads as early ZX boards) ({\tt 0} after hard reset)}
 \end{NextPort}
 
-\subsubsection{Peripheral 4 Register {\tt \$09}}
+\subsubsection{Peripheral 4 Register \MemAddr{09}}
 
 \PortReference{zx_next_sprite_registers}{Sprite}
 
 
+\pagebreak
+\IntentionallyEmpty
 \pagebreak

@@ -40,7 +40,7 @@ ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode is
 	\end{tabular}
 \endgroup
 
-\subsection{Pixel memory}
+\subsection{Pixel Memory}
 
 Each screen pixel is represented by a single bit, meaning 1 byte holds 8 screen pixels. So, for each line of 256 pixels, 32 bytes are needed. However, for sake of efficiency, original Spectrum optimized screen memory layout for speed, but made it inconvenient for programming.
 
@@ -152,7 +152,7 @@ If we instead wanted to check if pixel at given coordinate is set or not, we wou
 \end{tcblisting}
 
 
-\subsection{Attributes memory}
+\subsection{Attributes Memory}
 
 Now that we know how to draw individual pixels, it's time to handle colour. Memory wise, it's stored immediately after pixel RAM, at memory locations \MemAddr{5800} - \MemAddr{5AFF}. Each byte represents colour and attributes for 8$\times$8 pixel block on screen. Byte contents are as follows:
 
@@ -208,6 +208,7 @@ Next inherites Spectrum border colour handling through \PortLink{ULA Control Por
 
 Note: border colour is set the same way regardless of graphics mode used. However some Layer 2 modes and Tileset may partially or fully cover border, effectively making it invisible to user.
 
+
 \subsection{Enhanced ULA Modes}
 
 ZX Spectrum Next also supports several enhanced ULA modes like Timex Sinclair Double Buffering, Timex Sinclair Hi-Res and Hi-Colour, etc. However with presence of Layer 2 and Tilemap modes, it's unlikely these will be used when programming new software on Next. Therefore they are not described here. If interested, read more on:
@@ -216,8 +217,9 @@ ZX Spectrum Next also supports several enhanced ULA modes like Timex Sinclair Do
 
 
 \subsection{ULA Registers}
+\label{zx_next_ula_registers}
 
-\subsubsection{ULA Control Port {\tt \$xxFE}}
+\subsubsection{ULA Control Port \MemAddr{xxFE}}
 
 \begin{NextPort}
 	\PortBits{7-5}
@@ -230,7 +232,7 @@ ZX Spectrum Next also supports several enhanced ULA modes like Timex Sinclair Do
 		\PortDesc{Border colour}
 \end{NextPort}
 
-Note: when reading this port with certain high byte values will read keyboard status. See section \ref{zx_next_keyboard} for details.
+Note: when reading this port with certain high byte values will read keyboard status. See section \ref{zx_next_keyboard_registers} for details.
 
 
 \pagebreak
