@@ -2,241 +2,241 @@
 
 \begin{instrtable}
 
-    \begin{instruction}{LD rr,nm} 
-        \Symbol{\SymLD{rr}{nm}}
-            \FlagsLDrr
-            \OpCode{00}{\OCT{rr}0}{001} 
-            \Hex{..}{3} 
-            \Cycles{3}{10}
-            \Comment{
-                \tt
-                \multirow{4}{*}{
-                    \begin{tabular}{ll}
-                        rr & \OCT{rr} \\
-                        \hline
-                        BC & 00 \\
-                        DE & 01 \\
-                        HL & 10 \\
-                        SP & 11 \\
-                    \end{tabular}
-                }
-            }
-        \SkipToOpCode 
-            \OpRange{m} 
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{} 
-    \end{instruction}
+	\begin{instruction}{LD rr,nm} 
+		\Symbol{\SymLD{rr}{nm}}
+			\FlagsLDrr
+			\OpCode{00}{\OCT{rr}0}{001} 
+			\Hex{..}{3} 
+			\Cycles{3}{10}
+			\Comment{
+				\tt
+				\multirow{4}{*}{
+					\begin{tabular}{ll}
+						rr & \OCT{rr} \\
+						\hline
+						BC & 00 \\
+						DE & 01 \\
+						HL & 10 \\
+						SP & 11 \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-    \begin{instruction}{LD IX,nm} 
-        \Symbol{\SymLD{IX}{nm}}
-            \FlagsLDrr
-            \OpCode{11}{011}{101}
-            \Hex{DD}{4}
-            \Cycles{4}{14}
-        \SkipToOpCode 
-            \OpCode{00}{100}{001}
-            \Hex{21}{}
-        \SkipToOpCode 
-            \OpRange{m} 
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{LD IX,nm} 
+		\Symbol{\SymLD{IX}{nm}}
+			\FlagsLDrr
+			\OpCode{11}{011}{101}
+			\Hex{DD}{4}
+			\Cycles{4}{14}
+		\SkipToOpCode 
+			\OpCode{00}{100}{001}
+			\Hex{21}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{LD IY,nm} 
-        \Symbol{\SymLD{IX}{nm}}
-            \FlagsLDrr
-            \OpCode{11}{111}{101}
-            \Hex{FD}{4}
-            \Cycles{4}{14}
-        \SkipToOpCode 
-            \OpCode{00}{100}{001}
-            \Hex{21}{}
-        \SkipToOpCode 
-            \OpRange{m} 
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{} 
-    \end{instruction}
+	\begin{instruction}{LD IY,nm} 
+		\Symbol{\SymLD{IX}{nm}}
+			\FlagsLDrr
+			\OpCode{11}{111}{101}
+			\Hex{FD}{4}
+			\Cycles{4}{14}
+		\SkipToOpCode 
+			\OpCode{00}{100}{001}
+			\Hex{21}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-    \begin{instruction}{LD HL,(nm)} 
-        \Symbol{\SymLD{H}{(nm+1)}}
-            \FlagsLDrr
-            \OpCode{00}{101}{010}
-            \Hex{2A}{3}
-            \Cycles{5}{16}
-        \SkipToSymbol
-            \Symbol{\SymLD{L}{(nm)}}
-            \FromSymbolToOpCode
-            \OpRange{m}
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{} 
-    \end{instruction}
+	\begin{instruction}{LD HL,(nm)} 
+		\Symbol{\SymLD{H}{(nm+1)}}
+			\FlagsLDrr
+			\OpCode{00}{101}{010}
+			\Hex{2A}{3}
+			\Cycles{5}{16}
+		\SkipToSymbol
+			\Symbol{\SymLD{L}{(nm)}}
+			\FromSymbolToOpCode
+			\OpRange{m}
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-    \begin{instruction}{LD rr,(nm)} 
-        \Symbol{\SymLD{rr\High}{(nm+1)}}
-            \FlagsLDrr
-            \OpCode{11}{101}{101}
-            \Hex{ED}{4}
-            \Cycles{6}{20}
-        \SkipToSymbol
-            \Symbol{\SymLD{rr\Low}{(nm)}}
-            \FromSymbolToOpCode
-            \OpCode{01}{\OCT{rr}1}{011}
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{m} 
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{} 
-    \end{instruction}
+	\begin{instruction}{LD rr,(nm)} 
+		\Symbol{\SymLD{rr\High}{(nm+1)}}
+			\FlagsLDrr
+			\OpCode{11}{101}{101}
+			\Hex{ED}{4}
+			\Cycles{6}{20}
+		\SkipToSymbol
+			\Symbol{\SymLD{rr\Low}{(nm)}}
+			\FromSymbolToOpCode
+			\OpCode{01}{\OCT{rr}1}{011}
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-    \begin{instruction}{LD IX,(nm)}
-        \Symbol{\SymLD{IX\High}{(nm+1)}}
-            \FlagsLDrr
-            \OpCode{11}{011}{101}
-            \Hex{DD}{4}
-            \Cycles{6}{20}
-        \SkipToSymbol
-            \Symbol{\SymLD{IX\Low}{(nm)}}
-            \FromSymbolToOpCode
-            \OpCode{00}{101}{010}
-            \Hex{2A}{}
-        \SkipToOpCode
-            \OpRange{m}
-            \Hex{..}{}
-        \SkipToOpCode
-            \OpRange{n}
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{LD IX,(nm)}
+		\Symbol{\SymLD{IX\High}{(nm+1)}}
+			\FlagsLDrr
+			\OpCode{11}{011}{101}
+			\Hex{DD}{4}
+			\Cycles{6}{20}
+		\SkipToSymbol
+			\Symbol{\SymLD{IX\Low}{(nm)}}
+			\FromSymbolToOpCode
+			\OpCode{00}{101}{010}
+			\Hex{2A}{}
+		\SkipToOpCode
+			\OpRange{m}
+			\Hex{..}{}
+		\SkipToOpCode
+			\OpRange{n}
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{LD IY,(nm)}
-        \Symbol{\SymLD{IY\High}{(nm+1)}}
-            \FlagsLDrr
-            \OpCode{11}{111}{101}
-            \Hex{FD}{4}
-            \Cycles{6}{20}
-        \SkipToSymbol
-            \Symbol{\SymLD{IY\Low}{(nn)}}
-            \FromSymbolToOpCode
-            \OpCode{00}{101}{010}
-            \Hex{2A}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{} 
-    \end{instruction}
+	\begin{instruction}{LD IY,(nm)}
+		\Symbol{\SymLD{IY\High}{(nm+1)}}
+			\FlagsLDrr
+			\OpCode{11}{111}{101}
+			\Hex{FD}{4}
+			\Cycles{6}{20}
+		\SkipToSymbol
+			\Symbol{\SymLD{IY\Low}{(nn)}}
+			\FromSymbolToOpCode
+			\OpCode{00}{101}{010}
+			\Hex{2A}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-    \begin{instruction}{LD (nm),HL}
-        \Symbol{\SymLD{(nn+1)}{H}}
-            \FlagsLDrr
-            \OpCode{00}{100}{010}
-            \Hex{22}{3} 
-            \Cycles{5}{16}
-        \SkipToSymbol
-            \Symbol{\SymLD{(nm)}{L}}
-            \FromSymbolToOpCode
-            \OpRange{m} 
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{} 
-    \end{instruction}
+	\begin{instruction}{LD (nm),HL}
+		\Symbol{\SymLD{(nn+1)}{H}}
+			\FlagsLDrr
+			\OpCode{00}{100}{010}
+			\Hex{22}{3} 
+			\Cycles{5}{16}
+		\SkipToSymbol
+			\Symbol{\SymLD{(nm)}{L}}
+			\FromSymbolToOpCode
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 	
-    \begin{instruction}{LD (nm),rr} 
-        \Symbol{\SymLD{(nm+1)}{rr\High}}
-            \FlagsLDrr
-            \OpCode{11}{101}{101}
-            \Hex{ED}{4}
-            \Cycles{6}{20}
-        \SkipToSymbol
-            \Symbol{\SymLD{(nm)}{rr\Low}}
-            \FromSymbolToOpCode
-            \OpCode{01}{\OCT{rr}0}{011}
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{m} 
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{} 
-    \end{instruction}
+	\begin{instruction}{LD (nm),rr} 
+		\Symbol{\SymLD{(nm+1)}{rr\High}}
+			\FlagsLDrr
+			\OpCode{11}{101}{101}
+			\Hex{ED}{4}
+			\Cycles{6}{20}
+		\SkipToSymbol
+			\Symbol{\SymLD{(nm)}{rr\Low}}
+			\FromSymbolToOpCode
+			\OpCode{01}{\OCT{rr}0}{011}
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 	
-    \begin{instruction}{LD (nm),IX} 
-        \Symbol{\SymLD{(nm+1)}{IX\High}}
-            \FlagsLDrr
-            \OpCode{11}{011}{101}
-            \Hex{DD}{4}
-            \Cycles{6}{20}
-        \SkipToSymbol
-            \Symbol{\SymLD{(nm)}{IX\Low}}
-            \FromSymbolToOpCode
-            \OpCode{00}{100}{010}
-            \Hex{22}{}
-        \SkipToOpCode 
-            \OpRange{m}
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{n}
-            \Hex{..}{} 
-    \end{instruction}
+	\begin{instruction}{LD (nm),IX} 
+		\Symbol{\SymLD{(nm+1)}{IX\High}}
+			\FlagsLDrr
+			\OpCode{11}{011}{101}
+			\Hex{DD}{4}
+			\Cycles{6}{20}
+		\SkipToSymbol
+			\Symbol{\SymLD{(nm)}{IX\Low}}
+			\FromSymbolToOpCode
+			\OpCode{00}{100}{010}
+			\Hex{22}{}
+		\SkipToOpCode 
+			\OpRange{m}
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n}
+			\Hex{..}{} 
+	\end{instruction}
 	
-    \begin{instruction}{LD (nm),IY} 
-        \Symbol{\SymLD{(nm+1)}{IY\High}}
-            \FlagsLDrr
-            \OpCode{11}{111}{101}
-            \Hex{FD}{4}
-            \Cycles{6}{20}
-        \SkipToSymbol
-            \Symbol{\SymLD{(nm)}{IY\Low}}
-            \FromSymbolToOpCode
-            \OpCode{00}{100}{010}
-            \Hex{22}{}
-        \SkipToOpCode 
-            \OpRange{m} 
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{} 
-    \end{instruction}
+	\begin{instruction}{LD (nm),IY} 
+		\Symbol{\SymLD{(nm+1)}{IY\High}}
+			\FlagsLDrr
+			\OpCode{11}{111}{101}
+			\Hex{FD}{4}
+			\Cycles{6}{20}
+		\SkipToSymbol
+			\Symbol{\SymLD{(nm)}{IY\Low}}
+			\FromSymbolToOpCode
+			\OpCode{00}{100}{010}
+			\Hex{22}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-    \begin{instruction}{LD SP,HL} 
-        \Symbol{\SymLD{SP}{HL}}
-            \FlagsLDrr
-            \OpCode{11}{111}{001}
-            \Hex{F9}{1}
-            \Cycles{1}{6}
-    \end{instruction}
+	\begin{instruction}{LD SP,HL} 
+		\Symbol{\SymLD{SP}{HL}}
+			\FlagsLDrr
+			\OpCode{11}{111}{001}
+			\Hex{F9}{1}
+			\Cycles{1}{6}
+	\end{instruction}
 	
-    \begin{instruction}{LD SP,IX} 
-        \Symbol{\SymLD{SP}{IX}}
-            \FlagsLDrr
-            \OpCode{11}{011}{101}
-            \Hex{DD}{2}
-            \Cycles{2}{10}
-        \SkipToOpCode 
-            \OpCode{11}{111}{001}
-            \Hex{F9}{}
-    \end{instruction}
+	\begin{instruction}{LD SP,IX} 
+		\Symbol{\SymLD{SP}{IX}}
+			\FlagsLDrr
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{2}{10}
+		\SkipToOpCode 
+			\OpCode{11}{111}{001}
+			\Hex{F9}{}
+	\end{instruction}
 	
-    \begin{lastinstruction}{LD SP,IY} 
-        \Symbol{\SymLD{SP}{IY}}
-            \FlagsLDrr
-            \OpCode{11}{111}{101}
-            \Hex{FD}{2}
-            \Cycles{2}{10}
-        \SkipToOpCode 
-            \OpCode{11}{111}{001}
-            \Hex{F9}{}
-    \end{lastinstruction}
+	\begin{lastinstruction}{LD SP,IY} 
+		\Symbol{\SymLD{SP}{IY}}
+			\FlagsLDrr
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{2}{10}
+		\SkipToOpCode 
+			\OpCode{11}{111}{001}
+			\Hex{F9}{}
+	\end{lastinstruction}
 		
 \end{instrtable}

@@ -23,29 +23,29 @@ This chapter presents all instructions at a glance for quick info and to easily 
 \subsubsection{Instruction Execution}
 
 \begin{tabular}{ll}
-    B & 
-        Number of bytes instruction uses in RAM\\
-    Mc\notet & 
-        Number of machine cycles instruction takes to complete\\
-    Ts\notet & 
-        Number of clock periods instruction requires to complete\\
+	B & 
+		Number of bytes instruction uses in RAM\\
+	Mc\notet & 
+		Number of machine cycles instruction takes to complete\\
+	Ts\notet & 
+		Number of clock periods instruction requires to complete\\
 \end{tabular}
 
 \subsubsection{Flags}
 
 \begin{tabular}{lp{13cm}}
-    SF & 
-        Set if 2-complement value is negative.\\
-    ZF\notet & 
-        Set if the result is zero. \\
-    HY\notet & 
-        The half-carry of an addition/subtraction (from bit 3 to 4). Needed for BCD correction with {\tt DAA} \\
-    PV\notet & 
-        This flag can either be the parity of the result ({\tt \FPP}), or 2-complement signed overflow ({\tt \FPV}): set if 2-complement value doesn’t fit in the register \\
-    NF\notet & 
-        Shows whether the last operation was an addition ({\tt 0}) or a subtraction ({\tt 1}). This information is needed for {\tt DAA} \\
-    CF\notet & 
-        The carry flag, set if there was a carry from the most significant bit \\
+	SF & 
+		Set if 2-complement value is negative.\\
+	ZF\notet & 
+		Set if the result is zero. \\
+	HY\notet & 
+		The half-carry of an addition/subtraction (from bit 3 to 4). Needed for BCD correction with {\tt DAA} \\
+	PV\notet & 
+		This flag can either be the parity of the result ({\tt \FPP}), or 2-complement signed overflow ({\tt \FPV}): set if 2-complement value doesn’t fit in the register \\
+	NF\notet & 
+		Shows whether the last operation was an addition ({\tt 0}) or a subtraction ({\tt 1}). This information is needed for {\tt DAA} \\
+	CF\notet & 
+		The carry flag, set if there was a carry from the most significant bit \\
 \end{tabular}
 
 (copied from section \ref{flags} as convenience)
@@ -53,13 +53,13 @@ This chapter presents all instructions at a glance for quick info and to easily 
 \subsubsection{Effects}
 
 \begin{tabular}{cl}
-    {\tt 0}/{\tt 1} & Flag is set to {\tt 0} or {\tt 1} \\
-    {\tt \FS} & Flag is modified according to operation \\
-    {\tt \FN} & Flag is not affected \\
-    {\tt \FU} & Effect on flag is unpredictable \\
-    {\tt VF} & P/V flag is used as overflow \\
-    {\tt PF} & P/V flag is used as parity \\
-    {\tt \FX} & Special case, see description under the table or in chapter \ref{instruction_details}
+	{\tt 0}/{\tt 1} & Flag is set to {\tt 0} or {\tt 1} \\
+	{\tt \FS} & Flag is modified according to operation \\
+	{\tt \FN} & Flag is not affected \\
+	{\tt \FU} & Effect on flag is unpredictable \\
+	{\tt VF} & P/V flag is used as overflow \\
+	{\tt PF} & P/V flag is used as parity \\
+	{\tt \FX} & Special case, see description under the table or in chapter \ref{instruction_details}
 \end{tabular}
 
 \subsubsection{Notes}

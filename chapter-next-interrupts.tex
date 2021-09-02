@@ -18,19 +18,19 @@
 Maskable interrupts on ZX Spectrum:
 
 \begin{itemize}
-    \item {\textbf Mode 0}: meant for interrupts triggered by external device. Instruction to be executed needs to be placed on data bus ({\tt RST} or {\tt CALL} for example). On ZX Spectrum this is the mode that is enabled by default when device powers up. However ROM soon sets up mode 1.
+	\item {\textbf Mode 0}: meant for interrupts triggered by external device. Instruction to be executed needs to be placed on data bus ({\tt RST} or {\tt CALL} for example). On ZX Spectrum this is the mode that is enabled by default when device powers up. However ROM soon sets up mode 1.
 	
-    \item {\textbf Mode 1}: on ZX Spectrum, this interrupt is triggered by vertical blanking if the screen refresh, roughly 50 times per second. When this occurs, current contents of {\tt PC} counter are pushed onto stack {\tt SP}, then address of \MemAddr{0038} is loaded and program stored on that location will start running. On ZX Spectrum Next this interrupt is responsible for updating system variable frame counter and scanning the keyboard.
+	\item {\textbf Mode 1}: on ZX Spectrum, this interrupt is triggered by vertical blanking if the screen refresh, roughly 50 times per second. When this occurs, current contents of {\tt PC} counter are pushed onto stack {\tt SP}, then address of \MemAddr{0038} is loaded and program stored on that location will start running. On ZX Spectrum Next this interrupt is responsible for updating system variable frame counter and scanning the keyboard.
 	
-    \item {\textbf Mode 2}: similar to {\tt IM 1} in frequency and handling, but uses vector table to jump to interrupt program instead of executing hard code ROM routine thus allowing user to setup their own interrupt handler.
+	\item {\textbf Mode 2}: similar to {\tt IM 1} in frequency and handling, but uses vector table to jump to interrupt program instead of executing hard code ROM routine thus allowing user to setup their own interrupt handler.
 \end{itemize}
 
 On ZX Spectrum Next interrupt handler can be replaced by either:
 
 \begin{itemize}
-    \item Setting Z80 to {\tt IM 2} mode and configuring custom interrupt handler routine
+	\item Setting Z80 to {\tt IM 2} mode and configuring custom interrupt handler routine
 	
-    \item Page out ROM (as described in section \ref{zx_next_memorypaging}) and replace it with RAM page with custom interrupt routine at address \MemAddr{0038}
+	\item Page out ROM (as described in section \ref{zx_next_memorypaging}) and replace it with RAM page with custom interrupt routine at address \MemAddr{0038}
 \end{itemize}
 
 You can also adjust timing of the interrupts with Next/TBBlue Feature Control Registers {\tt \$22} and {\tt \$23}.
@@ -38,36 +38,36 @@ You can also adjust timing of the interrupts with Next/TBBlue Feature Control Re
 \pagebreak
 Example of setting up custom interrupt vectors with {\tt IM 2}\footnote{Based on \url{http://codersbucket.blogspot.com/2015/04/interrupts-on-zx-spectrum-what-are.html}}:
 
-\begin{lstlisting}
-    DI
+\begin{tcblisting}{}
+	DI
 	
-    LD HL, vectorTable  ; HL=address of vector table
-    LD DE, IM2Handler   ; DE=address of IM2 handler routine
-    LD B, 128           ; 128 vector addresses
+	LD HL, vectorTable    ; HL=address of vector table
+	LD DE, IM2Handler     ; DE=address of IM2 handler routine
+	LD B, 128             ; 128 vector addresses
 
-    LD A, H
-    LD I, A             ; I=high byte of vector table
+	LD A, H
+	LD I, A               ; I=high byte of vector table
 
-setupVectorTable:       ; fills in vector table 128x
-    LD (HL), E
-    INC HL
-    LD (HL), D
-    INC HL
-    DJNZ setupVectorTable 
+setupVectorTable:         ; fills in vector table 128x
+	LD (HL), E
+	INC HL
+	LD (HL), D
+	INC HL
+	DJNZ setupVectorTable 
 
-    IM 2                ; enable mode 2 interrupts
-    EI
-    RET
+	IM 2                  ; enable mode 2 interrupts
+	EI
+	RET
 
-IM2Handler:             ; this is called every time IM2 interrupt occurs
-    ...                 ; implement interrupt handler here
-    EI                  ; when complete call EI
-    RETI                ; end return from interrupt
+IM2Handler:               ; this is called every time IM2 interrupt occurs
+	...                   ; implement interrupt handler here
+	EI                    ; when complete call EI
+	RETI                  ; end return from interrupt
 
-    ORG $F000           ; needs to be on 256 byte boundary
+	ORG &F000             ; needs to be on 256 byte boundary
 vectorTable:
-    DEFS 256            ; 128x2
-\end{lstlisting}
+	DEFS 256              ; 128x2
+\end{tcblisting}
 
 
 

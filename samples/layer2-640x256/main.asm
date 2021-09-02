@@ -37,7 +37,7 @@ start:
 	; Setup starting Layer2 16K bank and swap corresponding 8K
 	; memory bank into screen memory $C000 where L2 will read from
 	NEXTREG $12, START_16K_BANK
-	NEXTREG $70, %00100000    ; 640x256 256 colour mode
+	NEXTREG $70, %00100000    ; 640x256 16 colour mode
 
 	NEXTREG $1C, 1            ; Reset Layer 2 clip window reg index
 	NEXTREG $18, 0

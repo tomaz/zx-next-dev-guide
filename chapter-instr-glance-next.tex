@@ -5,242 +5,242 @@
 
 \begin{instrtable}
 
-    \begin{instruction}{ADD rr,A} 
-        \Symbol{\SymADD{rr}{A}}
-            \FlagsADDrra
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{2}{8}
-            \Comment{
-                \multirow{3}{*}{
-                    \tt
-                    \begin{tabular}{ll}
-                        rr & \OCT{rr} \\
-                        \hline
-                        HL & 01 \\
-                        DE & 10 \\
-                        BC & 11 \\
-                    \end{tabular}
-                }
-            }
-        \SkipToOpCode 
-            \OpCode{00}{110}{0\OCT{rr}}
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{ADD rr,A} 
+		\Symbol{\SymADD{rr}{A}}
+			\FlagsADDrra
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+			\Comment{
+				\multirow{3}{*}{
+					\tt
+					\begin{tabular}{ll}
+						rr & \OCT{rr} \\
+						\hline
+						HL & 01 \\
+						DE & 10 \\
+						BC & 11 \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode 
+			\OpCode{00}{110}{0\OCT{rr}}
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{ADD pp,nm} 
-        \Symbol{\SymADD{pp}{nm}}
-            \FlagsADDrrnn
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-            \Comment{
-                \multirow{6}{*}{
-                    \tt
-                    \begin{tabular}{ll}
-                        pp & \OCT{pp} \\
-                        \hline
-                        HL & 00 \\
-                        DE & 01 \\
-                        BC & 10 \\
-                    \end{tabular}
-                }
-            }
-        \SkipToOpCode 
-            \OpCode{00}{110}{1\OCT{pp}}
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{m} 
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{} 
-    \end{instruction}
+	\begin{instruction}{ADD pp,nm} 
+		\Symbol{\SymADD{pp}{nm}}
+			\FlagsADDrrnn
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+			\Comment{
+				\multirow{6}{*}{
+					\tt
+					\begin{tabular}{ll}
+						pp & \OCT{pp} \\
+						\hline
+						HL & 00 \\
+						DE & 01 \\
+						BC & 10 \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode 
+			\OpCode{00}{110}{1\OCT{pp}}
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{} 
+	\end{instruction}
 
-    \begin{instruction}{BSLA DE,B\See{1}} 
-        \Symbol{\SymBSLA[0]}
-            \FlagsBSLA
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{2}{8}
-        \SkipToOpCode 
-            \OpCode{00}{101}{000}
-            \Hex{28}{}
-    \end{instruction}
+	\begin{instruction}{BSLA DE,B\See{1}} 
+		\Symbol{\SymBSLA[0]}
+			\FlagsBSLA
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{00}{101}{000}
+			\Hex{28}{}
+	\end{instruction}
 
-    \begin{instruction}{BSRA DE,B\See{1}} 
-        \SymbolS{\SymBSRA[0]}
-            \FlagsBSRA
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{2}{8}
-        \SkipToSymbol
-            \SymbolP{\SymBSRA[1]}
-            \FromSymbolToOpCode
-            \OpCode{00}{101}{001}
-            \Hex{29}{}
-    \end{instruction}
+	\begin{instruction}{BSRA DE,B\See{1}} 
+		\SymbolS{\SymBSRA[0]}
+			\FlagsBSRA
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToSymbol
+			\SymbolP{\SymBSRA[1]}
+			\FromSymbolToOpCode
+			\OpCode{00}{101}{001}
+			\Hex{29}{}
+	\end{instruction}
 
-    \begin{instruction}{BSRL DE,B\See{1}} 
-        \SymbolS{\SymBSRL[0]}
-            \FlagsBSRL
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{2}{8}
-        \SkipToSymbol
-            \SymbolP{\SymBSRL[1]}
-            \FromSymbolToOpCode
-            \OpCode{00}{101}{010}
-            \Hex{2A}{}
-    \end{instruction}
+	\begin{instruction}{BSRL DE,B\See{1}} 
+		\SymbolS{\SymBSRL[0]}
+			\FlagsBSRL
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToSymbol
+			\SymbolP{\SymBSRL[1]}
+			\FromSymbolToOpCode
+			\OpCode{00}{101}{010}
+			\Hex{2A}{}
+	\end{instruction}
 
-    \begin{instruction}{BSRF DE,B\See{1}} 
-        \SymbolS{\SymBSRF[0]}
-            \FlagsBSRF
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{2}{8}
-        \SkipToSymbol
-            \SymbolP{\SymBSRF[1]}
-            \FromSymbolToOpCode
-            \OpCode{00}{101}{011}
-            \Hex{2B}{}
-    \end{instruction}
+	\begin{instruction}{BSRF DE,B\See{1}} 
+		\SymbolS{\SymBSRF[0]}
+			\FlagsBSRF
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToSymbol
+			\SymbolP{\SymBSRF[1]}
+			\FromSymbolToOpCode
+			\OpCode{00}{101}{011}
+			\Hex{2B}{}
+	\end{instruction}
 		
-    \begin{instruction}{BRLC DE,B\See{1}} 
-        \Symbol{\SymBRLC[0]}
-            \FlagsBRLC
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{2}{8}
-        \SkipToSymbol
-            \Symbol{\SymBRLC[1]}
-            \FromSymbolToOpCode
-            \OpCode{00}{101}{100}
-            \Hex{2C}{}
-    \end{instruction}
+	\begin{instruction}{BRLC DE,B\See{1}} 
+		\Symbol{\SymBRLC[0]}
+			\FlagsBRLC
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToSymbol
+			\Symbol{\SymBRLC[1]}
+			\FromSymbolToOpCode
+			\OpCode{00}{101}{100}
+			\Hex{2C}{}
+	\end{instruction}
 
-    \begin{instruction}{JP (C)} 
-        \Symbol{\SymJPC}
-            \FlagsJPc
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{3}{13}
-        \SkipToOpCode
-            \OpCode{10}{011}{000}
-            \Hex{98}{}
-    \end{instruction}
+	\begin{instruction}{JP (C)} 
+		\Symbol{\SymJPC}
+			\FlagsJPc
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{3}{13}
+		\SkipToOpCode
+			\OpCode{10}{011}{000}
+			\Hex{98}{}
+	\end{instruction}
 
-    \begin{instruction}{LDDX} 
-        \Symbol{\SymLDDX[0]}
-            \FlagsLDDX
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-        \SkipToSymbol
-            \Symbol{\SymLDDX[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{101}{100}
-            \Hex{AC}{}
-        \SkipToSymbol
-            \Symbol{\SymLDDX[2]}
-        \SkipToSymbol
-            \Symbol{\SymLDDX[3]}
-    \end{instruction}
+	\begin{instruction}{LDDX} 
+		\Symbol{\SymLDDX[0]}
+			\FlagsLDDX
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{\SymLDDX[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{101}{100}
+			\Hex{AC}{}
+		\SkipToSymbol
+			\Symbol{\SymLDDX[2]}
+		\SkipToSymbol
+			\Symbol{\SymLDDX[3]}
+	\end{instruction}
 
-    \begin{instruction}{LDDRX} 
-        \Symbol{do LDDX}
-            \FlagsLDDRX
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-            \Comment{if {\tt BC}=0}
-        \SkipToSymbol
-            \Symbol{while BC>0}
-            \FromSymbolToOpCode
-            \OpCode{10}{111}{100}
-            \Hex{BC}{}
-            \Cycles{5}{21}
-            \Comment{if {\tt BC}$\neq$0}
-    \end{instruction}
+	\begin{instruction}{LDDRX} 
+		\Symbol{do LDDX}
+			\FlagsLDDRX
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+			\Comment{if {\tt BC}=0}
+		\SkipToSymbol
+			\Symbol{while BC>0}
+			\FromSymbolToOpCode
+			\OpCode{10}{111}{100}
+			\Hex{BC}{}
+			\Cycles{5}{21}
+			\Comment{if {\tt BC}$\neq$0}
+	\end{instruction}
 
-    \begin{instruction}{LDIX} 
-        \Symbol{\SymLDIX[0]}
-            \FlagsLDIX
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-        \SkipToSymbol
-            \Symbol{\SymLDIX[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{100}{100}
-            \Hex{A4}{}
-        \SkipToSymbol
-            \Symbol{\SymLDIX[2]}
-        \SkipToSymbol
-            \Symbol{\SymLDIX[3]}
-    \end{instruction}
+	\begin{instruction}{LDIX} 
+		\Symbol{\SymLDIX[0]}
+			\FlagsLDIX
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{\SymLDIX[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{100}{100}
+			\Hex{A4}{}
+		\SkipToSymbol
+			\Symbol{\SymLDIX[2]}
+		\SkipToSymbol
+			\Symbol{\SymLDIX[3]}
+	\end{instruction}
 
-    \begin{instruction}{LDIRX} 
-        \Symbol{\SymLDIRX[0]}
-            \FlagsLDIRX
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-            \Comment{if {\tt BC}=0}
-        \SkipToSymbol
-            \Symbol{\SymLDIRX[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{110}{100}
-            \Hex{B4}{}
-            \Cycles{5}{21}
-            \Comment{if {\tt BC}$\neq$0}
-    \end{instruction}
+	\begin{instruction}{LDIRX} 
+		\Symbol{\SymLDIRX[0]}
+			\FlagsLDIRX
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+			\Comment{if {\tt BC}=0}
+		\SkipToSymbol
+			\Symbol{\SymLDIRX[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{110}{100}
+			\Hex{B4}{}
+			\Cycles{5}{21}
+			\Comment{if {\tt BC}$\neq$0}
+	\end{instruction}
 
-    \begin{instruction}{LDPIRX} 
-        \Symbol{\SymLDPIRX[0]}
-            \FlagsLDPIRX
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-            \Comment{if {\tt BC}=0}
-        \SkipToSymbol
-            \Symbol{\SymLDPIRX[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{110}{111}
-            \Hex{B7}{}
-            \Cycles{5}{21}
-            \Comment{if {\tt BC}$\neq$0}
-        \SkipToSymbol
-            \Symbol{\SymLDPIRX[2]}
-        \SkipToSymbol
-            \Symbol{\SymLDPIRX[3]}
-        \SkipToSymbol
-            \Symbol{\SymLDPIRX[4]}
-        \SkipToSymbol
-            \Symbol{\SymLDPIRX[5]}
-    \end{instruction}
+	\begin{instruction}{LDPIRX} 
+		\Symbol{\SymLDPIRX[0]}
+			\FlagsLDPIRX
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+			\Comment{if {\tt BC}=0}
+		\SkipToSymbol
+			\Symbol{\SymLDPIRX[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{110}{111}
+			\Hex{B7}{}
+			\Cycles{5}{21}
+			\Comment{if {\tt BC}$\neq$0}
+		\SkipToSymbol
+			\Symbol{\SymLDPIRX[2]}
+		\SkipToSymbol
+			\Symbol{\SymLDPIRX[3]}
+		\SkipToSymbol
+			\Symbol{\SymLDPIRX[4]}
+		\SkipToSymbol
+			\Symbol{\SymLDPIRX[5]}
+	\end{instruction}
 
-    \begin{lastinstruction}{LDWS} 
-        \Symbol{\SymLDWS[0]}
-            \FlagsLDWS
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-        \SkipToSymbol
-            \Symbol{\SymLDWS[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{100}{101}
-            \Hex{A5}{}
-        \SkipToSymbol
-            \Symbol{\SymLDWS[2]}
-    \end{lastinstruction}
+	\begin{lastinstruction}{LDWS} 
+		\Symbol{\SymLDWS[0]}
+			\FlagsLDWS
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{\SymLDWS[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{100}{101}
+			\Hex{A5}{}
+		\SkipToSymbol
+			\Symbol{\SymLDWS[2]}
+	\end{lastinstruction}
 
 \end{instrtable}
 
 \begin{notestable}
-    \NoteItem{\See{1}Core v2+ only}
-    \NoteItem{\See{2}PV set to {\tt 1} if {\tt D} was {\tt \$7F} before increment, otherwise {\tt 0}}
+	\NoteItem{\See{1}Core v2+ only}
+	\NoteItem{\See{2}PV set to {\tt 1} if {\tt D} was {\tt \$7F} before increment, otherwise {\tt 0}}
 \end{notestable}
 
 % we need to have "continue" within minipage, and pagebreak outside...
@@ -255,178 +255,178 @@
 
 \begin{instrtable}	
 
-    % we need some extra spacing to accomodate the image; it's negative because \\ adds a line, but we don't need full line of space...
-    \\[-9pt]
+	% we need some extra spacing to accomodate the image; it's negative because \\ adds a line, but we don't need full line of space...
+	\\[-9pt]
 
-    \begin{instruction}{MIRROR A}
-        \Symbol{\multirow{2}{*}{\SymMIRROR{A}}}
-            \FlagsMIRRORa
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{2}{8}
-        \SkipToOpCode 
-            \OpCode{00}{100}{100}
-            \Hex{24}{}
-    \end{instruction}
+	\begin{instruction}{MIRROR A}
+		\Symbol{\multirow{2}{*}{\SymMIRROR{A}}}
+			\FlagsMIRRORa
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{00}{100}{100}
+			\Hex{24}{}
+	\end{instruction}
 	
-    % we need some extra spacing to accomodate the image
-    \\[0.5ex]
+	% we need some extra spacing to accomodate the image
+	\\[0.5ex]
 
-    \begin{instruction}{MUL D,E} 
-        \Symbol{\SymMUL}
-            \FlagsMULde
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{2}{8}
-        \SkipToOpCode 
-            \OpCode{00}{110}{000}
-            \Hex{30}{}
-    \end{instruction}
+	\begin{instruction}{MUL D,E} 
+		\Symbol{\SymMUL}
+			\FlagsMULde
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{00}{110}{000}
+			\Hex{30}{}
+	\end{instruction}
 
-    \begin{instruction}{NEXTREG n,A} 
-        \Symbol{\SymNEXTREG{A}}
-            \FlagsNEXTREGna
-            \OpCode{11}{101}{101} 
-            \Hex{ED}{3}
-            \Cycles{4}{17}
-        \SkipToOpCode 
-            \OpCode{10}{010}{010}
-            \Hex{92}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{NEXTREG n,A} 
+		\Symbol{\SymNEXTREG{A}}
+			\FlagsNEXTREGna
+			\OpCode{11}{101}{101} 
+			\Hex{ED}{3}
+			\Cycles{4}{17}
+		\SkipToOpCode 
+			\OpCode{10}{010}{010}
+			\Hex{92}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{NEXTREG n,m}
-        \Symbol{\SymNEXTREG{m}}
-            \FlagsNEXTREGnn
-            \OpCode{11}{101}{101}
-            \Hex{ED}{3}
-            \Cycles{5}{20}
-        \SkipToOpCode 
-            \OpCode{10}{010}{001}
-            \Hex{91}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{m} 
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{NEXTREG n,m}
+		\Symbol{\SymNEXTREG{m}}
+			\FlagsNEXTREGnn
+			\OpCode{11}{101}{101}
+			\Hex{ED}{3}
+			\Cycles{5}{20}
+		\SkipToOpCode 
+			\OpCode{10}{010}{001}
+			\Hex{91}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+	\end{instruction}
 	
-    \begin{instruction}{OUTINB} 
-        \Symbol{\SymOUTINB[0]}
-            \FlagsOUTINB
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{4}{16}
-        \SkipToSymbol
-            \Symbol{\SymOUTINB[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{010}{000}
-            \Hex{90}{}
-    \end{instruction}
+	\begin{instruction}{OUTINB} 
+		\Symbol{\SymOUTINB[0]}
+			\FlagsOUTINB
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{4}{16}
+		\SkipToSymbol
+			\Symbol{\SymOUTINB[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{010}{000}
+			\Hex{90}{}
+	\end{instruction}
 
-    \begin{instruction}{PIXELAD} 
-        \SymbolS{\SymPIXELAD[0]}
-            \FlagsPIXELAD
-            \OpCode{11}{101}{101}
-            \Hex{ED}{3}
-            \Cycles{2}{8}
-        \SkipToSymbol
-            \SymbolP{\SymPIXELAD[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{010}{100}
-            \Hex{94}{}
-        \SkipToSymbol
-            \SymbolP{\SymPIXELAD[2]}
-        \SkipToSymbol
-            \SymbolP{\SymPIXELAD[3]}
-        \SkipToSymbol
-            \SymbolP{\SymPIXELAD[4]}
-    \end{instruction}
+	\begin{instruction}{PIXELAD} 
+		\SymbolS{\SymPIXELAD[0]}
+			\FlagsPIXELAD
+			\OpCode{11}{101}{101}
+			\Hex{ED}{3}
+			\Cycles{2}{8}
+		\SkipToSymbol
+			\SymbolP{\SymPIXELAD[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{010}{100}
+			\Hex{94}{}
+		\SkipToSymbol
+			\SymbolP{\SymPIXELAD[2]}
+		\SkipToSymbol
+			\SymbolP{\SymPIXELAD[3]}
+		\SkipToSymbol
+			\SymbolP{\SymPIXELAD[4]}
+	\end{instruction}
 
-    \begin{instruction}{PIXELDN} 
-        \Symbol{\SymPIXELDN[0]}
-            \FlagsPIXELDN
-            \OpCode{11}{101}{101}
-            \Hex{ED}{3}
-            \Cycles{2}{8}
-        \SkipToSymbol
-            \Symbol{\SymPIXELDN[1]}
-            \FromSymbolToOpCode
-            \OpCode{10}{010}{011}
-            \Hex{93}{}
-        \SkipToSymbol
-            \Symbol{\SymPIXELDN[2]}
-        \SkipToSymbol
-            \Symbol{\SymPIXELDN[3]}
-        \SkipToSymbol
-            \Symbol{\SymPIXELDN[4]}
-        \SkipToSymbol
-            \Symbol{\SymPIXELDN[5]}
-    \end{instruction}
+	\begin{instruction}{PIXELDN} 
+		\Symbol{\SymPIXELDN[0]}
+			\FlagsPIXELDN
+			\OpCode{11}{101}{101}
+			\Hex{ED}{3}
+			\Cycles{2}{8}
+		\SkipToSymbol
+			\Symbol{\SymPIXELDN[1]}
+			\FromSymbolToOpCode
+			\OpCode{10}{010}{011}
+			\Hex{93}{}
+		\SkipToSymbol
+			\Symbol{\SymPIXELDN[2]}
+		\SkipToSymbol
+			\Symbol{\SymPIXELDN[3]}
+		\SkipToSymbol
+			\Symbol{\SymPIXELDN[4]}
+		\SkipToSymbol
+			\Symbol{\SymPIXELDN[5]}
+	\end{instruction}
 
-    \begin{instruction}{PUSH nm}
-        \Symbol{\SymPUSHnn[0]{n}{m}}
-            \FlagsPUSHnn
-            \OpCode{11}{101}{101}
-            \Hex{ED}{3}
-            \Cycles{6}{23}
-        \SkipToSymbol
-            \Symbol{\SymPUSHnn[1]{n}{m}}
-            \FromSymbolToOpCode
-            \OpCode{10}{001}{010}
-            \Hex{8A}{}
-        \SkipToSymbol
-            \Symbol{\SymPUSHnn[2]{n}{m}}
-            \FromSymbolToOpCode
-            \OpRange{\hspace*{-0.5ex}n\See{1}\hspace*{-0.5ex}} 
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{\hspace*{-0.5ex}m\See{1}\hspace*{-0.5ex}} 
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{PUSH nm}
+		\Symbol{\SymPUSHnn[0]{n}{m}}
+			\FlagsPUSHnn
+			\OpCode{11}{101}{101}
+			\Hex{ED}{3}
+			\Cycles{6}{23}
+		\SkipToSymbol
+			\Symbol{\SymPUSHnn[1]{n}{m}}
+			\FromSymbolToOpCode
+			\OpCode{10}{001}{010}
+			\Hex{8A}{}
+		\SkipToSymbol
+			\Symbol{\SymPUSHnn[2]{n}{m}}
+			\FromSymbolToOpCode
+			\OpRange{\hspace*{-0.5ex}n\See{1}\hspace*{-0.5ex}} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{\hspace*{-0.5ex}m\See{1}\hspace*{-0.5ex}} 
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{SETAE} 
-        \Symbol{\SymSETAE}
-            \FlagsSETAE
-            \OpCode{11}{101}{101}
-            \Hex{ED}{3}
-            \Cycles{2}{8}
-        \SkipToOpCode 
-            \OpCode{10}{010}{101}
-            \Hex{95}{}
-    \end{instruction}
+	\begin{instruction}{SETAE} 
+		\Symbol{\SymSETAE}
+			\FlagsSETAE
+			\OpCode{11}{101}{101}
+			\Hex{ED}{3}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{10}{010}{101}
+			\Hex{95}{}
+	\end{instruction}
 
-    \begin{instruction}{SWAPNIB}
-        \Symbol{\multirow[b]{1}{*}{\SymSWAPNIB[0]}}
-            \FlagsSWAPNIB
-            \OpCode{11}{101}{101}
-            \Hex{ED}{2}
-            \Cycles{2}{8}
-        \SkipToOpCode 
-            \OpCode{00}{100}{011}
-            \Hex{23}{}
-    \end{instruction}
+	\begin{instruction}{SWAPNIB}
+		\Symbol{\multirow[b]{1}{*}{\SymSWAPNIB[0]}}
+			\FlagsSWAPNIB
+			\OpCode{11}{101}{101}
+			\Hex{ED}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{00}{100}{011}
+			\Hex{23}{}
+	\end{instruction}
 
-    \begin{lastinstruction}{TEST n} 
-        \Symbol{\SymTEST}
-            \FlagsTESTn
-            \OpCode{11}{101}{101}
-            \Hex{ED}{3}
-            \Cycles{3}{11}
-        \SkipToOpCode 
-            \OpCode{00}{100}{111}
-            \Hex{27}{}
-    \end{lastinstruction}
+	\begin{lastinstruction}{TEST n} 
+		\Symbol{\SymTEST}
+			\FlagsTESTn
+			\OpCode{11}{101}{101}
+			\Hex{ED}{3}
+			\Cycles{3}{11}
+		\SkipToOpCode 
+			\OpCode{00}{100}{111}
+			\Hex{27}{}
+	\end{lastinstruction}
 
 \end{instrtable}
 
 \NoteTableSingleItemSpaceCorrection
 
 \begin{notestable}
-    \NoteItem{\See{1} This is not mistake, {\tt nm} operand is in fact encoded in big-endian}
+	\NoteItem{\See{1} This is not mistake, {\tt nm} operand is in fact encoded in big-endian}
 \end{notestable}
 
 \end{minipage}

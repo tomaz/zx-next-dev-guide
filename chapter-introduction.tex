@@ -34,62 +34,62 @@ github repository also includes companion source code. Sample projects were crea
 
 \pagebreak % we want list of all tools and software to be on the same page
 \begin{description}[style=unboxed,leftmargin=0cm]
-    \item[Visual Studio Code (\url{https://code.visualstudio.com/})]\hfill
+	\item[Visual Studio Code (\url{https://code.visualstudio.com/})]\hfill
 	
-    My code editor of choice! I use it with the following plugins:
+	My code editor of choice! I use it with the following plugins:
 
-    \begin{description}[topsep=1pt,labelindent=2em,leftmargin=2em]
-        \item[DeZog plugin (\url{https://github.com/maziac/DeZog})]\hfill
+	\begin{description}[topsep=1pt,labelindent=2em,leftmargin=2em]
+		\item[DeZog plugin (\url{https://github.com/maziac/DeZog})]\hfill
 	
-        Essential plugin; features list is too large to even attempt to enumerate here, but essentially turns VS Code into fully fledged debugging environment.
+		Essential plugin; features list is too large to even attempt to enumerate here, but essentially turns VS Code into fully fledged debugging environment.
 
-        \item[Z80 Macro-Assembler (\url{https://github.com/mborik/z80-macroasm-vscode})]\hfill
+		\item[Z80 Macro-Assembler (\url{https://github.com/mborik/z80-macroasm-vscode})]\hfill
 		
-        Another must-have plugin for Z80 assembly developer; syntax highlighting, code formatting and code completion, renaming etc.
+		Another must-have plugin for Z80 assembly developer; syntax highlighting, code formatting and code completion, renaming etc.
 
-        \item[Z80 Instruction Set (\url{https://github.com/maziac/z80-instruction-set})]\hfill
+		\item[Z80 Instruction Set (\url{https://github.com/maziac/z80-instruction-set})]\hfill
 		
-        Adds mouse hover action above any Z80N instruction for quick info.
+		Adds mouse hover action above any Z80N instruction for quick info.
 
-        \item[Z80 Assembly meter (\url{https://github.com/theNestruo/z80-asm-meter-vscode})]\hfill
+		\item[Z80 Assembly meter (\url{https://github.com/theNestruo/z80-asm-meter-vscode})]\hfill
 		
-        Shows the sum of clock cycles and machine code bytes for all instructions in current selection.
-    \end{description}
+		Shows the sum of clock cycles and machine code bytes for all instructions in current selection.
+	\end{description}
 	
-    \item[sjasmplus 1.18.2 (\url{https://github.com/z00m128/sjasmplus})]\hfill
+	\item[sjasmplus 1.18.2 (\url{https://github.com/z00m128/sjasmplus})]\hfill
 
-    Source code includes sjasmplus specific directives for creating nex files at top and bottom of {\tt main.asm} files; if you use different compiler, you may need to tweak or comment them out.
+	Source code includes sjasmplus specific directives for creating nex files at top and bottom of {\tt main.asm} files; if you use different compiler, you may need to tweak or comment them out.
 
-    VS Code projects are setup to expect binaries in specific folder. You will need to download and copy so that {\tt sjasmplus.exe} is located in {\tt Tools/sjasmplus}.
+	VS Code projects are setup to expect binaries in specific folder. You will need to download and copy so that {\tt sjasmplus.exe} is located in {\tt Tools/sjasmplus}.
 
-    \item[CSpect 2.13.0 (\url{http://cspect.org})]\hfill
+	\item[CSpect 2.13.0 (\url{http://cspect.org})]\hfill
 
-    Similar to sjasmplus, CSpect binaries are expected in specific folder. To install, download and copy so that {\tt CSpect.exe} is located in {\tt Tools/CSpect} folder.
+	Similar to sjasmplus, CSpect binaries are expected in specific folder. To install, download and copy so that {\tt CSpect.exe} is located in {\tt Tools/CSpect} folder.
 
-    \item[CSpect Next Image (\url{http://www.zxspectrumnext.online/#sd})]\hfill
+	\item[CSpect Next Image (\url{http://www.zxspectrumnext.online/#sd})]\hfill
 
-    You will also need to download ZX Spectrum Next image file and copy it to the folder where {\tt CSpect.exe} is located. I use 2GB image, hence VS Code project file is configured for that. If you use different image, make sure to update {\tt .vscode/tasks.json} file.
+	You will also need to download ZX Spectrum Next image file and copy it to the folder where {\tt CSpect.exe} is located. I use 2GB image, hence VS Code project file is configured for that. If you use different image, make sure to update {\tt .vscode/tasks.json} file.
 	
-    \item[DeZog CSpect plugin (\url{https://github.com/maziac/DeZogPlugin})]\hfill
+	\item[DeZog CSpect plugin (\url{https://github.com/maziac/DeZogPlugin})]\hfill
 
-    DeZog requires this plugin to be installed in order to work with CSpect. To install, download and copy to the same folder where {\tt CSpect.exe} is located. Make sure plugin version matches DeZog version!
+	DeZog requires this plugin to be installed in order to work with CSpect. To install, download and copy to the same folder where {\tt CSpect.exe} is located. Make sure plugin version matches DeZog version!
 
 \end{description}
 
 {
-    \footnotesize
+	\footnotesize
 
-    \begin{description}[topsep=1pt,itemsep=1pt,labelindent=0pt,leftmargin=0pt]		
-        \item[Note:] you need to have CSpect launched before you can run the samples. I created couple tasks\footnotemark~for it: open VS Code command palette ({\tt Ctrl+Shift+P} shortcut on my installation) and select \textit{Tasks: Run Task} option, then select \textit{Launch CSpect} from list. This is only needed once, afterwards use \textit{Run \textgreater ~Start Debugging} from main menu to compile and launch the program.
+	\begin{description}[topsep=1pt,itemsep=1pt,labelindent=0pt,leftmargin=0pt]		
+		\item[Note:] you need to have CSpect launched before you can run the samples. I created couple tasks\footnotemark~for it: open VS Code command palette ({\tt Ctrl+Shift+P} shortcut on my installation) and select \textit{Tasks: Run Task} option, then select \textit{Launch CSpect} from list. This is only needed once, afterwards use \textit{Run \textgreater ~Start Debugging} from main menu to compile and launch the program.
 
-        \item[Note:] default DeZog port of 11000 doesn't work on my computer, so I changed it to 13000. This needs to be managed in 2 places: {\tt .vscode/launch.json} and on plugin side. Companion code repository already includes the setup needed, including {\tt DeZogPlugin.dll.config} file, so it should work out of the box.
+		\item[Note:] default DeZog port of 11000 doesn't work on my computer, so I changed it to 13000. This needs to be managed in 2 places: {\tt .vscode/launch.json} and on plugin side. Companion code repository already includes the setup needed, including {\tt DeZogPlugin.dll.config} file, so it should work out of the box.
 	
-        \item[Note:] sample projects are ready for ZEsarUX as well, select the option from debug panel in VS Code.
-    \end{description}
+		\item[Note:] sample projects are ready for ZEsarUX as well, select the option from debug panel in VS Code.
+	\end{description}
 }
 
 \footnotetext{
-    Unfortunately with latest VS Code versions, workspace tasks stopped working. However there is a workaround: open {\tt .vscode/tasks.json} file from any of the sample projects, scroll down a little and copy {\tt Launch CSpect} and {\tt Launch ZEsarUX} tasks to user tasks. You can do this all from within VS Code. To open user tasks file, open command palette and start typing {\tt open user tasks}, then select the option from drop down menu.
+	Unfortunately with latest VS Code versions, workspace tasks stopped working. However there is a workaround: open {\tt .vscode/tasks.json} file from any of the sample projects, scroll down a little and copy {\tt Launch CSpect} and {\tt Launch ZEsarUX} tasks to user tasks. You can do this all from within VS Code. To open user tasks file, open command palette and start typing {\tt open user tasks}, then select the option from drop down menu.
 }
 
 
@@ -115,23 +115,23 @@ As the saying ``standing on the shoulders of giants'' goes, this book is also ba
 If interested, you can find it at \url{http://www.myquest.nl/z80undocumented/}.
 
 \begin{description}[style=unboxed,leftmargin=0cm]
-    \item[Jan]\hfill
+	\item[Jan]\hfill
 	
-    \url{http://www.myquest.nl/z80undocumented/}\\
-    Email \email{jw}{dds}{nl}\\
-    Twitter {\tt @janwilmans}
+	\url{http://www.myquest.nl/z80undocumented/}\\
+	Email \email{jw}{dds}{nl}\\
+	Twitter {\tt @janwilmans}
 
-    Interested in emulation for a long time, but a few years after Sean started writing this document, I have also started writing my own MSX emulator in 2003 and I've used this document quite a lot. Now (2005) the Z80 emulation is nearing perfection, I decided to add what extra I have learned and comments various people have sent to Sean, to this document.
+	Interested in emulation for a long time, but a few years after Sean started writing this document, I have also started writing my own MSX emulator in 2003 and I've used this document quite a lot. Now (2005) the Z80 emulation is nearing perfection, I decided to add what extra I have learned and comments various people have sent to Sean, to this document.
 
-    I have restyled the document (although very little) to fit my personal needs and I have checked a lot of things that were already in here.
+	I have restyled the document (although very little) to fit my personal needs and I have checked a lot of things that were already in here.
  
-    \item[Sean]\hfill
+	\item[Sean]\hfill
 
-    \url{http://www.msxnet.org/}
+	\url{http://www.msxnet.org/}
 	
-    Ever since I first started working on an MSX emulator, I've been very interested in getting the emulation absolutely correct - including the undocumented features. Not just to make sure that all games work, but also to make sure that if a program crashes, it crashes exactly the same way if running on an emulator as on the real thing. Only then is perfection achieved.
+	Ever since I first started working on an MSX emulator, I've been very interested in getting the emulation absolutely correct - including the undocumented features. Not just to make sure that all games work, but also to make sure that if a program crashes, it crashes exactly the same way if running on an emulator as on the real thing. Only then is perfection achieved.
 
-    I set about collecting information. I found pieces of information on the Internet, but not everything there is to know. So I tried to fill in the gaps, the results of which I put on my website. Various people have helped since then; this is the result of all those efforts and to my knowledge this document is the most complete.
+	I set about collecting information. I found pieces of information on the Internet, but not everything there is to know. So I tried to fill in the gaps, the results of which I put on my website. Various people have helped since then; this is the result of all those efforts and to my knowledge this document is the most complete.
 \end{description}
 
 
@@ -140,29 +140,34 @@ If interested, you can find it at \url{http://www.myquest.nl/z80undocumented/}.
 
 \begin{description}
 
-    \item[11th May 2021 (Version 1.0)]
-    Added ZX Spectrum Next information and instructions and restructured text for better maintainability and readability.
+	% when adding versions:
+	% 1. replace `\LatestReleaseDate` with value from macro definition in `defines.tex`
+	% 2. update `\LatestReleaseDate` with new value in `defines.tex`
+	% 3. create new entry here using now updated values (copy item definition from previous version)
 
-    \item[18th September 2005 (version 0.91)]
-    Corrected a textual typo in the R register and memory refresh section, thanks to David Aubespin. Corrected the contradiction in the {\tt DAA} section saying the {\tt NF} flag was both affected and unchanged :) thanks to Dan Meir.Added an error in official documentation about that way Interrupt Mode 2 works, thanks to Aaldert Dekker.
+	\item[\LatestReleaseDate]
+	Added ZX Spectrum Next information and instructions and restructured text for better maintainability and readability.
+
+	\item[18 September 2005]
+	Corrected a textual typo in the R register and memory refresh section, thanks to David Aubespin. Corrected the contradiction in the {\tt DAA} section saying the {\tt NF} flag was both affected and unchanged :) thanks to Dan Meir.Added an error in official documentation about that way Interrupt Mode 2 works, thanks to Aaldert Dekker.
 	
-    \item[15th Juni 2005 (version 0.9)]
-    Corrected improper notation of {\tt JP x,nn} mnemonics in opcode list, thanks to Laurens Holst. Corrected a mistake in the {\tt INI}, {\tt INIR}, {\tt IND}, {\tt INDR} section and documented a mistake in official Z80 documentation concerning Interrupt Mode 2, thanks to Boris Donko. Thanks to Aaldert Dekker for his ideas, for verifying many assumptions and writing instruction exercisers for various instruction groups.
+	\item[15 June 2005]
+	Corrected improper notation of {\tt JP x,nn} mnemonics in opcode list, thanks to Laurens Holst. Corrected a mistake in the {\tt INI}, {\tt INIR}, {\tt IND}, {\tt INDR} section and documented a mistake in official Z80 documentation concerning Interrupt Mode 2, thanks to Boris Donko. Thanks to Aaldert Dekker for his ideas, for verifying many assumptions and writing instruction exercisers for various instruction groups.
 
-    \item[18th May 2005 (version 0.8)]
-    Added an alphabetical list of instructions for easy reference and corrected an error in the 16-bit arithmetic section, {\tt SBC HL,nn} sets the NF flag just like other subtraction instructions, thanks to Fredrik Olssen for pointing that out.
+	\item[18 May 2005]
+	Added an alphabetical list of instructions for easy reference and corrected an error in the 16-bit arithmetic section, {\tt SBC HL,nn} sets the NF flag just like other subtraction instructions, thanks to Fredrik Olssen for pointing that out.
 
-    \item[4th April 2005 (version 0.7)]
-    I (Jan \email{jw}{dds}{nl}) will be maintaining this document from this version on. I restyled the document to fix the page numbering issues, corrected an error in the I/O Block Instructions section, added graphics for the {\tt RLD} and {\tt RRD} instructions and corrected the spelling in several places.
+	\item[4 April 2005]
+	I (Jan \email{jw}{dds}{nl}) will be maintaining this document from this version on. I restyled the document to fix the page numbering issues, corrected an error in the I/O Block Instructions section, added graphics for the {\tt RLD} and {\tt RRD} instructions and corrected the spelling in several places.
 
-    \item[20th November 2003 (version 0.6)]
-    Again, thanks to Ramsoft, added PV flag to {\tt OUTI}, {\tt INI} and friends. Minor fix to {\tt DAA} tables, other minor fixes.
+	\item[20 November 2003]
+	Again, thanks to Ramsoft, added PV flag to {\tt OUTI}, {\tt INI} and friends. Minor fix to {\tt DAA} tables, other minor fixes.
 
-    \item[13th November 2003 (version 0.5)]
-    Thanks to Ramsoft, add the correct tables for the {\tt DAA} instruction (section \ref{daa}). Minor corrections \& typos, thanks to Jim Battle, David Sutherland and most of all Fred Limouzin.
+	\item[13 November 2003]
+	Thanks to Ramsoft, add the correct tables for the {\tt DAA} instruction (section \ref{daa}). Minor corrections \& typos, thanks to Jim Battle, David Sutherland and most of all Fred Limouzin.
 
-    \item[September 2001 (version 0.4)]
-    Previous documents I had written were in plain text and Microsoft Word, which I now find very embarrassing, so I decided to combine them all and use {\LaTeX}. Apart from a full re-write, the only changed information is ``Power on defaults'' (section \ref{pon}) and the algorithm for the CF and HF flags for {\tt OTIR} and friends (section \ref{block_io}).
+	\item[September 2001]
+	Previous documents I had written were in plain text and Microsoft Word, which I now find very embarrassing, so I decided to combine them all and use {\LaTeX}. Apart from a full re-write, the only changed information is ``Power on defaults'' (section \ref{pon}) and the algorithm for the CF and HF flags for {\tt OTIR} and friends (section \ref{block_io}).
 
 \end{description}
 

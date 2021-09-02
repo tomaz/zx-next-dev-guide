@@ -36,32 +36,32 @@ All tiles definitions are specified in contiguous memory block. The offset of ti
 Tilemap data specifies tile definition index for each of the 40x32 or 80x32 tiles. Each tile takes 2 bytes:
 
 \begin{BitTableWord}
-    \BitStartMulti{4}{\rotatebox[origin=c]{90}{Palette Offset}} &
-    \rotatebox[origin=c]{90}{X Mirror} &
-    \rotatebox[origin=c]{90}{Y Mirror} &
-    \rotatebox[origin=c]{90}{Rotate} &
-    \rotatebox[origin=c]{90}{ULA Mode} &
-    \BitMulti{8}{\rotatebox[origin=c]{90}{Tile Index}} \\
+	\BitStartMulti{4}{\rotatebox[origin=c]{90}{Palette Offset}} &
+	\rotatebox[origin=c]{90}{X Mirror} &
+	\rotatebox[origin=c]{90}{Y Mirror} &
+	\rotatebox[origin=c]{90}{Rotate} &
+	\rotatebox[origin=c]{90}{ULA Mode} &
+	\BitMulti{8}{\rotatebox[origin=c]{90}{Tile Index}} \\
 \end{BitTableWord}
 
 \begin{basedescript}{
-    \desclabelstyle{\multilinelabel}
-    \desclabelwidth{3cm}}
-    \setlength\itemsep{0pt}
+	\desclabelstyle{\multilinelabel}
+	\desclabelwidth{3cm}}
+	\setlength\itemsep{0pt}
 
-    \newcommand{\RightItem}[1]{\item[#1]}
+	\newcommand{\RightItem}[1]{\item[#1]}
 
-    \RightItem{Palette Offset} 4-bit palette offset for this tile. This allows shifting colours to other 16-colour ``banks'' thus allowing us to reach the whole 256 colours from palette.
+	\RightItem{Palette Offset} 4-bit palette offset for this tile. This allows shifting colours to other 16-colour ``banks'' thus allowing us to reach the whole 256 colours from palette.
 	
-    \RightItem{X Mirror} If {\tt 1}, this tile will be mirrored in X direction.
+	\RightItem{X Mirror} If {\tt 1}, this tile will be mirrored in X direction.
 
-    \RightItem{Y Mirror} If {\tt 1}, this tile will be mirrored in Y direction.
+	\RightItem{Y Mirror} If {\tt 1}, this tile will be mirrored in Y direction.
 	
-    \RightItem{Rotate} If {\tt 1}, this tile will be rotated 90\Deg clockwise.
+	\RightItem{Rotate} If {\tt 1}, this tile will be rotated 90\Deg clockwise.
 	
-    \RightItem{ULA Mode} If {\tt 1}, this tile will be rendered on top, if {\tt 0} below ULA display. However in 512 tile mode, this is the 8th bit of tile index.
+	\RightItem{ULA Mode} If {\tt 1}, this tile will be rendered on top, if {\tt 0} below ULA display. However in 512 tile mode, this is the 8th bit of tile index.
 	
-    \RightItem{Tile Index} 8-bit tile index within the tile definitions.
+	\RightItem{Tile Index} 8-bit tile index within the tile definitions.
 \end{basedescript}
 
 However, it's possible to eliminate attributes byte by setting bit 5 in \PortLink{Tilemap Control Register}{6B}. This only leaves 8-bit tile index. Tileset therefore occupies only half the memory. But we lose the option to specify attributes for each tile separately. Instead attributes for all tiles are taken from \PortLink{Default Tilemap Attribute Register}{6C}.
@@ -76,18 +76,18 @@ Tilemap layer is closely tied with ULA. Memory wise, it always exists in 16K slo
 If both ULA and tilemap are used, memory should be arranged to avoid overlap. Given ULA pixel and attributes memory occupied memory addresses \MemAddr{4000}-\MemAddr{5AFF}, this leaves \MemAddr{5B00}-\MemAddr{7FFF} for tilemap. If we also take into account various system variables that reside on top of ULA attributes, \MemAddr{6000} should be used for starting address. This leaves us:
 
 {
-    \def\arraystretch{1.2}
-    \begin{tabular}{|l|l|l|l|l|}
-        \hline
-        & \multicolumn{2}{c|}{40x32} & \multicolumn{2}{c|}{80x32} \\
-        \hline
-        Bytes per tile & 1 & 2 & 1 & 2 \\
-        \hline
-        Bytes per tileset & 1280 & 2560 & 2560 & 5120 \\
-        \hline
-        Max Tile Definitions & 215 & 175 & 175 & 95 \\
-        \hline
-    \end{tabular}
+	\def\arraystretch{1.2}
+	\begin{tabular}{|l|l|l|l|l|}
+		\hline
+		& \multicolumn{2}{c|}{40x32} & \multicolumn{2}{c|}{80x32} \\
+		\hline
+		Bytes per tile & 1 & 2 & 1 & 2 \\
+		\hline
+		Bytes per tileset & 1280 & 2560 & 2560 & 5120 \\
+		\hline
+		Max Tile Definitions & 215 & 175 & 175 & 95 \\
+		\hline
+	\end{tabular}
 }
 
 Programmer needs to tell the system where in memory tilemap and tile definitions are stored. \PortLink{Tilemap Base Address Register}{6E} and \PortLink{Tile Definitions Base Address Register}{6F} are used for that.
@@ -102,9 +102,9 @@ Generic formula to calculate MSB of the offset is: {\tt (Address - \$4000) >> 8}
 ULA and Tilemap can be combined in two ways:
 
 \begin{itemize}[topsep=1pt,itemsep=1pt]
-    \item Standard mode: uses bit {\tt 0} from tile's attribute byte to determine if tile is above or below ULA. If tilemap uses 2 bytes per tile, we can specify priority for each tile separately, otherwise we specify it for all tiles. Transparent pixels are taken into account - if top layer is transparent, bottom one is visible through.
+	\item Standard mode: uses bit {\tt 0} from tile's attribute byte to determine if tile is above or below ULA. If tilemap uses 2 bytes per tile, we can specify priority for each tile separately, otherwise we specify it for all tiles. Transparent pixels are taken into account - if top layer is transparent, bottom one is visible through.
 	
-    \item Stencil mode: only used if both, ULA and tileset are enabled. The final pixel is transparent if both, ULA and tilemap pixels are transparent. Otherwise final pixel is {\tt AND} of both colour bits. This mode allows one layer to act as cut-out for the other.
+	\item Stencil mode: only used if both, ULA and tileset are enabled. The final pixel is transparent if both, ULA and tilemap pixels are transparent. Otherwise final pixel is {\tt AND} of both colour bits. This mode allows one layer to act as cut-out for the other.
 \end{itemize}
 
 
@@ -114,83 +114,83 @@ Using tilemaps is very simple. The most challenging part in my experience was fi
 
 Regardless of editor, we need 3 pieces of data: palette, tile definitions and tileset itself. In this example, they are included as binary files:
 
-\begin{lstlisting}
+\begin{tcblisting}{}
 tilemap:
-    INCBIN "tiles.map"
-tilemapLength: EQU $ - tilemap
+	INCBIN "tiles.map"
+tilemapLength: EQU & - tilemap
 
 tiles:
-    INCBIN "tiles.spr"
-tilesLength:   EQU $ - tiles
+	INCBIN "tiles.spr"
+tilesLength:   EQU & - tiles
 
 palette:
-    INCBIN "tiles.pal"
-paletteLength: EQU $-palette
-\end{lstlisting}
+	INCBIN "tiles.pal"
+paletteLength: EQU &-palette
+\end{tcblisting}
 
 With all data in place, we can start setting up tilemap:
 
-\begin{lstlisting}
-START_OF_BANK_5     EQU $4000
-START_OF_TILEMAP    EQU $6000     ; Just after ULA attributes and system vars
-START_OF_TILES      EQU $6600     ; Just after 40x32 tilemap
+\begin{tcblisting}{}
+START_OF_BANK_5     EQU &4000
+START_OF_TILEMAP    EQU &6000     ; Just after ULA attributes and system vars
+START_OF_TILES      EQU &6600     ; Just after 40x32 tilemap
 
 OFFSET_OF_MAP       EQU (START_OF_TILEMAP - START_OF_BANK_5) >> 8
 OFFSET_OF_TILES     EQU (START_OF_TILES - START_OF_BANK_5) >> 8
 
-    ; Enable tilemap mode
-    NEXTREG $6B, %10100001       ; 40x32, 8-bit entries
-    NEXTREG $6C, %00000000       ; palette offset, visuals
+	; Enable tilemap mode
+	NEXTREG &6B, %10100001       ; 40x32, 8-bit entries
+	NEXTREG &6C, %00000000       ; palette offset, visuals
 
-    ; Tell hardware where to find tiles
-    NEXTREG $6E, OFFSET_OF_MAP   ; MSB of tilemap in bank 5
-    NEXTREG $6F, OFFSET_OF_TILES ; MSB of tilemap definitions
-\end{lstlisting}
+	; Tell hardware where to find tiles
+	NEXTREG &6E, OFFSET_OF_MAP   ; MSB of tilemap in bank 5
+	NEXTREG &6F, OFFSET_OF_TILES ; MSB of tilemap definitions
+\end{tcblisting}
 
 Above code uses couple neat preprocessing tricks to automatically calculate MSB for tilemap and tile definitions offsets. The rest is simply setting up desired behaviour using Next registers.
 
 \pagebreak
 The only remaining piece is to actually copy all the data to expected memory locations:
 
-\begin{lstlisting}
-    ; Setup tilemap palette
-    NEXTREG $43, %00110000       ; Auto increment, select first tilemap palette
+\begin{tcblisting}{}
+	; Setup tilemap palette
+	NEXTREG &43, %00110000       ; Auto increment, select first tilemap palette
 
-    ; Copy palette
-    LD HL, palette               ; Address of palette data in memory
-    LD B, 16                     ; Copy 16 colours
-    CALL copyPalette             ; Call routine for copying
+	; Copy palette
+	LD HL, palette               ; Address of palette data in memory
+	LD B, 16                     ; Copy 16 colours
+	CALL CopyPalette             ; Call routine for copying
 
-    ; Copy tile definitions to expected memory
-    LD HL, tiles                 ; Address of tiles in memory
-    LD BC, tilesLength           ; Number of bytes to copy
-    CALL copyTileDefinitions     ; Copy all tiles data
+	; Copy tile definitions to expected memory
+	LD HL, tiles                 ; Address of tiles in memory
+	LD BC, tilesLength           ; Number of bytes to copy
+	CALL CopyTileDefinitions     ; Copy all tiles data
 
-    ; Copy tilemap to expected memory
-    LD HL, tilemap               ; Addreess of tilemap in memory
-    CALL copyTileMap40x32        ; Copy 40x32 tilemaps
-\end{lstlisting}
+	; Copy tilemap to expected memory
+	LD HL, tilemap               ; Addreess of tilemap in memory
+	CALL CopyTileMap40x32        ; Copy 40x32 tilemaps
+\end{tcblisting}
 
 We already know {\tt copyPalette} routine from Layer 2 chapter, the other two are straightforward {\tt LDIR} loops:
 
-\begin{lstlisting}
-copyTileDefinitions:
-    LD DE, START_OF_TILES
-    LDIR
-    RET
+\begin{tcblisting}{}
+CopyTileDefinitions:
+	LD DE, START_OF_TILES
+	LDIR
+	RET
 
-copyTileMap40x32:
-    LD BC, 40*32		; This variant always load 40x32
-    JR copyTileMap
+CopyTileMap40x32:
+	LD BC, 40*32		; This variant always loads 40x32
+	JR copyTileMap
 
-copyTileMap80x32:
-    LD BC, 80*32		; This variant always loads 80x32
+CopyTileMap80x32:
+	LD BC, 80*32		; This variant always loads 80x32
 
-copyTileMap:
-    LD DE, START_OF_TILEMAP
-    LDIR
-    RET
-\end{lstlisting}
+CopyTileMap:
+	LD DE, START_OF_TILEMAP
+	LDIR
+	RET
+\end{tcblisting}
 
 
 \pagebreak
@@ -200,41 +200,41 @@ copyTileMap:
 \subsubsection{Sprite and Layers System Register {\tt \$15}}
 
 \begin{NextPort}
-    \PortBits{7}
-        \PortDesc{{\tt 1} to enable lo-res layer, {\tt 0} disable it}
-    \PortBits{6}
-        \PortDesc{{\tt 1} to flip sprite rendering priority, i.e. sprite 0 is on top ({\tt 0} after reset)}
-    \PortBits{5}
-        \PortDesc{{\tt 1} to change clipping to ``over border'' mode (doubling X-axis coordinates of clip window, {\tt 0} after reset)}
-    \PortBits{4-2}
-        \PortDesc{Layers priority and mixing}
-        \PortDescOnly{
-            \begin{PortBitConfig}
-                \PortConfig{000}{{\tt S L U} (Sprites are at top, Layer 2 under, Enhanced ULA at bottom)}
-                \PortConfig{001}{{\tt L S U}}
-                \PortConfig{010}{{\tt S U L}}
-                \PortConfig{011}{{\tt L U S}}
-                \PortConfig{100}{{\tt U S L}}
-                \PortConfig{101}{{\tt U L S}}
-                \PortConfig{110}{Core 3.1.1+: {\tt (U|T)S(T|U)(B+L)} blending layer and Layer 2 combined}
-                \PortConfig{   }{Older cores: {\tt S(U+L)} colours from ULA and L2 added per R/G/B channel}
-                \PortConfig{111}{Core 3.1.1+: {\tt (U|T)S(T|U)(B+L-5)} blending layer and Layer 2 combined}
-                \PortConfig{   }{Older cores: {\tt S(U+L-5)} similar as {\tt 110}, but per R/G/B channel {\tt (U+L-5)}}
-                \PortConfig{   }{{\tt 110} and {\tt 111} modes: colours are clamped to {\tt [0,7]}}
-            \end{PortBitConfig}
-        }
-    \PortBits{1}
-        \PortDesc{{\tt 1} to enable sprites over border ({\tt 0} after reset)}
-    \PortBits{0}
-        \PortDesc{{\tt 1} to enable sprite visibility ({\tt 0} after reset)}
+	\PortBits{7}
+		\PortDesc{{\tt 1} to enable lo-res layer, {\tt 0} disable it}
+	\PortBits{6}
+		\PortDesc{{\tt 1} to flip sprite rendering priority, i.e. sprite 0 is on top ({\tt 0} after reset)}
+	\PortBits{5}
+		\PortDesc{{\tt 1} to change clipping to ``over border'' mode (doubling X-axis coordinates of clip window, {\tt 0} after reset)}
+	\PortBits{4-2}
+		\PortDesc{Layers priority and mixing}
+		\PortDescOnly{
+			\begin{PortBitConfig}
+				\PortConfig{000}{{\tt S L U} (Sprites are at top, Layer 2 under, Enhanced ULA at bottom)}
+				\PortConfig{001}{{\tt L S U}}
+				\PortConfig{010}{{\tt S U L}}
+				\PortConfig{011}{{\tt L U S}}
+				\PortConfig{100}{{\tt U S L}}
+				\PortConfig{101}{{\tt U L S}}
+				\PortConfig{110}{Core 3.1.1+: {\tt (U|T)S(T|U)(B+L)} blending layer and Layer 2 combined}
+				\PortConfig{   }{Older cores: {\tt S(U+L)} colours from ULA and L2 added per R/G/B channel}
+				\PortConfig{111}{Core 3.1.1+: {\tt (U|T)S(T|U)(B+L-5)} blending layer and Layer 2 combined}
+				\PortConfig{   }{Older cores: {\tt S(U+L-5)} similar as {\tt 110}, but per R/G/B channel {\tt (U+L-5)}}
+				\PortConfig{   }{{\tt 110} and {\tt 111} modes: colours are clamped to {\tt [0,7]}}
+			\end{PortBitConfig}
+		}
+	\PortBits{1}
+		\PortDesc{{\tt 1} to enable sprites over border ({\tt 0} after reset)}
+	\PortBits{0}
+		\PortDesc{{\tt 1} to enable sprite visibility ({\tt 0} after reset)}
 \end{NextPort}
 
 
 \subsubsection{Clip Window Tilemap Register {\tt \$1B}}
 
 \begin{NextPort}
-    \PortBits{7-0}
-        \PortDesc{Reads and writes clip-window coordinates for Tilemap}
+	\PortBits{7-0}
+		\PortDesc{Reads and writes clip-window coordinates for Tilemap}
 \end{NextPort}
 
 4 coordinates need to be set: X1, X2, Y1 and Y2. Tilemap will only be visible within these coordinates. X coordinates are internally doubled for 40x32 or quadrupled for 80x32 mode. Positions are inclusive. Default values are {\tt 0}, {\tt 159}, {\tt 0}, {\tt 255}. Origin (0,0) is located 32 pixels to the top-left of ULA top-left coordinate.
@@ -250,10 +250,10 @@ Which coordinate gets set, is determined by index. As each write to this registe
 \subsubsection{Tilemap Offset X MSB Register {\tt \$2F}}
 
 \begin{NextPort}
-    \PortBits{7-2}
-        \PortDesc{Reserved, use {\tt 0}}
-    \PortBits{1-0}
-        \PortDesc{Most significant bit(s) of X offset}
+	\PortBits{7-2}
+		\PortDesc{Reserved, use {\tt 0}}
+	\PortBits{1-0}
+		\PortDesc{Most significant bit(s) of X offset}
 \end{NextPort}
 
 In 40x32 mode, meaningful range is {\tt 0-319}, for 80x32 {\tt 0-639}. Low 8-bits are stored in \PortLink{Tilemap Offset X LSB Register}{30}.
@@ -262,8 +262,8 @@ In 40x32 mode, meaningful range is {\tt 0-319}, for 80x32 {\tt 0-639}. Low 8-bit
 \subsubsection{Tilemap Offset X LSB Register {\tt \$30}}
 
 \begin{NextPort}
-    \PortBits{7-0}
-        \PortDesc{X offset for drawing tilemap in pixels}
+	\PortBits{7-0}
+		\PortDesc{X offset for drawing tilemap in pixels}
 \end{NextPort}
 
 Tilemap X offset in pixels. Meaningful range is {\tt 0-319} for 40x32 and {\tt 0-639} for 80x32 mode. To write values larger than 255, \PortLink{Tilemap Offset X MSB Register}{2F} is used to store MSB.
@@ -272,8 +272,8 @@ Tilemap X offset in pixels. Meaningful range is {\tt 0-319} for 40x32 and {\tt 0
 \subsubsection{Tilemap Offset Y Register {\tt \$31}}
 
 \begin{NextPort}
-    \PortBits{7-0}
-        \PortDesc{Y offset for drawing tilemap in pixels}
+	\PortBits{7-0}
+		\PortDesc{Y offset for drawing tilemap in pixels}
 \end{NextPort}
 
 Y offset is {\tt 0-255}.
@@ -287,28 +287,28 @@ Y offset is {\tt 0-255}.
 \subsubsection{ULA Control Register {\tt \$68}}
 
 \begin{NextPort}
-    \PortBits{7}
-        \PortDesc{{\tt 1} to disable ULA output ({\tt 0} after soft reset)}
-    \PortBits{6-5}
-        \PortDesc{(Core 3.1.1+) Blending in SLU modes 6 \& 7}
-        \PortDescOnly{
-            \begin{PortBitConfig}
-                \PortConfig{00}{ULA as blend colour}
-                \PortConfig{01}{No blending}
-                \PortConfig{10}{ULA/tilemap as blend colour}
-                \PortConfig{11}{Tilemap as blend colour}
-            \end{PortBitConfig}
-        }
-    \PortBits{4}
-        \PortDesc{(Core 3.1.4+) Cancel entries in 8x5 matrix for extended keys}
-    \PortBits{3}
-        \PortDesc{{\tt 1} to enable ULA+ ({\tt 0} after soft reset)}
-    \PortBits{2}
-        \PortDesc{{\tt 1} to enable ULA half pixel scroll ({\tt 0} after soft reset)}
-    \PortBits{1}
-        \PortDesc{Reserved, set to {\tt 0}}
-    \PortBits{0}
-        \PortDesc{{\tt 1} to enable stencil mode when both the ULA and tilemap are enabled.}
+	\PortBits{7}
+		\PortDesc{{\tt 1} to disable ULA output ({\tt 0} after soft reset)}
+	\PortBits{6-5}
+		\PortDesc{(Core 3.1.1+) Blending in SLU modes 6 \& 7}
+		\PortDescOnly{
+			\begin{PortBitConfig}
+				\PortConfig{00}{ULA as blend colour}
+				\PortConfig{01}{No blending}
+				\PortConfig{10}{ULA/tilemap as blend colour}
+				\PortConfig{11}{Tilemap as blend colour}
+			\end{PortBitConfig}
+		}
+	\PortBits{4}
+		\PortDesc{(Core 3.1.4+) Cancel entries in 8x5 matrix for extended keys}
+	\PortBits{3}
+		\PortDesc{{\tt 1} to enable ULA+ ({\tt 0} after soft reset)}
+	\PortBits{2}
+		\PortDesc{{\tt 1} to enable ULA half pixel scroll ({\tt 0} after soft reset)}
+	\PortBits{1}
+		\PortDesc{Reserved, set to {\tt 0}}
+	\PortBits{0}
+		\PortDesc{{\tt 1} to enable stencil mode when both the ULA and tilemap are enabled.}
 \end{NextPort}
 
 See \PortLink{Sprite and Layers System Register}{15} for different priorities and mixing of ULA, Layer 2 and Sprites.
@@ -317,22 +317,22 @@ See \PortLink{Sprite and Layers System Register}{15} for different priorities an
 \subsubsection{Tilemap Control Register {\tt \$6B}}
 
 \begin{NextPort}
-    \PortBits{7}
-        \PortDesc{{\tt 1} to enable tilemap, {\tt 0} disable tilemap}
-    \PortBits{6}
-        \PortDesc{{\tt 1} for 80x32, {\tt 0} 40x32 mode}
-    \PortBits{5}
-        \PortDesc{{\tt 1} to eliminate attribute byte in tilemap}
-    \PortBits{4}
-        \PortDesc{{\tt 1} for second, {\tt 0} for first tilemap palette}
-    \PortBits{3}
-        \PortDesc{{\tt 1} to activate ``text mode''\See{1}}
-    \PortBits{2}
-        \PortDesc{Reserved, set to {\tt 0}}
-    \PortBits{1}
-        \PortDesc{{\tt 1} to activate 512, {\tt 0} for 256 tile mode}
-    \PortBits{0}
-        \PortDesc{{\tt 1} to force tilemap on top of ULA}
+	\PortBits{7}
+		\PortDesc{{\tt 1} to enable tilemap, {\tt 0} disable tilemap}
+	\PortBits{6}
+		\PortDesc{{\tt 1} for 80x32, {\tt 0} 40x32 mode}
+	\PortBits{5}
+		\PortDesc{{\tt 1} to eliminate attribute byte in tilemap}
+	\PortBits{4}
+		\PortDesc{{\tt 1} for second, {\tt 0} for first tilemap palette}
+	\PortBits{3}
+		\PortDesc{{\tt 1} to activate ``text mode''\See{1}}
+	\PortBits{2}
+		\PortDesc{Reserved, set to {\tt 0}}
+	\PortBits{1}
+		\PortDesc{{\tt 1} to activate 512, {\tt 0} for 256 tile mode}
+	\PortBits{0}
+		\PortDesc{{\tt 1} to force tilemap on top of ULA}
 \end{NextPort}
 
 \See{1}In text mode, tiles are defined as 1-bit B\&W bitmaps, same as original Spectrum UDGs. Each tile only requires 8 bytes. In this mode, tilemap attribute byte is also interpretted differently: bit 0 is still ULA over Tilemap (or 9th bit of tile data index) but top 7 bits are extended palette offset (least significant bit is the value of the pixel itself). In this mode, transparency is checked against \PortLink{Global Transparency Register}{14} colour, not against four bit tilemap colour index.
@@ -343,37 +343,37 @@ See \PortLink{Sprite and Layers System Register}{15} for different priorities an
 If single byte tilemap mode is selected (bit 5 of \PortLink{Tilemap Control Register}{6B} set), this register defines attributes for all tiles.
 
 \begin{NextPort}
-    \PortBits{7-4}
-        \PortDesc{Palette offset}
-    \PortBits{3}
-        \PortDesc{{\tt 1} to mirror tiles in X direction}
-    \PortBits{2}
-        \PortDesc{{\tt 1} to mirror tiles in Y direction}
-    \PortBits{1}
-        \PortDesc{{\tt 1} rotate tiles 90\Deg clockwise}
-    \PortBits{0}
-        \PortDesc{In 512 tile mode, bit 8 of tile index}
-        \PortDescOnly{{\tt 1} for ULA over tilemap, {\tt 0} for tilemap over ULA}
+	\PortBits{7-4}
+		\PortDesc{Palette offset}
+	\PortBits{3}
+		\PortDesc{{\tt 1} to mirror tiles in X direction}
+	\PortBits{2}
+		\PortDesc{{\tt 1} to mirror tiles in Y direction}
+	\PortBits{1}
+		\PortDesc{{\tt 1} rotate tiles 90\Deg clockwise}
+	\PortBits{0}
+		\PortDesc{In 512 tile mode, bit 8 of tile index}
+		\PortDescOnly{{\tt 1} for ULA over tilemap, {\tt 0} for tilemap over ULA}
 \end{NextPort}
 
 
 \subsubsection{Tilemap Base Address Register {\tt \$6E}}
 
 \begin{NextPort}
-    \PortBits{7-6}
-        \PortDesc{Ignored, set to {\tt 0}}
-    \PortBits{5-0}
-        \PortDesc{Most significant byte of tilemap data offset in bank 5}
+	\PortBits{7-6}
+		\PortDesc{Ignored, set to {\tt 0}}
+	\PortBits{5-0}
+		\PortDesc{Most significant byte of tilemap data offset in bank 5}
 \end{NextPort}
 
 
 \subsubsection{Tile Definitions Base Address Register {\tt \$6F}}
 
 \begin{NextPort}
-    \PortBits{7-6}
-        \PortDesc{Ignored, set to {\tt 0}}
-    \PortBits{5-0}
-        \PortDesc{Most significant byte of tile definitions offset in bank 5}
+	\PortBits{7-6}
+		\PortDesc{Ignored, set to {\tt 0}}
+	\PortBits{5-0}
+		\PortDesc{Most significant byte of tile definitions offset in bank 5}
 \end{NextPort}
 
 

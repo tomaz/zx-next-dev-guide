@@ -18,48 +18,48 @@
 Keyboard is read from port {\tt \$xxFE} where bits in result are as follows:
 
 {
-    \tt
-    \setlength{\extrarowheight}{0pt}
-    \def\arraystretch{0.1}
+	\tt
+	\setlength{\extrarowheight}{0pt}
+	\def\arraystretch{0.1}
 	
-    \begin{tabular}{p{0.7cm}|cp{1cm}p{1cm}p{1cm}p{1.3cm}p{1.5cm}}
+	\begin{tabular}{p{0.7cm}|cp{1cm}p{1cm}p{1cm}p{1.3cm}p{1.5cm}}
 
-        ~xx & & 4 & 3 & 2 & 1 & 0 \instrb \\
-        \hline
-        \$7F\instrt & & B & N & M & Symb & Space \\
-        \$BF\instrt & & H & J & K & L & Enter \\
-        \$DF\instrt & & Y & U & I & O & P \\
-        \$EF\instrt & & 6 & 7 & 8 & 9 & 0 \\
-        \$F7\instrt & & 5 & 4 & 3 & 2 & 1 \\
-        \$FB\instrt & & T & R & E & W & Q \\
-        \$FD\instrt & & G & F & D & S & A \\
-        \$FE\instrt\instrb & & V & C & X & Z & Caps \\
+		~xx & & 4 & 3 & 2 & 1 & 0 \instrb \\
+		\hline
+		\$7F\instrt & & B & N & M & Symb & Space \\
+		\$BF\instrt & & H & J & K & L & Enter \\
+		\$DF\instrt & & Y & U & I & O & P \\
+		\$EF\instrt & & 6 & 7 & 8 & 9 & 0 \\
+		\$F7\instrt & & 5 & 4 & 3 & 2 & 1 \\
+		\$FB\instrt & & T & R & E & W & Q \\
+		\$FD\instrt & & G & F & D & S & A \\
+		\$FE\instrt\instrb & & V & C & X & Z & Caps \\
 
-    \end{tabular}
+	\end{tabular}
 }
 
 If key is pressed, corresponding bit is set to {\tt 0} and vice versa. Example for checking if P or I is pressed:
 	
-\begin{lstlisting}
-    LD BC, $DFFE   ; We want to read keys:   YUIOP
-    IN A, (C)      ; A holds values in bits: 43210
+\begin{tcblisting}{}
+	LD BC, &DFFE     ; We want to read keys..... YUIOP
+	IN A, (C)        ; A holds values in bits... 43210
 checkP:
-    BIT 0, A       ; test bit 0 of A (P key)
-    JR NZ checkI   ; if bit0=1, P not pressed
-    ...            ; P is pressed
+	BIT 0, A         ; test bit 0 of A (P key)
+	JR NZ checkI     ; if bit0=1, P not pressed
+	...              ; P is pressed
 checkI:
-    BIT 2, A       ; test bit 2 of A (I key)
-    JR NZ continue ; if bit2=1, I not pressed
-    ...            ; I is pressed
+	BIT 2, A         ; test bit 2 of A (I key)
+	JR NZ continue   ; if bit2=1, I not pressed
+	...              ; I is pressed
 continue:
-\end{lstlisting}
+\end{tcblisting}
 
 We can slightly improve performance if we replace first two lines with:
 
-\begin{lstlisting}
-    LD A, $DF
-    IN ($FE)
-\end{lstlisting}
+\begin{tcblisting}{}
+	LD A, &DF
+	IN (&FE)
+\end{tcblisting}
 
 Using 16-bit load requires 10 T states for ``{\tt LD BC,nn}'' + 12 for ``{\tt IN A,(C)}'' whereas later variant requires 7 T states for ``{\tt LD A,nn}'' + 11 for ``{\tt IN (nn)}''. So 22 vs 18. The difference is small, but it can add up as typically keyboard is read multiple times per frame.
 

@@ -18,7 +18,6 @@ The book is available in two formats:
 Note: both books are the same apart from couple small differences:
 
 - PDF doesn't include alphabetical instructions table; mainly because it's searchable so I felt it just adds noise (it does include alphabetical list in appendix though)
-- PDF uses yellow-ish background for code listings, printed book is B/W so I use gray to achieve better control of the final colour
 - Email addresses are obfuscated in PDF, printed book uses proper `name@domain.nnn` notation
 
 However, you can still build printable variant yourself from sources - in fact, LaTeX source is prepared to build it as such by default!

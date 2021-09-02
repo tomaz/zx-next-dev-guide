@@ -4,140 +4,140 @@
 	
 \begin{instrtable}
 
-    \begin{instruction}{JP nm} 
-        \Symbol{\SymJP{nm}}
-            \FlagsJPnn
-            \OpCode{11}{000}{011}
-            \Hex{C3}{3}
-            \Cycles{3}{10}
-            \Comment{
-                \multirow{8}{*}{
-                    \tt
-                    \begin{tabular}{ll}
-                        c & \OCT{c} \\
-                        \hline
-                        NZ & 000 \\
-                        Z & 001 \\
-                        NC & C10 \\
-                        C & 011 \\
-                        PO & 100 \\
-                        PE & 101 \\
-                        P & 110 \\
-                        M & 111 \\
-                    \end{tabular}
-                }
-            }
-        \SkipToOpCode 
-            \OpRange{m} 
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{JP nm} 
+		\Symbol{\SymJP{nm}}
+			\FlagsJPnn
+			\OpCode{11}{000}{011}
+			\Hex{C3}{3}
+			\Cycles{3}{10}
+			\Comment{
+				\multirow{8}{*}{
+					\tt
+					\begin{tabular}{ll}
+						c & \OCT{c} \\
+						\hline
+						NZ & 000 \\
+						Z & 001 \\
+						NC & C10 \\
+						C & 011 \\
+						PO & 100 \\
+						PE & 101 \\
+						P & 110 \\
+						M & 111 \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode 
+			\OpRange{m} 
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{JP (HL)}
-        \Symbol{\SymJP{HL}}
-            \FlagsJPrr
-            \OpCode{11}{101}{001}
-            \Hex{E9}{1}
-            \Cycles{1}{4}
-    \end{instruction}
+	\begin{instruction}{JP (HL)}
+		\Symbol{\SymJP{HL}}
+			\FlagsJPrr
+			\OpCode{11}{101}{001}
+			\Hex{E9}{1}
+			\Cycles{1}{4}
+	\end{instruction}
 
-    \begin{instruction}{JP (IX)} 
-        \Symbol{\SymJP{IX}}
-            \FlagsJPrr
-            \OpCode{11}{011}{101}
-            \Hex{DD}{2}
-            \Cycles{2}{8}
-        \SkipToOpCode 
-            \OpCode{11}{101}{001}
-            \Hex{E9}{}
-    \end{instruction}
+	\begin{instruction}{JP (IX)} 
+		\Symbol{\SymJP{IX}}
+			\FlagsJPrr
+			\OpCode{11}{011}{101}
+			\Hex{DD}{2}
+			\Cycles{2}{8}
+		\SkipToOpCode 
+			\OpCode{11}{101}{001}
+			\Hex{E9}{}
+	\end{instruction}
 
-    \begin{instruction}{JP (IY)} 
-        \Symbol{\SymJP{IY}}
-            \FlagsJPrr
-            \OpCode{11}{111}{101}
-            \Hex{FD}{2}
-            \Cycles{2}{8}
-            \Comment{
-                \multirow{8}{*}{
-                    \tt
-                    \begin{tabular}{ll}
-                        p & \OCT{pp} \\
-                        \hline
-                        NZ & 00 \\
-                        Z & 01 \\
-                        NC & 10 \\
-                        C & 11 \\
-                    \end{tabular}
-                }
-            }
-        \SkipToOpCode 
-            \OpCode{11}{101}{001}
-            \Hex{E9}{}
-    \end{instruction}
+	\begin{instruction}{JP (IY)} 
+		\Symbol{\SymJP{IY}}
+			\FlagsJPrr
+			\OpCode{11}{111}{101}
+			\Hex{FD}{2}
+			\Cycles{2}{8}
+			\Comment{
+				\multirow{8}{*}{
+					\tt
+					\begin{tabular}{ll}
+						p & \OCT{pp} \\
+						\hline
+						NZ & 00 \\
+						Z & 01 \\
+						NC & 10 \\
+						C & 11 \\
+					\end{tabular}
+				}
+			}
+		\SkipToOpCode 
+			\OpCode{11}{101}{001}
+			\Hex{E9}{}
+	\end{instruction}
 
-    \begin{instruction}{JP c,nm} 
-        \Symbol{\SymJPc{nm}}
-            \FlagsJPccnn
-            \OpCode{11}{\OCT{c}}{010}
-            \Hex{..}{3}
-            \Cycles{3}{10}
-        \SkipToOpCode
-            \OpRange{m}
-            \Hex{..}{}
-        \SkipToOpCode 
-            \OpRange{n} 
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{JP c,nm} 
+		\Symbol{\SymJPc{nm}}
+			\FlagsJPccnn
+			\OpCode{11}{\OCT{c}}{010}
+			\Hex{..}{3}
+			\Cycles{3}{10}
+		\SkipToOpCode
+			\OpRange{m}
+			\Hex{..}{}
+		\SkipToOpCode 
+			\OpRange{n} 
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{JR e} 
-        \Symbol{\SymJR{e}}
-            \FlagsJRn
-            \OpCode{00}{011}{000}
-            \Hex{18}{2}
-            \Cycles{3}{12}
-        \SkipToOpCode 
-            \OpRangeSmall{e-2}
-            \Hex{..}{}
-    \end{instruction}
+	\begin{instruction}{JR e} 
+		\Symbol{\SymJR{e}}
+			\FlagsJRn
+			\OpCode{00}{011}{000}
+			\Hex{18}{2}
+			\Cycles{3}{12}
+		\SkipToOpCode 
+			\OpRangeSmall{e-2}
+			\Hex{..}{}
+	\end{instruction}
 
-    \begin{instruction}{JR p,e} 
-        \Symbol{\SymJRc{p}{e}}
-            \FlagsJRccn
-            \OpCode{00}{1\OCT{pp}}{000}
-            \Hex{..}{2}
-            \Cycles{2}{7}
-            \Comment{if {\tt p}=false}
-        \SkipToOpCode
-            \OpRangeSmall{e-2}
-            \Hex{..}{}
-            \Cycles{3}{12}
-            \Comment{if {\tt p}=true}
-    \end{instruction}
+	\begin{instruction}{JR p,e} 
+		\Symbol{\SymJRc{p}{e}}
+			\FlagsJRccn
+			\OpCode{00}{1\OCT{pp}}{000}
+			\Hex{..}{2}
+			\Cycles{2}{7}
+			\Comment{if {\tt p}=false}
+		\SkipToOpCode
+			\OpRangeSmall{e-2}
+			\Hex{..}{}
+			\Cycles{3}{12}
+			\Comment{if {\tt p}=true}
+	\end{instruction}
 
-    \begin{instruction}{DJNZ e} 
-        \Symbol{\SymDJNZ[0]{e}}
-            \FlagsDJNZ
-            \OpCode{00}{010}{000}
-            \Hex{10}{2}
-            \Cycles{2}{8}
-            \Comment{if {\tt B}=0}
-        \SkipToSymbol
-            \Symbol{\SymDJNZ[1]{e}}
-            \FromSymbolToOpCode
-            \OpRangeSmall{e-2}
-            \Hex{..}{}
-            \Cycles{3}{13}
-            \Comment{if {\tt B}$\neq$0}
-    \end{instruction}
+	\begin{instruction}{DJNZ e} 
+		\Symbol{\SymDJNZ[0]{e}}
+			\FlagsDJNZ
+			\OpCode{00}{010}{000}
+			\Hex{10}{2}
+			\Cycles{2}{8}
+			\Comment{if {\tt B}=0}
+		\SkipToSymbol
+			\Symbol{\SymDJNZ[1]{e}}
+			\FromSymbolToOpCode
+			\OpRangeSmall{e-2}
+			\Hex{..}{}
+			\Cycles{3}{13}
+			\Comment{if {\tt B}$\neq$0}
+	\end{instruction}
 		
 \end{instrtable}
 
 \begin{notestable}
-    \NoteItem{{\tt e} is a signed two-complement in the range -127, 129.}
-    \NoteItem{{\tt e-2} in the opcode provides an effective number of {\tt PC+e} as {\tt PC} is incremented by two prior to the addition of {\tt e}.}
+	\NoteItem{{\tt e} is a signed two-complement in the range -127, 129.}
+	\NoteItem{{\tt e-2} in the opcode provides an effective number of {\tt PC+e} as {\tt PC} is incremented by two prior to the addition of {\tt e}.}
 \end{notestable}
 
 \end{minipage}
