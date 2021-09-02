@@ -83,14 +83,13 @@
 Specific features of the Next are controlled via these register numbers, accessed via \PortLink{TBBlue Register Select\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Select}}}{243B} and \PortLink{TBBlue Register Access\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Access}}}{253B}, or via the NEXTREG instruction.
 
 \begingroup
-	\environbodyname\TBBlueBODY
-	\NewEnviron{tbbluereg}{
+	\NewDocumentEnvironment{tbbluereg}{ +b }{
 		\begin{tabularx}{\textwidth}{llX}
 			{\tt RW} & Port & Description \\
 			\hline
-			\TBBlueBODY
+			#1
 		\end{tabularx}
-	}
+	}{}
 
 	\newcommand{\nextport}[3]{
 		{\tt #1} & 
