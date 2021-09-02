@@ -210,17 +210,17 @@ CopyTileMap:
 		\PortDesc{Layers priority and mixing}
 		\PortDescOnly{
 			\begin{PortBitConfig}
-				\PortConfig{000}{{\tt S L U} (Sprites are at top, Layer 2 under, Enhanced ULA at bottom)}
-				\PortConfig{001}{{\tt L S U}}
-				\PortConfig{010}{{\tt S U L}}
-				\PortConfig{011}{{\tt L U S}}
-				\PortConfig{100}{{\tt U S L}}
-				\PortConfig{101}{{\tt U L S}}
-				\PortConfig{110}{Core 3.1.1+: {\tt (U|T)S(T|U)(B+L)} blending layer and Layer 2 combined}
-				\PortConfig{   }{Older cores: {\tt S(U+L)} colours from ULA and L2 added per R/G/B channel}
-				\PortConfig{111}{Core 3.1.1+: {\tt (U|T)S(T|U)(B+L-5)} blending layer and Layer 2 combined}
-				\PortConfig{   }{Older cores: {\tt S(U+L-5)} similar as {\tt 110}, but per R/G/B channel {\tt (U+L-5)}}
-				\PortConfig{   }{{\tt 110} and {\tt 111} modes: colours are clamped to {\tt [0,7]}}
+				\PortBitLine{000}{{\tt S L U} (Sprites are at top, Layer 2 under, Enhanced ULA at bottom)}
+				\PortBitLine{001}{{\tt L S U}}
+				\PortBitLine{010}{{\tt S U L}}
+				\PortBitLine{011}{{\tt L U S}}
+				\PortBitLine{100}{{\tt U S L}}
+				\PortBitLine{101}{{\tt U L S}}
+				\PortBitLine{110}{Core 3.1.1+: {\tt (U|T)S(T|U)(B+L)} blending layer and Layer 2 combined}
+				\PortBitLine{   }{Older cores: {\tt S(U+L)} colours from ULA and L2 added per R/G/B channel}
+				\PortBitLine{111}{Core 3.1.1+: {\tt (U|T)S(T|U)(B+L-5)} blending layer and Layer 2 combined}
+				\PortBitLine{   }{Older cores: {\tt S(U+L-5)} similar as {\tt 110}, but per R/G/B channel {\tt (U+L-5)}}
+				\PortBitLine{   }{{\tt 110} and {\tt 111} modes: colours are clamped to {\tt [0,7]}}
 			\end{PortBitConfig}
 		}
 	\PortBits{1}
@@ -293,10 +293,10 @@ Y offset is {\tt 0-255}.
 		\PortDesc{(Core 3.1.1+) Blending in SLU modes 6 \& 7}
 		\PortDescOnly{
 			\begin{PortBitConfig}
-				\PortConfig{00}{ULA as blend colour}
-				\PortConfig{01}{No blending}
-				\PortConfig{10}{ULA/tilemap as blend colour}
-				\PortConfig{11}{Tilemap as blend colour}
+				\PortBitLine{00}{ULA as blend colour}
+				\PortBitLine{01}{No blending}
+				\PortBitLine{10}{ULA/tilemap as blend colour}
+				\PortBitLine{11}{Tilemap as blend colour}
 			\end{PortBitConfig}
 		}
 	\PortBits{4}

@@ -527,10 +527,10 @@ nextY:
 		\PortDesc{Video RAM bank select}
 		\PortDescOnly{
 			\begin{PortBitConfig}
-				\PortConfig{00}{First 16K of layer 2 in the bottom 16K}
-				\PortConfig{01}{Second 16K of layer 2 in the bottom 16K}
-				\PortConfig{10}{Third 16K of layer 2 in the bottom 16K}
-				\PortConfig{11}{First 48K of layer 2 in the bottom 48K (core 3.0+)}
+				\PortBitLine{00}{First 16K of layer 2 in the bottom 16K}
+				\PortBitLine{01}{Second 16K of layer 2 in the bottom 16K}
+				\PortBitLine{10}{Third 16K of layer 2 in the bottom 16K}
+				\PortBitLine{11}{First 48K of layer 2 in the bottom 48K (core 3.0+)}
 			\end{PortBitConfig}
 		}
 	\PortBits{5}
@@ -541,8 +541,8 @@ nextY:
 		\PortDesc{Use Shadow Layer 2 for paging}
 		\PortDescOnly{
 			\begin{PortBitConfig}
-				\PortConfig{0}{Map \PortLink{Layer 2 RAM Page Register}{12}}
-				\PortConfig{1}{Map \PortLink{Layer 2 RAM Shadow Page}{13}}
+				\PortBitLine{0}{Map \PortLink{Layer 2 RAM Page Register}{12}}
+				\PortBitLine{1}{Map \PortLink{Layer 2 RAM Shadow Page}{13}}
 			\end{PortBitConfig}
 		}
 	\PortBits{2}
@@ -709,14 +709,14 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 		\PortDesc{Selects palette for read or write}
 		\PortDescOnly{
 			\begin{PortBitConfig}
-				\PortConfig{000}{ULA first palette}
-				\PortConfig{100}{ULA second palette}
-				\PortConfig{001}{Layer 2 first palette}
-				\PortConfig{101}{Layer 2 second palette}
-				\PortConfig{010}{Sprites first palette}
-				\PortConfig{110}{Sprites second palette}
-				\PortConfig{011}{Tilemap first palette}
-				\PortConfig{111}{Tilemap second palette}
+				\PortBitLine{000}{ULA first palette}
+				\PortBitLine{100}{ULA second palette}
+				\PortBitLine{001}{Layer 2 first palette}
+				\PortBitLine{101}{Layer 2 second palette}
+				\PortBitLine{010}{Sprites first palette}
+				\PortBitLine{110}{Sprites second palette}
+				\PortBitLine{011}{Tilemap first palette}
+				\PortBitLine{111}{Tilemap second palette}
 			\end{PortBitConfig}
 		}
 	\PortBits{3}
@@ -739,9 +739,9 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 		\PortDesc{Layer 2 resolution ({\tt 0} after soft reset)}
 		\PortDescOnly{
 			\begin{PortBitConfig}
-				\PortConfig{00}{256$\times$192, 8BPP}
-				\PortConfig{01}{320$\times$256, 8BPP}
-				\PortConfig{10}{640$\times$256, 4BPP}
+				\PortBitLine{00}{256$\times$192, 8BPP}
+				\PortBitLine{01}{320$\times$256, 8BPP}
+				\PortBitLine{10}{640$\times$256, 4BPP}
 			\end{PortBitConfig}
 		}
 	\PortBits{3-0}

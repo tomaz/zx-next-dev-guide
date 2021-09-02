@@ -463,9 +463,9 @@ For anchor sprites:
 		\PortDesc{{\tt H+N6} where {\tt H} is 4/8-bit data selector and {\tt N6} is sub-pattern selector for 4-bit sprites}
 		\PortDescOnly{
 			\begin{PortBitConfig}
-				\PortConfig{00}{Anchor sprite, 8-bit}
-				\PortConfig{10}{Anchor sprite, 4-bit using bytes 0-127 of pattern slot}
-				\PortConfig{11}{Anchor sprite, 4-bit using bytes 128-255 of pattern slot}
+				\PortBitLine{00}{Anchor sprite, 8-bit}
+				\PortBitLine{10}{Anchor sprite, 4-bit using bytes 0-127 of pattern slot}
+				\PortBitLine{11}{Anchor sprite, 4-bit using bytes 128-255 of pattern slot}
 			\end{PortBitConfig}
 		}
 	\PortBits{5}
@@ -474,10 +474,10 @@ For anchor sprites:
 		\PortDesc{X axis scale factor}
 		\PortDescOnly{
 			\begin{PortBitConfig}
-				\PortConfig{00}{1x}
-				\PortConfig{01}{2x}
-				\PortConfig{10}{4x}
-				\PortConfig{11}{8x}
+				\PortBitLine{00}{1x}
+				\PortBitLine{01}{2x}
+				\PortBitLine{10}{4x}
+				\PortBitLine{11}{8x}
 			\end{PortBitConfig}
 		}
 	\PortBits{2-1}

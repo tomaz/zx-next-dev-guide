@@ -273,10 +273,10 @@ ROM can be paged out by using +3 ``AllRam'' or Next MMU-based mode. Beware thoug
 		\PortDesc{In normal mode high bit of ROM selection. With low bit from bit 4 of \MemAddr{7FFD}:}
 		\PortDescOnly{
 			\begin{PortBitConfig}
-				\PortConfig{00}{ROM0 = 128K editor and menu system}
-				\PortConfig{01}{ROM1 = 128K syntax checker}
-				\PortConfig{10}{ROM2 = +3DOS}
-				\PortConfig{11}{ROM3 = 48K BASIC}
+				\PortBitLine{00}{ROM0 = 128K editor and menu system}
+				\PortBitLine{01}{ROM1 = 128K syntax checker}
+				\PortBitLine{10}{ROM2 = +3DOS}
+				\PortBitLine{11}{ROM3 = 48K BASIC}
 			\end{PortBitConfig}
 		}
 		\PortDescOnly{In special mode: high bit of memory configuration number}

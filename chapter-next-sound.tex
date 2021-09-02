@@ -88,10 +88,10 @@ When bit {\tt 7} is {\tt 1}:
 		\PortDesc{Selects active chip:}
 		\PortDescOnly{
 			\begin{PortBitConfig}
-				\PortConfig{00}{Unused}
-				\PortConfig{01}{AY3}
-				\PortConfig{10}{AY2}
-				\PortConfig{11}{AY1}
+				\PortBitLine{00}{Unused}
+				\PortBitLine{01}{AY3}
+				\PortBitLine{10}{AY2}
+				\PortBitLine{11}{AY1}
 			\end{PortBitConfig}
 		}
 \end{NextPort}
@@ -266,10 +266,10 @@ When bit {\tt 7} is {\tt 0}:
 		\PortDesc{Audio chip mode:}
 		\PortDescOnly{
 			\begin{PortBitConfig}
-				\PortConfig{00}{YM}				
-				\PortConfig{01}{AY}
-				\PortConfig{10}{Disabled}
-				\PortConfig{11}{Core 3.0+: Hold all AY in reset}
+				\PortBitLine{00}{YM}				
+				\PortBitLine{01}{AY}
+				\PortBitLine{10}{Disabled}
+				\PortBitLine{11}{Core 3.0+: Hold all AY in reset}
 			\end{PortBitConfig}
 		}
 \end{NextPort}
