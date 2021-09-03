@@ -179,7 +179,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			AND IYL\UNDOC
 		\end{DetailVariants}
 
-		Performs bitwise AND between accumulator {\tt A} and the given operand. Result is then stored back to accumulator. Individual bits are AND'ed like this:
+		Performs bitwise AND between accumulator {\tt A} and the given operand. The result is then stored back to the accumulator. Individual bits are AND'ed like this:
 
 		\begin{tabular}{cc|c}
 			{\tt A} & {\tt s} & Result \\
@@ -245,7 +245,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		{\IH{B}arrel \IH{R}otate \IH{L}eft \IH{C}ircular}
 		{\SymBRLC}
 
-		Rotates value in register pair {\tt DE} left for the amount given in bits 3-0 (low nibble) of register {\tt B}. To rotate right, use formula: {\tt B=16-places}. Result is stored in {\tt DE}.
+		Rotates value in register pair {\tt DE} left for the amount given in bits 3-0 (low nibble) of register {\tt B}. To rotate right, use formula: {\tt B=16-places}. The result is stored in {\tt DE}.
 
 		\begin{DetailEffects}
 			\FlagsBRLC
@@ -261,7 +261,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		{\IH{B}arrel \IH{S}hift \IH{L}eft \IH{A}rithmetic}
 		{\SymBSLA}
 
-		Performs shift left of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. Result is stored in {\tt DE}.
+		Performs shift left of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. The result is stored in {\tt DE}.
 
 		\begin{DetailEffects}
 			\FlagsBSLA
@@ -277,7 +277,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		{\IH{B}arrel \IH{S}hift \IH{R}ight \IH{A}rithmetic}
 		{\SymBSRA}
 
-		Performs arithmetical shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. Result is stored in {\tt DE}.
+		Performs arithmetical shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. The result is stored in {\tt DE}.
 
 		\begin{DetailEffects}
 			\FlagsBSRA
@@ -293,7 +293,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		{\IH{B}arrel \IH{S}hift \IH{R}ight \IH{F}ill-one}
 		{\SymBSRF}
 
-		Performs fill-one-way shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. Result is stored in {\tt DE}.
+		Performs fill-one-way shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. The result is stored in {\tt DE}.
 
 		\begin{DetailEffects}
 			\FlagsBSRF
@@ -309,7 +309,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		{\IH{B}arrel \IH{S}hift \IH{R}ight \IH{L}ogical}
 		{\SymBSRL}
 
-		Performs logical shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. Result is stored in {\tt DE}.
+		Performs logical shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. The result is stored in {\tt DE}.
 
 		\begin{DetailEffects}
 			\FlagsBSRL
@@ -354,7 +354,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 				{\tt CALL PO,nn} & calls if {\tt PV} is reset\\
 		\end{tabular}
 
-		If given condition is met, {\tt CALL nn} is performed, as described above.
+		If the given condition is met, {\tt CALL nn} is performed, as described above.
 
 		\begin{DetailEffects}
 			\FlagsCALLccnn
@@ -416,7 +416,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 			CP IYL\UNDOC
 		\end{DetailVariants}
 
-		Operand {\tt s} or content of the memory location addressed by {\tt s} is subtracted from {\tt A}. Status flags are updated according to result, but the result is then discarded (value of {\tt A} is not changed). Some general rules:
+		Operand {\tt s} or content of the memory location addressed by {\tt s} is subtracted from accumulator {\tt A}. Status flags are updated according to the result, but the result is then discarded (value of {\tt A} is not changed). Some general rules:
 
 		\begin{multicols}{2}
 			\begin{DetailCompactList}[Signed]
@@ -456,7 +456,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 		{\SymCPL}
 		% \bookmark[dest=details_cpl]{}
 
-		Complements (inverts) all bits of the accumulator {\tt A} and stores result back to {\tt A}.
+		Complements (inverts) all bits of the accumulator {\tt A} and stores the result back to {\tt A}.
 
 		\begin{DetailEffects}
 			\FlagsCPL
@@ -634,7 +634,7 @@ CPDR
 			DEC SP
 		\end{DetailVariants}
 
-		Decrements the operand {\tt s} or memory addressed by the operand {\tt s} by 1.
+		Decrements the operand {\tt s} or memory addressed by {\tt s} by 1.
 
 		\begin{DetailEffects}[v]
 			\FlagsDECr[8-bit]
@@ -757,7 +757,7 @@ CPDR
 		{\IH{EX}change alternate registers}
 		{\SymEXX}
 
-		Exchanges contents of registers {\tt BC}, {\tt DE} and {\tt HL} with shadow registers {\tt BC'}, {\tt DE'} and {\tt HL'}. Most frequent use is in interrupt handlers as alternative of using stack for saving and restoring register values. If using outside interrupt handlers, interrupts must be disabled before using this instruction.
+		Exchanges contents of registers {\tt BC}, {\tt DE} and {\tt HL} with shadow registers {\tt BC'}, {\tt DE'} and {\tt HL'}. The most frequent use is in interrupt handlers as an alternative to using the stack for saving and restoring register values. If using outside interrupt handlers, interrupts must be disabled before using this instruction.
 
 		\begin{DetailEffects}
 			\FlagsEXX
@@ -774,7 +774,7 @@ CPDR
 		{\IH{HALT}}
 		{}
 
-		Suspends CPU and executes {\tt NOP}s (to continue memory refresh cycles), until the next interrupt or reset. This effectively creates a delay. You can chain {\tt HALT}s. But make sure that there will be an interrupt, otherwise {\tt HALT} will run forever.
+		Suspends CPU and executes {\tt NOP}s (to continue memory refresh cycles) until the next interrupt or reset. This effectively creates a delay. You can chain {\tt HALT}s. But make sure that there will be an interrupt, otherwise {\tt HALT} will run forever.
 
 		\begin{DetailEffects}
 			\FlagsHALT
@@ -829,7 +829,7 @@ CPDR
 			IN F,(C)\UNDOC
 		\end{DetailVariants}
 
-		Reads peripheral device addressed by {\tt BC} or combination of {\tt A} and immediate value and stores result in given register. Address is provided as follows:
+		Reads peripheral device addressed by {\tt BC} or combination of {\tt A} and immediate value and stores result in given register. The address is provided as follows:
 
 		\begin{tabular}{ccc}
 			& \multicolumn{2}{c}{Address Bits} \\
@@ -840,7 +840,7 @@ CPDR
 		\end{tabular}
 		\vspace{1ex} % some spacing before next text for less cluttered layout
 
-		So these 2 have exactly the same result (though, as mentioned in section \ref{zx_next_keyboard}, variant on the right is slightly faster, 18 vs 22 T states):
+		So these two have the same result (though, as mentioned in section \ref{zx_next_keyboard}, variant on the right is slightly faster, 18 vs 22 T states):
 
 		\begin{multicols}{2}
 			\begin{tcblisting}{right skip=1em}
@@ -903,7 +903,7 @@ IN A, (&FE)
 			INC SP
 		\end{DetailVariants}
 
-		Increments the operand or memory addressed by the operand by 1.
+		Increments the operand {\tt s} or memory addressed by {\tt s} by 1.
 
 		\begin{DetailEffects}[v]
 			\FlagsINCr[8-bit]
@@ -930,7 +930,7 @@ IN A, (&FE)
 		{\IH{IN}put and \IH{D}ecrement}
 		{\SymIND}
 
-		Reads peripheral device addressed by {\tt BC} and stores result in memory addressed by {\tt HL} register pair. Then decrements {\tt HL} and {\tt B}.
+		Reads peripheral device addressed by {\tt BC} and stores the result in memory addressed by {\tt HL} register pair. Then decrements {\tt HL} and {\tt B}.
 
 		\begin{DetailEffects}
 			\FlagsIND
@@ -971,7 +971,7 @@ IN A, (&FE)
 		{\IH{IN}put and \IH{I}ncrement}
 		{\SymINI}
 
-		Reads peripheral device addressed by {\tt BC} and stores result in memory addressed by {\tt HL} register pair. Then increments {\tt HL} and decrements {\tt B}.
+		Reads peripheral device addressed by {\tt BC} and stores the result in memory addressed by {\tt HL} register pair. Then increments {\tt HL} and decrements {\tt B}.
 
 		\begin{DetailEffects}
 			\FlagsINI
@@ -1021,7 +1021,7 @@ IN A, (&FE)
 			JP (IY)
 		\end{DetailVariants}
 
-		Unconditionally jumps (changes program counter {\tt PC} to point) to given absolute address or the memory location addressed by register pair. Unconditional jumps are the fastest way of changing program counter, even faster than {\tt JR}, but they take more bytes.
+		Unconditionally jumps (changes program counter {\tt PC} to point) to the given absolute address or the memory location addressed by register pair. Unconditional jumps are the fastest way of changing program counter, even faster than {\tt JR}, but they take more bytes.
 
 		\begin{DetailEffects}
 			\FlagsJPnn
@@ -1055,7 +1055,7 @@ IN A, (&FE)
 				{\tt JP PO,nn} & jumps if {\tt PV} is reset\\
 		\end{tabular}
 
-		Conditionally jumps to given absolute address. See {\tt CP} on page \pageref{DetailRefCP} for more details on comparisons.
+		Conditionally jumps to the given absolute address. See {\tt CP} on page \pageref{DetailRefCP} for more details on comparisons.
 
 		\begin{DetailEffects}
 			\FlagsJPccnn
@@ -1318,7 +1318,7 @@ LDDR
 		{\IH{L}oa\IH{D} \IH{W}asp \IH{S}pecial}
 		{\SymLDWS}
 
-		Copies the byte pointed to by {\tt HL} to the address pointed to by {\tt DE}. Then increments {\tt L} and {\tt D}. This is used for vertically copying bytes to the Layer 2 display.
+		Copies the byte pointed to by {\tt HL} to the address pointed to by {\tt DE}. Then increments {\tt L} and {\tt D}. Used for vertically copying bytes to Layer 2 display.
 			
 		\begin{DetailEffects}[v]
 			\FlagsLDWS
@@ -1331,8 +1331,7 @@ LDDR
 			\DetailTime{4}{14}
 		\end{DetailTiming}
 
-		\DetailNote{Note: the source data are read only from single 256B (aligned) block of memory, because only {\tt L} is incremented, not {\tt HL} pair.
-		}
+		\DetailNote{Note: the source data are read only from single 256B (aligned) block of memory, because only {\tt L} is incremented, not {\tt HL} pair.}
 
 		\DetailNote[]{Note: {\tt LDWS} is alphabetically after {\tt LDPIRX}, but is placed here to avoid empty space and to allow Next extended {\tt LDxx} instructions to be presented together}
 
@@ -1363,8 +1362,7 @@ LDDR
 	\label{DetailRefLDDRX}
 	\begin{DetailItem}{LDDRX\ZXN}
 		{\IH{L}oa\IH{D} and \IH{D}ecrement \IH{R}epeated e\IH{X}tended}		
-		{do LDDX\\
-		while BC>0}
+		{\SymLDDRX}
 
 		Works similar to {\tt LDDR} except the differences noted at {\tt LDDX} above.
 
@@ -1423,7 +1421,7 @@ LDDR
 		{\IH{L}oa\IH{D} \IH{P}attern fill and \IH{I}ncrement e\IH{X}tended}
 		{\SymLDPIRX}
 
-		Similar to {\tt LDIRX} except the source byte address is not just {\tt HL}, but is obtained by using the top 13 bits of {\tt HL} and lower 3 bits of {\tt DE}. Furthermore {\tt HL} is not incremented during loop; it serves as base address of aligned 8 byte lookup table. {\tt DE} works as destination and also wrapping index 0..7 into table. This instruction is intended for ``pattern fill'' functionality.
+		Similar to {\tt LDIRX} except the source byte address is not just {\tt HL}, but is obtained by using the top 13 bits of {\tt HL} and lower 3 bits of {\tt DE}. Furthermore {\tt HL} is not incremented during the loop; it serves as the base address of the aligned 8-byte lookup table. {\tt DE} works as destination and also wrapping index 0..7 into the table. This instruction is intended for ``pattern fill'' functionality.
 
 		\begin{DetailEffects}
 			\FlagsLDPIRX
@@ -1477,7 +1475,7 @@ LDDR
 		{\IH{NEG}ate}
 		{\SymNEG}
 
-		Negates contents of accumulator and stores result back to {\tt A}.
+		Negates contents of the accumulator {\tt A} and stores result back to {\tt A}.
 
 		\begin{DetailEffects}[p]
 			\FlagsNEG
@@ -1498,7 +1496,7 @@ LDDR
 			NEXTREG n,n'
 		\end{DetailVariants}
 
-		Directly sets the Next Feature Control Registers without going through ports TBBlue Register Select. See section \ref{zx_next_tbblue_registers} for ports list.
+		Directly sets the Next Feature Control Registers without going through ports \PortLink{TBBlue Register Select}{243B} and \PortLink{TBBlue Register Access}{253B}. See section \ref{zx_next_tbblue_registers} for ports list.
 
 		\begin{DetailEffects}
 			\FlagsNEXTREGna
@@ -2107,8 +2105,8 @@ LDDR
 		{\SymRLD}
 
 		Performs leftward 12-bit rotation of 4-bit nibbles where 2 least significant nibbles are stored in memory location addressed by {\tt HL} and most significant digit as lower 4 bits of the accumulator {\tt A}.
-		
-		If used with BCD numbers: as shift happens by 1 digit to the left, this effectively results in multiplication with {\tt 10}. {\tt A} acts as a sort of decimal carry in the operation. Example of multiplying multi-digit BCD number by 10:
+        
+		If used with BCD numbers: as the shift happens by 1 digit to the left, this effectively results in multiplication with {\tt 10}. {\tt A} acts as a sort of decimal carry in the operation. Example of multiplying multi-digit BCD number by 10:
 
 		\begin{tabular}{m{8cm}p{0.1cm}m{4.3cm}}
 
@@ -2193,7 +2191,7 @@ digits = &-number   ;(2)
 			\DetailTime{5}{18}
 		\end{DetailTiming}
 
-		\DetailNote{Note: instruction doesn't assume any format of the data; it simply rotates nibbles. So while it's most frequently associated with BCD numbers, it can be used for shifting hexadecimal values (in which case it would represent multiplication by {\tt 16}), or any other content.}
+		\DetailNote{Note: instruction doesn't assume any format of the data; it simply rotates nibbles. So while it's most frequently associated with BCD numbers, it can be used for shifting hexadecimal values (in which case it would represent multiplication by {\tt 16}) or any other content.}
 
 	\end{DetailItem}
 
@@ -2334,7 +2332,7 @@ digits = &-number   ;(2)
 		{\IH{R}otate \IH{R}ight bcd \IH{D}igit}
 		{\SymRRD}
 		
-		Similar to {\tt RLD} (page \pageref{DetailRefRLD}) except rotation is to the right. If used with BCD values, this operation effectively divides 3-digit BCD number by {\tt 10} and stores remainder in {\tt A}. Taking example from {\tt RLD}, we can easily convert it to division by 10 simply by using {\tt RRD}. Note however we also need to change the order - we start from MSB now (which is exactly how division would be performed by hand):
+		Similar to {\tt RLD} (page \pageref{DetailRefRLD}) except rotation is to the right. If used with BCD values, this operation effectively divides 3-digit BCD number by {\tt 10} and stores remainder in {\tt A}. Taking the example from {\tt RLD}, we can easily convert it to division by 10 simply by using {\tt RRD}. Note however we also need to change the order - we start from MSB now (which is exactly how division would be performed by hand):
 
 		\begin{tabular}{m{8cm}p{0.1cm}m{4.3cm}}
 
@@ -2438,7 +2436,7 @@ digits = &-number   ;(2)
 			RST \$38
 		\end{DetailVariants}
 
-		Restarts at the zero page address {\tt s}. Only above addresses are possible, all in page {\tt 0} of the memory, therefore most significant byte of the program counter {\tt PC} is loaded with {\tt \$00}. The instruction may be used as a fast response to an interrupt.
+		Restarts at the zero page address {\tt s}. Only above addresses are possible, all in page {\tt 0} of the memory, therefore the most significant byte of the program counter {\tt PC} is loaded with {\tt \$00}. The instruction may be used as a fast response to an interrupt.
 
 		\begin{DetailEffects}
 			\FlagsRSTn				
@@ -2651,7 +2649,7 @@ digits = &-number   ;(2)
 		{\IH{S}hift \IH{L}eft \IH{L}ogical}
 		{}
 
-		This mnemonic has no associated opcode on Next. There is no difference between logical and arithmetic shift left, use {\tt SLA} for both. Some assemblers will allow {\tt SLL} as equivalent, but unfortunately some will assemble it as {\tt SLI}, so it's best avoiding.
+		This mnemonic has no associated opcode on Next. There is no difference between logical and arithmetic shift left, use {\tt SLA} for both. Some assemblers will allow {\tt SLL} as equivalent, but unfortunately, some will assemble it as {\tt SLI}, so it's best avoiding.
 		
 	\end{DetailItem}
 

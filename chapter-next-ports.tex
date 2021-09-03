@@ -80,7 +80,7 @@
 \subsection{Next/TBBlue Feature Control Registers}
 \label{zx_next_tbblue_registers}
 
-Specific features of the Next are controlled via these register numbers, accessed via \PortLink{TBBlue Register Select\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Select}}}{243B} and \PortLink{TBBlue Register Access\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Access}}}{253B}, or via the NEXTREG instruction.
+Specific features of the Next are controlled via these register numbers, accessed via \PortLink{TBBlue Register Select}{243B}\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Select}} and \PortLink{TBBlue Register Access}{253B}\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Access}}, or via the {\tt NEXTREG} instruction.
 
 \begingroup
 	\NewDocumentEnvironment{tbbluereg}{ +b }{
@@ -131,7 +131,7 @@ Specific features of the Next are controlled via these register numbers, accesse
 
 	\pagebreak
 
-	\vspace*{11.4ex}	% this aligns content with previous page vertically
+	\vspace*{9ex}	% this aligns content with previous page vertically
 	\begin{tbbluereg}
 		\nextport{RW}{22}{Controls the timing of raster interrupts and the ULA frame interrupt}
 		\nextport{RW}{23}{Holds the eight LSBs of the line on which a raster interrupt should occur}

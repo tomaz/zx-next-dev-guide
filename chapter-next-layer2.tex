@@ -15,9 +15,9 @@
 % ─██████████████─██████████████─
 % ───────────────────────────────
 
-As we saw in previous section, drawing with ULA graphics is much simplified on Next. But it can't eliminate the colour clash. Well, not with ULA mode at least. However, Next brings couple brand new graphic modes to the table, hidden behind somewhat casual name ``Layer 2''. But don't let its name deceive you; Layer 2 raises Next graphics capabilities to a whole new level!
+As we saw in the previous section, drawing with ULA graphics is much simplified on Next. But it can't eliminate the colour clash. Well, not with ULA mode at least. However, Next brings a couple of brand new graphic modes to the table, hidden behind a somewhat casual name ``Layer 2''. But don't let its name deceive you; Layer 2 raises Next graphics capabilities to a whole new level!
 
-Layer 2 may appear behind or above ULA layer. It supports different resolutions with every pixel coloured independently and memory organized sequentially, line by line, pixel by pixel. Consequently, Layer 2 requires more memory compared to ULA; each mode needs multiple 16K banks. But of course, Next has far more memory than original Speccy ever did!
+Layer 2 may appear behind or above the ULA layer. It supports different resolutions with every pixel coloured independently and memory organized sequentially, line by line, pixel by pixel. Consequently, Layer 2 requires more memory compared to ULA; each mode needs multiple 16K banks. But of course, Next has far more memory than the original Speccy ever did!
 
 \begin{tabularx}{\textwidth}{cccX}
 	\BitHead{Resolution} & \BitHead{Colours} & \BitHead{BPP} & \BitHead{Memory Organization} \\
@@ -29,21 +29,21 @@ Layer 2 may appear behind or above ULA layer. It supports different resolutions 
 
 \subsection{Initialization}
 
-Drawing on Layer 2 is much simpler than using ULA mode. But in contrast with ULA which is always ``on'', Layer 2 needs to be explicitly enabled. This is done by setting bit {\tt 1} of \PortLink{Layer 2 Access Port}{123B}.
+Drawing on Layer 2 is much simpler than using ULA mode. But in contrast with ULA, which is always ``on'', Layer 2 needs to be explicitly enabled. This is done by setting bit {\tt 1} of \PortLink{Layer 2 Access Port}{123B}.
 
-By default, Layer 2 will use 256$\times$192 with 256 colours, which is supported accross all Next core versions. To select another resolution, \PortLink{Layer 2 Control Register}{70} is used. 320$\times$256 and 640$\times$256 modes also require setting up clip window correctly with \PortLink{Clip Window Layer 2 Register}{18}.
+By default, Layer 2 will use 256$\times$192 with 256 colours, supported across all Next core versions. You can select another resolution with \PortLink{Layer 2 Control Register}{70}. 320$\times$256 and 640$\times$256 modes also require setting up clip window correctly with \PortLink{Clip Window Layer 2 Register}{18}.
 
 
 \subsection{Paging}
 
-After Layer 2 is enabled, we can start writing into memory banks. As mentioned above, Layer 2 requires 3-5 contiguous 16K banks. While Next initializes default configuration during boot, it's nonetheless good idea to set it up manually to ensure our code will work across all devices. \PortLink{Layer 2 Ram Page Register}{12} is used to setup bank number where Layer 2 video memory begins. Note it's always good idea to store previous bank setup so we can restore it afterwards.
+After Layer 2 is enabled, we can start writing into memory banks. As mentioned above, Layer 2 requires 3-5 contiguous 16K banks. While Next initializes default configuration during boot, it's nonetheless a good idea to set it up manually to ensure our code will work across all devices. \PortLink{Layer 2 Ram Page Register}{12} selects the bank number where Layer 2 video memory begins. Note it's a good idea to store the original bank values so we can restore them afterwards.
 
-Paging can be implemented using any supported mode, as described in section \ref{zx_next_memorypaging}, by swapping in bank numbers to 16K slot at \MemAddr{C000}. The simplest and most versatile is MMU mode; MMU6 and MMU7 registers correspond to 2 8K slots starting at \MemAddr{C000}.
+All supported modes can be used for paging, as described in section \ref{zx_next_memorypaging}, by swapping in bank numbers to 16K slot at \MemAddr{C000}. However, the simplest and most versatile is MMU mode; MMU6 and MMU7 registers correspond to 2 8K slots starting at \MemAddr{C000}.
 
 \pagebreak
 \subsection{Drawing}
 
-In general, drawing pixels requires programmer to:
+In general, drawing pixels requires the programmer to:
 
 \begin{itemize}[topsep=1pt,itemsep=1pt]
 	\item Determine and select bank to write to
@@ -51,9 +51,9 @@ In general, drawing pixels requires programmer to:
 	\item Write byte with colour data
 \end{itemize}
 
-All Layer 2 modes use the same approach when drawing pixels. Each pixel is represented by one byte (except 640$\times$320 where each byte contains data for 2 pixels). The value is simply an index into the palette entries list. Similar to other layers, Layer 2 also has two palettes of which only one can be active at any given time. \PortLink{Enhanced ULA Control Register}{43} is used to select active palette. See Palette chapter \ref{zx_next_palette} for details on how to program palettes.
+All Layer 2 modes use the same approach when drawing pixels. Each pixel uses one byte (except 640$\times$320 where each byte contains data for 2 pixels). The value is simply an index into the palette entries list. Similar to other layers, Layer 2 also has two palettes, of which only one can be active at any given time. \PortLink{Enhanced ULA Control Register}{43} is used to select active palette. See Palette chapter \ref{zx_next_palette} for details on how to program palettes.
 
-Also see specific modes in the following pages for examples of writing pixel data.
+See specific modes in the following pages for examples of writing pixel data.
 
 
 \subsection{Effects}
@@ -153,11 +153,11 @@ Scrolling effects can be achieved by writing pixel offsets to \PortLink{Layer 2 
 	\end{tabularx}
 \end{multicols}
 
-This mode is the closest to ULA, resolution wise, so is perhaps the simplest to grasp. It's also supported accross all Next core versions. Pixels are layed out from left to right and top to bottom. Each pixel takes 1 byte representing 8-bit index into palette. 3 16K banks are needed to cover the whole screen, each holding data for 64 lines. Or alternatively 6 8K banks, 32 lines each. Combined, colour data requires 48K of memory.
+This mode is the closest to ULA, resolution wise, so is perhaps the simplest to grasp. It's also supported across all Next core versions. Pixels are laid out from left to right and top to bottom. Each pixel uses one byte that represents an 8-bit index into the palette. 3 16K banks are needed to cover the whole screen, each holding data for 64 lines. Or, if using 8K, 6 banks, 32 lines each. Combined, colour data requires 48K of memory.
 
-16-bits are needed to represent (x,y) coordinate pair. If upper byte is used for Y and lower for X coordinate, together they will form exact memory location offset from top of first bank. But to account for bank swapping; for 16K banks, most significat 2 bits of Y correspond to bank number and for 8K banks, top 3 bits. The rest of Y + X is memory location within the bank.
+Each (x,y) coordinate pair requires 16-bits. If the upper byte is used for Y and lower for the X coordinate, together they will form exact memory location offset from the top of the first bank. But to account for bank swapping; for 16K banks, the most significant 2 bits of Y correspond to bank number and for 8K banks, top 3 bits. The rest of Y + X is memory location within the bank.
 
-Example of filling the screen with vertical rainbow:
+Example of filling the screen with a vertical rainbow:
 
 \begin{tcblisting}{}
 START_16K_BANK  EQU 9
@@ -209,7 +209,7 @@ nextX:
 
 Worth noting: MMU page 6 (next register \MemAddr{56}) covers memory \MemAddr{C000} - \MemAddr{DFFF}. As we swap different 8K banks there, we're effectively changing 8K banks that are readable and writable at those memory addresses. That's why we {\tt OR \$C0} in line 24; we need to convert zero based address to \MemAddr{C000} based. See section \ref{zx_next_bank_mmu_mode} for details on MMU paging mode.
 
-Also note we don't have to handle bank swapping on every iteration, once per 32 rows would do for this example. But the code is more versatile this way and could be easily converted into reusable pixel setting routine.
+We don't have to handle bank swapping on every iteration; once per 32 rows would do for this example. But the code is more versatile this way and could be easily converted into a reusable pixel setting routine.
 
 
 \pagebreak
@@ -292,14 +292,13 @@ Also note we don't have to handle bank swapping on every iteration, once per 32 
 	\end{tabularx}
 \end{multicols}
 
-320$\times$256 mode is only available on Next core 3.0.6 or later. Pixels are layed out from top to bottom and left to right. Each pixel takes 1 byte representing 8-bit index into palette. To cover the whole scren, 5 16K banks of 64 columns or 10 8K banks of 32 columns are needed. Together colour data requires 80K of memory.
+320$\times$256 mode is only available on Next core 3.0.6 or later. Pixels are laid out from top to bottom and left to right. Each pixel uses one byte that represents an 8-bit index into the palette. To cover the whole screen, 5 16K banks of 64 columns or 10 8K banks of 32 columns are needed. Together colour data requires 80K of memory.
 
 In contrast with 256$\times$192, this mode allows drawing to the whole screen, including border. In fact, you can think of it as the regular 256$\times$192 mode with additional 32 pixel border around (32 + 256 + 32 = 320 and 32 + 192 + 32 = 256).
 
-Addressing is more complicated though. As we need 9 bits for X and 8 for Y, we can't address all screen pixels with single 16-bit register pair. However we can use 16-bit register pair to address all pixels within each individual bank. From this perspective, the setup is similar to 256$\times$192 mode, except that X and Y are reversed: if upper byte is used for X and lower for Y, then most significant 2 bits of 16-bit register pair represent lower 2 bits of 16K bank number. And for 8K banks, most significant 3 bits correspond to lower 3 bits of 8K bank number. In either case, most significant bit of bank number arrives from 9th bit of the X coordinate ($X_8$ in table above). The rest of the X + Y is memory location within the bank.
+Addressing is more complicated though. As we need 9 bits for X and 8 for Y, we can't address all screen pixels with single 16-bit register pair. But we can use 16-bit register pair to address all pixels within each bank. From this perspective, the setup is similar to 256$\times$192 mode, except that X and Y are reversed: if the upper byte is used for X and lower for Y, then most significant 2 bits of 16-bit register pair represent lower 2 bits of 16K bank number. And for 8K banks, the most significant 3 bits correspond to the lower 3 bits of 8K bank number. In either case, the most significant bit of the bank number arrives from the 9th bit of the X coordinate ($X_8$ in the table above). The rest of the X + Y is memory location within the bank.
 
-To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to setup clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
-
+To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to set clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
 
 \begin{tcblisting}{}
 START_16K_BANK  EQU 9
@@ -441,11 +440,11 @@ nextY:
 	\end{tabularx}
 \end{multicols}
 
-640$\times$256 mode is very similar to 320$\times$256, except that each byte represents 2 colours instead of 1. It's also available on Next core 3.0.6 or later only. Pixels are layed out from top to bottom and left to right. Each pixel takes 4 bits, so each byte contains data for 2 pixels. To cover the whole scren, 5 16K banks of 128 columns or 10 8K banks of 64 columns are needed. Together colour data requires 80K of memory. Similar to 320$\times$256, this mode also covers the whole screen, including border.
+640$\times$256 mode is very similar to 320$\times$256, except that each byte represents 2 colours instead of 1. It's also available on Next core 3.0.6 or later only. Pixels are laid out from top to bottom and left to right. Each pixel takes 4 bits, so each byte contains data for 2 pixels. To cover the whole screen, 5 16K banks of 128 columns or 10 8K banks of 64 columns are needed. Together colour data requires 80K of memory. Similar to 320$\times$256, this mode also covers the whole screen, including the border.
 
-Addressing wise, this mode is the same as 230$\times$256. Using 16-bit register pair we can't address all pixels on screen, but we can address all pixels within each individual bank. Again, assuming upper byte of 16-bit register pair is used for X and lower for Y and using 9th bit of X coordinate (bit $X_8$ in table above) as most significant bit of bank number, then most significant 2 bits of 16-bit register pair represent lower 2 bits of 16K bank number. And for 8K banks, most significant 3 bits correspond to lower 3 bits of 8K bank number. The rest of the X + Y is memory location within the bank. Don't forget: each colour byte represents 2 screen pixels, so memory X coordinate (as described above) needs to be multiplied by 2 to convert to screen X coordinate.
+Addressing wise, this mode is the same as 230$\times$256. Using 16-bit register pair we can't address all pixels on the screen, but we can address all pixels within each bank. Again, assuming upper byte of 16-bit register pair is used for X and lower for Y and using 9th bit of X coordinate (bit $X_8$ in the table above) as the most significant bit of bank number, then most significant 2 bits of 16-bit register pair represent lower 2 bits of 16K bank number. And for 8K banks, the most significant 3 bits correspond to the lower 3 bits of 8K bank number. The rest of the X + Y is memory location within the bank. Don't forget: each colour byte represents 2 screen pixels, so the memory X coordinate (as described above) needs to be multiplied by 2 to convert to screen X coordinate.
 
-To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to setup clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
+To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to set clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
 
 \begin{tcblisting}{}
 START_16K_BANK  EQU 9
@@ -567,7 +566,7 @@ Since core 3.0.7, write with bit {\tt 4} set was also added:
 
 Default 256$\times$192 mode requires 3 16K banks while new, 320$\times$256 and 640$\times$256 modes require 5 16K banks. Banks need to be contiguous in memory, so here we only specify the first one. Valid bank numbers are therefore {\tt 0} - {\tt 45} ({\tt 109} for 2MB RAM models) for standard mode and {\tt 0} - {\tt 43} ({\tt 107} for 2MB RAM models) for new modes.
 
-Note: this register uses 16K bank numbers; if you're using 8K banks, you need to multiply this value by 2. For example, 16K bank 9 corresponds to 8K banks 18 and 19.
+Note: this register uses 16K bank numbers. If you're using 8K banks, you have to multiply this value by 2. For example, 16K bank 9 corresponds to 8K banks 18 and 19.
 
 
 \pagebreak
@@ -604,7 +603,7 @@ Valid range is:
 		\PortDesc{Reads and writes clip-window coordinates for Layer 2}
 \end{NextPort}
 
-4 coordinates need to be set: X1, X2, Y1 and Y2. Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset index to {\tt 0} in \PortLink{Clip Window Control Register}{1C}, then write all 4 coordinates in succession. Positions are inclusive. Furthermore X positions are doubled for 320$\times$256 mode, quadrupled for 640$\times$256. Therefore, to view the whole of Layer 2, the values are:
+4 coordinates need to be set: X1, X2, Y1 and Y2. Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset the index to {\tt 0} in \PortLink{Clip Window Control Register}{1C}, then write all 4 coordinates in succession. Positions are inclusive. Furthermore, X positions are doubled for 320$\times$256 mode, quadrupled for 640$\times$256. Therefore, to view the whole of Layer 2, the values are:
 
 \begin{tabular}{cllll}
 	& & 

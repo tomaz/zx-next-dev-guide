@@ -19,24 +19,24 @@ Next inherits the same 3 AY-3-8912 chips setup as used in 128K Spectrums. This a
 
 \subsection{AY Chip Registers}
 
-AY chip has 3 sound channels, called A, B and C. Combined with 3 chips, this allows us to produce 9 channel music. Programming wise, each of 3 chips needs to be selected first via \PortLink{Turbo Sound Next Control}{FFFD} register. Afterwards we can setup various parameters through \PortLink{Peripheral 3 Register}{08} and \PortLink{Peripheral 4 Register}{09}.
+AY chip has 3 sound channels, called A, B and C. Combined with 3 chips, this allows us to produce 9 channel music. Programming wise, each of the 3 chips needs to be selected first via \PortLink{Turbo Sound Next Control}{FFFD} register. Afterwards, we can set various parameters through \PortLink{Peripheral 3 Register}{08} and \PortLink{Peripheral 4 Register}{09}.
 
 AY chip is controlled by 14 internal registers. To program them, we first need to select the register with \PortLink{Turbo Sound Next Control}{FFFD} and then write the value with \PortLink{Sound Chip Register Write}{BFFD}.
 
 
 \subsection{Editing and Players}
 
-There are several applications that can produce sounds or music compatible with AY chip. For sounds, Shiru's AYFX Player\footnote{\url{https://shiru.untergrund.net/software.shtml#old}} can be used. This program also includes Z80 native player that can directly load and play sound effects. Alternatively, Remy's AY audio generator website\footnote{\url{https://zx.remysharp.com/audio/}} can produce exactly the same results and is fully compatible with AYFX Player.
+Several applications can produce sounds or music compatible with the AY chip. For sounds, Shiru's AYFX Player\footnote{\url{https://shiru.untergrund.net/software.shtml#old}} can be used. This program also includes a Z80 native player that can directly load and play sound effects. Alternatively, Remy's AY audio generator website\footnote{\url{https://zx.remysharp.com/audio/}} can produce exactly the same results and is fully compatible with AYFX Player.
 
-A different way of playing sounds is to convert WAV file into 1, 2 or 4 bit per sample sound with ChibiWave application. Sounds take a bit more memory this way, but are much easier to create. You can find the application, as well as tutorial and playback source code on Chibi Akumas website\footnote{\url{https://www.chibiakumas.com/z80/platform4.php#LessonP35}}. While there, definitely check other tutorials too - they're all high quality and available as both, written posts and YouTube videos.
+A different way of playing sounds is to convert the WAV file into 1, 2 or 4-bit per sample sound with the ChibiWave application. Sounds take a bit more memory this way but are much easier to create. You can find the application, as well as tutorial and playback source code on Chibi Akumas website\footnote{\url{https://www.chibiakumas.com/z80/platform4.php#LessonP35}}. While there, definitely check other tutorials too - they're all high quality and available as both, written posts and YouTube videos.
 
-For creating music there are also several options. NextDAW\footnote{\url{https://nextdaw.biasillo.com/}} is native composer that runs on ZX Spectrum Next itself. Or if you prefer cross platform, Arkos Tracker\footnote{\url{https://www.julien-nevo.com/arkostracker/}} or Vortex Tracker\footnote{\url{https://bulba.untergrund.net/vortex_e.htm}} should do the job. All include ``drivers''; Z80 code you can include in your program that can load and play created music.
+For creating music there are also several options. NextDAW\footnote{\url{https://nextdaw.biasillo.com/}} is native composer that runs on ZX Spectrum Next itself. Or if you prefer cross-platform, Arkos Tracker\footnote{\url{https://www.julien-nevo.com/arkostracker/}} or Vortex Tracker\footnote{\url{https://bulba.untergrund.net/vortex_e.htm}} should do the job. All include ``drivers''; Z80 code you can include in your program that can load and play created music.
 
 
 \pagebreak
 \subsection{Examples}
 
-Before we can start playing sounds, we need to enable the sound hardware. While this is usually enabled by default, it's nonetheless good idea to ensure our program will always run under the same conditions.
+Before we can start playing sounds, we need to enable the sound hardware. While this is usually enabled by default, it's nonetheless a good idea to ensure our program will always run under the same conditions.
 
 \begin{tcblisting}{}
 	; Setup Turbo Sound chip
@@ -49,7 +49,7 @@ Before we can start playing sounds, we need to enable the sound hardware. While 
 	NEXTREG &09, %11100000  ; Enable mono for AY1-3
 \end{tcblisting}
 
-Programming AY consists of writing various values to its registers. As mentioned, this is two step process: first select register number, then write the value. Multiple writes are required for each tone to set period, volume etc. To make it simpler, I created a subroutine. It takes 2 parameters: {\tt A} for register number ({\tt 0-13}) and {\tt D} with value to write.
+Programming AY consists of writing various values to its registers. As mentioned, this is a two-step process: first select register number, then write the value. Multiple writes are required for each tone to set period, volume etc. To make it simpler, I created a subroutine. It takes 2 parameters: {\tt A} for register number ({\tt 0-13}) and {\tt D} with value to write.
 
 \begin{tcblisting}{}
 WriteDToAYReg:
@@ -65,7 +65,7 @@ WriteDToAYReg:
 	RET
 \end{tcblisting}
 
-Companion code on github includes expanded code as well as a simple player that plays multiple tones in sequence. For the purposes of this book, I used Remy's AY audio generator website to load one of example effects, then manually copied raw values into source code. Laborious process to say the least, this is not how effects should be handled in real life. But I wanted to learn and demonstrate how to program AY chip, not how to use ready made drivers to play effects or music. Furthermore, my ``player'' blocks the main loop; ideally sound effects and music would play on interrupt handler. Which could be a nice homework for the reader - example in section \ref{zx_next_interrupts} should give you an idea of how to achieve this - happy coding!
+Companion code on GitHub includes expanded code as well as a simple player that plays multiple tones in sequence. For the purposes of this book, I used Remy's AY audio generator website to load one of the example effects, then manually copied raw values into the source code. Laborious process to say the least - this is not how effects should be handled in real life. But I wanted to learn and demonstrate how to program AY chip, not how to use ready-made drivers to play effects or music. Furthermore, my ``player'' blocks the main loop; ideally, sound effects and music would play on the interrupt handler. This could be a nice homework for the reader - example in section \ref{zx_next_interrupts} should give you an idea of how to achieve this - happy coding!
 
 
 \pagebreak

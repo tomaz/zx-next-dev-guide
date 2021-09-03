@@ -15,12 +15,12 @@
 % ─██████──████████─██████████████───────██████───────██████████████─
 % ───────────────────────────────────────────────────────────────────
 
-Next inherits ZX Spectrum keyboard handling, so all legacy programs will work out of the box. Additionally, it allows reading status of extended keys.
+Next inherits ZX Spectrum keyboard handling, so all legacy programs will work out of the box. Additionally, it allows reading the status of extended keys.
 
 
 \subsection{Legacy Keyboard Status}
 
-ZX Spectrum uses 8$\times$5 matrix for reading keyboard status. This means 40 distinct keys can be represented. Keyboard is read from \PortLink{ULA Control Port}{xxFE} with particular high bytes. There are 8 possible bytes, each will return status of 5 associated keys. If key is pressed, corresponding bit is set to {\tt 0} and vice versa.
+ZX Spectrum uses 8$\times$5 matrix for reading keyboard status. This means 40 distinct keys can be represented. The keyboard is read from \PortLink{ULA Control Port}{xxFE} with particular high bytes. There are 8 possible bytes, each will return the status of 5 associated keys. If a key is pressed, the corresponding bit is set to {\tt 0} and vice versa.
 
 Example for checking if {\tt P} or {\tt I} is pressed:
 	
@@ -47,12 +47,12 @@ We can slightly improve performance if we replace first two lines with:
 
 Using 16-bit load requires 10 T states for ``{\tt LD BC,nn}'' + 12 for ``{\tt IN A,(C)}'' whereas later variant requires 7 T states for ``{\tt LD A,nn}'' + 11 for ``{\tt IN (nn)}''. So 22 vs 18. The difference is small, but it can add up as typically keyboard is read multiple times per frame.
 
-First program is more understandable at a glance - port address is given as whole 16-bit value, as usually provided in documentation. The second program splits it into 2 8-bit values, so intent may not be immediately apparent. Of course, one learns the patterns with experience, but it nonetheless demonstrates the compromise between readability and speed.
+The first program is more understandable at a glance - the port address is given as a whole 16-bit value, as usually provided in the documentation. The second program splits it into 2 8-bit values, so intent may not be immediately apparent. Of course, one learns the patterns with experience, but it nonetheless demonstrates the compromise between readability and speed.
 
 
 \subsection{Next Extended Keys}
 
-Next uses larger 8$\times$7 matrix for keyboard, with 10 additional keys. By default, hardware is translating keys from extra two columns into existing 8$\times$5 set. However this can be turned off with bit {\tt 4} of \PortLink{ULA Control Register}{68}. Extra keys can be read separately via \PortLink{Extended Keys 0 Register}{B0} and \PortLink{Extended Keys 1 Register}{B1}.
+Next uses larger 8$\times$7 matrix for keyboard, with 10 additional keys. By default, hardware is translating keys from extra two columns into the existing 8$\times$5 set. But you can turn this off with bit {\tt 4} of \PortLink{ULA Control Register}{68}. Extra keys can be read separately via \PortLink{Extended Keys 0 Register}{B0} and \PortLink{Extended Keys 1 Register}{B1}.
 
 
 \subsection{Keyboard Registers}
@@ -60,6 +60,7 @@ Next uses larger 8$\times$7 matrix for keyboard, with 10 additional keys. By def
 
 \subsubsection{ULA Control Port \MemAddr{xxFE}}
 
+\vspace*{-1em} % for some reason LaTeX adds some unwanted vertical space between title and text!?
 Returns keyboard status when read with certain high byte values:
 
 {
@@ -83,7 +84,7 @@ Returns keyboard status when read with certain high byte values:
 	\end{tabular}
 }
 
-Bits are reversed: if key is pressed, corresponding bit is {\tt 0}, if key is not pressed, bit is {\tt 1}.
+Bits are reversed: if a key is pressed, the corresponding bit is {\tt 0}, if a key is not pressed, bit is {\tt 1}.
 
 Note: when written to, \PortLink{ULA Control Port}{xxFE} is used to set border colour and audio devices. See description under ULA chapter, section \ref{zx_next_ula_registers} for details.
 
