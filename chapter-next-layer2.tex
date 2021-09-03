@@ -61,27 +61,7 @@ See specific modes in following pages for examples of writing pixel data.
 Scrolling effects can be achieved by writing pixel offsets to \PortLink{Layer 2 X Offset Register}{16}, \PortLink{Layer 2 X Offset MSB Register}{71} and \PortLink{Layer 2 Y Offset Register}{17}.
 
 
-\subsection{Palette}
 
-Pixel colour data is specified as palette indexes in all modes. Default palette is setup by Next automatically, but if needed, we can change it whole, or just partially to custom colours. This can be used to change specific entries to efficiently achieve different effects such as fade to/from black, animate transition from day to night, animate water etc.
-
-There are several registers involved in palette changes that work together: \PortLink{Enhanced Ula Control Register}{43} is used to select palette, \PortLink{Palette Index Register}{40} to set the index and finally \PortLink{Palette Value Register}{41} to change the entry.
-
-Reusable subroutine for copying a number of palette entries defined by {\tt B} from memory addressed by {\tt HL} register into palette selected by Next register \MemAddr{43}:
-
-\begin{tcblisting}{}
-	NEXTREG &43, %00010000    ; Auto increment, L2 first palette for read/write
-	NEXTREG &40, 0            ; Start copying into index 0
-	LD HL, palette            ; Address to copy RRRGGGBB bytes from
-	LD B, 255                 ; Copy 255 bytes
-	CALL CopyPalette
-	...
-CopyPalette:
-	LD A, (HL)                ; Load RRRGGGBB into A
-	INC HL                    ; Increment to next colour entry
-	NEXTREG &41, A            ; Send colour data to Next HW
-	DJNZ CopyPalette          ; Repeat until B=0
-\end{tcblisting}
 
 
 \pagebreak
@@ -662,72 +642,12 @@ Read:
 
 
 \subsubsection{Palette Index Register \MemAddr{40}}
-
-\begin{NextPort}
-	\PortBits{7-0}
-		\PortDesc{Reads or writes palette index to be manipulated}
-\end{NextPort}
-
-Writing an index {\tt 0-255} associates it with colour set through \PortLink{Palette Value Register}{41} of currently selected pallette in \PortLink{Enhanced Ula Control Register}{43}.
-
-
+\vspace*{-2ex}
 \subsubsection{Palette Value Register \MemAddr{41}}
+\vspace*{-2ex}
+\subsubsection{Enhanced ULA Control Register \MemAddr{43}}
+\PortReference{zx_next_palette_registers}{Palette}
 
-\begin{NextPort}
-	\PortBits{7-0}
-		\PortDesc{Reads or writes 8-bit colour data}
-\end{NextPort}
-
-Format is:
-
-\begin{BitTableByte}
-	\BitSmall{$R_2$} &
-		\BitSmall{$R_1$} &
-		\BitSmall{$R_0$} &
-		\BitSmall{$G_2$} &
-		\BitSmall{$G_1$} &
-		\BitSmall{$G_0$} &
-		\BitSmall{$B_1$} &
-		\BitSmall{$B_0$} \\
-	\hline
-	\BitStartMulti{3}{Red} &
-		\BitMulti{3}{Green} &
-		\BitMulti{2}{Blue} \\
-\end{BitTableByte}
-
-Least significant bit of blue is set to {\tt OR} between $B_1$ and $B_0$.
-
-Writing the value will automatically increment index in \PortLink{Palette Index Register}{40}, if auto-increment is enabled in \PortLink{Enhanced Ula Control Register}{43}. Read doesn't auto-increment index.
-
-
-\subsubsection{Enhanced Ula Control Register \MemAddr{43}}
-
-\begin{NextPort}
-	\PortBits{7}
-		\PortDesc{{\tt 1} to disable palette index auto-increment, {\tt 0} to enable}
-	\PortBits{6-4}
-		\PortDesc{Selects palette for read or write}
-		\PortDescOnly{
-			\begin{PortBitConfig}
-				\PortBitLine{000}{ULA first palette}
-				\PortBitLine{100}{ULA second palette}
-				\PortBitLine{001}{Layer 2 first palette}
-				\PortBitLine{101}{Layer 2 second palette}
-				\PortBitLine{010}{Sprites first palette}
-				\PortBitLine{110}{Sprites second palette}
-				\PortBitLine{011}{Tilemap first palette}
-				\PortBitLine{111}{Tilemap second palette}
-			\end{PortBitConfig}
-		}
-	\PortBits{3}
-		\PortDesc{Selects active Sprites palette ({\tt 0} = first palette, {\tt 1} = second palette)}
-	\PortBits{2}
-		\PortDesc{Selects active Layer 2 palette ({\tt 0} = first palette, {\tt 1} = second palette)}
-	\PortBits{1}
-		\PortDesc{Selects active ULA palette ({\tt 0} = first palette, {\tt 1} = second palette)}
-	\PortBits{0}
-		\PortDesc{Enables ULANext mode if {\tt 1} ({\tt 0} after reset)}
-\end{NextPort}
 
 
 \subsubsection{Layer 2 Control Register \MemAddr{70}}
@@ -761,4 +681,6 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 This is only used for 320$\times$256 and 640$\times$256 modes. Together with \PortLink{Layer 2 X Offset Register}{16} full 319 pixels offsets are available. For 640$\times$256 only 2 pixel offsets are possible.
 
 
+\pagebreak
+\IntentionallyEmpty
 \pagebreak

@@ -67,8 +67,8 @@
 \newcommand{\BitMulti}[2]{\multicolumn{#1}{c|}{#2}}
 \newcommand{\BitStartMulti}[2]{\multicolumn{#1}{|c|}{#2}}
 
-\NewDocumentEnvironment{BitTableByte}{ +b }{
-	\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\NewDocumentEnvironment{BitTableByte}{ O{c} +b }{
+	\begin{tabular}{|#1|#1|#1|#1|#1|#1|#1|#1|}
 		\hline
 		\BitHead{7} &
 			\BitHead{6} &
@@ -81,7 +81,7 @@
 
 		\hline
 
-		#1
+		#2
 		
 		\hline
 	\end{tabular}

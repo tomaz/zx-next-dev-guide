@@ -155,17 +155,17 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{-W}{37}{Writes directly into byte 3 of \PortLink{Sprite Attribute Upload}{xx57} \zxsee{zx_next_sprites}}
 		\nextport{-W}{38}{Writes directly into byte 4 of \PortLink{Sprite Attribute Upload}{xx57} \zxsee{zx_next_sprites}}
 		\nextport{-W}{39}{Writes directly into byte 5 of \PortLink{Sprite Attribute Upload}{xx57} \zxsee{zx_next_sprites}}
-		\nextport{RW}{40}{Chooses a palette element (index) to manipulate with \zxsee{zx_next_layer2}}
-		\nextport{RW}{41}{Use to set/read 8-bit colours of the ULANext palette \zxsee{zx_next_layer2}}
+		\nextport{RW}{40}{Chooses a palette element (index) to manipulate with \zxsee{zx_next_palette}}
+		\nextport{RW}{41}{Use to set/read 8-bit colours of the ULANext palette \zxsee{zx_next_palette}}
 		\nextport{RW}{42}{Specifies mask to extract ink colour from attribute cell value in ULANext mode}
-		\nextport{RW}{43}{Enables or disables Enhanced ULA interpretation of attribute values and toggles active palette \zxsee{zx_next_layer2}}
+		\nextport{RW}{43}{Enables or disables Enhanced ULA interpretation of attribute values and toggles active palette \zxsee{zx_next_palette}}
+		\nextport{RW}{44}{Sets 9-bit (2-byte) colours of the Enhanced ULA palette, or to read second byte of colour \zxsee{zx_next_palette}}
 	\end{tbbluereg}
 
 	\pagebreak
 
 	\begin{tbbluereg}
-		\nextport{RW}{44}{Sets 9-bit (2-byte) colours of the Enhanced ULA palette, or to read second byte of colour}
-		\nextport{RW}{4A}{8-bit colour to be used when all layers contain transparent pixel}
+		\nextport{RW}{4A}{8-bit colour to be used when all layers contain transparent pixel \zxsee{zx_next_palette}}
 		\nextport{RW}{4B}{Index of transparent colour in sprite palette \zxsee{zx_next_sprites}}
 		\nextport{RW}{4C}{Index of transparent colour in Tilemap palette}
 		\nextport{RW}{50}{Selects the 8k-bank stored in 8k-slot 0 \zxsee{zx_next_memorypaging}}

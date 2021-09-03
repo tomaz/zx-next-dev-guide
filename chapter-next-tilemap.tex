@@ -159,7 +159,7 @@ The only remaining piece is to actually copy all the data to expected memory loc
 	; Copy palette
 	LD HL, palette               ; Address of palette data in memory
 	LD B, 16                     ; Copy 16 colours
-	CALL CopyPalette             ; Call routine for copying
+	CALL Copy8BitPalette         ; Call routine for copying
 
 	; Copy tile definitions to expected memory
 	LD HL, tiles                 ; Address of tiles in memory
@@ -171,7 +171,7 @@ The only remaining piece is to actually copy all the data to expected memory loc
 	CALL CopyTileMap40x32        ; Copy 40x32 tilemaps
 \end{tcblisting}
 
-We already know {\tt copyPalette} routine from Layer 2 chapter, the other two are straightforward {\tt LDIR} loops:
+We already know {\tt Copy8BitPalette} routine from Layer 2 chapter, the other two are straightforward {\tt LDIR} loops:
 
 \begin{tcblisting}{}
 CopyTileDefinitions:
@@ -279,9 +279,9 @@ Tilemap X offset in pixels. Meaningful range is {\tt 0-319} for 40x32 and {\tt 0
 Y offset is {\tt 0-255}.
 
 
-\subsubsection{Enhanced Ula Control Register \MemAddr{43}}
+\subsubsection{Enhanced ULA Control Register \MemAddr{43}}
 
-\PortReference{zx_next_layer2_registers}{Layer 2}
+\PortReference{zx_next_palette_registers}{Palette}
 
 
 \subsubsection{ULA Control Register \MemAddr{68}}
