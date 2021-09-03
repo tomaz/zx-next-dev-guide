@@ -51,12 +51,20 @@ In general, drawing pixels requires programmer to:
 	\item Write byte with colour data
 \end{itemize}
 
-See specific modes in following pages for examples of writing pixel data.
+All Layer 2 modes use the same approach when drawing pixels. Each pixel is represented by one byte (except 640$\times$320 where each byte contains data for 2 pixels). The value is simply an index into the palette entries list. Similar to other layers, Layer 2 also has two palettes of which only one can be active at any given time. \PortLink{Enhanced ULA Control Register}{43} is used to select active palette. See Palette chapter \ref{zx_next_palette} for details on how to program palettes.
+
+Also see specific modes in the following pages for examples of writing pixel data.
 
 
 \subsection{Effects}
 
-\PortLink{Global Transparency Register}{14} can be used to alter transparent colour of Layer 2. This same register also affects ULA, LoRes and 1-bit (``text mode'') tilemap.
+\PortLink{Sprite and Layers System Register}{15} can be used to change Layer 2 priority, effectively moving Layer 2 above or below other layers - see Tilemap chapter, section \ref{zx_next_tilemap_registers} for details.
+
+We can even be more specific and only prioritize specific colours, so only pixels using those colours will appear on top while other pixels below other layers. This way we can achieve a simple depth effect. Per-pixel priority is available when writing a custom palette with \PortLink{Enhanced ULA Palette Extension}{44} (9-bit colours). See description under Palette chapter, section \ref{zx_next_palette} for details on how to program palette.
+
+We can also use both Layer 2 palettes to achieve simple effects. For example, certain colours can be marked with the priority flag on one palette but not on the other. When swapping palettes, pixels drawn with these colours would appear on top or below other layers. Another simple effect using both palettes could be colour animation, though it can't be very smooth with only two states.
+
+\PortLink{Global Transparency Register}{14} can be used to alter the transparent colour of Layer 2. This same register also affects ULA, LoRes and 1-bit (``text mode'') tilemap. 
 
 Scrolling effects can be achieved by writing pixel offsets to \PortLink{Layer 2 X Offset Register}{16}, \PortLink{Layer 2 X Offset MSB Register}{71} and \PortLink{Layer 2 Y Offset Register}{17}.
 
