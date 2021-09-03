@@ -284,6 +284,18 @@ Y offset is {\tt 0-255}.
 \PortReference{zx_next_palette_registers}{Palette}
 
 
+\subsubsection{Tilemap Transparency Index Register \MemAddr{4C}}
+
+\begin{NextPort}
+	\PortBits{7-5}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{4-0}
+		\PortDesc{Index of transparent colour into tilemap palette}
+\end{NextPort}
+
+The pixel index from tile definitions is compared before palette offset is applied to upper 4 bits, so there's always one index between {\tt 0} and {\tt 15} that works as transparent colour.
+
+
 \subsubsection{ULA Control Register \MemAddr{68}}
 
 \begin{NextPort}
