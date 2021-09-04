@@ -218,7 +218,9 @@ next:
 	DJNZ next
 \end{tcblisting}
 
-We are effectively writing 20 bytes into memory \MemAddr{14000} - \MemAddr{14013}
+We are effectively writing 20 bytes into memory \MemAddr{14000} - \MemAddr{14013}.
+
+Note: {\tt MMU0} and {\tt MMU1} have extra functionality: ROM can be automatically paged in if otherwise nonexistent 8K page \MemAddr{FF} is written. Low or high 8K ROM bank is automatically determined based on which 8K slot is used. This may be useful if temporarily paging RAM into the bottom 16K region and then wanting to restore back to ROM.
 
 \pagebreak
 
