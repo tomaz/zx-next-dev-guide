@@ -23,9 +23,9 @@ All palettes are initialized with default colours, so they are usable out of the
 	\item \PortLink{Palette Value Register}{41} or \PortLink{Enhanced ULA Palette Extension}{44} reads or writes data for selected colour
 \end{enumerate}
 
-When writing colours, we can chose to automatically increment colour indexes after each write. Bit 7 of \PortLink{Enhanced ULA Control Register}{43} is used for that purpose. This works the same with both registers. Colour RGB values can either be 8-bit {\tt RRRGGGBB}, or 9-bit {\tt RRRGGGBBB} values. Use \PortLink{Palette Value Register}{41} for 8-bit and \PortLink{Enhanced ULA Palette Extension}{44} for 9-bit.
+When writing colours, we can chose to automatically increment colour indexes after each write. Bit 7 of \PortLink{Enhanced ULA Control Register}{43} is used for that purpose. This works the same for both write registers (\MemAddr{41} and \MemAddr{44}). Colour RGB values can either be 8-bit {\tt RRRGGGBB}, or 9-bit {\tt RRRGGGBBB} values. Use \PortLink{Palette Value Register}{41} for 8-bit and \PortLink{Enhanced ULA Palette Extension}{44} for 9-bit.
 
-Note: \PortLink{Enhanced ULA Control Register}{43} has two roles when working with palettes - it selects the active palette for display (out of two available - only for ULA, Layer 2 and Sprites) and selects palette for editing (for all modes, including Tilemap). Therefore care needs to be taken when updating colour entries to avoid accidentally changing the active palette for display at the same time. Depending on our program, we may first need to read the value and then only change bits affecting the palette for editing to ensure the rest of the data remains unaffected.
+Note: \PortLink{Enhanced ULA Control Register}{43} has two roles when working with palettes - it selects the active palette for display (out of two available - only for ULA, Layer 2 and Sprites) and selects palette for editing (for all layers, including Tilemap). Therefore care needs to be taken when updating colour entries to avoid accidentally changing the active palette for display at the same time. Depending on our program, we may first need to read the value and then only change bits affecting the palette for editing to ensure the rest of the data remains unaffected.
 
 
 \subsection{8 Bit Colours}

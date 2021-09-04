@@ -195,6 +195,8 @@ Colour value {\tt 0-7} corresponds to:
 
 Spectrum only requires 768 bytes to configure colour and attributes for the whole screen. And memory is contiguous so it's simple to manage. However, it comes at expense of restricting to only 2 colours per character block - the reason for the (in)famous colour clash.
 
+Note: on Next, default ULA colours can be changed, see Palette chapter \ref{zx_next_palette} for details.
+
 
 \subsection{Border}
 
@@ -234,5 +236,18 @@ ZX Spectrum Next also supports several enhanced ULA modes like Timex Sinclair Do
 
 Note: when reading this port with certain high byte values will read keyboard status. See section \ref{zx_next_keyboard_registers} for details.
 
+
+\subsubsection{Palette Index Register \MemAddr{40}}
+\vspace*{-2ex}
+\subsubsection{Palette Value Register \MemAddr{41}}
+\vspace*{-2ex}
+\subsubsection{Enhanced ULA Ink Colour Mask \MemAddr{42}}
+\vspace*{-2ex}
+\subsubsection{Enhanced ULA Control Register \MemAddr{43}}
+\vspace*{-2ex}
+\subsubsection{Enhanced ULA Palette Extension \MemAddr{44}}
+\vspace*{-2ex}
+\subsubsection{Transparency Colour Fallback Register \MemAddr{4A}}
+\PortReference{zx_next_palette_registers}{Palette}
 
 \pagebreak
