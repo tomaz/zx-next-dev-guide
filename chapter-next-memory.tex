@@ -18,15 +18,15 @@
 \newcommand{\MemEmpty}{\multicolumn{1}{c}{}}
 \newcommand{\MemArrow}[1]{\multicolumn{1}{c}{\IfEq{#1}{<}{\LArrowLine{1em}}{\RArrowLine{1em}}}}
 
-ZX Spectrum Next comes with 1024K (expanded with 2048K) of memory. On the other hand, it's an 8-bit computer with 16-bit address bus. This means it can access up to 2\textsuperscript{16} = 65.536 bytes or 64K of memory at any given time. In order to get access to the whole available memory, a technique called ``paging'' is used. 
+ZX Spectrum Next comes with 1024K (expanded with 2048K) of memory. On the other hand, it's an 8-bit computer with a 16-bit address bus. This means it can access up to 2\textsuperscript{16} = 65.536 bytes or 64K of memory at any given time. In order to get access to the whole available memory, a technique called ``paging'' is used. 
 
-Addressable 64K memory is divided into 8K or 16K chunks called ``slots''. Each slot has fixed memory address range, however as we assign different parts of memory into it, we effectively get ability to read or write that memory, as if that part of memory would be directly located on these addresses. Each slot is therefore like an 8K or 16K window into the whole available memory.
+Addressable 64K memory is divided into 8K or 16K chunks called ``slots''. Each slot has a fixed memory address range, however as we assign different parts of memory into it, we effectively get the ability to read or write that memory, as if that part of memory would be directly located on these addresses. Each slot is therefore like an 8K or 16K window into the whole available memory.
 
-Chunks of memory assigned to slots are called ``banks''\footnote{You may also see term ``page'' used, which is in fact why the techinque is called ``paging''. Note that sometimes slots are also called banks. Furthermore, I also noticed 64K addressable memory called a bank. In this book, I try to keep consistent naming to avoid confusion.}. To simplify addressing, the whole available memory also acts as if it was divided into 8K or 16K chunks itself. This way, ``banks'' are selected by their number - first bank is {\tt 0}, second {\tt 1} and so on. If you ever worked with arrays, banks and their numbers work exactly the same as array data and indexes.
+Chunks of memory assigned to slots are called ``banks''\footnote{You may also see the term ``page'' used, which is in fact why the technique is called ``paging''. Note that sometimes slots are also called banks. Furthermore, I also noticed 64K addressable memory called a bank. In this book, I try to keep consistent naming to avoid confusion.}. To simplify addressing, the whole available memory also acts as if it was divided into 8K or 16K chunks itself. This way, ``banks'' are selected by their number - first bank is {\tt 0}, second {\tt 1} and so on. If you ever worked with arrays, banks and their numbers work exactly the same as array data and indexes.
 
 \subsection{128K and +3 Modes}
 
-Next inherits 128K and +3 paging modes that divide 64K addressable memory into 16K slots. Of these, bottom 16K is always occupied by ROM:
+Next inherits 128K and +3 paging modes that divide 64K addressable memory into 16K slots. Of these, the bottom 16K is always occupied by ROM:
 
 \begingroup
 	\setlength{\tabcolsep}{1pt}
@@ -74,7 +74,7 @@ Together 4 bits from \MemAddr{DFFD} and 3 from \MemAddr{7FFD} form 7 bit bank nu
 
 If you are using the standard interrupt handler or OS routines, then any time you write to Memory Paging Control \MemAddr{7FFD} you should also store the value at \MemAddr{5B5C}.
 
-Example routine for selecting bank on 128K Spectrum (supports standard interrupt handler and OS routines). Routine takes bank number 0-7 as argument in {\tt B}:
+Example routine for selecting bank on 128K Spectrum (supports standard interrupt handler and OS routines). Routine takes bank number 0-7 as an argument in {\tt B}:
 
 \begin{tcblisting}{}
 SwitchBank:
@@ -99,12 +99,12 @@ To call the routine use:
 	CALL SwitchBank
 \end{tcblisting}
 
-Note: while above routine could be extended to support switching all 127 banks on ZX Spectrum Next by writing top 4 bits to \MemAddr{DFFD}, it's much simpler to use Next specific MMU bank switching, as described in section \ref{zx_next_bank_mmu_mode}.
+Note: while the above routine could be extended to support switching all 127 banks on ZX Spectrum Next by writing top 4 bits to \MemAddr{DFFD}, it's much simpler to use Next specific MMU bank switching, as described in section \ref{zx_next_bank_mmu_mode}.
 
 \pagebreak
 \subsubsection{+3 ``AllRam'' Mode}
 
-+3 mode allows selecting all 16K slots of 64K bank from limited selection of arrangements. In normal mode, everything works as in 128K mode, except that we can select from 4 instead of just 2 ROMs:
++3 mode allows selecting all 16K slots of 64K bank from a limited selection of arrangements. In normal mode, everything works as in 128K mode, except that we can select from 4 instead of just 2 ROMs:
 
 \begin{tabular}{ccccl}
 	\MemAddr{0000} & \MemAddr{4000} & \MemAddr{8000} & \MemAddr{C000} & \\
@@ -153,7 +153,7 @@ Any time you write to \PortLink{Plus 3 Memory Paging Control}{1FFD} you should a
 \subsection{MMU-based Mode}
 \label{zx_next_bank_mmu_mode}
 
-Next unique \textbf{MMU-based Mode} is much more flexible in that it allows mapping 8K banks into any 8K slot of memory available to CPU. In this mode, 64K memory accessible to CPU is divided into 8 slots called MMU0 through MMU7, as shown in diagram below. Physical memory is thus divided into 96 (or 224 in expanded Next) 8K banks.
+Next unique \textbf{MMU-based Mode} is much more flexible in that it allows mapping 8K banks into any 8K slot of memory available to CPU. In this mode, 64K memory accessible to the CPU is divided into 8 slots called MMU0 through MMU7, as shown in the diagram below. Physical memory is thus divided into 96 (or 224 in expanded Next) 8K banks.
 
 \begingroup
 	\setlength{\tabcolsep}{1pt}
@@ -226,9 +226,9 @@ We are effectively writing 20 bytes into memory \MemAddr{14000} - \MemAddr{14013
 
 In normal 128K mode, changes made in 128K and Next mode memory management are synchronized. The most recent change always has priority. This means that using 128K mode memory management to select a new 16K bank in 16K slot 4 will update the MMU registers 6 and 7 with the corresponding 8K bank numbers.
 
-However, enabling +3 ``AllRam'' mode will override the Next MMU. Bank selections from the +3 mode will override pages in the Next registers. MMU registers can still be changed, but they will have no effect until special paging mode is disabled.
+However, enabling the +3 ``AllRam'' mode will override the Next MMU. Bank selections from the +3 mode will override pages in the Next registers. MMU registers can still be changed, but they will have no effect until special paging mode is disabled.
 
-Keep in mind that single 16K bank is covered by 2 8K banks, therefore we need to multiply by 2 to calculate 8K bank number:
+Keep in mind that a single 16K bank is covered by 2 8K banks, therefore we need to multiply by 2 to calculate 8K bank number:
 
 {
 	\def\arraystretch{1.5}
@@ -257,7 +257,7 @@ Keep in mind that single 16K bank is covered by 2 8K banks, therefore we need to
 
 \subsection{Paging Out ROM}
 
-ROM can be paged out by using +3 ``AllRam'' or Next MMU-based mode. Beware though that some programs may expect to find ROM routines at fixed addresses between \MemAddr{0000} and \MemAddr{3FFF}. And if default interrupt mode (IM 1) is set, Z80 will jump PC to \MemAddr{0038} expecting to find interrupt handler there.
+ROM can be paged out by using +3 ``AllRam'' or Next MMU-based mode. Beware though that some programs may expect to find ROM routines at fixed addresses between \MemAddr{0000} and \MemAddr{3FFF}. And if default interrupt mode (IM 1) is set, Z80 will jump {\tt PC} to \MemAddr{0038} expecting to find interrupt handler there.
 
 
 \pagebreak
@@ -273,10 +273,10 @@ ROM can be paged out by using +3 ``AllRam'' or Next MMU-based mode. Beware thoug
 		\PortDesc{In normal mode high bit of ROM selection. With low bit from bit 4 of \MemAddr{7FFD}:}
 		\PortDescOnly{
 			\begin{PortBitConfig}
-				\PortConfig{00}{ROM0 = 128K editor and menu system}
-				\PortConfig{01}{ROM1 = 128K syntax checker}
-				\PortConfig{10}{ROM2 = +3DOS}
-				\PortConfig{11}{ROM3 = 48K BASIC}
+				\PortBitLine{00}{ROM0 = 128K editor and menu system}
+				\PortBitLine{01}{ROM1 = 128K syntax checker}
+				\PortBitLine{10}{ROM2 = +3DOS}
+				\PortBitLine{11}{ROM3 = 48K BASIC}
 			\end{PortBitConfig}
 		}
 		\PortDescOnly{In special mode: high bit of memory configuration number}

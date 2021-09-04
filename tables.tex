@@ -17,14 +17,17 @@
 % ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ░▒█░░ 　 ▒█▄▄▀ ▒█▄▄▄ ▒█░░░ ▄█▄ ▒█░░▀█ ▄█▄ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█
 
 % declares the table for describing individual bits of a Next port
-\environbodyname\NEXTPORTBODY
-\NewEnviron{NextPort}{
-	\begin{tabularx}{\textwidth}{cX}
-		Bit & Effect \\
+% 2 optional parameters:
+% - tabular columns definitions (default `cX`)
+% - Title line (default `Bit & Effect`)
+\NewDocumentEnvironment{NextPort}{ O{cX} O{Bit & Effect} +b }{
+	\begin{tabularx}{\linewidth}{#1}
+		#2 \\
 		\hline
-		\NEXTPORTBODY
+		#3
 	\end{tabularx}
-}
+	\vspace*{-1ex}		% reduce spacing below tabular, it's too much by default
+}{}
 
 % ▒█▀▀█ ▀█▀ ▀▀█▀▀ 　 ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀█ ▀█▀ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 
 % ▒█▀▀▄ ▒█░ ░▒█░░ 　 ▒█░▒█ ▒█▀▀▀ ░▀▀▀▄▄ ▒█░░░ ▒█▄▄▀ ▒█░ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 
@@ -42,17 +45,16 @@
 % ▒█▄▄█ ▄█▄ ░▒█░░ 　 ▒█▄▄█ ▒█▄▄▄█ ▒█░░▒█ ▒█▄▄█ ▄█▄ ▒█░░▀█ ▒█░▒█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
 
 % internal table for defining values for specific bit combinations (usually used within `PortDescOnly`)
-\environbodyname\PORTBITTABLEBODY
-\NewEnviron{PortBitConfig}{
-	{
+\NewDocumentEnvironment{PortBitConfig}{ +b }{
+	{ % we are nesting this tabularx within parent tabularx, so we need to embed it within braces
 	\begin{tabularx}{\linewidth}{lX}
-		\PORTBITTABLEBODY
+		#1
 	\end{tabularx}	
 	}
-}
+}{}
 
 % declares each line within `PortBitConfig`
-\newcommand{\PortConfig}[2]{{\tt #1} & \PortDesc{#2}}
+\newcommand{\PortBitLine}[2]{{\tt #1} & \PortDesc{#2}}
 
 
 % ▒█▀▀█ ▒█▀▀▀ ▒█▄░▒█ ▒█▀▀▀ ▒█▀▀█ ░█▀▀█ ▒█░░░ 　 ▒█▀▀█ ▀█▀ ▀▀█▀▀ 　 ▀▀█▀▀ ░█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀ ▒█▀▀▀█ 
@@ -65,9 +67,8 @@
 \newcommand{\BitMulti}[2]{\multicolumn{#1}{c|}{#2}}
 \newcommand{\BitStartMulti}[2]{\multicolumn{#1}{|c|}{#2}}
 
-\environbodyname\BITTABLEBODY
-\NewEnviron{BitTableByte}{
-	\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\NewDocumentEnvironment{BitTableByte}{ O{c} +b }{
+	\begin{tabular}{|#1|#1|#1|#1|#1|#1|#1|#1|}
 		\hline
 		\BitHead{7} &
 			\BitHead{6} &
@@ -80,12 +81,12 @@
 
 		\hline
 
-		\BITTABLEBODY
+		#2
 		
 		\hline
 	\end{tabular}
-}
-\NewEnviron{BitTableWord}{
+}{}
+\NewDocumentEnvironment{BitTableWord}{ +b} {
 	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 		\hline
 
@@ -112,10 +113,10 @@
 
 		\hline
 		
-		\BITTABLEBODY
+		#1
 		\hline
 	\end{tabular}
-}
+}{}
 
 
 % ────────────────────────────────────────────────────────────────────────────────────
@@ -137,7 +138,7 @@
 % ▒█░ ▒█▒█▒█ ░▀▀▀▄▄ ░▒█░░ ▒█▄▄▀ ▒█░▒█ ▒█░░░ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 　 ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ ░▀▀▀▄▄ 
 % ▄█▄ ▒█░░▀█ ▒█▄▄▄█ ░▒█░░ ▒█░▒█ ░▀▄▄▀ ▒█▄▄█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ 　 ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄ ▒█▄▄▄█
 
-% this is internal definition for instruction table that takes 2 arguments: first 2 column definitions and body. It should only be used by NewEnviron macros, not intended as general purpose macro by itself (it could be used, but then tables would not be defined with begin/end)
+% this is internal definition for instruction table that takes 2 arguments: first 2 column definitions and body. It should only be used by NewDocumentEnvironment macros, not intended as general purpose macro by itself (it could be used, but then tables would not be defined with begin/end)
 \newcommand{\InstrTableBody}[3]{
 	{
 		\footnotesize
@@ -185,11 +186,10 @@
 % concrete environments for instruction tables (uses above 2 macros and unifies parameters)
 
 % the most generic of the tables, this should suffice for most tables, mnemonic and symbolic operation columns are same width
-\environbodyname\INSTRTABLEBODY
-\NewEnviron{instrtable}{\InstrTableBodyBottomLine{p{8em}X}{\INSTRTABLEBODY}}
+\NewDocumentEnvironment{instrtable}{ +b }{\InstrTableBodyBottomLine{p{8em}X}{#1}}{}
 
 % this table doesn't use bottom line, it's mainly here for alphabetical tables use. Note it also uses less space for instruction - we don't include undocumented instructions at the moment and they do require additional space for mnemonic from `instrtable`
-\NewEnviron{instrtablesimple}{\InstrTableBody{p{7em}X}{\INSTRTABLEBODY}{}}
+\NewDocumentEnvironment{instrtablesimple}{ +b }{\InstrTableBody{p{7em}X}{#1}{}}{}
 
 
 % ▀█▀ ▒█▄░▒█ ▒█▀▀▀█ ▀▀█▀▀ ▒█▀▀█ ▒█░▒█ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ ▒█▀▀▀█ 
@@ -197,15 +197,14 @@
 % ▄█▄ ▒█░░▀█ ▒█▄▄▄█ ░▒█░░ ▒█░▒█ ░▀▄▄▀ ▒█▄▄█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
 
 % defines instruction environment that embeds each instruction. Instruction mnemonic is taken as parameter, mainly to show it when environment is collapsed in editor. Note this needs to use \xdef and be an ugly mess of oneliner otherwise mnemonic will be right aligned...
-\environbodyname\INSTRBODY
-\NewEnviron{instruction}[1]{\xdef\instructionbody{\unexpanded{{\tt #1}\instrt&}\unexpanded\expandafter{\INSTRBODY}\unexpanded{\instrb\\}}
+\NewDocumentEnvironment{instruction}{ m +b }{\xdef\instructionbody{\unexpanded{{\tt #1}\instrt&}\unexpanded\expandafter{#2}\unexpanded{\instrb\\}}
 \aftergroup\instructionbody
-}
+}{}
 
 % same as `instruction` except this should be used for last instruction in `instrtable` so that spacing below instruction and above bottom line is smaller
-\NewEnviron{lastinstruction}[1]{\xdef\instructionbody{\unexpanded{{\tt #1}\instrt&}\unexpanded\expandafter{\INSTRBODY}\unexpanded{\instrb}}
+\NewDocumentEnvironment{lastinstruction}{ m +b }{\xdef\instructionbody{\unexpanded{{\tt #1}\instrt&}\unexpanded\expandafter{#2}\unexpanded{\instrb}}
 \aftergroup\instructionbody
-}
+}{}
 
 
 % ▀█▀ ▒█▄░▒█ ▒█▀▀▀█ ▀▀█▀▀ ▒█▀▀█ ▒█░▒█ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 　 ▒█▀▀█ ░█▀▀█ ▒█▀▀█ ▀▀█▀▀ ▒█▀▀▀█ 
@@ -276,8 +275,7 @@
 
 % defines table for notes; unfortunately I wasn't able to add notes to the same table created using above macros, so we need to use separate one. 
 % Note: you should embed both tables into minipage to keep them together; while we could create macro for that too, we'd lose ability to collapse in editor
-\environbodyname\NOTEBODY
-\NewEnviron{notestable}{
+\NewDocumentEnvironment{notestable}{ +b }{
 	{
 		\scriptsize
 		\setlength{\fboxsep}{1pt}	% keep fboxes tight to keep notes vertically short
@@ -286,13 +284,13 @@
 		\begin{tabularx}{\textwidth}{lX}
 			Notes:
 
-			\NOTEBODY
+			#1
 
 			\hline
 
 		\end{tabularx}
 	}
-}
+}{}
 
 % note item
 \newcommand{\NoteItem}[1]{& #1 \\}

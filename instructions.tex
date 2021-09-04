@@ -236,6 +236,14 @@
 	}
 }
 
+\newcommand{\SymLDDRX}[1][]{
+	\IfEqCase{#1}{
+		{0}{do LDDX}
+		{1}{while BC>0}
+		{}{\SymLDDRX[0]\\\SymLDDRX[1]}
+	}
+}
+
 \newcommand{\SymLDDX}[1][]{
 	\IfEqCase{#1}{
 		{0}{if (HL)$\neq$A:~(DE)$\leftarrow$(HL)}

@@ -18,11 +18,11 @@
 Maskable interrupts on ZX Spectrum:
 
 \begin{itemize}
-	\item {\textbf Mode 0}: meant for interrupts triggered by external device. Instruction to be executed needs to be placed on data bus ({\tt RST} or {\tt CALL} for example). On ZX Spectrum this is the mode that is enabled by default when device powers up. However ROM soon sets up mode 1.
+	\item {\textbf Mode 0}: meant for interrupts triggered by an external device. Instruction to be executed needs to be placed on the data bus ({\tt RST} or {\tt CALL} for example). On ZX Spectrum this is the mode that is enabled by default when the device powers up. But ROM soon sets up mode 1.
 	
-	\item {\textbf Mode 1}: on ZX Spectrum, this interrupt is triggered by vertical blanking if the screen refresh, roughly 50 times per second. When this occurs, current contents of {\tt PC} counter are pushed onto stack {\tt SP}, then address of \MemAddr{0038} is loaded and program stored on that location will start running. On ZX Spectrum Next this interrupt is responsible for updating system variable frame counter and scanning the keyboard.
+	\item {\textbf Mode 1}: on ZX Spectrum, this interrupt is triggered by vertical blanking if the screen refresh, roughly 50 times per second. When this occurs, current contents of {\tt PC} counter are pushed onto stack {\tt SP}, then the address of \MemAddr{0038} is loaded and a program stored on that location will start running. On ZX Spectrum Next this interrupt is responsible for updating the system variable frame counter and scanning the keyboard.
 	
-	\item {\textbf Mode 2}: similar to {\tt IM 1} in frequency and handling, but uses vector table to jump to interrupt program instead of executing hard code ROM routine thus allowing user to setup their own interrupt handler.
+	\item {\textbf Mode 2}: similar to {\tt IM 1} in frequency and handling, but uses vector table to jump to interrupt program instead of executing hard code ROM routine thus allowing the user to set their own interrupt handler.
 \end{itemize}
 
 On ZX Spectrum Next interrupt handler can be replaced by either:
@@ -30,10 +30,10 @@ On ZX Spectrum Next interrupt handler can be replaced by either:
 \begin{itemize}
 	\item Setting Z80 to {\tt IM 2} mode and configuring custom interrupt handler routine
 	
-	\item Page out ROM (as described in section \ref{zx_next_memorypaging}) and replace it with RAM page with custom interrupt routine at address \MemAddr{0038}
+	\item Paging out ROM (as described in section \ref{zx_next_memorypaging}) and replace it with RAM page with custom interrupt routine at address \MemAddr{0038}
 \end{itemize}
 
-You can also adjust timing of the interrupts with Next/TBBlue Feature Control Registers {\tt \$22} and {\tt \$23}.
+You can also adjust timing of the interrupts with Next/TBBlue Feature Control Registers \MemAddr{22} and \MemAddr{23}.
 
 \pagebreak
 Example of setting up custom interrupt vectors with {\tt IM 2}\footnote{Based on \url{http://codersbucket.blogspot.com/2015/04/interrupts-on-zx-spectrum-what-are.html}}:

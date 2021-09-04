@@ -24,17 +24,17 @@
 \section{Overview}
 \subsection{History of the Z80}
 
-In 1969 Intel was approached by a Japanese company called Busicom to produce  chips for Busicom's electronic desktop calculator. Intel suggested that the calculator should be built around a single-chip generalized computing engine and thus was born the first microprocessor - the 4004. Although it was based on ideas from much larger mainframe and mini-computers the 4004 was cut down to fit onto a 16-pin chip, the largest that was available at the time, so that its data bus and address bus were each only 4-bits wide. 
+In 1969 Intel was approached by a Japanese company called Busicom to produce chips for Busicom's electronic desktop calculator. Intel suggested that the calculator should be built around a single-chip generalized computing engine and thus was born the first microprocessor - the 4004. Although it was based on ideas from a much larger mainframe and mini-computers the 4004 was cut down to fit onto a 16-pin chip, the largest that was available at the time, so that its data bus and address bus were each only 4-bits wide. 
 
 Intel went on to improve the design and produced the 4040 (an improved 4-bit design) the 8008 (the first 8-bit microprocessor) and then in 1974 the 8080. This last one turned out to be a very useful and popular design and was used in the first home computer, the Altair 8800, and CP/M. 
 
-In 1975 Federico Faggin who had had worked at Intel on the 4004 and its successors left the company and joined forces with Masatoshi Shima to form Zilog. At their new company Faggin and Shima designed a microprocessor that was compatible with Intel's 8080 (it ran all 78 instructions of the 8080 in almost the same way that Intel's chip did)\footnote{Thanks to Jim Battle (\email{frustum}{pacbell}{net}): the 8080 always puts the parity in the PF flag; VF does not exist and the timing is different. Possibly there are other differences.} but had many more abilities (an extra 120 instructions, many more registers, simplified connection to hardware). Thus was born the mighty Z80, and thus was the empire forged!
+In 1975 Federico Faggin who had worked at Intel on the 4004 and its successors left the company and joined forces with Masatoshi Shima to form Zilog. At their new company, Faggin and Shima designed a microprocessor that was compatible with Intel's 8080 (it ran all 78 instructions of the 8080 in almost the same way that Intel's chip did)\footnote{Thanks to Jim Battle (\email{frustum}{pacbell}{net}): the 8080 always puts the parity in the PF flag; VF does not exist and the timing is different. Possibly there are other differences.} but had many more abilities (an extra 120 instructions, many more registers, simplified connection to hardware). Thus was born the mighty Z80, and thus was the empire forged!
 
 The original Z80 was first released in July 1976, coincidentally Jan was born in the very same month. Since then newer versions have appeared with much of the same architecture but running at higher speeds. The original Z80 ran with a clock rate of 2.5MHz, the Z80A runs at 4MHz, the Z80B at 6MHz and the Z80H at 8Mhz. 
 
-Many companies produced machines based around Zilog's improved chip during the 1970's and 80's and because the chip could run 8080 code without needing any changes to the code the perfect choice of operating system was CP/M. 
+Many companies produced machines based around Zilog's improved chip during the 1970s and 80's and because the chip could run 8080 code without needing any changes to the code the perfect choice of the operating system was CP/M. 
 
-Also Zilog has created a Z280, an enhanced version of the Zilog Z80 with a 16 bit architecture, introduced in July, 1987. It added an MMU to expand addressing to 16Mb, features for multitasking, a 256 byte cache, and a huge number of new opcodes (giving a total of over 2000!). Its internal clock runs at 2 or 4 times the external clock (e.g. a 16MHz CPU with a 4MHz bus.
+Also, Zilog has created a Z280, an enhanced version of the Zilog Z80 with a 16-bit architecture, introduced in July 1987. It added an MMU to expand addressing to 16Mb, features for multitasking, a 256-byte cache, and a huge number of new opcodes (giving a total of over 2000!). Its internal clock runs at 2 or 4 times the external clock (e.g. a 16MHz CPU with a 4MHz bus.
 
 The Z380 CPU incorporates advanced architectural while maintaining Z80/Z180 object code compatibility. The Z380 CPU is an enhanced version of the Z80 CPU. The Z80 instruction set has been retained, adding a full complement of 16-bit arithmetic and logical operations, multiply and divide, a complete set of register-to-register loads and exchanges, plus 32-bit load and exchange, and 32-bit arithmetic operations for address calculations.
 
@@ -81,7 +81,7 @@ The following accessible registers exist in the Z80.
 \subsection{Flags}
 \label{flags}
 
-The conventional way of denoting the flags is with one letter, ``C'' for the carry flag for example. It could be confused with the C register, so I've chosen to use the ``CF'' notation for flags (except ``P'' which uses ``PV'' notation due to having dual purpose, either as parity or overflow). And for YF and XF the same notation used in MAME\footnote{\url{http://www.mame.net/}}.
+The conventional way of denoting the flags is with one letter, ``C'' for the carry flag for example. It could be confused with the C register, so I've chosen to use the ``CF'' notation for flags (except ``P'' which uses ``PV'' notation due to having dual-purpose, either as parity or overflow). And for YF and XF the same notation is used in MAME\footnote{\url{http://www.mame.net/}}.
 
 \begin{tabular}{|l|c|c|c|c|c|c|c|c|} 
 	\hline
@@ -235,22 +235,22 @@ This section might be relevant even if you don't do anything with hardware; it m
 \subsection{Power on Defaults}
 \label{pon}
 
-Matt\footnote{\email{redflame}{xmission}{com}} has done some excellent research on this. He found that AF and SP are always set to \MemAddr{FFFF} after a reset, and all other registers are undefined (different depending on how long the CPU has been powered off, different for different Z80 chips). Of course the PC should be set to 0 after a reset, and so should the {\tt IFF1} and {\tt IFF2} flags (otherwise strange things could happen). Also since the Z80 is 8080 compatible, interrupt mode is probably 0.
+Matt\footnote{\email{redflame}{xmission}{com}} has done some excellent research on this. He found that AF and SP are always set to \MemAddr{FFFF} after a reset, and all other registers are undefined (different depending on how long the CPU has been powered off, different for different Z80 chips). Of course, the PC should be set to 0 after a reset, and so should the {\tt IFF1} and {\tt IFF2} flags (otherwise strange things could happen). Also since the Z80 is 8080 compatible, the interrupt mode is probably 0.
 
-Probably the best way to simulate this in an emulator is set PC, IFF1, IFF2, IM to 0 and set all other registers to \MemAddr{FFFF}.
+Probably the best way to simulate this in an emulator is to set {\tt PC}, {\tt IFF1}, {\tt IFF2}, {\tt IM} to 0 and set all other registers to \MemAddr{FFFF}.
 
 
 \section{Undocumented Opcodes}
 
 There are quite a few undocumented opcodes/instructions. This section should describe every possible opcode so you know what will be executed, whatever the value of the opcode is.
 
-The following prefixes exist: CB, ED, DD, FD, DDCB and FDCB. Prefixes change the way the following opcodes are interpreted. All instructions without a prefix (not a value of one the above) are single byte opcodes (without the operand, that is), which are documented in the official documentation.
+The following prefixes exist: {\tt CB}, {\tt ED}, {\tt DD}, {\tt FD}, {\tt DDCB} and {\tt FDCB}. Prefixes change the way the following opcodes are interpreted. All instructions without a prefix (not a value of one the above) are single-byte opcodes (without the operand, that is), which are documented in the official documentation.
 
 
 \subsection{CB Prefix \cite{gerton}}
 \label{prefix_cb}
 
-An opcode with a CB prefix is a rotate, shift or bit test/set/reset instruction. There are a few instructions missing from the official list, which are usually denoted with {\tt SLL} (Shift Logical Left). It works like {\tt SLA}, for one exception: it sets bit 0 ({\tt SLA} resets it).
+An opcode with a {\tt CB} prefix is a rotate, shift or bit test/set/reset instruction. A few instructions are missing from the official list, for example {\tt SLL} (Shift Logical Left). It works like {\tt SLA}, for one exception: it sets bit 0 ({\tt SLA} resets it).
 
 {\tt 
   \begin{tabbing}
@@ -268,18 +268,18 @@ An opcode with a CB prefix is a rotate, shift or bit test/set/reset instruction.
 
 \subsection{DD Prefix \cite{gerton}}
 
-In general, the instruction following the DD prefix is executed as is, but if the HL register is supposed to be used the IX register is used instead. Here are the rules:
+In general, the instruction following the {\tt DD} prefix is executed as is, but if the {\tt HL} register is supposed to be used the {\tt IX} register is used instead. Here are the rules:
 
 \begin{itemize}[topsep=1pt,itemsep=1pt]
-	\item Any usage of HL is treated as an access to IX (except {\tt EX DE,HL} and {\tt EXX} and the ED prefixed instructions that use HL).
+	\item Any usage of {\tt HL} is treated as an access to {\tt IX} (except {\tt EX DE,HL} and {\tt EXX} and the {\tt ED} prefixed instructions that use {\tt HL}).
 	
-	\item Any access to (HL) is changed to (IX+d), where ``d'' is a signed displacement byte placed after the main opcode - except {\tt JP (HL)}, which isn't indirect anyway. The mnemonic should be {\tt JP HL}.
+	\item Any access to {\tt (HL)} is changed to {\tt (IX+d)}, where ``d'' is a signed displacement byte placed after the main opcode - except {\tt JP (HL)}, which isn't indirect anyway. The mnemonic should be {\tt JP HL}.
 	
-	\item Any access to H is treated as an access to IX\High (the high byte of IX) except if (IX+d) is used as well.
+	\item Any access to {\tt H} is treated as an access to {\tt IX\High} (the high byte of {\tt IX}) except if {\tt (IX+d)} is used as well.
 	
-	\item Any access to L is treated as an access to IX\Low (the low byte of IX) except if (IX+d) is used as well.
+	\item Any access to {\tt L} is treated as an access to {\tt IX\Low} (the low byte of {\tt IX}) except if {\tt (IX+d)} is used as well.
 	
-	\item A DD prefix before a CB selects a completely different instruction set, see section {\ref{prefix_cbdd}}.
+	\item A {\tt DD} prefix before a {\tt CB} selects a completely different instruction set, see section {\ref{prefix_cbdd}}.
 \end{itemize}
 
 \pagebreak
@@ -287,25 +287,25 @@ Some examples:
 
 {\tt 
 	\begin{tabbing}
-		{\qquad}\={\rm Without DD prefix}\qquad\={\rm With DD prefix}\+ \\
-		LD H,(HL)\>LD H,(IX+d)\\
-		LD H,A\>LD IXH,A\\
-		LD L,H\>LD IXL,IXH\\
+		{\qquad}\={\rm Without {\tt DD} prefix}\qquad\={\rm With {\tt DD} prefix}\+ \\
+		LD H, (HL)\>LD H, (IX+d)\\
+		LD H, A\>LD IXH, A\\
+		LD L, H\>LD IXL, IXH\\
 		JP (HL)\>JP (IX)\\
-		LD DE,0\>LD DE,0\\
-		LD HL,0\>LD IX,0\\
+		LD DE, 0\>LD DE, 0\\
+		LD HL, 0\>LD IX, 0\\
 	\end{tabbing}
 }
 
 
 \subsection{FD Prefix \cite{gerton}}
 
-This prefix has the same effect as the DD prefix, though IY is used instead of IX.  Note {\tt LD IXL,IYH} is not possible: only IX or IY is accessed in one instruction, never both.
+This prefix has the same effect as the {\tt DD} prefix, though {\tt IY} is used instead of {\tt IX}.  Note {\tt LD IXL}, {\tt IYH} is not possible: only {\tt IX} or {\tt IY} is accessed in one instruction, never both.
 
 
 \subsection{ED Prefix \cite{gerton}}
 
-There are a number of undocumented EDxx instructions, of which most are duplicates of documented instructions. Any instruction not listed here has no effect (same as 2 {\tt NOP}s). \See{**} indicates undocumented instruction:
+There are a number of undocumented {\tt EDxx} instructions, of which most are duplicates of documented instructions. Any instruction not listed here has no effect (same as 2 {\tt NOP}s). \See{**} indicates undocumented instruction:
 
 {\tt
 	\vspace*{1em}
@@ -313,42 +313,42 @@ There are a number of undocumented EDxx instructions, of which most are duplicat
 	\begin{parcolumns}[colwidths={1=0.3\linewidth}]{2}
 		\colchunk{
 			\begin{tabularx}{\linewidth}{p{0.25cm}lX}	% p{0.25} to move left edge inwards
-				& ED40 & IN B,(C) \\
-				& ED41 & OUT (C),B \\
-				& ED42 & SBC HL,BC \\
-				& ED43 & LD (nn),BC \\
+				& ED40 & IN B, (C) \\
+				& ED41 & OUT (C), B \\
+				& ED42 & SBC HL, BC \\
+				& ED43 & LD (nn), BC \\
 				& ED44 & NEG \\
 				& ED45 & RETN \\
 				& ED46 & IM 0 \\
-				& ED47 & LD I,A \\
-				& ED48 & IN C,(C) \\
-				& ED49 & OUT (C),C \\
-				& ED4A & ADC HL,BC \\
-				& ED4B & LD BC,(nn) \\
+				& ED47 & LD I, A \\
+				& ED48 & IN C, (C) \\
+				& ED49 & OUT (C), C \\
+				& ED4A & ADC HL, BC \\
+				& ED4B & LD BC, (nn) \\
 				& ED4C & NEG\See{**} \\
 				& ED4D & RETI \\
 				& ED4E & IM 0\See{**} \\
-				& ED4F & LD R,A \\
+				& ED4F & LD R, A \\
 			\end{tabularx}
 		}
 		\colchunk{
 			\begin{tabularx}{\linewidth}{lX}
-				ED50 & IN D,(C) \\
-				ED51 & OUT (C),D \\
-				ED52 & SBC HL,DE \\
-				ED53 & LD (nn),DE \\
+				ED50 & IN D, (C) \\
+				ED51 & OUT (C), D \\
+				ED52 & SBC HL, DE \\
+				ED53 & LD (nn), DE \\
 				ED54 & NEG\See{**} \\
 				ED55 & RETN\See{**} \\
 				ED56 & IM 1 \\
-				ED57 & LD A,I \\
-				ED58 & IN E,(C) \\
-				ED59 & OUT (C),E \\
-				ED5A & ADC HL,DE \\
-				ED5B & LD DE,(nn) \\
+				ED57 & LD A, I \\
+				ED58 & IN E, (C) \\
+				ED59 & OUT (C), E \\
+				ED5A & ADC HL, DE \\
+				ED5B & LD DE, (nn) \\
 				ED5C & NEG\See{**} \\
 				ED5D & RETN\See{**} \\
 				ED5E & IM 2 \\
-				ED5F & LD A,R \\
+				ED5F & LD A, R \\
 			\end{tabularx}
 		}
 	\end{parcolumns}
@@ -356,18 +356,18 @@ There are a number of undocumented EDxx instructions, of which most are duplicat
 	\begin{parcolumns}[colwidths={1=0.3\linewidth}]{2}
 		\colchunk[1]{
 			\begin{tabularx}{\linewidth}{p{0.25cm}lX}
-				& ED60 & IN H,(C) \\
-				& ED61 & OUT (C),H \\
-				& ED62 & SBC HL,HL \\
-				& ED63 & LD (nn),HL \\
+				& ED60 & IN H, (C) \\
+				& ED61 & OUT (C), H \\
+				& ED62 & SBC HL, HL \\
+				& ED63 & LD (nn), HL \\
 				& ED64 & NEG\See{**} \\
 				& ED65 & RETN\See{**} \\
 				& ED66 & IM 0\See{**} \\
 				& ED67 & RRD \\
-				& ED68 & IN L,(C) \\
-				& ED69 & OUT (C),L \\
-				& ED6A & ADC HL,HL \\
-				& ED6B & LD HL,(nn) \\
+				& ED68 & IN L, (C) \\
+				& ED69 & OUT (C), L \\
+				& ED6A & ADC HL, HL \\
+				& ED6B & LD HL, (nn) \\
 				& ED6C & NEG\See{**} \\
 				& ED6D & RETN\See{**} \\
 				& ED6E & IM 0\See{**} \\
@@ -377,18 +377,18 @@ There are a number of undocumented EDxx instructions, of which most are duplicat
 
 		\colchunk[2]{
 			\begin{tabularx}{\linewidth}{lX}
-				ED70 & IN (C) / IN F,(C)\See{**} \\
-				ED71 & OUT (C),0\See{**} \\
-				ED72 & SBC HL,SP \\
-				ED73 & LD (nn),SP \\
+				ED70 & IN (C) / IN F, (C)\See{**} \\
+				ED71 & OUT (C), 0\See{**} \\
+				ED72 & SBC HL, SP \\
+				ED73 & LD (nn), SP \\
 				ED74 & NEG\See{**} \\
 				ED75 & RETN\See{**} \\
 				ED76 & IM 1\See{**} \\
 				ED77 & NOP\See{**} \\
-				ED78 & IN A,(C) \\
-				ED79 & OUT (C),A \\
-				ED7A & ADC HL,SP \\
-				ED7B & LD SP,(nn) \\
+				ED78 & IN A, (C) \\
+				ED79 & OUT (C), A \\
+				ED7A & ADC HL, SP \\
+				ED7B & LD SP, (nn) \\
 				ED7C & NEG\See{**} \\
 				ED7D & RETN\See{**} \\
 				ED7E & IM 2\See{**} \\
@@ -398,14 +398,14 @@ There are a number of undocumented EDxx instructions, of which most are duplicat
 	\end{parcolumns}
 }
 
-The ED70 instruction reads from I/O port C, but does not store the result. It just affects the flags like the other {\tt IN x,(C)} instructions. ED71 simply outs the value 0 to I/O port C.
+The {\tt ED70} instruction reads from I/O port {\tt C}, but does not store the result. It just affects the flags like the other {\tt IN x,(C)} instructions. {\tt ED71} simply outs the value 0 to I/O port {\tt C}.
 
-The ED63 is a duplicate of the 22 opcode ({\tt LD (nn),HL}) and similarly ED6B is a duplicate of the 2A opcode ({\tt LD HL,(nn)}). Of course the timings are different. These instructions are listed in the official documentation.
+The {\tt ED63} is a duplicate of the 22 opcode ({\tt LD (nn),HL}) and similarly {\tt ED6B} is a duplicate of the {\tt 2A} opcode ({\tt LD HL,(nn)}). Of course the timings are different. These instructions are listed in the official documentation.
 
 According to Gerton Lunter\footnote{\email{gerton}{math.rug}{nl}}:
 
 \begin{quote}
-	The instructions ED 4E and ED 6E are {\tt IM 0} equivalents: when FF was put on the bus (physically) at interrupt time, the Spectrum continued to execute normally, whereas when an EF ({\tt RST \$28}) was put on the bus it crashed, just as it does in that case when the Z80 is in the official interrupt mode 0. In {\tt IM 1} the Z80 just executes a {\tt RST \$38} (opcode FF) no matter what is on the bus.
+	The instructions {\tt ED 4E} and {\tt ED 6E} are {\tt IM 0} equivalents: when {\tt FF} was put on the bus (physically) at interrupt time, the Spectrum continued to execute normally, whereas when an {\tt EF} ({\tt RST \$28}) was put on the bus it crashed, just as it does in that case when the Z80 is in the official interrupt mode 0. In {\tt IM 1} the Z80 just executes a {\tt RST \$38} (opcode {\tt FF}) no matter what is on the bus.
 \end{quote}
 
 All the {\tt RETI/RETN} instructions are the same, all like the {\tt RETN} instruction. So they all, including {\tt RETI}, copy {\tt IFF2} to {\tt IFF1}. See section \ref{flipflop} for more information on {\tt RETI} and {\tt RETN} and {\tt IM x}.
@@ -414,7 +414,7 @@ All the {\tt RETI/RETN} instructions are the same, all like the {\tt RETN} instr
 \subsection{DDCB Prefix}
 \label{prefix_cbdd}
 
-The undocumented DDCB instructions store the result (if any) of the operation in one of the seven all-purpose registers. Which one depends on the lower 3 bits of the last byte of the opcode (not operand, so not the offset).
+The undocumented {\tt DDCB} instructions store the result (if any) of the operation in one of the seven all-purpose registers. Which one depends on the lower 3 bits of the last byte of the opcode (not operand, so not the offset).
 
 {\tt
 	\vspace*{1em}
@@ -439,56 +439,56 @@ The undocumented DDCB instructions store the result (if any) of the operation in
 	\end{parcolumns}
 }
 
-The documented {\tt DDCB0106} is {\tt RLC (IX+\$01)}. So, clear the lower three bits ({\tt DDCB0100}) and something is done to register B. The result of the RLC (which is stored in (IX+\$01)) is now also stored in register B. Effectively, it does the following:
+The documented {\tt DDCB0106} is {\tt RLC (IX+\$01)}. So, clear the lower three bits ({\tt DDCB0100}) and something is done to register {\tt B}. The result of the {\tt RLC} (which is stored in {\tt (IX+\$01)}) is now also stored in register {\tt B}. Effectively, it does the following:
 
 {\tt 
 	\begin{tabbing}
-		{\qquad}\=LD B,(IX+\$01)\+\\
+		{\qquad}\=LD B, (IX+\$01)\+\\
 		RLC B\\
-		LD (IX+\$01),B
+		LD (IX+\$01), B
 	\end{tabbing}
 }
 
-So you get double value for money. The result is stored in B and (IX+\$01). The most common notation is: {\tt RLC (IX+\$01),B}
+So you get double value for money. The result is stored in {\tt B} and {\tt (IX+\$01)}. The most common notation is: {\tt RLC (IX+\$01), B}
 
 I've once seen this notation:
  
 {\tt 
 	\begin{tabbing}
 		{\qquad}\=RLC (IX+\$01)\+\\
-		LD B,(IX+\$01)
+		LD B, (IX+\$01)
 	\end{tabbing}
 }
 
-That's not correct: B contains the rotated value, even if (IX+\$01) points to ROM. The DDCB SET and RES instructions do the same thing as the shift/rotate instructions:
+That's not correct: {\tt B} contains the rotated value, even if {\tt (IX+\$01)} points to ROM. The {\tt DDCB} {\tt SET} and {\tt RES} instructions do the same thing as the shift/rotate instructions:
 
 {\tt 
 	\begin{tabbing}
-		{\qquad}\=DDCB10C0{\qquad}\=SET 0,(IX+\$10),B\+\\
-		DDCB10C1	\>SET 0,(IX+\$10),C\\
-		DDCB10C2	\>SET 0,(IX+\$10),D\\
-		DDCB10C3	\>SET 0,(IX+\$10),E\\
-		DDCB10C4	\>SET 0,(IX+\$10),H\\
-		DDCB10C5	\>SET 0,(IX+\$10),L\\
-		DDCB10C6	\>SET 0,(IX+\$10) {\rm - documented instruction}\\
-		DDCB10C7	\>SET 0,(IX+\$10),A
+		{\qquad}\=DDCB10C0{\qquad}\=SET 0, (IX+\$10), B\+\\
+		DDCB10C1	\>SET 0, (IX+\$10), C\\
+		DDCB10C2	\>SET 0, (IX+\$10), D\\
+		DDCB10C3	\>SET 0, (IX+\$10), E\\
+		DDCB10C4	\>SET 0, (IX+\$10), H\\
+		DDCB10C5	\>SET 0, (IX+\$10), L\\
+		DDCB10C6	\>SET 0, (IX+\$10) {\rm - documented instruction}\\
+		DDCB10C7	\>SET 0, (IX+\$10), A
 	\end{tabbing}
 }
 
-So for example with the last instruction, the value of (IX+\$10) with bit 0 set is also stored in register A.
+So for example with the last instruction, the value of {\tt (IX+\$10)} with bit 0 set is also stored in register {\tt A}.
 
-The DDCB BIT instructions do not store any value; they merely test a bit. That's why the undocumented DDCB BIT instructions are no different from the official ones:
+The {\tt DDCB} {\tt BIT} instructions do not store any value; they merely test a bit. That's why the undocumented {\tt DDCB} {\tt BIT} instructions are no different from the official ones:
 
 {\tt 
 	\begin{tabbing}
-		{\qquad}\=DDCB d 78{\qquad}\=BIT 7,(IX+d)\+\\
-		DDCB d 79\>BIT 7,(IX+d)\\
-		DDCB d 7A\>BIT 7,(IX+d)\\
-		DDCB d 7B\>BIT 7,(IX+d)\\
-		DDCB d 7C\>BIT 7,(IX+d)\\
-		DDCB d 7D\>BIT 7,(IX+d)\\
-		DDCB d 7E\>BIT 7,(IX+d) {\rm - documented instruction}\\
-		DDCB d 7F\>BIT 7,(IX+d)
+		{\qquad}\=DDCB d 78{\qquad}\=BIT 7, (IX+d)\+\\
+		DDCB d 79\>BIT 7, (IX+d)\\
+		DDCB d 7A\>BIT 7, (IX+d)\\
+		DDCB d 7B\>BIT 7, (IX+d)\\
+		DDCB d 7C\>BIT 7, (IX+d)\\
+		DDCB d 7D\>BIT 7, (IX+d)\\
+		DDCB d 7E\>BIT 7, (IX+d) {\rm - documented instruction}\\
+		DDCB d 7F\>BIT 7, (IX+d)
 	\end{tabbing}
 }
 
@@ -496,16 +496,16 @@ The DDCB BIT instructions do not store any value; they merely test a bit. That's
 \pagebreak
 \subsection{FDCB Prefixes}
 
-Same as for the DDCB prefix, though IY is used instead of IX.
+Same as for the {\tt DDCB} prefix, though {\tt IY} is used instead of {\tt IX}.
 
 
 \subsection{Combinations of Prefixes}
 
 This part may be of some interest to emulator coders. Here we define what happens if strange sequences of prefixes appear in the instruction cycle of the Z80.
 
-If CB or ED is encountered, that byte plus the next make up an instruction. FD or DD should be seen as prefix setting a flag which says ``use IX or IY instead of HL'', and not an instruction. In a large sequence of DD and FD bytes, it is the last one that counts. Also any other byte (or instruction) resets this flag.
+If {\tt CB} or {\tt ED} is encountered, that byte plus the next make up an instruction. {\tt FD} or {\tt DD} should be seen as prefix setting a flag which says ``use {\tt IX} or {\tt IY} instead of {\tt HL}'', and not an instruction. In a large sequence of {\tt DD} and {\tt FD} bytes, it is the last one that counts. Also any other byte (or instruction) resets this flag.
 
-{\tt {\qquad}FD DD 00 21 00 10{\qquad}NOP NOP NOP LD HL,\$1000}
+{\tt {\qquad}FD DD 00 21 00 10{\qquad}NOP NOP NOP LD HL, \$1000}
 
 
 
@@ -544,21 +544,21 @@ If CB or ED is encountered, that byte plus the next make up an instruction. FD o
 
 \end{description}
 
-This is where things start to get strange. With the {\tt BIT n,(IX+d)} instructions, the flags behave just like the {\tt BIT n,r} instruction, except for YF and XF. These are not copied from the result but from something completely different, namely bit 5 and 3 of the high byte of IX+d (so IX plus the displacement).
+This is where things start to get strange. With the {\tt BIT n,(IX+d)} instructions, the flags behave just like the {\tt BIT n,r} instruction, except for YF and XF. These are not copied from the result but from something completely different, namely bit 5 and 3 of the high byte of {\tt IX+d} (so {\tt IX} plus the displacement).
 
-Things get more bizarre with the {\tt BIT n,(HL)} instruction. Again, except for YF and XF the flags are the same. YF and XF are copied from some sort of internal register. This register is related to 16 bit additions. Most instructions do not change this register. Unfortunately, I haven't tested all instructions yet, but here is the list so far:
+Things get more bizarre with the {\tt BIT n,(HL)} instruction. Again, except for YF and XF, the flags are the same. YF and XF are copied from some sort of internal register. This register is related to 16-bit additions. Most instructions do not change this register. Unfortunately, I haven't tested all instructions yet, but here is the list so far:
 
 \begin{tabularx}{\linewidth}{@{}lX}
-	{\tt ADD HL,xx}
-		& Use high byte of HL, ie. H before the addition. \\
+	{\tt ADD HL, xx}
+		& Use high byte of {\tt HL}, ie. {\tt H} before the addition. \\
 
-	{\tt LD r,(IX+d)}
-		& Use high byte of the resulting address IX+d. \\
+	{\tt LD r, (IX+d)}
+		& Use high byte of the resulting address {\tt IX+d}. \\
 
 	{\tt JR d}
 		& Use high byte target address of the jump. \\
 
-	{\tt LD r,r'}
+	{\tt LD r, r'}
 		& Doesn't change this register. \\
 \end{tabularx}
 
@@ -568,7 +568,7 @@ Any help here would be most appreciated!
 \subsection{Memory Block Instructions \cite{mrison}}
 \label{block_mem}
 
-The {\tt LDI/LDIR/LDD/LDDR} instructions affect the flags in a strange way. At every iteration, a byte is copied. Take that byte and add the value of register A to it. Call that value n. Now, the flags are:
+The {\tt LDI}/{\tt LDIR}/{\tt LDD}/{\tt LDDR} instructions affect the flags in a strange way. At every iteration, a byte is copied. Take that byte and add the value of register {\tt A} to it. Call that value {\tt n}. Now, the flags are:
 
 \begin{description}
  
@@ -589,7 +589,7 @@ The {\tt LDI/LDIR/LDD/LDDR} instructions affect the flags in a strange way. At e
 
 \end{description}
 
-And now for {\tt CPI/CPIR/CPD/CPDR}. These instructions compare a series of bytes in memory to register A. Effectively, it can be said they perform {\tt CP (HL)} at every iteration. The result of that compare sets the HF flag, which is important for the next step. Take the value of register A, subtract the value of the memory address, and finally subtract the value of HF flag, which is set or reset by the hypothetical {\tt CP (HL)}. So, {\tt n = A - (HL) - HF}.
+And now for {\tt CPI}/{\tt CPIR}/{\tt CPD}/{\tt CPDR}. These instructions compare a series of bytes in memory to register {\tt A}. Effectively, it can be said they perform {\tt CP (HL)} at every iteration. The result of that comparison sets the HF flag, which is important for the next step. Take the value of register {\tt A}, subtract the value of the memory address, and finally subtract the value of HF flag, which is set or reset by the hypothetical {\tt CP (HL)}. So, {\tt n=A-(HL)-HF}.
 
 \begin{description}
 
@@ -597,10 +597,10 @@ And now for {\tt CPI/CPIR/CPD/CPDR}. These instructions compare a series of byte
 	Set by the hypothetical {\tt CP (HL)}.
 
 	\item[YF flag]
-	A copy of bit 1 of n.
+	A copy of bit 1 of {\tt n}.
 
 	\item[XF flag]
-	A copy of bit 3 of n.
+	A copy of bit 3 of {\tt n}.
 
 	\item[PV flag]
 	Set if BC is not 0.
@@ -632,7 +632,7 @@ First of all, all instructions affect the following flags:
 
 \end{description}
 
-And now the for {\tt OUTI}/{\tt OTIR}/{\tt OUTD}/{\tt OTDR} instructions. Take state of the L after the increment or decrement of HL; add the value written to the I/O port; call that {\tt k} for now. If {\tt k} $>$ 255, then the CF and HF flags are set. The PV flag is set like the parity of {\tt k} bitwise and'ed with 7, bitwise xor'ed with B.
+And now the for {\tt OUTI}/{\tt OTIR}/{\tt OUTD}/{\tt OTDR} instructions. Take the state of the {\tt L} after the increment or decrement of HL; add the value written to the I/O port; call that {\tt k} for now. If {\tt k} $>$ 255, then the CF and HF flags are set. The PV flag is set like the parity of {\tt k} bitwise and'ed with 7, bitwise xor'ed with {\tt B}.
 
 \begin{description}
 
@@ -644,7 +644,7 @@ And now the for {\tt OUTI}/{\tt OTIR}/{\tt OUTD}/{\tt OTDR} instructions. Take s
 
 \end{description}
 
-{\tt INI}/{\tt INIR}/{\tt IND}/{\tt INDR} use the C register instead of the L register. There is a catch though, because not the value of C is used, but C + 1 if it's {\tt INI}/{\tt INIR} or C - 1 if it's {\tt IND}/{\tt INDR}. So, first of all {\tt INI}/{\tt INIR}:
+{\tt INI}/{\tt INIR}/{\tt IND}/{\tt INDR} use the {\tt C} register instead of the {\tt L} register. There is a catch though, because not the value of {\tt C} is used, but {\tt C + 1} if it's {\tt INI}/{\tt INIR} or {\tt C - 1} if it's {\tt IND}/{\tt INDR}. So, first of all {\tt INI}/{\tt INIR}:
 
 \begin{description}
 
@@ -656,7 +656,7 @@ And now the for {\tt OUTI}/{\tt OTIR}/{\tt OUTD}/{\tt OTDR} instructions. Take s
 
 \end{description}
 
-And last {\tt IND/INDR}:
+And last {\tt IND}/{\tt INDR}:
 
 \begin{description}
 
@@ -671,7 +671,7 @@ And last {\tt IND/INDR}:
 
 \subsection{16 Bit I/O ports}
 
-Officially the Z80 has an 8 bit I/O port address space. When using the I/O ports, the 16 address lines are used. And in fact, the high 8 bit do actually have some value, so you can use 65536 ports after all. {\tt IN r,(C)}, {\tt OUT (C),r}, and the block I/O instructions  actually place the entire BC register on the address bus. Similarly {\tt IN A,(n)} and {\tt OUT (n),A} put A $\times$ 256 + n on the address bus.
+Officially the Z80 has an 8-bit I/O port address space. When using the I/O ports, the 16 address lines are used. And in fact, the high 8 bits do have some value, so you can use 65536 ports after all. {\tt IN r, (C)}, {\tt OUT (C), r}, and the block I/O instructions actually place the entire {\tt BC} register on the address bus. Similarly {\tt IN A, (n)} and {\tt OUT (n), A} put {\tt A $\times$256 + n} on the address bus.
 
 The {\tt INI}, {\tt INIR}, {\tt IND} and {\tt INDR} instructions use {\tt BC} before decrementing {\tt B}, and the {\tt OUTI}, {\tt OTIR}, {\tt OUTD} and {\tt OTDR} instructions use {\tt BC} after decrementing.
 
@@ -683,15 +683,15 @@ The repeated block instructions simply decrement the {\tt PC} by two so the inst
 
 \subsection{16 Bit Additions}
 
-The 16 bit additions are a bit more complicated than 8 bit ones. Since the Z80 is an 8-bit CPU, 16 bit additions are done in two stages: first the lower bytes are added, then the two higher bytes. The SF, YF, HF, XF flags are affected as by the second (high) 8 bit addition. ZF is set if the whole 16 bit result is 0.
+The 16-bit additions are a bit more complicated than the 8-bit ones. Since the Z80 is an 8-bit CPU, 16-bit additions are done in two stages: first, the lower bytes are added, then the two higher bytes. The SF, YF, HF, XF flags are affected by the second (high) 8-bit addition. ZF is set if the whole 16-bit result is 0.
 
 
 \subsection{DAA Instruction}
 \label{daa}
 
-This instruction is useful when you're using BCD values. After an addition or subtraction, {\tt DAA} corrects the value back to BCD again.  Note that it uses the CF flag, so it cannot be used after {\tt INC} and {\tt DEC}.
+This instruction is useful when you're using BCD values. After addition or subtraction, {\tt DAA} corrects the value back to BCD again.  Note that it uses the CF flag, so it cannot be used after {\tt INC} and {\tt DEC}.
 
-Stefano Donati from Ramsoft\footnote{http://www.ramsoft.bbk.org/} has found the tables which describe the {\tt DAA} operation. The input is the A register and the CF, NF, HF flags. Result is as follows:
+Stefano Donati from Ramsoft\footnote{http://www.ramsoft.bbk.org/} has found the tables which describe the {\tt DAA} operation. The input is the A register and the CF, NF, HF flags. The result is as follows:
 
 {
 	\footnotesize
@@ -812,16 +812,16 @@ SF, YF, XF are copies of bit 7, 5, 3 of the result respectively; ZF is set accor
 
 There are two types of interrupts, maskable and non-maskable. The maskable type is ignored if {\tt IFF1} is reset. Non-maskable interrupts (NMI) will are always accepted, and they have a higher priority, so if both are requested at the same time, the NMI will be accepted first.
 
-For the interrupts, the following things are important: interrupt Mode (set with the {\tt IM 0, IM 1, IM 2} instructions), the interrupt flip-flops ({\tt IFF1} and {\tt IFF2}), and the {\tt I} register. When a maskable interrupt is accepted, external device can put a value on the data bus.
+For the interrupts, the following things are important: interrupt Mode (set with the {\tt IM 0, IM 1, IM 2} instructions), the interrupt flip-flops ({\tt IFF1} and {\tt IFF2}), and the {\tt I} register. When a maskable interrupt is accepted, the external device can put a value on the data bus.
 
-Both types of interrupts increase the {\tt R} register by one, when accepted.
+Both types of interrupts increase the {\tt R} register by one when accepted.
 
 
 \subsection{Non-Maskable Interrupts (NMI)}
 
-When a NMI is accepted, {\tt IFF1} is reset. At the end of the routine, {\tt IFF1} must be restored (so the running program is not affected). That's why {\tt IFF2} is there; to keep a copy of {\tt IFF1}.
+When an NMI is accepted, {\tt IFF1} is reset. At the end of the routine, {\tt IFF1} must be restored (so the running program is not affected). That's why {\tt IFF2} is there; to keep a copy of {\tt IFF1}.
 
-An NMI is accepted when the $\mathtt{\overline{NMI}}$ pin on the Z80 is made low (edge-triggered). The Z80 responds to the change of the line from +5 to 0 - so the interrupt line doesn't have a state, it's just a pulse. When this happens, a call is done to address \MemAddr{0066} and {\tt IFF1} is reset so the routine isn't bothered by maskable interrupts. The routine should end with an {\tt RETN} (RETurn from Nmi) which is just a usual RET, but also copies {\tt IFF2} to {\tt IFF1}, so the IFFs are the same as before the interrupt.
+An NMI is accepted when the $\mathtt{\overline{NMI}}$ pin on the Z80 is made low (edge-triggered). The Z80 responds to the change of the line from +5 to 0 - so the interrupt line doesn't have a state, it's just a pulse. When this happens, a call is done to address \MemAddr{0066} and {\tt IFF1} is reset so the routine isn't bothered by maskable interrupts. The routine should end with an {\tt RETN} (RETurn from Nmi) which is just a usual {\tt RET} but also copies {\tt IFF2} to {\tt IFF1}, so the IFFs are the same as before the interrupt.
 
 You can check whether interrupts were disabled or not during an NMI by using the {\tt LD A,I} or {\tt LD A,R} instruction. These instructions copy {\tt IFF2} to the PV flag.
 
@@ -834,18 +834,18 @@ If the $\mathtt{\overline{INT}}$ line is low and {\tt IFF1} is set, a maskable i
 
 When an interrupt is accepted, both {\tt IFF1} and {\tt IFF2} are cleared, preventing another interrupt from occurring which would end up as an infinite loop (and overflowing the stack). What happens next depends on the Interrupt Mode.
 
-A device can place a value on the databus when the interrupt is accepted. Some computer systems do not utilize this feature, and this value ends up being {\tt \$FF}.
+A device can place a value on the data bus when the interrupt is accepted. Some computer systems do not utilize this feature, and this value ends up being {\tt \$FF}.
 
 \begin{description}
 
 	\item[Interrupt Mode 0]
-	This is the 8080 compatibility mode. The instruction on the bus is executed (usually an {\tt RST} instruction, but it can be anything). I register is not used. Assuming it's a {\tt RST} instruction, accepting this takes 13 t-states.
+	This is the 8080 compatibility mode. The instruction on the bus is executed (usually an {\tt RST} instruction, but it can be anything). {\tt I} register is not used. Assuming it's a {\tt RST} instruction, accepting this takes 13 t-states.
 
 	\item[Interrupt Mode 1]
-	An RST {\tt \$38} is executed, no matter what value is put on the bus or what value the I register has. Accepting this type costs 13 t-states.
+	This is the 8080 compatibility mode. The instruction on the bus is executed (usually an {\tt RST} instruction, but it can be anything). {\tt I} register is not used. Assuming it's a {\tt RST} instruction, accepting this takes 13 t-states.
 
 	\item[Interrupt Mode 2]
-	A call is made to the address read from memory. What address is read from is calculated as follows: (I register) $\times$ 256 + (value on bus). Zilog's user manual states (very convincingly) that the least significant bit of the address is always 0, so they calculate the address that is read from as: (I register) $\times$ 256 + (value on bus $\wedge$ \$FE). I have tested this and it's not correct. Of course a word (two bytes) are read, making the address where the call is made to. In this way, you can have a vector table for interrupts. Accepting this of interrupt type costs 19 t-states.
+	A call is made to the address read from memory. What address is read from is calculated as follows: $(I\ register) \times 256 + (value\ on\ bus)$. Zilog's user manual states (very convincingly) that the least significant bit of the address is always 0, so they calculate the address that is read from as: $(I\ register) \times 256 + (value\ on\ bus \wedge \mathtt{\$FE})$. I have tested this and it's not correct. Of course, a word (two bytes) is read, making the address where the call is made to. In this way, you can have a vector table for interrupts. Accepting this interrupt type costs 19 t-states.
 
 \end{description}
 
@@ -881,23 +881,23 @@ All the IFF related things are:
 	{\tt LD A,I / LD A,R} & - & - & Copies {\tt IFF2} into {\tt PV} flag
 \end{tabular}
 
-If you're working with a Z80 system without NMIs (like the MSX), you can forget all about the two separate IFFs; since a NMI isn't ever generated, the two will always be the same. 
+If you're working with a Z80 system without NMIs (like the MSX), you can forget all about the two separate IFFs; since an NMI isn't ever generated, the two will always be the same. 
 
 Some documentation says that when an NMI is accepted, {\tt IFF1} is first copied into {\tt IFF2} before {\tt IFF1} is cleared. If this is true, the state of {\tt IFF2} is lost after a nested NMI, which is undesirable. Have tested this in the following way: make sure the Z80 is in {\tt EI} mode, generate an NMI. In the NMI routine, wait for another NMI before executing {\tt RETN}. In the second NMI {\tt IFF2} was still set, so {\tt IFF1} is {\em not} copied to {\tt IFF2} when accepting an NMI.
 
-Another interesting fact: I was trying to figure out whether the undocumented ED {\tt RET} instructions were {\tt RETN} or {\tt RETI}. I tested this by putting the machine in {\tt EI} mode, wait for an NMI and end with one of the ED {\tt RET} instructions. Then execute a {\tt HALT} instruction. If {\tt IFF1} was not restored, the machine would hang but this did not happen with any of the instructions, including the documented {\tt RETI}!
+Another interesting fact: I was trying to figure out whether the undocumented {\tt ED} {\tt RET} instructions were {\tt RETN} or {\tt RETI}. I tested this by putting the machine in {\tt EI} mode, wait for an NMI and end with one of the {\tt ED} {\tt RET} instructions. Then execute a {\tt HALT} instruction. If {\tt IFF1} was not restored, the machine would hang but this did not happen with any of the instructions, including the documented {\tt RETI}!
 
-Since every interrupt routine must end with {\tt EI} followed by {\tt RETI} officially, It does not matter that RETI copies {\tt IFF2} into IFF1; both are set anyway.
+Since every interrupt routine must end with {\tt EI} followed by {\tt RETI} officially, It does not matter that {\tt RETI} copies {\tt IFF2} into IFF1; both are set anyway.
 
 
 \subsection{HALT Instruction}
 
-The HALT instruction halts the Z80; it does not increase the PC so that the instruction is re-executed, until a maskable or non-maskable interrupt is accepted. Only then does the Z80 increase the PC again and continues with the next instruction. During the HALT state, the HALT line is set. The PC is increased before the interrupt routine is called.
+The HALT instruction halts the Z80; it does not increase the PC so that the instruction is re-executed until a maskable or non-maskable interrupt is accepted. Only then does the Z80 increase the PC again and continues with the next instruction. During the HALT state, the HALT line is set. The PC is increased before the interrupt routine is called.
 
 
 \subsection{Where interrupts are accepted}
 
-During execution of instructions, interrupts won't be accepted. Only {\em between} instructions. This is also true for prefixed instructions.
+During the execution of instructions, interrupts won't be accepted. Only {\em between} instructions. This is also true for prefixed instructions.
 
 Directly after an {\tt EI} or {\tt DI} instruction, interrupts aren't accepted. They're accepted again after the instruction after the {\tt EI} ({\tt RET} in the following example). So for example, look at this MSX2 routine that reads a scanline from the keyboard:
 
@@ -915,7 +915,7 @@ Directly after an {\tt EI} or {\tt DI} instruction, interrupts aren't accepted. 
 
 You can assume that there never is an interrupt after the {\tt EI}, before the {\tt IN A,(\$0A9)} - which would be a problem because the MSX interrupt routine reads the keyboard too.
 
-\pagebreak
+\pagebreak % we want to keep this explanation text together with sample code
 Using this feature of {\tt EI}, it is possible to check whether it is true that interrupts are never accepted during instructions:
 
 \begin{tcblisting}{}
@@ -930,17 +930,17 @@ InterruptRoutine:
 
 And yes, for all instructions, including the prefixed ones, interrupts are never accepted during an instruction. Only after the tested instruction. Remember that block instructions simply re-execute themselves (by decreasing the PC with 2) so an interrupt is accepted after each iteration.
 
-Another predictable test: at the ``insert instruction to test'' insert a large sequence of {\tt EI} instructions. Of course, during execution of the {\tt EI} instructions, no interrupts are accepted. 
+Another predictable test: at the ``insert instruction to test'' insert a large sequence of {\tt EI} instructions. Of course, during the execution of the {\tt EI} instructions, no interrupts are accepted. 
 
-But now for the interesting stuff. ED or CB make up instructions, so interrupts are accepted after them. But DD and FD are prefixes, which only slightly affects the next opcode. If you test a large sequence of DDs or FDs, the same happens as with the {\tt EI} instruction: no interrupts are accepted during the execution of these sequences.
+But now for the interesting stuff. {\tt ED} or {\tt CB} make up instructions, so interrupts are accepted after them. But {\tt DD} and {\tt FD} are prefixes, which only slightly affects the next opcode. If you test a large sequence of {\tt DD}s or {\tt FD}s, the same happens as with the {\tt EI} instruction: no interrupts are accepted during the execution of these sequences.
 
-This makes sense, if you think of DD and FD as a prefix which set the ``use IX instead of HL'' or ``use IY instead of HL'' flag. If an interrupt was accepted after DD or FD, this flag information would be lost, and:
+This makes sense if you think of {\tt DD} and {\tt FD} as a prefix that sets the ``use {\tt IX} instead of {\tt HL}'' or ``use {\tt IY} instead of {\tt HL}'' flag. If an interrupt was accepted after {\tt DD} or {\tt FD}, this flag information would be lost, and:
 
 {\tt 
-	{\qquad}DD 21 00 00{\qquad}LD IX,0
+	{\qquad}DD 21 00 00{\qquad}LD IX, 0
 }
 
-could be interpreted as a simple {\tt LD HL,0} if the interrupt was after the last DD. Which never happens, so the implementation is correct. Although I haven't tested this, as I imagine the same holds for NMI interrupts.
+could be interpreted as a simple {\tt LD HL,0} if the interrupt was after the last {\tt DD}. Which never happens, so the implementation is correct. Although I haven't tested this, as I imagine the same holds for NMI interrupts.
 
 Also see section \ref{zx_next_interrupts} for details on handling interrupts on ZX Spectrum Next.
 
@@ -950,20 +950,20 @@ Also see section \ref{zx_next_interrupts} for details on handling interrupts on 
 
 \subsection{R register and memory refresh}
 
-During every first machine cycle (beginning of an instruction or part of it - prefixes have their own M1 two), the memory refresh cycle is issued. The whole IR register is put on the address bus, and the RFSH pin is lowered.  It unclear whether the Z80 increases the R register before or after putting IR on the bus. 
+During every first machine cycle (beginning of instruction or part of it - prefixes have their own M1 two), the memory refresh cycle is issued. The whole IR register is put on the address bus, and the $\mathtt{\overline{RFSH}}$ pin is lowered.  It's unclear whether the Z80 increases the {\tt R} register before or after putting IR on the bus. 
 
-The R register is increased at every first machine cycle (M1). Bit 7 of the register is never changed by this; only the lower 7 bits are included in the addition. So bit 7 stays the same, but it can be changed using the
+The {\tt R} register is increased at every first machine cycle (M1). Bit 7 of the register is never changed by this; only the lower 7 bits are included in the addition. So bit 7 stays the same, but it can be changed using the
 {\tt LD R,A} instruction.
 
-Instructions without a prefix increase R by one. Instructions with an ED, CB, DD, FD prefix, increase R by two, and so do the DDCBxxxx and FDCBxxxx instructions (weird enough). Just a stray DD or FD increases the R by one. {\tt LD A,R} and {\tt LD R,A} access the R register after it is increased by the instruction itself. 
+Instructions without a prefix increase {\tt R} by one. Instructions with an {\tt ED}, {\tt CB}, {\tt DD}, {\tt FD} prefix, increase {\tt R} by two, and so do the {\tt DDCBxxxx} and {\tt FDCBxxxx} instructions (weird enough). Just a stray {\tt DD} or {\tt FD} increases the {\tt R} by one. {\tt LD A,R} and {\tt LD R,A} access the {\tt R} register after it is increased by the instruction itself. 
 
-Remember that block instructions simply decrement the PC with two, so the instructions are re-executed. So LDIR increases R by BC $\times$ 2 (note that in the case of BC = 0, R is increased by \MemAddr{10000} $\times$ 2, effectively 0).
+Remember that block instructions simply decrement the {\tt PC} with two, so the instructions are re-executed. So {\tt LDIR} increases {\tt R} by {\tt BC} $\times$ 2 (note that in the case of {\tt BC} = 0, {\tt R} is increased by \MemAddr{10000} $\times$ 2, effectively 0).
 
-Accepting a maskable or non-maskable interrupt increases the R by one.
+Accepting a maskable or non-maskable interrupt increases the {\tt R} by one.
 
-After a hardware reset, or after power on, the R register is reset to 0.
+After a hardware reset, or after power on, the {\tt R} register is reset to 0.
 
-That should cover all there is to say about the R register. It is often used in programs for a random value, which is good but of course not truly random.
+That should cover all there is to say about the {\tt R} register. It is often used in programs for a random value, which is good but of course not truly random.
 
 
 \pagebreak
@@ -974,16 +974,16 @@ Some official Zilog documentation contains errors. Not every documentation has a
 \begin{itemize}
 
 	\item
-	The flag affection summary table shows that {\tt LDI/LDIR/LDD/LDDR} instructions leave the SF and ZF in an undefined state. This is not correct; the SF and ZF flags are unaffected.
+	The flag affection summary table shows that {\tt LDI}/{\tt LDIR}/{\tt LDD}/{\tt LDDR} instructions leave the SF and ZF in an undefined state. This is not correct; the SF and ZF flags are unaffected.
 
 	\item
-	Similarly, the same table shows that {\tt CPI/CPIR/CPD/CPDR} leave the SF and HF flags in an undefined state. Not true, they are affected as defined elsewhere in the documentation.
+	Similarly, the same table shows that {\tt CPI}/{\tt CPIR}/{\tt CPD}/{\tt CPDR} leave the SF and HF flags in an undefined state. Not true, they are affected as defined elsewhere in the documentation.
 
 	\item
-	Also, the table says about {\tt INI/OUTD/}etc ``Z=0 if B $<>$ 0 otherwise Z=0''; of course the latter should be Z=1.
+	Also, the table says about {\tt INI}/{\tt OUTD}/etc ``Z=0 if B $<>$ 0 otherwise Z=0''; of course the latter should be Z=1.
 
 	\item
-	The {\tt INI/INIR/IND/INDR/OUTI/OUTD/OTIR/OTDR} instructions do affect the CF flag (some official documentation says they leave it unaffected, important!) and the NF flag isn't always set but may also be reset (see \ref{block_io} for exact operation).
+	The {\tt INI}/{\tt INIR}/{\tt IND}/{\tt INDR}/{\tt OUTI}/{\tt OUTD}/{\tt OTIR}/{\tt OTDR} instructions do affect the CF flag (some official documentation says they leave it unaffected, important!) and the NF flag isn't always set but may also be reset (see \ref{block_io} for exact operation).
 
 	\item
 	When an NMI is accepted, the {\tt IFF1} isn't copied to {\tt IFF2}. Only {\tt IFF1} is reset.
@@ -992,7 +992,7 @@ Some official Zilog documentation contains errors. Not every documentation has a
 	In the 8-bit Load Group, the last two bits of the second byte of the {\tt LD r,(IX + d)} opcode should be 10 and not 01.
 
 	\item
-	In the 16-bit Arithmetic Group, bit 6 of the second byte of the {\tt ADD IX, pp} opcode should be 0, not 1.
+	In the 16-bit Arithmetic Group, bit 6 of the second byte of the {\tt ADD IX,pp} opcode should be 0, not 1.
 
 	\item
 	{\tt IN x,(C)} resets the HF flag, it never sets it. Some documentation states it is set according to the result of the operation; this is impossible since no arithmetic is done in this instruction.
@@ -1004,7 +1004,7 @@ Note: In zilog's own z80cpu\_um.pdf document, there are a lot of errors, some ar
 \begin{itemize}
 
 	\item
-	Page 21, figure 2 says ``the Alternative Register Set contains 2 B' registers''; this should of course be B' and C'.  
+	Page 21, figure 2 says ``the Alternative Register Set contains 2 {\tt B'} registers''; this should of course be {\tt B'} and {\tt C'}.
 
 	\item
 	Page 26, figure 16 shows very convincingly that ``the least significant bit of the address to read for Interrupt Mode 2 is always 0''. I have tested this and it is not correct, it can also be 1, in my test case the bus contained {\tt \$FF} and the address that was read did not end in {\tt \$FE} but was {\tt \$FF}.

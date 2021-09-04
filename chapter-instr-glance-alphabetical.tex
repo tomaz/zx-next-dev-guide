@@ -1654,14 +1654,14 @@
 	\end{instruction}
 
 	\begin{instruction}{LDDRX\ZXNS} 
-		\Symbol{do LDDX}
+		\Symbol{\SymLDDRX[0]}
 			\FlagsLDDRX
 			\OpCode{11}{101}{101}
 			\Hex{ED}{2}
 			\Cycles{4}{16}
 			\Comment{if {\tt BC}=0}
 		\SkipToSymbol
-			\Symbol{while BC>0}
+			\Symbol{\SymLDDRX[1]}
 			\FromSymbolToOpCode
 			\OpCode{10}{111}{100}
 			\Hex{BC}{}

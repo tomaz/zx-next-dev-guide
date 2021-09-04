@@ -15,9 +15,9 @@
 % ─██████████████─██████████████─██████──██████─
 % ──────────────────────────────────────────────
 
-Original ZX Spectrum didn't have dedicated graphics chip. To keep price as low as possible, screen rendering was performed by ULA (``Uncommitted Logic Array'') chip.
+Original ZX Spectrum didn't have a dedicated graphics chip. To keep the price as low as possible, screen rendering was performed by ULA (``Uncommitted Logic Array'') chip.
 
-ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode is 256$\times$192 pixels. If we translate this to characters which are 8$\times$8 pixels, this gives us 32 character columns in 24 character rows. Memory dedicated to ULA resides in second 16K slot at addresses \MemAddr{4000}-\MemAddr{5AFF}. And similar to memory configuration of other contemporary computers, pixel memory is separate from attributes/colour memory:
+ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode is 256$\times$192 pixels. If we translate this to characters that are 8$\times$8 pixels, this gives us 32 character columns in 24 character rows. Memory dedicated to ULA resides in second 16K slot at addresses \MemAddr{4000}-\MemAddr{5AFF}. And similar to the memory configuration of other contemporary computers, pixel memory is separate from attributes/colour memory:
 
 \begingroup
 	\setlength{\tabcolsep}{5pt}
@@ -40,11 +40,11 @@ ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode is
 	\end{tabular}
 \endgroup
 
-\subsection{Pixel memory}
+\subsection{Pixel Memory}
 
-Each screen pixel is represented by a single bit, meaning 1 byte holds 8 screen pixels. So, for each line of 256 pixels, 32 bytes are needed. However, for sake of efficiency, original Spectrum optimized screen memory layout for speed, but made it inconvenient for programming.
+Each screen pixel is represented by a single bit, meaning 1 byte holds 8 screen pixels. So, for each line of 256 pixels, 32 bytes are needed. However, for sake of efficiency, the original Spectrum optimized screen memory layout for speed but made it inconvenient for programming.
 
-Pixel memory is not linear, but is instead divided to fill character rows line by line. First 32 bytes of memory represent first line of first character row, followed by 32 bytes representing first line of second character row and so on until first line of 8 character rows is filled. Then next 32 bytes of screen memory represent second line of first character row, again followed by second line of second character row, until all 8 character rows are covered:
+Pixel memory is not linear but is instead divided to fill character rows line by line. The first 32 bytes of memory represent the first line of the first character row, followed by 32 bytes representing the first line of the second character row and so on until the first line of 8 character rows is filled. Then next 32 bytes of screen memory represent the second line of the first character row, again followed by the second line of the second character row, until all 8 character rows are covered:
 
 {
 	\newcommand{\PixelTitle}{Addr. & Ln. & Ch.}
@@ -65,7 +65,7 @@ Pixel memory is not linear, but is instead divided to fill character rows line b
 	\end{tabularx}
 }
 
-But this is not the end of peculiarities of Spectrum ULA mode. If you attempt to fill the screen memory byte by byte, you'll realize top third of the screen fills in first, then middle third and lastly bottom third. Reason is, ULA mode divides screen into 3 banks. Each bank covers 8 character rows, so 8$\times$8$\times$32 or 2048 bytes:
+But this is not the end of the peculiarities of Spectrum ULA mode. If you attempt to fill the screen memory byte by byte, you'll realize the top third of the screen fills in first, then middle third and lastly bottom third. The reason is, ULA mode divides the screen into 3 banks. Each bank covers 8 character rows, so 8$\times$8$\times$32 or 2048 bytes:
 
 \begin{tabular}{ccc}
 	Memory Range & Screen Lines & Char. Rows \\
@@ -80,7 +80,7 @@ But this is not the end of peculiarities of Spectrum ULA mode. If you attempt to
 		{\tt 17} - {\tt 23} \\
 \end{tabular}
 
-In fact, to calculate the address of memory for any given (x,y) coordinate, we'd need to prepare 16-bit value like this:
+In fact, to calculate the address of memory for any given (x,y) coordinate, we'd need to prepare a 16-bit value like this:
 
 \begin{BitTableWord}
 	\BitMono{0} &
@@ -110,17 +110,17 @@ In fact, to calculate the address of memory for any given (x,y) coordinate, we'd
 
 \end{BitTableWord}
 
-As you can see, X is quite straightforward; we need to take upper 5 bits and fill them in to lower 5 bits of 16-bit register pair. Y coordinate takes all 8 bits which need to be filled in to bits 12-5 of 16-bit register pair. However, notice how individual bits are scrambled. It makes incrementing address for next character row simple operation of {\tt INC H} (assuming {\tt HL} stores the address of previous row), which is likely one of the reasons for such implementation. But imagine for a second how complex Z80 program would need to be to handle all of this. Sure, nothing couple shifts and masking operations couldn't handle but still, lots of wasted CPU cycles. However on ZX Spectrum Next we don't have to deal with any of the peculiarities of ULA mode; we have 3 new instructions that take care of all of the complexity for us:
+As you can see, X is straightforward; we simply need to take the upper 5 bits and fill them into the lower 5 bits of a 16-bit register pair. Y coordinate requires all 8 bits that are written into bits 12-5 of 16-bit register pair. However, notice how individual bits are scrambled. It makes incrementing address for next character row simple operation of {\tt INC H} (assuming {\tt HL} stores the address of the previous row), which is likely one of the reasons for such implementation. But imagine for a second how complex a Z80 program would need to be to handle all of this. Sure, nothing couple shifts and masking operations couldn't handle but still, lots of wasted CPU cycles. However, on ZX Spectrum Next we don't have to deal with any of the peculiarities of ULA mode; we have 3 new instructions that take care of all of the complexity for us:
 
 \begin{itemize}[topsep=1pt,itemsep=1pt]
-	\item {\tt PIXELAD} calculates address of a pixel with coordinates from {\tt DE} register pair where {\tt D} is Y and {\tt E} is X coordinate and stores the memory location address into {\tt HL} register pair for ready consumption
+	\item {\tt PIXELAD} calculates the address of a pixel with coordinates from {\tt DE} register pair where {\tt D} is Y and {\tt E} is X coordinate and stores the memory location address into {\tt HL} register pair for ready consumption
 	
-	\item {\tt PIXELDN} takes address of a pixel in {\tt HL} and updates it to point to the same X coordinate but one screen line down
+	\item {\tt PIXELDN} takes the address of a pixel in {\tt HL} and updates it to point to the same X coordinate but one screen line down
 	
-	\item {\tt SETAE} takes X coordinte from {\tt E} register and prepares mask in register {\tt A} for reading or writing to ULA screen
+	\item {\tt SETAE} takes X coordinate from {\tt E} register and prepares mask in register {\tt A} for reading or writing to ULA screen
 \end{itemize}
 
-Furthermore; each instruction only uses 8 t-states, which is far less than corresponding Z80 assembly program would require. Somewhat naive program for drawing vertical line write from pixel at coordinate (16,32) to (16,50):
+Furthermore; each instruction only uses 8 t-states, which is far less than the corresponding Z80 assembly program would require. Somewhat naive program for drawing vertical line write from the pixel at coordinate (16,32) to (16,50):
 
 \begin{tcblisting}{}
 	LD DE, &1020      ; Y=16, X=32
@@ -139,9 +139,9 @@ loop:
 	JR loop           ; continue with next pixel
 \end{tcblisting}
 
-Note: because we're updating our Y coordinate in {\tt D} register within the loop, we could also use {\tt PIXELAD} instead of {\tt PIXELDN} in line 13. Both instructions require 8 T states for execution, so there's no difference performance wise.
+Note: because we're updating our Y coordinate in {\tt D} register within the loop, we could also use {\tt PIXELAD} instead of {\tt PIXELDN} in line 13. Both instructions require 8 T states for execution, so there's no difference performance-wise.
 
-If we instead wanted to check if pixel at given coordinate is set or not, we would use {\tt AND (HL)} instead of {\tt OR (HL)}. For example:
+If we instead wanted to check if the pixel at the given coordinate is set or not, we would use {\tt AND (HL)} instead of {\tt OR (HL)}. For example:
 
 \begin{tcblisting}{}
 	LD DE, &1020      ; Y=16, X=32
@@ -152,9 +152,9 @@ If we instead wanted to check if pixel at given coordinate is set or not, we wou
 \end{tcblisting}
 
 
-\subsection{Attributes memory}
+\subsection{Attributes Memory}
 
-Now that we know how to draw individual pixels, it's time to handle colour. Memory wise, it's stored immediately after pixel RAM, at memory locations \MemAddr{5800} - \MemAddr{5AFF}. Each byte represents colour and attributes for 8$\times$8 pixel block on screen. Byte contents are as follows:
+Now that we know how to draw individual pixels, it's time to handle colour. Memory wise, it's stored immediately after pixel RAM, at memory locations \MemAddr{5800} - \MemAddr{5AFF}. Each byte represents colour and attributes for 8$\times$8 pixel block on the screen. Byte contents are as follows:
 
 \begin{BitTableByte}
 	\BitSmall{$F$} &
@@ -193,12 +193,14 @@ Colour value {\tt 0-7} corresponds to:
 	\BitMono{7}	& Gray & White \\
 \end{tabular}
 
-Spectrum only requires 768 bytes to configure colour and attributes for the whole screen. And memory is contiguous so it's simple to manage. However it comes at expense of restricting to only 2 colours per each character block - the reason for the (in)famous colour clash.
+Spectrum only requires 768 bytes to configure colour and attributes for the whole screen. And memory is contiguous so it's simple to manage. However, it comes at expense of restricting to only 2 colours per character block - the reason for the (in)famous colour clash.
+
+Note: on Next, default ULA colours can be changed, see Palette chapter \ref{zx_next_palette} for details.
 
 
 \subsection{Border}
 
-Next inherites Spectrum border colour handling through \PortLink{ULA Control Port}{xxFE}. Bottom 3 bits are used to specify one of 8 possible colours (see table on previous page for full list). Example:
+Next inherits Spectrum border colour handling through \PortLink{ULA Control Port}{xxFE}. The bottom 3 bits are used to specify one of 8 possible colours (see table on the previous page for full list). Example:
 % note: use of "previous page" in parenthesis above - this works as long as colours table will be physically on previous page in printed book, but make sure it's adjusted if additional content it added, or layout changes otherwise in the future ("in previous section" or "above" for example)
 
 \begin{tcblisting}{}
@@ -206,18 +208,20 @@ Next inherites Spectrum border colour handling through \PortLink{ULA Control Por
 	OUT (&FE), A	; Set border colour from A
 \end{tcblisting}
 
-Note: border colour is set the same way regardless of graphics mode used. However some Layer 2 modes and Tileset may partially or fully cover border, effectively making it invisible to user.
+Note: border colour is set the same way regardless of graphics mode used. However, some Layer 2 modes and Tileset may partially or fully cover the border, effectively making it invisible to the user.
+
 
 \subsection{Enhanced ULA Modes}
 
-ZX Spectrum Next also supports several enhanced ULA modes like Timex Sinclair Double Buffering, Timex Sinclair Hi-Res and Hi-Colour, etc. However with presence of Layer 2 and Tilemap modes, it's unlikely these will be used when programming new software on Next. Therefore they are not described here. If interested, read more on:
+ZX Spectrum Next also supports several enhanced ULA modes like Timex Sinclair Double Buffering, Timex Sinclair Hi-Res and Hi-Colour, etc. However, with the presence of Layer 2 and Tilemap modes, it's unlikely these will be used when programming new software on Next. Therefore they are not described here. If interested, read more on:
 
 \url{https://wiki.specnext.dev/Video_Modes}
 
 
 \subsection{ULA Registers}
+\label{zx_next_ula_registers}
 
-\subsubsection{ULA Control Port {\tt \$xxFE}}
+\subsubsection{ULA Control Port \MemAddr{xxFE}}
 
 \begin{NextPort}
 	\PortBits{7-5}
@@ -230,7 +234,20 @@ ZX Spectrum Next also supports several enhanced ULA modes like Timex Sinclair Do
 		\PortDesc{Border colour}
 \end{NextPort}
 
-Note: when reading this port with certain high byte values will read keyboard status. See section \ref{zx_next_keyboard} for details.
+Note: when reading this port with certain high byte values will read keyboard status. See section \ref{zx_next_keyboard_registers} for details.
 
+
+\subsubsection{Palette Index Register \MemAddr{40}}
+\vspace*{-2ex}
+\subsubsection{Palette Value Register \MemAddr{41}}
+\vspace*{-2ex}
+\subsubsection{Enhanced ULA Ink Colour Mask \MemAddr{42}}
+\vspace*{-2ex}
+\subsubsection{Enhanced ULA Control Register \MemAddr{43}}
+\vspace*{-2ex}
+\subsubsection{Enhanced ULA Palette Extension \MemAddr{44}}
+\vspace*{-2ex}
+\subsubsection{Transparency Colour Fallback Register \MemAddr{4A}}
+\PortReference{zx_next_palette_registers}{Palette}
 
 \pagebreak
