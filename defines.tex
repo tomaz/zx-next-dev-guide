@@ -73,23 +73,6 @@
 \pagestyle{empty}
 
 
-% ▀▀█▀▀ ░█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▄▀█ ░█▀▀█ ▀▀█▀▀ ▀▀█▀▀ ▀█▀ ▒█▄░▒█ ▒█▀▀█ 
-% ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█░░▒█ ▒█▄▄▀ ▒█▒█▒█ ▒█▄▄█ ░▒█░░ ░▒█░░ ▒█░ ▒█▒█▒█ ▒█░▄▄ 
-% ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄ 　 ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ▒█░░▒█ ▒█░▒█ ░▒█░░ ░▒█░░ ▄█▄ ▒█░░▀█ ▒█▄▄█
-
-% same as X and p{size} respectively, but centers text horizontally
-\newcolumntype{Y}{>{\centering\arraybackslash}X}
-\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
-
-% top and bottom "struts" for instruction lines (note different height can be passed in via optional parameter)
-\newcommand{\instrt}[1][2.5ex]{\rule{0pt}{#1}}
-\newcommand{\instrb}[1][-1.4ex]{\rule[#1]{0pt}{0pt}}
-
-% top and bottom "struts" for note lines
-\newcommand{\notet}{\rule{0pt}{2.4ex}}
-\newcommand{\noteb}{\rule[-1.3ex]{0pt}{0pt}}
-
-
 % ▒█▀▀▀█ ▒█░▒█ ▒█▀▀▀█ ▒█▀▀█ ▀▀█▀▀ ▒█░▒█ ░█▀▀█ ▒█▄░▒█ ▒█▀▀▄ ▒█▀▀▀█ 
 % ░▀▀▀▄▄ ▒█▀▀█ ▒█░░▒█ ▒█▄▄▀ ░▒█░░ ▒█▀▀█ ▒█▄▄█ ▒█▒█▒█ ▒█░▒█ ░▀▀▀▄▄ 
 % ▒█▄▄▄█ ▒█░▒█ ▒█▄▄▄█ ▒█░▒█ ░▒█░░ ▒█░▒█ ▒█░▒█ ▒█░░▀█ ▒█▄▄▀ ▒█▄▄▄█

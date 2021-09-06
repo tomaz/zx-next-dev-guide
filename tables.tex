@@ -12,6 +12,99 @@
 % ─██████████████─██████████████─██████──────────██████─██████████████─██████──██████████─██████──██████─██████████████─
 % ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
+
+% ▀▀█▀▀ ░█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▄▀█ ░█▀▀█ ▀▀█▀▀ ▀▀█▀▀ ▀█▀ ▒█▄░▒█ ▒█▀▀█ 
+% ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█░░▒█ ▒█▄▄▀ ▒█▒█▒█ ▒█▄▄█ ░▒█░░ ░▒█░░ ▒█░ ▒█▒█▒█ ▒█░▄▄ 
+% ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄ 　 ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ▒█░░▒█ ▒█░▒█ ░▒█░░ ░▒█░░ ▄█▄ ▒█░░▀█ ▒█▄▄█
+
+% same as X and p{size} respectively, but centers text horizontally
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% top and bottom "struts" for instruction lines (note different height can be passed in via optional parameter)
+\newcommand{\instrt}[1][2.5ex]{\rule{0pt}{#1}}
+\newcommand{\instrb}[1][-1.4ex]{\rule[#1]{0pt}{0pt}}
+
+% top and bottom "struts" for note lines
+\newcommand{\notet}{\rule{0pt}{2.4ex}}
+\newcommand{\noteb}{\rule[-1.3ex]{0pt}{0pt}}
+
+
+% ▀▀█▀▀ ░█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀ ▒█▀▀▀█ 　 ▒█░░▒█ ▀█▀ ▀▀█▀▀ ▒█░▒█ 　 ▒█░▒█ ▒█▀▀▀ ░█▀▀█ ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀█ ▒█▀▀▀█ 
+% ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ ░▀▀▀▄▄ 　 ▒█▒█▒█ ▒█░ ░▒█░░ ▒█▀▀█ 　 ▒█▀▀█ ▒█▀▀▀ ▒█▄▄█ ▒█░▒█ ▒█▀▀▀ ▒█▄▄▀ ░▀▀▀▄▄ 
+% ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄ ▒█▄▄▄█ 　 ▒█▄▀▄█ ▄█▄ ░▒█░░ ▒█░▒█ 　 ▒█░▒█ ▒█▄▄▄ ▒█░▒█ ▒█▄▄▀ ▒█▄▄▄ ▒█░▒█ ▒█▄▄▄█
+
+% creates a customizable tabularx with following options:
+% - (required) tabularx columns
+% - (optional) commands that should only be available to main environment block (note only \NewExpandableDocumentCommand or \newcommand is allowed!)
+% - (optional) suffix; string, default = \hline
+% - (optional) row stretch ratio; float, empty for builtin, default = 1.2
+\NewDocumentEnvironment{ElegantTableX}{ m O{} O{\hline} O{1.2} +!b }{
+	\begingroup
+
+		% execute any group only commands
+		#2
+
+		% if row stretch ratio is given, use it
+		\IfEq{#4}{}{}{\renewcommand{\arraystretch}{#4}}
+
+		\begin{tabularx}{\linewidth}{#1}
+
+			\hline
+
+			#5
+
+			#3
+
+		\end{tabularx}
+
+	\endgroup
+}{}
+% same as above except using tabular instead of tabularx
+\NewDocumentEnvironment{ElegantTable}{ m O{} O{\hline} O{1.2} +!b }{
+	\begingroup
+
+		% execute any group only commands
+		#2
+
+		% if row stretch ratio is given, use it
+		\IfEq{#4}{}{}{\renewcommand{\arraystretch}{#4}}
+
+		\begin{tabular}{#1}
+
+			\hline
+
+			#5
+
+			#3
+
+		\end{tabular}
+
+	\endgroup
+}{}
+
+% creates a header with options:
+% - (optional) suffix; string, empty for none, deafult = \hline
+% - (required) headers without ending newline (\\)
+% note: this must be "expandable" command otherwise rowcolor will not work
+% https://tex.stackexchange.com/questions/176570/rowcolor-in-newdocumentcommand
+\NewExpandableDocumentCommand{\ElegantHeader}{ O{\hline} m }{
+	\rowcolor{PrintableLightGray}
+	#2
+	\\
+	#1
+}
+
+% creates elegant header cell
+% unfortunately I didn't find any simpler solution that would automatically make header text bold for the whole row...
+\newcommand{\EH}[1]{ \textbf{#1} }
+
+% creates simple cell without vertical lines
+% - (optional) cell alignment; default = c
+% - (requires) cell contents
+\newcommand{\ES}[2][c]{ #2 }
+% \newcommand{\ES}[2][c]{ \multicolumn{1}{#1}{#2} }
+
 % ▒█▀▀█ ▒█▀▀▀█ ▒█▀▀█ ▀▀█▀▀ 　 ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀▀ ▀█▀ ▒█▄░▒█ ▀█▀ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 
 % ▒█▄▄█ ▒█░░▒█ ▒█▄▄▀ ░▒█░░ 　 ▒█░▒█ ▒█▀▀▀ ▒█▀▀▀ ▒█░ ▒█▒█▒█ ▒█░ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 
 % ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ░▒█░░ 　 ▒█▄▄▀ ▒█▄▄▄ ▒█░░░ ▄█▄ ▒█░░▀█ ▄█▄ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█
