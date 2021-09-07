@@ -71,24 +71,19 @@ The offset of the tilemap data memory address relative to the start of bank 5 ne
 
 \subsection{Memory Organization}
 
-The Tilemap layer is closely tied with ULA. Memory wise, it always exists in 16K slot 5 (memory addresses \MemAddr{4000}-\MemAddr{7FFF}).
+The Tilemap layer is closely tied with ULA. Memory wise, it always exists in 16K slot 5. By default, this page is loaded into 16K slot 1 \MemAddr{4000}-\MemAddr{7FFF} (examples here will assume this configuration, if you load into a different slot, you will have to adjust addresses accordingly).
 
 If both ULA and tilemap are used, memory should be arranged to avoid overlap. Given ULA pixel and attributes memory occupied memory addresses \MemAddr{4000}-\MemAddr{5AFF}, this leaves \MemAddr{5B00}-\MemAddr{7FFF} for tilemap. If we also take into account various system variables that reside on top of ULA attributes, \MemAddr{6000} should be used for starting address. This leaves us:
 
-{
-	\def\arraystretch{1.2}
-	\begin{tabular}{|l|l|l|l|l|}
-		\hline
-		& \multicolumn{2}{c|}{40x32} & \multicolumn{2}{c|}{80x32} \\
-		\hline
-		Bytes per tile & 1 & 2 & 1 & 2 \\
-		\hline
-		Bytes per tileset & 1280 & 2560 & 2560 & 5120 \\
-		\hline
-		Max Tile Definitions & 215 & 175 & 175 & 95 \\
-		\hline
-	\end{tabular}
-}
+\begin{ElegantTable}{|l|l|l|l|l|}
+	\ElegantHeader{& \multicolumn{2}{c|}{\EH{40x32}} & \multicolumn{2}{c|}{\EH{80x32}}}
+
+	Bytes per tile & 1 & 2 & 1 & 2 \\
+	\hline
+	Bytes per tileset & 1280 & 2560 & 2560 & 5120 \\
+	\hline
+	Max Tile Definitions & 215 & 175 & 175 & 95 \\
+\end{ElegantTable}
 
 We as programmers need to tell hardware where in the memory tilemap and tile definitions are stored. \PortLink{Tilemap Base Address Register}{6E} and \PortLink{Tile Definitions Base Address Register}{6F} are used for that.
 

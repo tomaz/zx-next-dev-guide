@@ -78,7 +78,7 @@ Scrolling effects can be achieved by writing pixel offsets to \PortLink{Layer 2 
 \begin{multicols}{2}
 	3 horizontal banks:
 
-	\begin{tabularx}{0.455\textwidth}{c|YY|YY|}
+	\begin{tabularx}{0.95\linewidth}{c|YY|YY|}
 		\multicolumn{1}{l}{} & 
 			\multicolumn{1}{l}{0} &
 			\multicolumn{2}{c}{\dots} &
@@ -131,14 +131,14 @@ Scrolling effects can be achieved by writing pixel offsets to \PortLink{Layer 2 
 
 	Banking Setup:
 
-	\begin{tabularx}{0.445\textwidth}{|c|c|c|c|Y|}
-		\hline
-		\BitHead{15} & 
+	\begin{ElegantTableX}{|c|c|c|c|Y|}
+		\ElegantHeader{
+			\BitHead{15} & 
 			\BitHead{14} & 
 			\BitHead{13} &
 			\BitHead{12-8} &
-			\BitHead{7-0} \\
-		\hline
+			\BitHead{7-0}
+		}
 		\BitStartMulti{4}{$Y$} & 
 			\BitMulti{1}{$X$} \\
 		\hline
@@ -149,8 +149,8 @@ Scrolling effects can be achieved by writing pixel offsets to \PortLink{Layer 2 
 		\BitStartMulti{3}{8K} &
 			\BitMulti{1}{$Y_{4-0}$} &
 			\BitMulti{1}{$X$} \\
-		\hline
-	\end{tabularx}
+	\end{ElegantTableX}
+
 \end{multicols}
 
 This mode is the closest to ULA, resolution wise, so is perhaps the simplest to grasp. It's also supported across all Next core versions. Pixels are laid out from left to right and top to bottom. Each pixel uses one byte that represents an 8-bit index into the palette. 3 16K banks are needed to cover the whole screen, each holding data for 64 lines. Or, if using 8K, 6 banks, 32 lines each. Combined, colour data requires 48K of memory.
@@ -218,7 +218,7 @@ We don't have to handle bank swapping on every iteration; once per 32 rows would
 \begin{multicols}{2}
 	5 vertical banks:
 
-	\begin{tabularx}{0.455\textwidth}{l|X|X|X|X|X|X|X|X|X|X|}
+	\begin{tabularx}{0.95\linewidth}{l|X|X|X|X|X|X|X|X|X|X|}
 		\multicolumn{1}{l}{} &
 			\multicolumn{1}{l}{0} &
 			\multicolumn{7}{X}{} &
@@ -268,15 +268,15 @@ We don't have to handle bank swapping on every iteration; once per 32 rows would
 
 	Banking Setup:
 
-	\begin{tabularx}{0.445\textwidth}{|c|c|c|c|c|Y|}
-		\hline
-		\BitHead{16} &
+	\begin{ElegantTableX}{|c|c|c|c|c|Y|}
+		\ElegantHeader{
+			\BitHead{16} &
 			\BitHead{15} &
 			\BitHead{14} &
 			\BitHead{13} &
 			\BitHead{12-8} &
-			\BitHead{7-0} \\
-		\hline
+			\BitHead{7-0}
+		}
 		\BitStartMulti{1}{$X_{8}$} & 
 			\BitMulti{4}{$X_{7-0}$} &
 			\BitMulti{1}{$Y$} \\
@@ -288,8 +288,8 @@ We don't have to handle bank swapping on every iteration; once per 32 rows would
 		\BitStartMulti{4}{8K} &
 			\BitMulti{1}{$X_{4-0}$} &
 			\BitMulti{1}{$Y$} \\
-		\hline
-	\end{tabularx}
+	\end{ElegantTableX}
+
 \end{multicols}
 
 320$\times$256 mode is only available on Next core 3.0.6 or later. Pixels are laid out from top to bottom and left to right. Each pixel uses one byte that represents an 8-bit index into the palette. To cover the whole screen, 5 16K banks of 64 columns or 10 8K banks of 32 columns are needed. Together colour data requires 80K of memory.
@@ -365,7 +365,7 @@ nextY:
 \begin{multicols}{2}
 	5 vertical banks:
 
-	\begin{tabularx}{0.455\textwidth}{l|X|X|X|X|X|X|X|X|X|X|}
+	\begin{tabularx}{0.95\linewidth}{l|X|X|X|X|X|X|X|X|X|X|}
 		\multicolumn{1}{l}{} &
 			\multicolumn{1}{l}{0} &
 			\multicolumn{7}{X}{} &
@@ -416,15 +416,15 @@ nextY:
 
 	Banking Setup:
 
-	\begin{tabularx}{0.445\textwidth}{|c|c|c|c|c|Y|}
-		\hline
-		\BitHead{16} &
+	\begin{ElegantTableX}{|c|c|c|c|c|Y|}
+		\ElegantHeader{
+			\BitHead{16} &
 			\BitHead{15} &
 			\BitHead{14} &
 			\BitHead{13} &
 			\BitHead{12-8} &
-			\BitHead{7-0} \\
-		\hline
+			\BitHead{7-0}
+		}
 		\BitStartMulti{1}{$X_{8}\times 2$} & 
 			\BitMulti{4}{$X_{7-0}\times 2$} &
 			\BitMulti{1}{$Y$} \\
@@ -436,8 +436,8 @@ nextY:
 		\BitStartMulti{4}{8K} &
 			\BitMulti{1}{$X_{4-0}\times 2$} &
 			\BitMulti{1}{$Y$} \\
-		\hline
-	\end{tabularx}
+	\end{ElegantTableX}
+
 \end{multicols}
 
 640$\times$256 mode is very similar to 320$\times$256, except that each byte represents 2 colours instead of 1. It's also available on Next core 3.0.6 or later only. Pixels are laid out from top to bottom and left to right. Each pixel takes 4 bits, so each byte contains data for 2 pixels. To cover the whole screen, 5 16K banks of 128 columns or 10 8K banks of 64 columns are needed. Together colour data requires 80K of memory. Similar to 320$\times$256, this mode also covers the whole screen, including the border.

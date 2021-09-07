@@ -38,21 +38,22 @@
 % - (required) tabularx columns
 % - (optional) commands that should only be available to main environment block (note only \NewExpandableDocumentCommand or \newcommand is allowed!)
 % - (optional) suffix; string, default = \hline
+% - (optional) table width; default = \linewidth
 % - (optional) row stretch ratio; float, empty for builtin, default = 1.2
-\NewDocumentEnvironment{ElegantTableX}{ m O{} O{\hline} O{1.2} +!b }{
+\NewDocumentEnvironment{ElegantTableX}{ m O{} O{\hline} O{\linewidth} O{1.2} +!b }{
 	\begingroup
 
 		% execute any group only commands
 		#2
 
 		% if row stretch ratio is given, use it
-		\IfEq{#4}{}{}{\renewcommand{\arraystretch}{#4}}
+		\IfEq{#5}{}{}{\renewcommand{\arraystretch}{#5}}
 
-		\begin{tabularx}{\linewidth}{#1}
+		\begin{tabularx}{#4}{#1}
 
 			\hline
 
-			#5
+			#6
 
 			#3
 
