@@ -4,6 +4,7 @@
 \usepackage{a4wide}
 \usepackage{afterpage}
 \usepackage{amsfonts}
+\usepackage{anyfontsize}
 \usepackage{url}
 \usepackage{array}
 \usepackage{multicol}
@@ -44,52 +45,68 @@
 \input{tables.tex}
 \input{instructions.tex}
 
-
 \begin{document}
 
-% use arabic numerals for starting pages
-\frontmatter
+	% note: includes cannot be nested, therefore we must include each section separately (where chapters are divided into multiple files)
 
-% note: includes cannot be nested, therefore we must include each section separately (where chapters are divided into multiple files)
+	% ▒█▀▀▀ ▒█▀▀█ ▒█▀▀▀█ ▒█▄░▒█ ▀▀█▀▀ 
+	% ▒█▀▀▀ ▒█▄▄▀ ▒█░░▒█ ▒█▒█▒█ ░▒█░░ 
+	% ▒█░░░ ▒█░▒█ ▒█▄▄▄█ ▒█░░▀█ ░▒█░░
 
-\include{chapter-title.tex}
+	% use arabic numerals for starting pages
+	\frontmatter
 
-% all other pages after this one should use defaults from `usepackage' statement on the top of the file!
-\afterpage{\aftergroup\restoregeometry}
+	% use empty style for first couple pages, until defined otherwise
+	\pagestyle{empty}
 
-\include{chapter-copyright.tex}
+	\include{chapter-title.tex}
+	\include{chapter-copyright.tex}
+	\include{chapter-toc.tex}
 
-% use arabic numerals for page numbers and clean page style for the rest of the document
-\mainmatter
+	% ▒█▀▀█ ▒█▀▀▀█ ▒█▄░▒█ ▀▀█▀▀ ▒█▀▀▀ ▒█▄░▒█ ▀▀█▀▀ 
+	% ▒█░░░ ▒█░░▒█ ▒█▒█▒█ ░▒█░░ ▒█▀▀▀ ▒█▒█▒█ ░▒█░░ 
+	% ▒█▄▄█ ▒█▄▄▄█ ▒█░░▀█ ░▒█░░ ▒█▄▄▄ ▒█░░▀█ ░▒█░░
 
-\include{chapter-introduction.tex}
+	% use arabic numerals for page numbers and clean page style for the rest of the document
+	\mainmatter
 
-\include{chapter-z80.tex}
+	% use default page style for all content pages
+	\pagestyle{clean}
 
-\include{chapter-next.tex}
-\include{chapter-next-ports.tex}
-\include{chapter-next-memory.tex}
-\include{chapter-next-palette.tex}
-\include{chapter-next-ula.tex}
-\include{chapter-next-layer2.tex}
-\include{chapter-next-tilemap.tex}
-\include{chapter-next-sprites.tex}
-\include{chapter-next-sound.tex}
-\include{chapter-next-keyboard.tex}
-\include{chapter-next-interrupts.tex}
+	\include{chapter-introduction.tex}
 
-\include{chapter-instr-glance.tex}
+	\include{chapter-z80.tex}
 
-\include{chapter-instr-close.tex}
+	\include{chapter-next.tex}
+	\include{chapter-next-ports.tex}
+	\include{chapter-next-memory.tex}
+	\include{chapter-next-palette.tex}
+	\include{chapter-next-ula.tex}
+	\include{chapter-next-layer2.tex}
+	\include{chapter-next-tilemap.tex}
+	\include{chapter-next-sprites.tex}
+	\include{chapter-next-sound.tex}
+	\include{chapter-next-keyboard.tex}
+	\include{chapter-next-interrupts.tex}
 
-\appendix
+	% instruction pages should show chapter name on both odd & even
+	\pagestyle{nosectionmarker}
 
-% only print chapters in appendices, not sections and subsections
-\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+	\include{chapter-instr-glance.tex}
+	\include{chapter-instr-close.tex}
 
-\include{chapter-instr-sorted-mnemonic.tex}
-\include{chapter-instr-sorted-opcode.tex}
-\include{chapter-bibliography.tex}
-\include{chapter-license.tex}
+
+	% ░█▀▀█ ▒█▀▀█ ▒█▀▀█ ▒█▀▀▀ ▒█▄░▒█ ▒█▀▀▄ ▀█▀ ▀▄▒▄▀ 
+	% ▒█▄▄█ ▒█▄▄█ ▒█▄▄█ ▒█▀▀▀ ▒█▒█▒█ ▒█░▒█ ▒█░ ░▒█░░ 
+	% ▒█░▒█ ▒█░░░ ▒█░░░ ▒█▄▄▄ ▒█░░▀█ ▒█▄▄▀ ▄█▄ ▄▀▒▀▄
+
+	\appendix
+	% only print chapters in appendices, not sections and subsections
+	\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+
+	\include{chapter-instr-sorted-mnemonic.tex}
+	\include{chapter-instr-sorted-opcode.tex}
+	\include{chapter-bibliography.tex}
+	\include{chapter-license.tex}
 
 \end{document}

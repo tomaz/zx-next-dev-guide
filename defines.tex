@@ -7,9 +7,30 @@
 % general document info for simpler reuse
 \newcommand{\AuthorName}{Toma\v{z}}
 \newcommand{\AuthorNameSurname}{\AuthorName ~Kragelj}
-\newcommand{\BookTitle}{ZX Spectrum Next Assembler Developer Guide}
+\newcommand{\BookTitleMain}{ZX Spectrum Next}
+\newcommand{\BookTitleSub}{Assembler Developer Guide}
+\newcommand{\BookTitle}{\BookTitleMain~\BookTitleSub}
+
+
+% ▒█▀▀█ ▒█▀▀▀ ▒█░░▒█ ▀█▀ ▒█▀▀▀█ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ ▒█▀▀▀█ 
+% ▒█▄▄▀ ▒█▀▀▀ ░▒█▒█░ ▒█░ ░▀▀▀▄▄ ▒█░ ▒█░░▒█ ▒█▒█▒█ ░▀▀▀▄▄ 
+% ▒█░▒█ ▒█▄▄▄ ░░▀▄▀░ ▄█▄ ▒█▄▄▄█ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
+
 \newcommand{\LatestYear}{2021}
-\newcommand{\LatestReleaseDate}{16 July 2021}
+\newcommand{\LatestMonthName}{September}
+\newcommand{\LatestMonth}{09}
+\newcommand{\LatestDay}{15}
+
+% revision name is nicely structured variant with named month
+\newcommand{\LatestRevisionName}{\LatestDay~\LatestMonthName~\LatestYear}
+
+% revision date is "reverse domain" type that can be easily sorted in various computer lists; also suitable for git tags
+\newcommand{\LatestRevisionDate}{\LatestYear-\LatestMonth-\LatestDay}
+
+
+% ▒█▀▀▀ ▒█░░░ ▒█▀▀▀ ▒█▀▄▀█ ▒█▀▀▀ ▒█▄░▒█ ▀▀█▀▀ ▒█▀▀▀█ 
+% ▒█▀▀▀ ▒█░░░ ▒█▀▀▀ ▒█▒█▒█ ▒█▀▀▀ ▒█▒█▒█ ░▒█░░ ░▀▀▀▄▄ 
+% ▒█▄▄▄ ▒█▄▄█ ▒█▄▄▄ ▒█░░▒█ ▒█▄▄▄ ▒█░░▀█ ░▒█░░ ▒█▄▄▄█
 
 % definitions based on whether PDF is generated for book or online.
 \newcommand{\email}[3]{\ifdefined\PRINTED{\tt #1@#2.#3}\else{\tt #1 AT #2 DOT #3}\fi}
@@ -31,20 +52,51 @@
 \setlength{\headheight}{14.49998pt}
 \addtolength{\topmargin}{-2.49998pt}
 
+% section marker should only use name, without number
+\renewcommand{\sectionmark}[1]{\uppercase{\markright{#1}}}
+
 % redefine the default "plain" pagestyle (used by chapter pages)
+% only show page number
 \fancypagestyle{plain}{
 	\fancyhf{} 
 	\fancyhead{}
-	\fancyfoot[L]{\thepage}
+	\fancyfoot[LO,RE]{\sffamily\footnotesize\thepage}
 	\renewcommand{\headrulewidth}{0pt}
 	\renewcommand{\footrulewidth}{0pt}
 }
 
 % define style used for normal pages
+% odd pages (aka left) shows chapter marker
+% even pages (aka right) shows section name
 \fancypagestyle{clean}{
 	\fancyhf{}
-	\fancyhead[RE,LO]{\leftmark}
-	\fancyfoot[RE,LO]{\thepage}
+	\fancyhead[LO]{\sffamily\footnotesize\leftmark}
+	\fancyhead[RE]{\sffamily\footnotesize\rightmark}
+	\fancyfoot[RE,LO]{\sffamily\footnotesize\thepage}
+	\renewcommand{\headrulewidth}{0.1pt}
+	\renewcommand{\footrulewidth}{0pt}
+}
+
+% define style used for pages where section mark doesn't make sense
+% odd and even pages show chapter marker on the outer edge
+\fancypagestyle{nosectionmarker}{
+	\fancyhf{}
+	\fancyhead[RE,LO]{\sffamily\footnotesize\leftmark}
+	\fancyfoot[RE,LO]{\sffamily\footnotesize\thepage}
+	\renewcommand{\headrulewidth}{0.1pt}
+	\renewcommand{\footrulewidth}{0pt}
+}
+
+% empty pages before chapters should use empty style (aka nothing)
+\let\mtcleardoublepage\cleardoublepage
+\renewcommand{\cleardoublepage}{\clearpage{\pagestyle{empty}\mtcleardoublepage}}
+
+% creates minitoc without any headers
+\newcommand{\ChapterTOC}[1][\pagestyle{clean}]{
+	\pagestyle{nosectionmarker}
+	\minitoc
+	\thispagestyle{plain}
+	#1
 }
 
 % we can use this for pages that are intentionally left blank
@@ -58,19 +110,12 @@
 	\mbox{}
 }
 
-% empty pages before chapters should use empty style (aka nothing)
-\let\mtcleardoublepage\cleardoublepage
-\renewcommand{\cleardoublepage}{\clearpage{\pagestyle{empty}\mtcleardoublepage}}
-
 % define default paragraph styles
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1.5ex}
 
 % don't stretch content into empty space vertically
 \raggedbottom
-
-% use empty style for first couple pages, until defined otherwise
-\pagestyle{empty}
 
 
 % ▒█▀▀▀█ ▒█░▒█ ▒█▀▀▀█ ▒█▀▀█ ▀▀█▀▀ ▒█░▒█ ░█▀▀█ ▒█▄░▒█ ▒█▀▀▄ ▒█▀▀▀█ 

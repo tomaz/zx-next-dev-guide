@@ -18,6 +18,33 @@
 
 \title{\BookTitle}
 \author{\AuthorNameSurname}
-\date{\LatestReleaseDate}
+\date{\LatestRevisionName}
 
-\maketitle
+
+\begin{titlepage}
+	\newcommand{\BigFont}[1]{\fontsize{30}{30}\selectfont #1}
+	\newcommand{\MidFont}[1]{\fontsize{20.4}{20}\selectfont #1}
+	\newcommand{\SmallFont}[1]{\fontsize{14}{14}\selectfont #1}
+	\newcommand{\MiniFont}[1]{\fontsize{8}{8}\selectfont #1}
+
+	\vspace*{\fill}
+
+	\begin{flushright}
+		\sffamily
+
+		\textbf{
+			\BigFont{\BookTitleMain}
+			\\[0.5cm]
+			\MidFont{\BookTitleSub}
+		}
+
+		\vspace*{4cm}
+
+		\MidFont{\AuthorNameSurname}
+
+	\end{flushright}
+
+	\vspace*{\fill}
+
+	
+\end{titlepage}

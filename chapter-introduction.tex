@@ -14,7 +14,7 @@
 % █░░░░░░░░░░█░░░░░░██████████░░░░░░█████░░░░░░█████░░░░░░██░░░░░░░░░░█░░░░░░░░░░░░░░█
 % ████████████████████████████████████████████████████████████████████████████████████
 
-\minitoc
+\ChapterTOC[]
 
 
 \section{Where to get this document}
@@ -89,7 +89,7 @@ GitHub repository also includes companion source code. Sample projects were crea
 }
 
 \footnotetext{
-	Unfortunately with latest VS Code versions, workspace tasks stopped working. However there is a workaround: open {\tt .vscode/tasks.json} file from any of the sample projects, scroll down a little and copy {\tt Launch CSpect} and {\tt Launch ZEsarUX} tasks to user tasks. You can do this all from within VS Code. To open the user tasks file, open the command palette and start typing {\tt open user tasks}, then select the option from the drop-down menu.
+	Workspace tasks seem to not be supported in some later VS Code versions. If this is the case for you, copy them to user tasks (shared between projects): open {\tt .vscode/tasks.json} file from any of the sample projects, scroll down a little and copy {\tt Launch CSpect} and {\tt Launch ZEsarUX} tasks to user tasks. You can do this all from within VS Code. To open the user tasks file, open the command palette and start typing {\tt open user tasks}, then select the option from the drop-down menu.
 }
 
 
@@ -141,11 +141,14 @@ If interested, you can find it at \url{http://www.myquest.nl/z80undocumented/}.
 \begin{description}
 
 	% when adding versions:
-	% 1. replace `\LatestReleaseDate` with value from macro definition in `defines.tex`
-	% 2. update `\LatestReleaseDate` with new value in `defines.tex`
+	% 1. replace `\LatestRevisionName` with value from macro definition in `defines.tex`
+	% 2. update `\LatestRevisionName` with new value in `defines.tex`
 	% 3. create new entry here using now updated values (copy item definition from previous version)
 
-	\item[\LatestReleaseDate]
+	\item[\LatestRevisionName]
+	Corrections and updates based on community comments - with special thanks to Peter Ped Helcmanovsky. Restructured and updated many ZX Next chapters: added sample code to ports, completely restructured memory map and paging, added new palette chapter including 9-bit palette handling, updated ULA with shadow screen info and added Next extended keyboard description. Other than that couple of cosmetic changes: redesigned title, copyright pages etc. Also, many behind the scenes improvements like splitting previous huge single \LaTeX~ file into multiple per-chapter/section. This is not only more manageable but can also compile much faster.
+
+	\item[16 July 2021]
 	Added ZX Spectrum Next information and instructions and restructured text for better maintainability and readability.
 
 	\item[18 September 2005]

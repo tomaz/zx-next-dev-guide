@@ -1,24 +1,24 @@
-\chapter*{Copyright Statement}
+\vspace*{\fill}
 
-Copyright {\copyright} \LatestYear ~\AuthorNameSurname\\	% note this should become 2021-\LatestYear for releases after 2021...
+{\Large\textbf{\BookTitle}}
+
+\vspace*{0.1cm}
+
+{\large\AuthorNameSurname}
+
+\LatestRevisionName
+
+REVISIONS\\
+\LatestRevisionDate\\
+2021-07-16
+
+\vspace*{0.2cm}
+
+Copyright {\copyright} \LatestYear ~\AuthorNameSurname\\	% note this should become 2021-\LatestYear (aka 2021-2022) for releases after 2021...
 Copyright {\copyright} 2005 Jan Wilmans\\
 Copyright {\copyright} 1997, 1998, 2001, 2003, 2005 Sean Young
 
 Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.1 or any later version published by the Free Software Foundation; with no Invariant Sections, with no Front-Cover Texts, and with no Back-Cover Texts. A copy of the license is included in the section entitled ``GNU Free Documentation License''.
 
-
-% start numbering pages with table of contents, set style to clean so page numbers will be visible and other page styles reflected
-\setcounter{page}{0}
-\pagestyle{clean}
-
-% print table of contents, but just chapters and sections, we'll print toc for each chapter separately that will include subsection as well
-\setcounter{tocdepth}{1}
-\dominitoc \tableofcontents
-
-% setup formatting for section toc - no horizontal delimiters, offsets etc.
-\noptcrule
-\nomtcrule									% no horizontal delimiters on top and bottom
-\renewcommand{\mtcoffset}{-1.5em}			% render minitoc a bit more to the left for more centralized appearance
-\mtcsetfeature{minitoc}{open}{\vspace{1em}}	% add some vertical spacing between contents title and toc
-\def\mtcSfont{\normalsize}
-\def\mtcSSfont{\small}
+% all other pages after this one should use defaults from `usepackage' statement on the top of the file!
+\afterpage{\aftergroup\restoregeometry}
