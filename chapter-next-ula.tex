@@ -17,28 +17,27 @@
 
 Original ZX Spectrum didn't have a dedicated graphics chip. To keep the price as low as possible, screen rendering was performed by ULA (``Uncommitted Logic Array'') chip.
 
-ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode is 256$\times$192 pixels. If we translate this to characters that are 8$\times$8 pixels, this gives us 32 character columns in 24 character rows. Memory dedicated to ULA resides in second 16K slot at addresses \MemAddr{4000}-\MemAddr{5AFF}. And similar to the memory configuration of other contemporary computers, pixel memory is separate from attributes/colour memory:
+ZX Spectrum Next inherits ULA mode. The resolution of the screen in this mode is 256$\times$192 pixels. If we translate this to 8$\times$8 pixels characters, it gives us 32 character columns in 24 character rows.
 
-\begingroup
+ULA always reads from 16K bank 5 which is assigned to the second 16K slot at addresses \MemAddr{4000}-\MemAddr{7FFF} by default. Similar to the memory configuration of other contemporary computers, pixel memory is separate from attributes/colour memory. If using default memory configuration:
+
+\begin{ElegantTable}{|c|c|c|c|}[
 	\setlength{\tabcolsep}{5pt}
-	\begin{tabular}{|c|c|c|c|}
-		\hline
-		ROM\notet\noteb & \multicolumn{3}{c|}{RAM} \\
-		\hline
-		16K & 16K & 16K & 16K \\
-		&
-			\begin{tabular}{c|c|c}
-				\arrayrulecolor{gray}
-				\hline
-				Pixels & Attributes & ... \\
-				\MemAddr{4000}-\MemAddr{57FF} & 
-					\MemAddr{5800}-\MemAddr{5AFF} &
-					\MemAddr{5B00}-\MemAddr{7FFF} \\
-			\end{tabular}
-		& & \\
-		\hline
-	\end{tabular}
-\endgroup
+]
+	\ElegantHeader{ROM & \multicolumn{3}{c|}{RAM}}
+
+	16K & 16K & 16K & 16K \\
+	&
+		\begin{tabular}{c|c|c}
+			\arrayrulecolor{gray}
+			\hline
+			Pixels & Attributes & (free) \\
+			\MemAddr{4000}-\MemAddr{57FF} & 
+				\MemAddr{5800}-\MemAddr{5AFF} &
+				\MemAddr{5B00}-\MemAddr{7FFF} \\
+		\end{tabular}
+	& & \\
+\end{ElegantTable}
 
 \subsection{Pixel Memory}
 
@@ -110,7 +109,7 @@ In fact, to calculate the address of memory for any given (x,y) coordinate, we'd
 
 \end{BitTableWord}
 
-As you can see, X is straightforward; we simply need to take the upper 5 bits and fill them into the lower 5 bits of a 16-bit register pair. Y coordinate requires all 8 bits that are written into bits 12-5 of 16-bit register pair. However, notice how individual bits are scrambled. It makes incrementing address for next character row simple operation of {\tt INC H} (assuming {\tt HL} stores the address of the previous row), which is likely one of the reasons for such implementation. But imagine for a second how complex a Z80 program would need to be to handle all of this. Sure, nothing couple shifts and masking operations couldn't handle but still, lots of wasted CPU cycles. However, on ZX Spectrum Next we don't have to deal with any of the peculiarities of ULA mode; we have 3 new instructions that take care of all of the complexity for us:
+As you can see, X is straightforward; we simply need to take the upper 5 bits and fill them into the lower 5 bits of a 16-bit register pair. Y coordinate requires all 8 bits written into bits 12-5 of 16-bit register pair. However, notice how individual bits are scrambled. It makes incrementing address for next character row simple operation of {\tt INC H} (assuming {\tt HL} stores the address of the previous row), which is likely one of the reasons for such implementation. But imagine for a second how complex a Z80 program would need to be to handle all of this. Sure, nothing couple shifts and masking operations couldn't handle but still, lots of wasted CPU cycles. However, on ZX Spectrum Next we have 3 new instructions that take care of all of the complexity for us:
 
 \begin{itemize}[topsep=1pt,itemsep=1pt]
 	\item {\tt PIXELAD} calculates the address of a pixel with coordinates from {\tt DE} register pair where {\tt D} is Y and {\tt E} is X coordinate and stores the memory location address into {\tt HL} register pair for ready consumption
@@ -181,16 +180,16 @@ Now that we know how to draw individual pixels, it's time to handle colour. Memo
 
 Colour value {\tt 0-7} corresponds to:
 
-\begin{tabular}{cll}
-	\BitHead{Value} & \BitHead{Colour} & \BitHead{Bright} \\
-	\BitMono{0}	& Black & Black \\
-	\BitMono{1}	& Blue & Bright blue \\
-	\BitMono{2}	& Red & Bright red \\
-	\BitMono{3}	& Magenta & Bright magenta \\
-	\BitMono{4}	& Green & Bright green \\
-	\BitMono{5}	& Cyan & Bright cyan \\
-	\BitMono{6}	& Yellow & Bright yellow \\
-	\BitMono{7}	& Gray & White \\
+\begin{tabular}{ccll}
+	\BitHead{Value} & \BitHead{Binary} & \BitHead{Colour} & \BitHead{Bright} \\
+	\BitMono{0}	& \BitMono{000}	& Black & Black \\
+	\BitMono{1}	& \BitMono{001}	& Blue & Bright blue \\
+	\BitMono{2}	& \BitMono{010}	& Red & Bright red \\
+	\BitMono{3}	& \BitMono{011}	& Magenta & Bright magenta \\
+	\BitMono{4}	& \BitMono{100}	& Green & Bright green \\
+	\BitMono{5}	& \BitMono{101}	& Cyan & Bright cyan \\
+	\BitMono{6}	& \BitMono{110}	& Yellow & Bright yellow \\
+	\BitMono{7}	& \BitMono{111}	& Gray & White \\
 \end{tabular}
 
 Spectrum only requires 768 bytes to configure colour and attributes for the whole screen. And memory is contiguous so it's simple to manage. However, it comes at expense of restricting to only 2 colours per character block - the reason for the (in)famous colour clash.
@@ -210,6 +209,33 @@ Next inherits Spectrum border colour handling through \PortLink{ULA Control Port
 
 Note: border colour is set the same way regardless of graphics mode used. However, some Layer 2 modes and Tileset may partially or fully cover the border, effectively making it invisible to the user.
 
+
+\subsection{Shadow Screen}
+
+As mentioned, ULA uses 16K bank 5 by default to determine what to show on the screen. However, it's possible to change this to bank 7 instead by using bit 3 of \PortLink{Memory Paging Control}{7FFD}. Bank 7 mode is called the ``shadow'' screen. It gives us two separate memory spaces for rendering ULA data and means for quickly swapping between them. It allows always drawing into inactive bank and only swapping it in when ready thus help eliminating flicker.
+
+Note: \PortLink{Memory Paging Control}{7FFD} only controls which of the two possible banks is being used by ULA, but it doesn't map the bank into any of the memory slots. This needs to be done by one of the paging modes as described in the Memory Map and Paging chapter, section \ref{zx_next_memorypaging}. Using MMU, we could do something like:
+
+\begin{tcblisting}{}
+	LD HL, &5800        ; we'll be swapping colours
+
+	NEXTREG &52, 10     ; swap first half of 16K bank 5 to 8K slot 2
+	LD A, %00000000     ; paper=black, ink=black
+	LD (HL), A          ; write data to screen (immediately visible)
+	
+	NEXTREG &52, 14     ; swap first half of 16K bank 7 to 8K slot 2
+	LD A, %00000101     ; paper=black, ink=cyan
+	LD (HL), A          ; write to 16K bank 7 (not visible)
+	
+	LD BC, &7FFD        ; prepare port for changing layers
+	LD A, %00001000     ; activate shadow layer
+	OUT (C), A          ; top left char now has black background
+	
+	LD A, %00000000     ; deactivate shadow layer
+	OUT (C), A          ; top left char now has cyan background
+\end{tcblisting}
+
+Remember: 16K bank 7 corresponds to 8K banks 14 and 15. And because pixel and attributes combined fit within single 8K, only single bank needs to be swapped in.
 
 \subsection{Enhanced ULA Modes}
 
@@ -237,6 +263,10 @@ ZX Spectrum Next also supports several enhanced ULA modes like Timex Sinclair Do
 Note: when reading this port with certain high byte values will read keyboard status. See section \ref{zx_next_keyboard_registers} for details.
 
 
+\subsubsection{Memory Paging Control \MemAddr{7FFD}}
+\PortReference{zx_next_memorypaging}{Memory Map and Paging}
+
+
 \subsubsection{Palette Index Register \MemAddr{40}}
 \vspace*{-2ex}
 \subsubsection{Palette Value Register \MemAddr{41}}
@@ -250,4 +280,8 @@ Note: when reading this port with certain high byte values will read keyboard st
 \subsubsection{Transparency Colour Fallback Register \MemAddr{4A}}
 \PortReference{zx_next_palette_registers}{Palette}
 
+
+
+\pagebreak
+\IntentionallyEmpty
 \pagebreak

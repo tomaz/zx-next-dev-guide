@@ -154,61 +154,57 @@
 % ▒█░▄▄ ▒█▀▀▀ ▒█▒█▒█ ▒█▀▀▀ ▒█▄▄▀ ▒█▄▄█ ▒█░░░ 　 ▒█▀▀▄ ▒█░ ░▒█░░ 　 ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ ░▀▀▀▄▄ 
 % ▒█▄▄█ ▒█▄▄▄ ▒█░░▀█ ▒█▄▄▄ ▒█░▒█ ▒█░▒█ ▒█▄▄█ 　 ▒█▄▄█ ▄█▄ ░▒█░░ 　 ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄ ▒█▄▄▄█
 
-\newcommand{\BitHead}[1]{\footnotesize \textbf{#1}}
+\newcommand{\BitHead}[1]{\footnotesize \EH{#1}}
 \newcommand{\BitMono}[1]{\tt #1}
 \newcommand{\BitSmall}[1]{\small #1}
 \newcommand{\BitMulti}[2]{\multicolumn{#1}{c|}{#2}}
 \newcommand{\BitStartMulti}[2]{\multicolumn{#1}{|c|}{#2}}
 
 \NewDocumentEnvironment{BitTableByte}{ O{c} +b }{
-	\begin{tabular}{|#1|#1|#1|#1|#1|#1|#1|#1|}
-		\hline
-		\BitHead{7} &
+	\begin{ElegantTable}{|#1|#1|#1|#1|#1|#1|#1|#1|}
+		\ElegantHeader{
+			\BitHead{7} &
 			\BitHead{6} &
 			\BitHead{5} &
 			\BitHead{4} &
 			\BitHead{3} &
 			\BitHead{2} &
 			\BitHead{1} &
-			\BitHead{0} \\
-
-		\hline
+			\BitHead{0}
+		}
 
 		#2
 		
-		\hline
-	\end{tabular}
+	\end{ElegantTable}
 }{}
-\NewDocumentEnvironment{BitTableWord}{ +b} {
-	\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\NewDocumentEnvironment{BitTableWord}{ +b } {
+	\begin{ElegantTable}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 		\hline
 
-		\multicolumn{8}{|c|}{High Byte} & \multicolumn{8}{c|}{Low Byte} \\
+		\ElegantHeader{\multicolumn{8}{|c|}{High Byte} & \multicolumn{8}{c|}{Low Byte}}
 
-		\hline
-
-		\BitHead{15} &
-			\BitHead{14} &
-			\BitHead{13} &
-			\BitHead{12} &
-			\BitHead{11} & 
-			\BitHead{10} &
-			\BitHead{9} &
-			\BitHead{8} &
-		\BitHead{7} &
-			\BitHead{6} &
-			\BitHead{5} &
-			\BitHead{4} &
-			\BitHead{3} &
-			\BitHead{2} &
-			\BitHead{1} &
-			\BitHead{0} \\
-
-		\hline
+		\ElegantHeader{
+			\BitHead{15} &
+				\BitHead{14} &
+				\BitHead{13} &
+				\BitHead{12} &
+				\BitHead{11} & 
+				\BitHead{10} &
+				\BitHead{9} &
+				\BitHead{8} &
+			\BitHead{7} &
+				\BitHead{6} &
+				\BitHead{5} &
+				\BitHead{4} &
+				\BitHead{3} &
+				\BitHead{2} &
+				\BitHead{1} &
+				\BitHead{0}
+		}
 		
 		#1
-		\hline
-	\end{tabular}
+
+	\end{ElegantTable}
 }{}
 
 
