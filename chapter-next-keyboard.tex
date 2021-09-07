@@ -38,14 +38,14 @@ checkI:
 continue:
 \end{tcblisting}
 
-We can slightly improve performance if we replace first two lines with:
+As mentioned in Ports chapter, section \ref{zx_next_ports_examples}, we can slightly improve performance if we replace first two lines with:
 
 \begin{tcblisting}{}
 	LD A, &DF
 	IN (&FE)
 \end{tcblisting}
 
-Using 16-bit load requires 10 T states for ``{\tt LD BC,nn}'' + 12 for ``{\tt IN A,(C)}'' whereas later variant requires 7 T states for ``{\tt LD A,nn}'' + 11 for ``{\tt IN (nn)}''. So 22 vs 18. The difference is small, but it can add up as typically keyboard is read multiple times per frame.
+Reading the port in first example requires 22 t-states (10+12) vs. 18 (7+11). The difference is small, but it can add up as typically keyboard is read multiple times per frame.
 
 The first program is more understandable at a glance - the port address is given as a whole 16-bit value, as usually provided in the documentation. The second program splits it into 2 8-bit values, so intent may not be immediately apparent. Of course, one learns the patterns with experience, but it nonetheless demonstrates the compromise between readability and speed.
 

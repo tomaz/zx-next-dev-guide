@@ -1,4 +1,5 @@
 \section{Ports}
+\label{zx_next_ports}
 
 % ────────────────────────────────────────────────────────────────────────────────
 % ─██████████████─██████████████─████████████████───██████████████─██████████████─
@@ -37,7 +38,7 @@
 		\zxport{RW}{103B}{0001 0000 0011 1011}{Sets and reads the I2C SCL line}
 		\zxport{RW}{113B}{0001 0001 0011 1011}{Sets and reads the I2C SDA line}
 		\zxport{RW}{123B}{0001 0010 0011 1011}{Enables layer 2 and controls paging of layer 2 screen into lower memory \zxsee{zx_next_layer2}}
-		\zxport{RW}{133B}{0001 0011 0011 1011}{Sends byte to serial port. If read, tells if data is available in RX buffer}
+		\zxport{RW}{133B}{0001 0011 0011 1011}{Sends byte to serial port. Read tells if data is available in RX buffer}
 		\zxport{RW}{143B}{0001 0100 0011 1011}{Reads data from serial port, write sets the baud rate}
 		\zxport{RW}{153B}{0001 0101 0011 1011}{Configuration of UART interfaces}
 		\zxport{-W}{1FFD}{0001 ---- ---- --0-}{Controls ROM paging and special paging options from the +2a/+3 \zxsee{zx_next_memorypaging}}
@@ -228,6 +229,153 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{-W}{FF}{Turns debug LEDs on and off on TBBlue implementations that have them}
 	\end{tbbluereg}
 \endgroup
+
+
+\pagebreak
+
+\subsection{Accessing Registers}
+\label{zx_next_ports_examples}
+
+% note: this section results in full 2 pages (there's 1 paragraph available in first 2 sub sections); if adding substantial text make sure it still fits 2 pages! If not possible otherwise, space can be found by combining more Next registers in tables above - so that they fill full pages, and then continuing directly with this subsection, without pagebreak... Current layout is nice though - left page describes read/write to Spectrum ports, right one for Next registers...
+
+\subsubsection{Writing to Spectrum Ports}
+
+When writing to one of the lower 256 ports, {\tt OUT (n),A} instruction is used. For example to write the value of {\tt 43} to peripheral device mapped to port \MemAddr{15}:
+
+\begin{tcblisting}{}
+	LD A, 43            ; we want to write 43
+	OUT (&15), A        ; writes value of A to port &15
+\end{tcblisting}
+
+To write using full 16-bit address, {\tt OUT (C),r} instruction is used instead. Example of writing a byte to serial port using \PortLink{UART TX}{133B}:
+
+\begin{tcblisting}{}
+	LD A, 42            ; we want to write 42
+	LD BC, &133B        ; we want to write to port &133B
+	OUT (C), A
+\end{tcblisting}
+
+The difference between the two speed-wise is tangible: first example requires only 18 t-states (7+11) while second 29 (7+10+12).
+
+
+\subsubsection{Reading from Spectrum Ports}
+
+Reading also uses the same approach as on original Spectrums - for the lower 256 ports {\tt IN A,(n)} is used. For example reading a byte from port \MemAddr{15}:
+
+\begin{tcblisting}{}
+	LD A, 0       ; perhaps not strictly required, but good idea
+	IN A, (&15)   ; read byte from port &15 to A
+\end{tcblisting}
+
+Note how the accumulator {\tt A} is cleared before accessing the port. With {\tt IN A,(n)}, the 16-bit address is composed from {\tt A} forming high byte and {\tt n} low byte.
+
+Let's see how we can use this for reading from 16-bit ports - we have two options: we can either use {\tt IN A,(n)} or {\tt IN r,(C)}. Example of both, reading a byte from serial port:
+
+\begin{multicols}{2}
+	\begin{tcblisting}{right skip=1em}
+LD BC, &143B   ; read &143B port
+IN A, (C)      ; read byte to A
+	\end{tcblisting}
+
+	\columnbreak
+
+	\begin{tcblisting}{}
+LD A, &14      ; high byte
+IN A, (&3B)    ; read byte to A
+	\end{tcblisting}
+\end{multicols}
+
+\vspace*{-0.7em} % multicols creates additional space below, we want next text to be closer up...
+Both have the same result. The difference speed-wise is 22 t-states (10+12) vs 18 (7+11). Not by a lot, but it may add up if used frequently. However, the intent of the first code is clearer as the port address is provided in full instead of being split between two instructions.
+
+This example nicely demonstrates a common dilemma when programming: frequently we can have readable but not as optimal code, or vice versa. But I also thought this was worth pointing out to avoid possible confusion in case you will encounter different ways in someone else's code.
+
+
+\subsubsection{Writing to Next registers}
+
+Writing values to Next/TBBlue registers occurs through \PortLink{TBBlue Register Select}{243B} and \PortLink{TBBlue Register Access}{253B} ports. It's composed from 2 steps: first we select the register via write to port \MemAddr{243B}, then write the value through port \MemAddr{253B}. For example writing value of {\tt 5} to port \MemAddr{16}:
+
+\begin{multicols}{2}
+	\begin{tcblisting}{right skip=1em}
+LD A, &16      ; register &16
+LD BC, &243B   ; port &243B
+OUT (C), A
+
+LD A, 5        ; write 5
+LD BC, &253B   ; to port &254B
+OUT (C), A
+	\end{tcblisting}
+
+	\columnbreak
+
+	\begin{tcblisting}{}
+LD A, &16      ; register &16
+LD BC, &243B   ; port &243B
+OUT (C), A
+
+LD A, 5        ; write 5
+INC B          ; to port &253B
+OUT (C), A	
+	\end{tcblisting}
+
+\end{multicols}
+
+\vspace*{-0.7em} % multicols creates additional space below, we want next text to be closer up...
+Quite involving, isn't it? Speed-wise, first example requires 58 t-states ((7+10+12)$\times$2) and second 6 t-states less: 52 ((7+10+12)+(7+4+12)).
+
+The second code relies on the fact that the only difference between two port addresses is the high byte (\MemAddr{24} vs \MemAddr{25}). So given we already assigned \MemAddr{243B} to {\tt BC}, we can simply increment {\tt B} to get \MemAddr{253B}. Again, the intent of the first example is clearer. And again, I thought it was worth pointing out in case you will encounter both approaches and wonder...
+
+However, we can do better. Much better, in fact, using Next {\tt NEXTREG} instruction, which allows direct writes to given registers. So above examples could simply be changed to either:
+
+\begin{multicols}{2}
+	\begin{tcblisting}{{right skip=1em}}
+LD A, 5          ; write 5
+NEXTREG &16, A  ; to reg &16
+	\end{tcblisting}
+
+	\columnbreak
+
+	\begin{tcblisting}{}
+NEXTREG &16, 5 ; write 5 to reg &16
+	\end{tcblisting}
+\end{multicols}
+
+\vspace*{-0.7em} % multicols creates additional space below, we want next text to be closer up...
+The first example requires 24 t-states (7+17) while second 20. So less than half of that of traditional approach. In fact, using {\tt NEXTREG} is the preferred method of writing to Next registers!
+
+
+\subsubsection{Reading from Next Registers}
+
+Reading values from Next/TBBlue registers also occurs through \MemAddr{243B} and \MemAddr{253B} ports. Similar to write, read is also composed from 2 steps: first select the register with port \MemAddr{243B}, then read the value from port \MemAddr{253B}. For example reading a byte from port \MemAddr{B0}:
+
+\begin{multicols}{2}
+
+	\begin{tcblisting}{right skip=1em}
+		LD A, &16      ; register &16
+		LD BC, &243B   ; port &243B
+		OUT (C), A     ; set port
+	
+		LD BC, &253B   ; port &253B
+		IN A, (C)      ; read to A
+	\end{tcblisting}
+
+	\columnbreak
+	
+	\begin{tcblisting}{}
+		LD A, &16      ; register &16
+		LD BC, &243B   ; port &243B
+		OUT (C), A     ; set port
+	
+		INC B          ; port &253B
+		IN A, (C)      ; read to A
+	\end{tcblisting}
+		
+\end{multicols}
+
+\vspace*{-0.7em} % multicols creates additional space below, we want next text to be closer up...
+The difference is small: 51 t-states ((7+10+12)+(10+12)) vs 45 ((7+10+12)+(4+12)). 
+
+Unfortunately, we don't have faster means of reading Next registers directly as we do for writing; there is no {\tt NEXTREG} alternative for reads.
 
 
 \pagebreak
