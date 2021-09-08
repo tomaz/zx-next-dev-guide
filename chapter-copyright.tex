@@ -1,28 +1,23 @@
-\vspace*{\fill} % render at the bottom of the page
+\begingroup
+	\vspace*{\fill} % render at the bottom of the page
 
-{\Large\textbf{\BookTitle}}
+	{\Large\textbf{\BookTitle}}
 
-\vspace*{0.1cm}
+	\vspace*{0.1cm}
 
-{\large\AuthorNameSurname}
+	{\large\AuthorNameSurname}
 
-\LatestRevisionName
+	\LatestRevisionName
 
-REVISIONS\\
-\LatestRevisionDate\\
-2021-07-16
+	REVISIONS\\
+	\LatestRevisionDate\\
+	2021-07-16
 
-\vspace*{0.2cm}
+	\vspace*{0.2cm}
 
-Copyright {\copyright} \LatestYear ~\AuthorNameSurname\\	% note this should become 2021-\LatestYear (aka 2021-2022) for releases after 2021...
-Copyright {\copyright} 2005 Jan Wilmans\\
-Copyright {\copyright} 1997, 1998, 2001, 2003, 2005 Sean Young
+	Copyright {\copyright} \LatestYear ~\AuthorNameSurname\\	% note this should become 2021-\LatestYear (aka 2021-2022) for releases after 2021...
+	Copyright {\copyright} 2005 Jan Wilmans\\
+	Copyright {\copyright} 1997, 1998, 2001, 2003, 2005 Sean Young
 
-Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.1 or any later version published by the Free Software Foundation; with no Invariant Sections, with no Front-Cover Texts, and with no Back-Cover Texts. A copy of the license is included in the section entitled ``GNU Free Documentation License''.
-
-
-% all other pages after this one should use defaults from `usepackage' statement on the top of the file!
-\afterpage{\aftergroup\restoregeometry}
-
-% this prevents empty page from being inserted before TOC (by default LaTeX will start chapters on odd pages which is fine for all pages except TOC - we have acknowlegements here instread)
-\let\cleardoublepage\clearpage
+	Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.1 or any later version published by the Free Software Foundation; with no Invariant Sections, with no Front-Cover Texts, and with no Back-Cover Texts. A copy of the license is included in the section entitled ``GNU Free Documentation License''.
+\endgroup

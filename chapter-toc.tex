@@ -12,23 +12,7 @@
 % █████░░░░░░█████░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
 % ██████████████████████████████████████████████
 
-% start numbering pages with table of contents
-\setcounter{page}{0}
-
-% use plain page style without any headers
-\pagestyle{plain}
 
 % print table of contents, but just chapters and sections, we'll print toc for each chapter separately that will include subsection as well
 \setcounter{tocdepth}{1}
 \dominitoc \tableofcontents
-
-% after TOC set style to clean so page numbers will be visible and other page styles reflected
-% \pagestyle{plain}
-
-% setup formatting for toc - no horizontal delimiters, offsets etc.
-\noptcrule
-\nomtcrule									% no horizontal delimiters on top and bottom
-\renewcommand{\mtcoffset}{-1.5em}			% render minitoc a bit more to the left for more centralized appearance
-\mtcsetfeature{minitoc}{open}{\vspace{1em}}	% add some vertical spacing between contents title and toc
-\def\mtcSfont{\normalsize}
-\def\mtcSSfont{\small}

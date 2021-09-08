@@ -56,13 +56,19 @@
 	% use arabic numerals for starting pages
 	\frontmatter
 
-	% use empty style for first couple pages, until defined otherwise
-	\pagestyle{empty}
+	\SetupPageFormattingTitle
 
 	\include{chapter-title.tex}
+
+	\SetupPageFormattingIntro
+	
 	\include{chapter-copyright.tex}
 	\include{chapter-acknowledge.tex}
+
+	\SetupPageFormattingTOC
+
 	\include{chapter-toc.tex}
+
 
 	% ▒█▀▀█ ▒█▀▀▀█ ▒█▄░▒█ ▀▀█▀▀ ▒█▀▀▀ ▒█▄░▒█ ▀▀█▀▀ 
 	% ▒█░░░ ▒█░░▒█ ▒█▒█▒█ ░▒█░░ ▒█▀▀▀ ▒█▒█▒█ ░▒█░░ 
@@ -71,8 +77,7 @@
 	% use arabic numerals for page numbers and clean page style for the rest of the document
 	\mainmatter
 
-	% use default page style for all content pages
-	\pagestyle{clean}
+	\SetupPageFormattingBook
 
 	\include{chapter-introduction.tex}
 
@@ -90,10 +95,10 @@
 	\include{chapter-next-keyboard.tex}
 	\include{chapter-next-interrupts.tex}
 
-	% instruction pages should show chapter name on both odd & even
-	\pagestyle{nosectionmarker}
+	\SetupPageFormattingInstructions
 
 	\include{chapter-instr-glance.tex}
+
 	\include{chapter-instr-close.tex}
 
 
@@ -101,9 +106,7 @@
 	% ▒█▄▄█ ▒█▄▄█ ▒█▄▄█ ▒█▀▀▀ ▒█▒█▒█ ▒█░▒█ ▒█░ ░▒█░░ 
 	% ▒█░▒█ ▒█░░░ ▒█░░░ ▒█▄▄▄ ▒█░░▀█ ▒█▄▄▀ ▄█▄ ▄▀▒▀▄
 
-	\appendix
-	% only print chapters in appendices, not sections and subsections
-	\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+	\SetupPageFormattingAppendix
 
 	\include{chapter-instr-sorted-mnemonic.tex}
 	\include{chapter-instr-sorted-opcode.tex}
