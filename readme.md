@@ -56,6 +56,9 @@ Couple ideas for new content:
 - Add sample project for interrupts
 - ~Split LaTeX source into multiple files, one per chapter with `include` (or `includeonly` for quicker compiling when working on individual chapters)~
 
+Also one bigger thing: I'd prefer to have the book in smaller physical size, something between A5 and A4. It would get more pages, but would fit better in hand and on the shelf. Most of the content would hopefully flow nicely, however some will be problematic (instructions at a glance come to mind). Maybe Royal or Crown Quarto - though I don't think either is available as coil bound variant (and this type of book would benefit a lot from such binding). Also need to check if more pages will affect the price...
+
+
 # License
 
 ZX Spectrum Next Developer Guide and companion source code are available under GNU license, please see the end of PDF document for full licence info!
