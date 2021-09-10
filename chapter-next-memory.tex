@@ -23,11 +23,11 @@ ZX Spectrum Next comes with 1024K (expanded version with 2048K) of memory. But i
 
 \subsection{Banks and Slots}
 
-Due to its 16-bit address bus, Next can only address 2\textsuperscript{16} = 65.536 bytes or 64K of memory at a time. To get access to all available memory, it's divided into smaller chunks called ``banks''.
+Due to its 16-bit address bus, Next can only address 2\textsuperscript{16} = 65.536 bytes or 64K of memory at a time. To get access to all available memory, it's divided into smaller chunks called ``banks''\footnote{You may also see the term ``page'' used instead of ``bank'' (in fact, that's why the process of swapping banks into slots is usually called ``paging''). I also noticed sometimes 64K addressable memory is referred to as ``bank''. In this book, I will keep naming consistent to avoid confusion.}.
 
-Next supports two interchangeable memory management models. One is inherited from the original Spectrum 128K, +2, +3 series and Pentagon clones and uses 16K banks. The other is unique to Next and uses 8K banks. Hence, addressable 64K is also divided into 16K or 8K ``slots'' into which banks are swapped in and out\footnote{You may also see the term ``page'' used instead of ``bank'' (in fact, that's why the process of swapping banks into slots is usually called ``paging''). I also noticed sometimes 64K addressable memory is referred to as ``bank''. In this book, I will keep naming consistent to avoid confusion.}.
+Next supports two interchangeable memory management models. One is inherited from the original Spectrums and clones and uses 16K banks. The other is unique to Next and uses 8K banks. Hence, addressable 64K is also divided into 16K or 8K ``slots'' into which banks are swapped in and out. In a way, slots are like windows into available memory.
 
-Banks are selected by their number - first bank is {\tt 0}, second {\tt 1} and so on. If you ever worked with arrays, banks and their numbers work the same as array data and indexes. Both 16K and 8K banks start with number {\tt 0} at the same address. So if 16K bank $n$ is selected, then the two corresponding 8K bank numbers would be $n \times 2$ and $n \times 2 + 1$.
+Banks are selected by their number - the first bank is {\tt 0}, second {\tt 1} and so on. If you ever worked with arrays, banks and their numbers work the same as array data and indexes. Both 16K and 8K banks start with number {\tt 0} at the same address. So if 16K bank $n$ is selected, then the two corresponding 8K bank numbers would be $n \times 2$ and $n \times 2 + 1$.
 
 After startup, addressable 64K space is mapped like this:
 
@@ -221,7 +221,7 @@ Allows selecting:
 	\item 16K RAM to be visible in the top 16K slot (3) from 8 possible banks (128 banks on Next)
 \end{itemize}
 
-Registers involved:
+Ports involved:
 
 \begin{itemize}[topsep=0pt,itemsep=0pt]
 	\item \PortLink{Memory Paging Control}{7FFD} bit 4 selects ROM bank for slot 0
@@ -247,7 +247,7 @@ Allows selecting:
 	\item 16K RAM to be visible in the top 16K slot (3) from 8 possible banks (128 banks on Next)
 \end{itemize}
 
-Registers involved:
+Ports involved:
 
 \begin{itemize}[topsep=0pt,itemsep=0pt]
 	\item \PortLink{Plus 3 Memory Paging Control}{1FFD} bit 2 as LSB for selecting ROM bank for slot 0
@@ -274,7 +274,7 @@ If you are using the standard interrupt handler or OS routines, then any time yo
 
 Also called ``Special Mode'' or ``CP/M Mode''. Allows selecting all 4 slots from limited selection of banks as shown in the table above.
 
-Registers involved:
+Ports involved:
 
 \begin{itemize}[topsep=0pt,itemsep=0pt]
 	\item \PortLink{Plus 3 Memory Paging Control}{1FFD} bit 0 enables All-RAM (if {\tt 1}) or normal mode ({\tt 0})
@@ -292,9 +292,9 @@ Next also supports paging implementation from Pentagon spectrums. It's unlikely 
 \pagebreak
 \subsection{Next MMU Paging Mode}
 
-Next MMU based paging mode is much more flexible in that it allows mapping 8K banks into any 8K slot of memory available to the CPU. It's also the simplest to use - a single instruction assigning bank number to desired MMU slot register.
+Next MMU based paging mode is much more flexible in that it allows mapping 8K banks into any 8K slot of memory available to the CPU. This is the only mode that allows paging in all 2048K on extended Next. It's also the simplest to use - a single {\tt NEXTREG} instruction assigning bank number to desired MMU slot register.
 
-In this mode, 64K memory accessible to the CPU is divided into 8 slots called MMU0 through MMU7, as shown in the diagram below. Physical memory is thus divided into 96 (or 224 on expanded Next) 8K banks. This is the only mode that allows paging in all memory from 2048K extended Next.
+In this mode, 64K memory accessible to the CPU is divided into 8 slots called MMU0 through MMU7, as shown in the diagram below. Physical memory is thus divided into 96 (or 224 on expanded Next) 8K banks.
 
 % similar to legacy tables, but less width per column
 \begin{ElegantTable}{|p{1.8cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|C{1.1cm}|}[][]
@@ -338,14 +338,14 @@ In this mode, 64K memory accessible to the CPU is divided into 8 slots called MM
 Bank selection is set via Next registers:
 
 \begin{itemize}[topsep=0pt,itemsep=0pt]
-	\item \PortLink{Memory Management Slot 0 bank}{50}
-	\item \PortLink{Memory Management Slot 1 bank}{51}
-	\item \PortLink{Memory Management Slot 2 bank}{52}
-	\item \PortLink{Memory Management Slot 3 bank}{53}
-	\item \PortLink{Memory Management Slot 4 bank}{54}
-	\item \PortLink{Memory Management Slot 5 bank}{55}
-	\item \PortLink{Memory Management Slot 6 bank}{56}
-	\item \PortLink{Memory Management Slot 7 bank}{57}
+	\item \PortLink{Memory Management Slot 0 Bank}{50}
+	\item \PortLink{Memory Management Slot 1 Bank}{51}
+	\item \PortLink{Memory Management Slot 2 Bank}{52}
+	\item \PortLink{Memory Management Slot 3 Bank}{53}
+	\item \PortLink{Memory Management Slot 4 Bank}{54}
+	\item \PortLink{Memory Management Slot 5 Bank}{55}
+	\item \PortLink{Memory Management Slot 6 Bank}{56}
+	\item \PortLink{Memory Management Slot 7 Bank}{57}
 \end{itemize}
 
 While not absolutely required, it's good practice to store original slot values and then restore before exiting program or returning from subroutines.
@@ -365,7 +365,7 @@ next:
 	DJNZ next
 \end{tcblisting}
 
-Note: \PortLink{Memory Management Slot 0 bank}{50} and \PortLink{Memory Management Slot 1 bank}{51} have extra ``functionality'': ROM can be automatically paged in if otherwise nonexistent 8K page \MemAddr{FF} is set. Low or high 8K ROM bank is automatically determined based on which 8K slot is used. This may be useful if temporarily paging RAM into the bottom 16K region and then wanting to restore back to ROM.
+Note: \PortLink{Memory Management Slot 0 Bank}{50} and \PortLink{Memory Management Slot 1 Bank}{51} have extra ``functionality'': ROM can be automatically paged in if otherwise nonexistent 8K page \MemAddr{FF} is set. Low or high 8K ROM bank is automatically determined based on which 8K slot is used. This may be useful if temporarily paging RAM into the bottom 16K region and then wanting to restore back to ROM.
 
 
 \subsection{Interaction Between Paging Modes}
@@ -375,25 +375,25 @@ As mentioned, legacy and Next paging modes are interchangeable. Changing banks i
 
 \subsubsection{Paging Out ROM}
 
-ROM is usually mapped to the bottom 16K slot, addresses \MemAddr{0000}-\MemAddr{3FFF}. This area can only be remapped using +3 All-RAM or Next MMU-based mode. Beware though that some programs may expect to find ROM routines at fixed addresses between \MemAddr{0000} and \MemAddr{3FFF}. And if default interrupt mode (IM 1) is set, Z80 will jump {\tt PC} to \MemAddr{0038} expecting to find interrupt handler there.
+ROM is usually mapped to the bottom 16K slot, addresses \MemAddr{0000}-\MemAddr{3FFF}. This area can only be remapped using +3 All-RAM or Next MMU-based mode. Beware though that some programs may expect to find ROM routines at fixed addresses between \MemAddr{0000} and \MemAddr{3FFF}. And if default interrupt mode (IM 1) is set, Z80 will expect to find interrupt handler at the address \MemAddr{0038}.
 
 
 \subsubsection{ULA}
 
 ULA always reads content from 16K bank 5. This is mapped to 16K slot 1 by default, addresses \MemAddr{4000}-\MemAddr{7FFF}. ULA will always use bank 5, regardless of which bank is mapped to slot 1, or which slot bank 5 is mapped to (or if it is mapped into any slot at all).
 
-You can redirect ULA to read from 16K bank 7 instead (the ``shadow'' screen), using bit 3 of \PortLink{Memory Paging Control}{7FFD}. However, you still need to map bank 7 into one of the slots if you want to read or write to it (that's 8K banks 14 and 15 if using MMU for paging). Read more in ULA chapter, section \ref{zx_next_ula}.
+You can redirect ULA to read from 16K bank 7 instead (the ``shadow screen'', used for double-buffering), using bit 3 of \PortLink{Memory Paging Control}{7FFD}. However, you still need to map bank 7 into one of the slots if you want to read or write to it (that's 8K banks 14 and 15 if using MMU for paging). Read more in ULA chapter, section \ref{zx_next_ula}.
 
 
 \subsubsection{Layer 2 Paging}
 
-The bottom 16K slot can be set for write-only access for Layer 2. This can be handy as this slot is typically mapped to ROM and thus useless to write to. There are also other Layer 2 related combinations available, read more in Layer 2 chapter, section \ref{zx_next_layer2}
+Layer 2 uses specific ports and registers that are can be used to change memory mapping. For example, the bottom 16K slot can be set for write and read access. Layer 2 also supports a double-buffering scheme of its own. Though any other mapping mode discussed here can be used as well. See Layer 2 chapter, section \ref{zx_next_layer2} for more details.
 
 
 
 \pagebreak
 
-\subsection{Paging Mode Registers}
+\subsection{Paging Mode Ports and Registers}
 \label{zx_next_memorypaging_registers}
 
 \subsubsection{+3 Memory Paging Control \MemAddr{1FFD}}
@@ -444,7 +444,7 @@ The bottom 16K slot can be set for write-only access for Layer 2. This can be ha
 \end{NextPort}
 
 
-\subsubsection{Memory Management Slot 0-7 \MemAddr{50}-\MemAddr{57}}
+\subsubsection{Memory Management Slot 0-7 Bank \MemAddr{50}-\MemAddr{57}}
 
 \begin{NextPort}
 	\PortBits{7-0}

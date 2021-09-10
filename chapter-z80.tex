@@ -904,16 +904,16 @@ Directly after an {\tt EI} or {\tt DI} instruction, interrupts aren't accepted. 
 \begin{tcblisting}{}
 	LD C, A
 	DI
-	IN A, (&0AA)
-	AND &0F0
+	IN A, (&AA)
+	AND &F0
 	ADD A, C
-	OUT (&0AA), A
+	OUT (&AA), A
 	EI
-	IN A, (&0A9)
+	IN A, (&A9)
 	RET
 \end{tcblisting}
 
-You can assume that there never is an interrupt after the {\tt EI}, before the {\tt IN A,(\$0A9)} - which would be a problem because the MSX interrupt routine reads the keyboard too.
+You can assume that there never is an interrupt after the {\tt EI}, before the {\tt IN A,(\$A9)} - which would be a problem because the MSX interrupt routine reads the keyboard too.
 
 \pagebreak % we want to keep this explanation text together with sample code
 Using this feature of {\tt EI}, it is possible to check whether it is true that interrupts are never accepted during instructions:

@@ -161,8 +161,8 @@
 \newcommand{\BitMulti}[2]{\multicolumn{#1}{c|}{#2}}
 \newcommand{\BitStartMulti}[2]{\multicolumn{#1}{|c|}{#2}}
 
-\NewDocumentEnvironment{BitTableByte}{ O{c} +b }{
-	\begin{ElegantTable}{|#1|#1|#1|#1|#1|#1|#1|#1|}
+\NewDocumentEnvironment{BitTableByte}{ O{c} O{1.2} +b }{
+	\begin{ElegantTable}{|#1|#1|#1|#1|#1|#1|#1|#1|}[][\hline][#2]
 		\ElegantHeader{
 			\BitHead{7} &
 			\BitHead{6} &
@@ -174,12 +174,12 @@
 			\BitHead{0}
 		}
 
-		#2
+		#3
 		
 	\end{ElegantTable}
 }{}
-\NewDocumentEnvironment{BitTableWord}{ +b } {
-	\begin{ElegantTable}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\NewDocumentEnvironment{BitTableWord}{ O{c} O{1.2} +b } {
+	\begin{ElegantTable}{|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|}[][\hline][#2]
 		\hline
 
 		\ElegantHeader{\multicolumn{8}{|c|}{High Byte} & \multicolumn{8}{c|}{Low Byte}}
@@ -203,7 +203,7 @@
 				\BitHead{0}
 		}
 		
-		#1
+		#3
 
 	\end{ElegantTable}
 }{}

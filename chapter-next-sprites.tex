@@ -144,7 +144,7 @@ The main difference is the hardware will automatically adjust relative sprites X
 
 \subsection{Attributes}
 
-Attributes are 4 or 5 bytes that define where and how the sprite is drawn. The data can be set either by selecting sprite index with \PortLink{Sprite Status/Slot Select}{303B} and then continuously sending bytes to \PortLink{Sprite Attribute Upload}{xx57} (which automatically increments sprite index after all data for single sprite is transferred) or by calling individual direct access Next registers \MemAddr{35}-\MemAddr{39} or their auto-increment variants \MemAddr{75}-\MemAddr{79}. See registers section for a description of individual bytes:
+Attributes are 4 or 5 bytes that define where and how the sprite is drawn. The data can be set either by selecting sprite index with \PortLink{Sprite Status/Slot Select}{303B} and then continuously sending bytes to \PortLink{Sprite Attribute Upload}{xx57} (which automatically increments sprite index after all data for single sprite is transferred) or by calling individual direct access Next registers \MemAddr{35}-\MemAddr{39} or their auto-increment variants \MemAddr{75}-\MemAddr{79}. See ports and registers section \ref{zx_next_sprite_registers} for a description of individual bytes:
 
 \begin{itemize}[topsep=1pt,itemsep=1pt]
 	\item Byte 0: \PortLink{Sprite port-mirror Attribute 0 Register}{35}
@@ -295,7 +295,7 @@ Because we use combined sprite, we only need to update the anchor to change all 
 
 
 \pagebreak
-\subsection{Sprite Registers}
+\subsection{Sprite Ports and Registers}
 \label{zx_next_sprite_registers}
 
 \subsubsection{Sprite Status/Slot Select \MemAddr{303B}}

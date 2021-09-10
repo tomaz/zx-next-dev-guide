@@ -1,4 +1,4 @@
-\section{Ports}
+\section{Ports and Registers}
 \label{zx_next_ports}
 
 % ────────────────────────────────────────────────────────────────────────────────
@@ -81,7 +81,7 @@
 \subsection{Next/TBBlue Feature Control Registers}
 \label{zx_next_tbblue_registers}
 
-Specific features of the Next are controlled via these register numbers, accessed via \PortLink{TBBlue Register Select}{243B}\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Select}} and \PortLink{TBBlue Register Access}{253B}\footnote{\url{https://wiki.specnext.dev/TBBlue_Register_Access}}, or via the {\tt NEXTREG} instruction.
+Specific features of the Next are controlled via these register numbers, accessed through ports \PortLink{TBBlue Register Select}{243B} and \PortLink{TBBlue Register Access}{253B}. All registers can also be written to directly with the {\tt NEXTREG} instruction.
 
 \begingroup
 	\NewDocumentEnvironment{tbbluereg}{ +b }{
@@ -293,7 +293,7 @@ This example nicely demonstrates a common dilemma when programming: frequently w
 
 \subsubsection{Writing to Next registers}
 
-Writing values to Next/TBBlue registers occurs through \PortLink{TBBlue Register Select}{243B} and \PortLink{TBBlue Register Access}{253B} ports. It's composed from 2 steps: first we select the register via write to port \MemAddr{243B}, then write the value through port \MemAddr{253B}. For example writing value of {\tt 5} to port \MemAddr{16}:
+Writing values to Next/TBBlue registers occurs through \PortLink{TBBlue Register Select}{243B} and \PortLink{TBBlue Register Access}{253B} ports. It's composed from 2 steps: first we select the register via write to port \MemAddr{243B}, then write the value through port \MemAddr{253B}. For example writing value of {\tt 5} to Next register \MemAddr{16}:
 
 \begin{multicols}{2}
 	\begin{tcblisting}{right skip=1em}
@@ -325,7 +325,7 @@ Quite involving, isn't it? Speed-wise, first example requires 58 t-states ((7+10
 
 The second code relies on the fact that the only difference between two port addresses is the high byte (\MemAddr{24} vs \MemAddr{25}). So given we already assigned \MemAddr{243B} to {\tt BC}, we can simply increment {\tt B} to get \MemAddr{253B}. Again, the intent of the first example is clearer. And again, I thought it was worth pointing out in case you will encounter both approaches and wonder...
 
-However, we can do better. Much better, in fact, using Next {\tt NEXTREG} instruction, which allows direct writes to given registers. So above examples could simply be changed to either:
+However, we can do better. Much better, in fact, using Next {\tt NEXTREG} instruction, which allows direct writes to given Next registers. So above examples could simply be changed to either:
 
 \begin{multicols}{2}
 	\begin{tcblisting}{{right skip=1em}}
@@ -341,33 +341,33 @@ NEXTREG &16, 5 ; write 5 to reg &16
 \end{multicols}
 
 \vspace*{-0.7em} % multicols creates additional space below, we want next text to be closer up...
-The first example requires 24 t-states (7+17) while second 20. So less than half of that of traditional approach. In fact, using {\tt NEXTREG} is the preferred method of writing to Next registers!
+The first example requires 24 t-states (7+17) while the second 20. So less than half compared to using ports. In fact, using {\tt NEXTREG} is the preferred method of writing to Next registers!
 
 
 \subsubsection{Reading from Next Registers}
 
-Reading values from Next/TBBlue registers also occurs through \MemAddr{243B} and \MemAddr{253B} ports. Similar to write, read is also composed from 2 steps: first select the register with port \MemAddr{243B}, then read the value from port \MemAddr{253B}. For example reading a byte from port \MemAddr{B0}:
+Reading values from Next/TBBlue registers also occurs through \MemAddr{243B} and \MemAddr{253B} ports. Similar to write, read is also composed from 2 steps: first select the register with port \MemAddr{243B}, then read the value from port \MemAddr{253B}. For example reading a byte from Next register \MemAddr{B0}:
 
 \begin{multicols}{2}
 
 	\begin{tcblisting}{right skip=1em}
-		LD A, &16      ; register &16
-		LD BC, &243B   ; port &243B
-		OUT (C), A     ; set port
-	
-		LD BC, &253B   ; port &253B
-		IN A, (C)      ; read to A
+LD A, &16      ; register &16
+LD BC, &243B   ; port &243B
+OUT (C), A     ; set port
+
+LD BC, &253B   ; port &253B
+IN A, (C)      ; read to A
 	\end{tcblisting}
 
 	\columnbreak
 	
 	\begin{tcblisting}{}
-		LD A, &16      ; register &16
-		LD BC, &243B   ; port &243B
-		OUT (C), A     ; set port
-	
-		INC B          ; port &253B
-		IN A, (C)      ; read to A
+LD A, &16      ; register &16
+LD BC, &243B   ; port &243B
+OUT (C), A     ; set port
+
+INC B          ; port &253B
+IN A, (C)      ; read to A
 	\end{tcblisting}
 		
 \end{multicols}
