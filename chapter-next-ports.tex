@@ -134,8 +134,8 @@ Specific features of the Next are controlled via these register numbers, accesse
 
 	\vspace*{11.8ex}	% this aligns content with previous page vertically
 	\begin{tbbluereg}
-		\nextport{RW}{22}{Controls the timing of raster interrupts and the ULA frame interrupt}
-		\nextport{RW}{23}{Holds the eight LSBs of the line on which a raster interrupt should occur}
+		\nextport{RW}{22}{Controls the timing of raster interrupts and the ULA frame interrupt \zxsee{zx_next_interrupts}}
+		\nextport{RW}{23}{Holds the eight LSBs of the line on which a raster interrupt should occur \zxsee{zx_next_interrupts}}
 		\nextport{RW}{26}{Pixel X offset ({\tt 0-255}) to use when drawing ULA Layer}
 		\nextport{RW}{27}{Pixel Y offset ({\tt 0-191}) to use when drawing ULA Layer}
 		\nextport{RW}{28}{PS/2 Keymap address MSB, read (pending) first byte of palette colour}
@@ -181,7 +181,7 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{RW}{61}{Holds low byte of Copper control bits}
 		\nextport{RW}{62}{Holds high byte of Copper control flags}
 		\nextport{-W}{63}{Used to upload code to the Copper}
-		\nextport{RW}{64}{Offset numbering of raster lines in copper/interrupt/active register}
+		\nextport{RW}{64}{Offset numbering of raster lines in copper/interrupt/active register \zxsee{zx_next_interrupts}}
 		\nextport{RW}{68}{Disable ULA, controls ULA mixing/blending, enable ULA+ \zxsee{zx_next_tilemap}}
 		\nextport{RW}{69}{Layer2, ULA shadow, Timex \MemAddr{FF} port}
 		\nextport{RW}{6A}{LoRes Radastan mode}
@@ -196,14 +196,14 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{-W}{77}{Same as \PortLink{Attribute 2 Register}{37} plus increments \MemAddr{34} \zxsee{zx_next_sprites}}
 		\nextport{-W}{78}{Same as \PortLink{Attribute 3 Register}{38} plus increments \MemAddr{34} \zxsee{zx_next_sprites}}
 		\nextport{-W}{79}{Same as \PortLink{Attribute 4 Register}{39} plus increments \MemAddr{34} \zxsee{zx_next_sprites}}
-	\end{tbbluereg}
+		\nextport{RW}{7F}{8-bit storage for user}
+		\nextport{RW}{80}{Expansion bus enable/config}
+		\nextport{RW}{81}{Expansion bus controls}
+		\end{tbbluereg}
 
 	\pagebreak
 
 	\begin{tbbluereg}
-		\nextport{RW}{7F}{8-bit storage for user}
-		\nextport{RW}{80}{Expansion bus enable/config}
-		\nextport{RW}{81}{Expansion bus controls}
 		\nextport{RW}{82}{Enabling internal ports decoding bits 0-7 register}
 		\nextport{RW}{83}{Enabling internal ports decoding bits 8-15 register}
 		\nextport{RW}{84}{Enabling internal ports decoding bits 16-23 register}
@@ -226,6 +226,15 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{R-}{B1}{Read Next keyboard compound keys separately \zxsee{zx_next_keyboard}}
 		\nextport{RW}{B2}{DivMMC trap configuration}
 		\nextport{RW}{B4}{DivMMC trap configuration}
+		\nextport{RW}{C0}{Interrupt Control \zxsee{zx_next_interrupts}}
+		\nextport{RW}{C2}{NMI Return Address LSB \zxsee{zx_next_interrupts}}
+		\nextport{RW}{C3}{NMI Return Address MSB \zxsee{zx_next_interrupts}}
+		\nextport{RW}{C4}{Interrupt Enable 0 \zxsee{zx_next_interrupts}}
+		\nextport{RW}{C5}{Interrupt Enable 1 \zxsee{zx_next_interrupts}}
+		\nextport{RW}{C6}{Interrupt Enable 2 \zxsee{zx_next_interrupts}}
+		\nextport{RW}{C8}{Interrupt Status 0 \zxsee{zx_next_interrupts}}
+		\nextport{RW}{C9}{Interrupt Status 1 \zxsee{zx_next_interrupts}}
+		\nextport{RW}{CA}{Interrupt Status 2 \zxsee{zx_next_interrupts}}
 		\nextport{-W}{FF}{Turns debug LEDs on and off on TBBlue implementations that have them}
 	\end{tbbluereg}
 \endgroup

@@ -263,6 +263,8 @@
 	morecomment=[l]{;},
 	moredelim=[is][\rmfamily\itshape]{|}{|},	% any text within |...| will be roman/italic
 	literate={&}{\$}1							% replace `&` with `$` (to avoid syntax higlight issues)
+			{Band}{\&~}1						% replace `Band` with `&` (to allow bitwise and output without & being consumed for $ from previous rule)
+			{Bor}{|~}1							% replace `Bor' with `|` (to allow bitwise or output without | being consumed for roman/italic from moredelim rule above)
 }
 
 % define default settings for all tcolorbox instances
