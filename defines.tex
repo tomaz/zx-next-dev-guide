@@ -126,16 +126,11 @@
 	% start numbering from 1 with TOC
 	\setcounter{page}{1}
 
+	% TOC should only display up to depth 1 (chapter+section)
+	\setcounter{tocdepth}{1}
+
 	% use plain page style with just page number for following pages
 	\pagestyle{plain}
-
-	% setup formatting for toc - no horizontal delimiters, offsets etc.
-	\noptcrule
-	\nomtcrule									% no horizontal delimiters on top and bottom
-	\renewcommand{\mtcoffset}{-1.5em}			% render minitoc a bit more to the left for more centralized appearance
-	\mtcsetfeature{minitoc}{open}{\vspace{1em}}	% add some vertical spacing between contents title and toc
-	\def\mtcSfont{\normalsize}
-	\def\mtcSSfont{\small}
 }
 
 % foramt for the book content pages, after TOC
@@ -161,12 +156,16 @@
 % -------------------------------------------------------------------------
 % couple commonly used page elements
 
-% creates minitoc without any headers
-\newcommand{\ChapterTOC}[1][\pagestyle{clean}]{
+% creates minitoc without any headers; parameters:
+% - (optional) boolean; if star present, no styling will be applied after TOC, otherwise default styling will be applied (which is the default)
+\NewDocumentCommand{\ChapterTOC}{ o }{
 	\pagestyle{nosectionmarker}
-	\minitoc
-	\thispagestyle{plain}
-	#1
+
+	\etocsettocstyle{}{}	% no title
+	\localtableofcontents
+	\thispagestyle{plain}	% simple TOC pages without headers
+	
+	\IfValueF{#1}{\pagestyle{clean}}
 }
 
 % we can use this for pages that are intentionally left blank
