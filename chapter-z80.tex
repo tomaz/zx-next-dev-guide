@@ -209,39 +209,48 @@ Probably the best way to simulate this in an emulator is to set {\tt PC}, {\tt I
 
 \subsection{Registers}
 
-The following accessible registers exist in the Z80.
+\begin{tikzpicture}[
+	framed/.style={draw, font=\ttfamily, minimum width=1.1cm, minimum height=0.5cm},
+	filled/.style={framed, fill=PrintableLightGray},
+	frameddouble/.style={framed, minimum width=2.2cm},
+	filleddouble/.style={filled, minimum width=2.2cm},
+	desc/.style={midway,xshift=1.5ex,anchor=west},
+	curly/.style={
+		decorate,
+		decoration={brace,amplitude=5pt,raise=3pt},
+		line width=1pt,
+		yshift=0pt,
+		shorten >=1pt,
+		shorten <=1pt
+	}
+]
 
-\newcommand{\RegDesc}[2]{\rdelim\}{#1}{1ex}[#2]}
+	\node[framed] (a) {A};
+	\node[framed, right=0pt of a] (f) {F};
+	\draw[curly] (f.north east) -- (f.south east) node[desc] {Accumulator and Flags};
 
-\begin{tabular}{|c|c|l}
-	\cline{1-2}
-	\tt A & \tt F & \} Accumulator and Flags \\
-	\cline{1-2}
-	\multicolumn{2}{|c|}{\tt BC} & \RegDesc{3}{General purpose registers} \\ 
-	\cline{1-2}
-	\multicolumn{2}{|c|}{\tt DE} & \\ 
-	\cline{1-2}
-	\multicolumn{2}{|c|}{\tt HL} & \\ 
-	\cline{1-2}
-	\multicolumn{2}{|c|}{\tt IX} & \RegDesc{2}{Index registers} \\ 
-	\cline{1-2}
-	\multicolumn{2}{|c|}{\tt IY} & \\ 
-	\cline{1-2}
-	\multicolumn{2}{|c|}{\tt PC} & \RegDesc{3}{Special purpose registers} \\ 
-	\cline{1-2}
-	\multicolumn{2}{|c|}{\tt SP} & \\ 
-	\cline{1-2}
-	\tt I & \tt R & \\
-	\cline{1-2}
-	\multicolumn{2}{|c|}{\tt AF'} & \RegDesc{4}{Alternate general purpose registers} \\ 
-	\cline{1-2}
-	\multicolumn{2}{|c|}{\tt BC'} & \\ 
-	\cline{1-2}
-	\multicolumn{2}{|c|}{\tt DE'} & \\ 
-	\cline{1-2}
-	\multicolumn{2}{|c|}{\tt HL'} & \\ 
-	\cline{1-2}
-\end{tabular}
+	\node[filleddouble, below=0pt of a.south east] (bc) {BC};
+	\node[filleddouble, below=0pt of bc] (de) {DE};
+	\node[filleddouble, below=0pt of de] (hl) {HL};
+	\draw[curly] (bc.north east) -- (hl.south east) node[desc] {General purpose registers};
+
+	\node[frameddouble, below=0pt of hl] (ix) {IX};
+	\node[frameddouble, below=0pt of ix] (iy) {IY};
+	\draw[curly] (ix.north east) -- (iy.south east) node[desc] {Index registers};
+
+	\node[filleddouble, below=0pt of iy] (pc) {PC};
+	\node[filleddouble, below=0pt of pc] (sp) {SP};
+	\node[filled, below=0pt of sp.south west, anchor=north west] (i) {I};
+	\node[filled, right=0pt of i] (r) {R};
+	\draw[curly] (pc.north east) -- (r.south east) node[desc] {Special purpose registers};
+
+	\node[frameddouble, below=0pt of i.south east] (afe) {AF'};
+	\node[frameddouble, below=0pt of afe] (bce) {BC'};
+	\node[frameddouble, below=0pt of bce] (dee) {DE'};
+	\node[frameddouble, below=0pt of dee] (hle) {HL'};
+	\draw[curly] (afe.north east) -- (hle.south east) node[desc] {Alternate general purpose registers};
+
+\end{tikzpicture}
 
 
 \subsection{Flags}
@@ -639,6 +648,7 @@ First of all, all instructions affect the following flags:
 
 \end{description}
 
+\pagebreak % we want to keep this paragraph with description below to avoid page flipping
 And now the for {\tt OUTI}/{\tt OTIR}/{\tt OUTD}/{\tt OTDR} instructions. Take the state of the {\tt L} after the increment or decrement of HL; add the value written to the I/O port; call that {\tt k} for now. If {\tt k} $>$ 255, then the CF and HF flags are set. The PV flag is set like the parity of {\tt k} bitwise and'ed with 7, bitwise xor'ed with {\tt B}.
 
 \begin{description}
