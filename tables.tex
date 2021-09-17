@@ -17,9 +17,9 @@
 % ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█░░▒█ ▒█▄▄▀ ▒█▒█▒█ ▒█▄▄█ ░▒█░░ ░▒█░░ ▒█░ ▒█▒█▒█ ▒█░▄▄ 
 % ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄ 　 ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ▒█░░▒█ ▒█░▒█ ░▒█░░ ░▒█░░ ▄█▄ ▒█░░▀█ ▒█▄▄█
 
-% same as X and p{size} respectively, but centers text horizontally
-\newcolumntype{Y}{>{\centering\arraybackslash}X}
-\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+% couple columns for tabularx
+\newcolumntype{Y}{>{\centering\arraybackslash}X}		% same as X but vertically centers content in cell
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}	% same as p{size} but vertically centers content in cell
 
 % top and bottom "struts" for instruction lines (note different height can be passed in via optional parameter)
 \newcommand{\instrt}[1][2.5ex]{\rule{0pt}{#1}}
@@ -351,8 +351,8 @@
 \newcommand{\EmptySeparator}{\\[-6px]}
 
 % writes a table break with vertical spacing so table starts at the same vertical postiion as the one on previous page
-\newcommand{\InstrTableContinue}{
-	\vspace*{-2.5ex}
+\newcommand{\InstrTableContinue}[1][-2.5ex]{
+	\vspace*{#1}
 	{
 		\scriptsize
 		(continued on next page)
@@ -382,8 +382,10 @@
 	}
 }{}
 
-% note item
+% note item + variants where item is manually split between multiple lines (use "cont" variant for first and subsequent, "end" for last)
 \newcommand{\NoteItem}[1]{& #1 \\}
+\newcommand{\NoteItemCont}[1]{& #1 \\[-1pt]}
+\newcommand{\NoteItemEnd}[1]{& #1 \\[1pt]}
 
 % add this above `NoteItem` when there's only single item in the table; in such case compiler creates almost 1 item empty gap on top for some reason... I couldn't find better solution unfortunately and couldn't figure out why this happens
 \newcommand{\NoteTableSingleItemSpaceCorrection}{
