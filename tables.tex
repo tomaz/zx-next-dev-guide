@@ -29,6 +29,8 @@
 \newcommand{\notet}{\rule{0pt}{2.4ex}}
 \newcommand{\noteb}{\rule[-1.3ex]{0pt}{0pt}}
 
+\newcommand{\TableDefaultRowHeightRatio}{1.2}
+
 
 % ▀▀█▀▀ ░█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀ ▒█▀▀▀█ 　 ▒█░░▒█ ▀█▀ ▀▀█▀▀ ▒█░▒█ 　 ▒█░▒█ ▒█▀▀▀ ░█▀▀█ ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀█ ▒█▀▀▀█ 
 % ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ ░▀▀▀▄▄ 　 ▒█▒█▒█ ▒█░ ░▒█░░ ▒█▀▀█ 　 ▒█▀▀█ ▒█▀▀▀ ▒█▄▄█ ▒█░▒█ ▒█▀▀▀ ▒█▄▄▀ ░▀▀▀▄▄ 
@@ -39,8 +41,8 @@
 % - (optional) commands that should only be available to main environment block (note only \NewExpandableDocumentCommand or \newcommand is allowed!)
 % - (optional) suffix; string, default = \hline
 % - (optional) table width; default = \linewidth
-% - (optional) row stretch ratio; float, empty for builtin, default = 1.2
-\NewDocumentEnvironment{ElegantTableX}{ m O{} O{\hline} O{\linewidth} O{1.2} +!b }{
+% - (optional) row stretch ratio; float, empty for built-in, default = \TableDefaultRowHeightRatio
+\NewDocumentEnvironment{ElegantTableX}{ m O{} O{\hline} O{\linewidth} O{\TableDefaultRowHeightRatio} +!b }{
 	\begingroup
 
 		% execute any group only commands
@@ -62,7 +64,7 @@
 	\endgroup
 }{}
 % same as above except using tabular instead of tabularx
-\NewDocumentEnvironment{ElegantTable}{ m O{} O{\hline} O{1.2} +!b }{
+\NewDocumentEnvironment{ElegantTable}{ m O{} O{\hline} O{\TableDefaultRowHeightRatio} +!b }{
 	\begingroup
 
 		% execute any group only commands
@@ -161,8 +163,10 @@
 \newcommand{\BitMulti}[2]{\multicolumn{#1}{c|}{#2}}
 \newcommand{\BitStartMulti}[2]{\multicolumn{#1}{|c|}{#2}}
 
-\NewDocumentEnvironment{BitTableByte}{ O{c} O{1.2} +b }{
-	\begin{ElegantTable}{|#1|#1|#1|#1|#1|#1|#1|#1|}[][\hline][#2]
+% renders 8-bit table. Parameters:
+% - (optional) column format; default = c
+\NewDocumentEnvironment{BitTableByte}{ O{c} +b }{
+	\begin{ElegantTable}{|#1|#1|#1|#1|#1|#1|#1|#1|}
 		\ElegantHeader{
 			\BitHead{7} &
 			\BitHead{6} &
@@ -174,15 +178,20 @@
 			\BitHead{0}
 		}
 
-		#3
+		#2
 		
 	\end{ElegantTable}
 }{}
-\NewDocumentEnvironment{BitTableWord}{ O{c} O{1.2} +b } {
-	\begin{ElegantTable}{|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|}[][\hline][#2]
+
+% similar to BitTableByte, except it's for 16-bits. In addition to show each bit header, it also uses header row above with 2 multirow columns, one for each byte. Parmeters:
+% - (optional) column format; default = c
+% - (optional) header for high byte; default = High Byte
+% - (optional) header for low byte: default = Low Byte
+\NewDocumentEnvironment{BitTableWord}{ O{c} O{High Byte} O{Low Byte} +b } {
+	\begin{ElegantTable}{|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|}
 		\hline
 
-		\ElegantHeader{\multicolumn{8}{|c|}{High Byte} & \multicolumn{8}{c|}{Low Byte}}
+		\ElegantHeader{\multicolumn{8}{|c|}{#2} & \multicolumn{8}{c|}{#3}}
 
 		\ElegantHeader{
 			\BitHead{15} &
@@ -203,7 +212,7 @@
 				\BitHead{0}
 		}
 		
-		#3
+		#4
 
 	\end{ElegantTable}
 }{}

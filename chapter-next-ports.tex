@@ -177,10 +177,10 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{RW}{55}{Selects the 8k-bank stored in 8k-slot 5 \zxsee{zx_next_memorypaging}}
 		\nextport{RW}{56}{Selects the 8k-bank stored in 8k-slot 6 \zxsee{zx_next_memorypaging}}
 		\nextport{RW}{57}{Selects the 8k-bank stored in 8k-slot 7 \zxsee{zx_next_memorypaging}}
-		\nextport{-W}{60}{Used to upload code to the Copper}
-		\nextport{RW}{61}{Holds low byte of Copper control bits}
-		\nextport{RW}{62}{Holds high byte of Copper control flags}
-		\nextport{-W}{63}{Used to upload code to the Copper}
+		\nextport{-W}{60}{Used to upload code to the Copper \zxsee{zx_next_copper_registers}}
+		\nextport{RW}{61}{Holds low byte of Copper control bits \zxsee{zx_next_copper_registers}}
+		\nextport{RW}{62}{Holds high byte of Copper control flags \zxsee{zx_next_copper_registers}}
+		\nextport{-W}{63}{Used to upload code to the Copper in 16-bit chunks \zxsee{zx_next_copper_registers}}
 		\nextport{RW}{64}{Offset numbering of raster lines in copper/interrupt/active register \zxsee{zx_next_interrupts}}
 		\nextport{RW}{68}{Disable ULA, controls ULA mixing/blending, enable ULA+ \zxsee{zx_next_tilemap}}
 		\nextport{RW}{69}{Layer2, ULA shadow, Timex \MemAddr{FF} port}
