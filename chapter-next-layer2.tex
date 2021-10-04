@@ -215,6 +215,8 @@ Worth noting: MMU page 6 (next register \MemAddr{56}) covers memory \MemAddr{C00
 
 We don't have to handle bank swapping on every iteration; once per 32 rows would do for this example. But the code is more versatile this way and could be easily converted into a reusable pixel setting routine.
 
+You can find fully working example in companion code on GitHub in folder {\tt layer2-256x192}.
+
 
 \pagebreak
 \subsection{320$\times$256 256 Colour Mode}
@@ -362,6 +364,8 @@ nextY:
 	JP NZ, nextBank           ; No, proceed with next bank
 \end{tcblisting}
 
+You can find fully working example in companion code on GitHub in folder {\tt layer2-320x256}.
+
 
 \pagebreak
 \subsection{640$\times$256 16 Colour Mode}
@@ -507,6 +511,7 @@ nextY:
 	JP NZ, nextBank           ; No, proceed with next bank
 \end{tcblisting}
 
+You can find fully working example in companion code on GitHub in folder {\tt layer2-640x256}.
 
 \subsection{Layer 2 Registers}
 \label{zx_next_layer2_registers}
