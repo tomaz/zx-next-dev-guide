@@ -200,7 +200,7 @@ LoadSprites:
 	DB %10000010            ; WR5 restart on end of block
 	DB %11001111            ; WR6 load
 	DB %10000111            ; WR6 enable DMA
-.dmaCodeLength:  EQU &-.dmaCode
+.dmaCodeLength = &-.dmaCode
 \end{tcblisting}
 
 Perhaps worth noting: routine uses a technique called ``self-modifying code''. As the name suggests, this means that the program modifies itself in RAM. In this case it modifies 2 addresses ``marked'' by {\tt .dmaSource} and {\tt .dmaLength} labels. But it's also possible to modify opcodes (in this case {\tt NOP}s are frequently used as placeholders). Either way, careful planning is required to avoid writing over undesired parts.

@@ -112,26 +112,26 @@ Regardless of the editor, we need 3 pieces of data: palette, tile definitions an
 \begin{tcblisting}{}
 tilemap:
 	INCBIN "tiles.map"
-tilemapLength: EQU & - tilemap
+tilemapLength = &-tilemap
 
 tiles:
 	INCBIN "tiles.spr"
-tilesLength:   EQU & - tiles
+tilesLength = &-tiles
 
 palette:
 	INCBIN "tiles.pal"
-paletteLength: EQU &-palette
+paletteLength = &-palette
 \end{tcblisting}
 
 With all data in place, we can start setting up tilemap:
 
 \begin{tcblisting}{}
-START_OF_BANK_5     EQU &4000
-START_OF_TILEMAP    EQU &6000     ; Just after ULA attributes and system vars
-START_OF_TILES      EQU &6600     ; Just after 40x32 tilemap
+START_OF_BANK_5     = &4000
+START_OF_TILEMAP    = &6000     ; Just after ULA attributes and system vars
+START_OF_TILES      = &6600     ; Just after 40x32 tilemap
 
-OFFSET_OF_MAP       EQU (START_OF_TILEMAP - START_OF_BANK_5) >> 8
-OFFSET_OF_TILES     EQU (START_OF_TILES - START_OF_BANK_5) >> 8
+OFFSET_OF_MAP       = (START_OF_TILEMAP - START_OF_BANK_5) >> 8
+OFFSET_OF_TILES     = (START_OF_TILES - START_OF_BANK_5) >> 8
 
 	; Enable tilemap mode
 	NEXTREG &6B, %10100001       ; 40x32, 8-bit entries
