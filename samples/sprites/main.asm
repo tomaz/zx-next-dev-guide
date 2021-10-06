@@ -115,32 +115,30 @@ delay:
 ; BC = number of bytes to load
 ; A  = index of first sprite to load int5o
 loadSprites:
-	LD BC, $303B			; Prepare port for sprite index
-	OUT (C), A			; Load index of first sprite
-	LD (.dmaSource), HL		; Copy sprite sheet address from HL
-	LD (.dmaLength), BC		; Copy length in bytes from BC
-	LD HL, .dmaCode			; Setup source for OTIR
-	LD B, .dmaCodeLength		; Setup length for OTIR
-	LD C, $6B			; Setup DMA port
-	OTIR				; Invoke DMA code
+	LD BC, $303B		; Prepare port for sprite index
+	OUT (C), A		; Load index of first sprite
+	LD (.dmaSource), HL	; Copy sprite sheet address from HL
+	LD (.dmaLength), BC	; Copy length in bytes from BC
+	LD HL, .dmaProgram	; Setup source for OTIR
+	LD B, .dmaProgramLength	; Setup length for OTIR
+	LD C, $6B		; Setup DMA port
+	OTIR			; Invoke DMA code
 	RET
-.dmaCode:
-	DB %10000011			; Disable DMA
-	DB %01111101			; WR0 transfer mode, A->B, write adress + block length
+.dmaProgram:
+	DB %10000011		; WR6 - Disable DMA
+	DB %01111101		; WR0 - append length + port A address, A->B
 .dmaSource:
-	DW 0				; WR0 port A, source address
+	DW 0			; WR0 par 1&2 - port A start address
 .dmaLength:
-	DW 0				; WR0 block length in bytes
-	DB %01010100			; WR1 read A, increment, to memory, bitmaks
-	DB %00000010			; WR1 cycle port A length
-	DB %01101000			; WR2 write B, port B address fixed, B is IO
-	DB %00000010			; WR2 cycle length B
-	DB %10101101			; WR4 continuous mode, write destination address
-	DW $5B				; Sprite image port $xx5B
-	DB %10000010			; WR5 restart on end of block
-	DB %11001111			; WR6 load
-	DB %10000111			; WR6 enable DMA
-.dmaCodeLength:  EQU $-.dmaCode
+	DW 0			; WR0 par 3&4 - transfer length
+	DB %00010100		; WR1 - A incr., A=memory
+	DB %00101000		; WR2 - B fixed, B=I/O
+	DB %10101101		; WR4 - continuous, append port B address
+	DW $005B		; WR4 par 1&2 - port B address
+	DB %10000010		; WR5 - stop on end of block, CE only
+	DB %11001111		; WR6 - load addresses into DMA counters
+	DB %10000111		; WR6 - enable DMA
+.dmaProgramLength = $-.dmaProgram
 
 ;;--------------------------------------------------------------------
 ;; data

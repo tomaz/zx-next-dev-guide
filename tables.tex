@@ -18,8 +18,9 @@
 % ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄ 　 ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ▒█░░▒█ ▒█░▒█ ░▒█░░ ░▒█░░ ▄█▄ ▒█░░▀█ ▒█▄▄█
 
 % couple columns for tabularx
-\newcolumntype{Y}{>{\centering\arraybackslash}X}		% same as X but vertically centers content in cell
-\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}	% same as p{size} but vertically centers content in cell
+\newcolumntype{Y}{>{\centering\arraybackslash}X}			% same as X but vertically centers content in cell
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}		% same as p{size} but vertically centers content in cell
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}	% same as p{size} but right aligned
 
 % top and bottom "struts" for instruction lines (note different height can be passed in via optional parameter)
 \newcommand{\instrt}[1][2.5ex]{\rule{0pt}{#1}}
@@ -141,7 +142,7 @@
 % ▒█▄▄█ ▄█▄ ░▒█░░ 　 ▒█▄▄█ ▒█▄▄▄█ ▒█░░▒█ ▒█▄▄█ ▄█▄ ▒█░░▀█ ▒█░▒█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
 
 % internal table for defining values for specific bit combinations (usually used within `PortDescOnly`)
-\NewDocumentEnvironment{PortBitConfig}{ +b }{
+\NewDocumentEnvironment{PortBitConfig}{ +!b }{
 	{ % we are nesting this tabularx within parent tabularx, so we need to embed it within braces
 	\begin{tabularx}{\linewidth}{lX}
 		#1

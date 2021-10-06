@@ -46,22 +46,36 @@ InitializeLayer2:
 	; Swap current bank into slot 6 (memory $C000-$DFFF)
 	NEXTREG $56, A
 
-	; Prepare HL and DE for LDIR
+	; Prepare starting address and fill in 0 to the first byte. We'll copy this value over the rest of the memory.
 	LD HL, $C000
-	LD DE, HL		; DE = $C000
-	INC E			; DE = $C001 (HL + 1)
+	LD (HL), 0
 
-	; Fill in 0 to the whole of current bank
-	LD (HL), 0		; we want to fill in 0...
-	LD BC, 8*1024		; ...8K times
-	LDIR
+	; We'll use DMA to copy the first byte (we just set to 0) over remaining 8K. DMA setup will be: port A = $C000 and will remain fixed throughout the transfer, port B starts at $C001 and will be incremented after each transfer, length = 8K-1
+	LD HL, .dmaProgram	; HL = pointer to DMA program
+	LD B, .dmaProgramLength	; B = size of the code
+	LD C, $6B		; C = $6B (DMA port)
+	OTIR			; upload and run DMA program
 
 	; Continue with next bank, until we fill all
 	INC A
 	CP A, L2_END_8K_BANK+1
 	JP NZ, .nextBank
-
 	RET
+
+.dmaProgram:
+	DB %10000011		; WR6 - Disable DMA
+	DB %01111101		; WR0 - append length + port A address, A->B
+	DW $C000		; WR0 par 1&2 - port A start address
+	DW 8*1024-1		; WR0 par 3&4 - transfer length
+	DB %00100100		; WR1 - A fixed, A=memory
+	DB %00010000		; WR2 - B incrementing, B=memory
+	DB %10101101		; WR4 - continuous, append port B address
+	DW $C001		; WR4 par 1&2 - port B address
+	DB %10000010		; WR5 - stop on end of block, CE only
+	DB %11001111		; WR6 - load addresses into DMA counters
+	DB %10000111		; WR6 - enable DMA
+.dmaProgramLength = $-.dmaProgram
+
 
 ; Demonstrates how to initialize Copper using NEXTREG $63 directly
 InitializeCopper:
@@ -111,8 +125,8 @@ InitializeCopperListDMA:
 	NEXTREG $62, %00000000
 
 	; Copy parameters into DMA code
-	LD (.dmaPortAStartAddress), HL
-	LD (.dmaBlockLength), BC
+	LD (.dmaSource), HL
+	LD (.dmaLength), BC
 
 	; We want to upload to NEXTREG $63, select it with $243B port
 	LD A, $63
@@ -120,9 +134,9 @@ InitializeCopperListDMA:
 	OUT (C), A
 
 	; Upload DMA instructions to DMA memory
-	LD HL, .dmaCode		; HL = pointer to DMA program
-	LD B, .dmaCodeSize	; B(C) (MSB) = size of the code
-	LD C, $6B		; (B)C (LSB) = $6B (DMA port)
+	LD HL, .dmaProgram	; HL = pointer to DMA program
+	LD B, .dmaProgramLength	; B = size of the code
+	LD C, $6B		; C = $6B (DMA port)
 	OTIR			; upload DMA program
 
 	; Finally start copper using mode %11
@@ -130,29 +144,21 @@ InitializeCopperListDMA:
 	NEXTREG $62, %11000000
 	RET
 
-.dmaCode:
-	DB %1'00000'11		; WR6 - disable DMA
-
-	DB %0'11'11'1'01	; WR0 - append block length + port A start address, A->B, transfer mode
-.dmaPortAStartAddress:
-	DW 0			; WR0 - appendix - port A start address
-.dmaBlockLength:
-	DW 0			; WR0 - appendix - block length
-
-	DB %0'1'01'0'100	; WR1 - append port A timing, port A increments, port A is memory
-	DB %00000010		; WR1 - appendix - port A cycle length = 2
-
-	DB %0'1'10'1'000	; WR2 - append port B timing, port B fixed, port B is I/O
-	DB %00000010		; WR2 - appendix - port B cycle length = 2
-
-	DB %1'01'0'11'01	; WR4 - continuous mode, append port B start address
-	DW $253B		; WR4 - appendix - port B address
-
-	DB %10'00'0010		; WR5 - stop on end of block
-
-	DB %1'10011'11		; WR6 - load port A & B addresses into DMA internal pointers
-	DB %1'00001'11		; WR6 - enable DMA
-.dmaCodeSize = $-.dmaCode
+.dmaProgram:
+	DB %10000011		; WR6 - Disable DMA
+	DB %01111101		; WR0 - append length + port A address, A->B
+.dmaSource:
+	DW 0			; WR0 par 1&2 - port A start address
+.dmaLength:
+	DW 0			; WR0 par 3&4 - transfer length
+	DB %00010100		; WR1 - A incr., A=memory
+	DB %00101000		; WR2 - B fixed, B=I/O
+	DB %10101101		; WR4 - continuous, append port B address
+	DW $253B		; WR4 par 1&2 - port B address
+	DB %10000010		; WR5 - stop on end of block, CE only
+	DB %11001111		; WR6 - load addresses into DMA counters
+	DB %10000111		; WR6 - enable DMA
+.dmaProgramLength = $-.dmaProgram
 
 
 MainLoop:

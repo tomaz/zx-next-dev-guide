@@ -17,7 +17,7 @@ The book is available in two formats:
 
 Note: both books are the same apart from couple small differences:
 
-- PDF doesn't include alphabetical instructions table; mainly because it's searchable so I felt it just adds noise (it does include alphabetical list in appendix though)
+- PDF doesn't include alphabetical instructions table; mainly because it's searchable so I felt it just adds noise
 - Email addresses are obfuscated in PDF, printed book uses proper `name@domain.nnn` notation
 
 However, you can still build printable variant yourself from sources - in fact, LaTeX source is prepared to build it as such by default!
@@ -49,12 +49,7 @@ Sample code from the book is also included in this repository. I use VS Code for
 
 # Todo / Ideas
 
-Couple ideas for new content:
-
-- Description for other relevant ZX Spectrum / Next port
-- Add DMA chapter
-- Add sample project for interrupts
-- ~Split LaTeX source into multiple files, one per chapter with `include` (or `includeonly` for quicker compiling when working on individual chapters)~
+See [GitHub issues](https://github.com/tomaz/zx-next-dev-guide/issues) or contact me!
 
 Also one bigger thing: I'd prefer to have the book in smaller physical size, something between A5 and A4. It would get more pages, but would fit better in hand and on the shelf. Most of the content would hopefully flow nicely, however some will be problematic (instructions at a glance come to mind). Maybe Royal or Crown Quarto - though I don't think either is available as coil bound variant (and this type of book would benefit a lot from such binding). Also need to check if more pages will affect the price...
 

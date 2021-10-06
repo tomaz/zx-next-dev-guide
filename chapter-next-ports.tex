@@ -114,7 +114,7 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{RW}{0A}{Mouse buttons and DPI config}
 		\nextport{R-}{0E}{Identifies core (FPGA image) version (sub minor number)}
 		\nextport{RW}{10}{Used within the Anti-brick system}
-		\nextport{RW}{11}{Sets video output timing variant}
+		\nextport{RW}{11}{Sets video output timing variant \zxsee{zx_next_dma_registers}}
 		\nextport{RW}{12}{Sets the bank number where Layer 2 video memory begins \zxsee{zx_next_layer2}}
 		\nextport{RW}{13}{Sets the bank number where the Layer 2 shadow screen begins}
 		\nextport{RW}{14}{Sets the transparent colour for Layer 2, ULA and LoRes pixel data}
@@ -235,6 +235,9 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{RW}{C8}{Interrupt Status 0 \zxsee{zx_next_interrupts}}
 		\nextport{RW}{C9}{Interrupt Status 1 \zxsee{zx_next_interrupts}}
 		\nextport{RW}{CA}{Interrupt Status 2 \zxsee{zx_next_interrupts}}
+		\nextport{RW}{CC}{DMA Interrupt Enable 0 \zxsee{zx_next_interrupts}}
+		\nextport{RW}{CD}{DMA Interrupt Enable 1 \zxsee{zx_next_interrupts}}
+		\nextport{RW}{CE}{DMA Interrupt Enable 2 \zxsee{zx_next_interrupts}}
 		\nextport{-W}{FF}{Turns debug LEDs on and off on TBBlue implementations that have them}
 	\end{tbbluereg}
 \endgroup

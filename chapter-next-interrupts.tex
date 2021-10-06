@@ -293,7 +293,7 @@ Interrupt routines can reside anywhere in the memory.
 
 You can find fully working example in companion code, folder {\tt im2hw}.
 
-With hardware IM2 mode it's possible to interrupt DMA operations. This is beyond the scope of this book, at least for the moment being. Here's what {\tt AA} wrote about this possibility on Next Discord server:
+With hardware IM2 mode it's possible to interrupt DMA operations. The choice of interrupters that can interrupt DMA is made with \PortLink{DMA Interrupt Enable 0-2}{CC-\$CE} registers. Here's what {\tt AA} wrote about this possibility on Next Discord server:
 
 \vspace*{-1ex}
 \begin{quote}
@@ -306,6 +306,7 @@ Very special thanks to the folks from Next Discord server: {\tt AA} for mentioni
 
 \pagebreak
 \subsection{Interrupt Registers}
+\label{zx_next_interrupts_registers}
 
 \subsubsection{Raster Interrupt Control Register \MemAddr{22}}
 
@@ -502,4 +503,64 @@ Read indicates whether the given interrupt was generated in the past. Write with
 Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortLink{Interrupt Control}{C0}) with interrupts enabled.
 
 
+\subsubsection{DMA Interrupt Enable 0 \MemAddr{CC}}
+
+\begin{NextPort}
+	\PortBits{7-2}
+		\PortDesc{Reserved, must be 0}
+	\PortBits{1}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents line interrupt from interrupting DMA}
+	\PortBits{0}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents ULA interrupt from interrupting DMA}
+\end{NextPort}
+
+
+\subsubsection{DMA Interrupt Enable 1 \MemAddr{CD}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 7 interrupt from interrupting DMA}
+	\PortBits{6}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 6 interrupt from interrupting DMA}
+	\PortBits{5}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 5 interrupt from interrupting DMA}
+	\PortBits{4}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 4 interrupt from interrupting DMA}
+	\PortBits{3}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 3 interrupt from interrupting DMA}
+	\PortBits{2}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 2 interrupt from interrupting DMA}
+	\PortBits{1}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 1 interrupt from interrupting DMA}
+	\PortBits{0}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 0 interrupt from interrupting DMA}
+\end{NextPort}
+
+All bits {\tt 0} after reset.
+
+
+\subsubsection{DMA Interrupt Enable 2 \MemAddr{CE}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{6}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents UART1 Tx empty from interrupting DMA}
+	\PortBits{5}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents UART1 Rx half full from interrupting DMA}
+	\PortBits{4}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents UART1 Rx available from interrupting DMA}
+	\PortBits{3}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{2}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents UART0 Tx empty from interrupting DMA}
+	\PortBits{1}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents UART0 Rx half full from interrupting DMA}
+	\PortBits{0}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents UART0 Rx available from interrupting DMA}
+\end{NextPort}
+
+
+\pagebreak
+\IntentionallyEmpty
 \pagebreak

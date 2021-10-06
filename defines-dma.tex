@@ -1,0 +1,423 @@
+% ▒█▀▀█ ▒█▀▀▀ ▒█▄░▒█ ▒█▀▀▀ ▒█▀▀█ ░█▀▀█ ▒█░░░ 
+% ▒█░▄▄ ▒█▀▀▀ ▒█▒█▒█ ▒█▀▀▀ ▒█▄▄▀ ▒█▄▄█ ▒█░░░ 
+% ▒█▄▄█ ▒█▄▄▄ ▒█░░▀█ ▒█▄▄▄ ▒█░▒█ ▒█░▒█ ▒█▄▄█
+
+% Writes register name (WR0...) in the proper style.
+\newcommand{\DMARegName}[1]{{\tt #1}}
+
+
+% ▒█▀▀█ ▒█░░▒█ ▀▀█▀▀ ▒█▀▀▀ 　 ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀█ ▀█▀ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 
+% ▒█▀▀▄ ▒█▄▄▄█ ░▒█░░ ▒█▀▀▀ 　 ▒█░▒█ ▒█▀▀▀ ░▀▀▀▄▄ ▒█░░░ ▒█▄▄▀ ▒█░ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 
+% ▒█▄▄█ ░░▒█░░ ░▒█░░ ▒█▄▄▄ 　 ▒█▄▄▀ ▒█▄▄▄ ▒█▄▄▄█ ▒█▄▄█ ▒█░▒█ ▄█▄ ▒█░░░ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█
+
+% Writes an environment for describing individual components of a DMA byte
+\newenvironment{DMADescription}{
+	\begin{basedescript}{
+		% setup basedescript styling for labels
+		\desclabelstyle{\multilinelabel}
+		\desclabelwidth{2.5cm}
+	}
+
+	% setup spacing between items
+	\setlength\itemsep{1ex}
+}{
+	\end{basedescript}
+}
+
+% Writes an itemize within the DMADescription environment; it uses some less vertical spacing
+\newenvironment{DMAList}{
+	\begin{itemize}[topsep=-3pt,itemsep=-1pt]
+}{
+	\end{itemize}
+}
+
+% Use for individual items within DMADescription environment. Parameters:
+% - #1 Single bit (0) or range (2-0)
+% - #2 Title
+% - #3 Description
+\newcommand{\DMADescriptionItem}[3]{
+	\item[\footnotesize \IfInteger{#1}{Bit}{Bits} {\tt #1}:\\#2]
+
+	#3
+}
+
+% Use for description items that are not bits - typically what remains are bytes. Parameters:
+% - #1 Title
+% - #2 Description
+\newcommand{\DMADescriptionByte}[2]{
+	\item[\footnotesize #1]
+	
+	#2
+}
+
+
+% ▒█▀▀▄ ▒█▀▀█ ░█▀▀█ ▒█░░▒█ ▀█▀ ▒█▄░▒█ ▒█▀▀█ ▒█▀▀▀█ 　 ░░ 　 ▒█▀▀█ ░█▀▀█ ▒█▀▀▀█ ▒█▀▀▀ 
+% ▒█░▒█ ▒█▄▄▀ ▒█▄▄█ ▒█▒█▒█ ▒█░ ▒█▒█▒█ ▒█░▄▄ ░▀▀▀▄▄ 　 ▀▀ 　 ▒█▀▀▄ ▒█▄▄█ ░▀▀▀▄▄ ▒█▀▀▀ 
+% ▒█▄▄▀ ▒█░▒█ ▒█░▒█ ▒█▄▀▄█ ▄█▄ ▒█░░▀█ ▒█▄▄█ ▒█▄▄▄█ 　 ░░ 　 ▒█▄▄█ ▒█░▒█ ▒█▄▄▄█ ▒█▄▄▄
+
+\newcommand{\DMAScaledReg}[2]{
+	\textbf{#1}
+	
+	\scalebox{0.75}{#2}
+}
+
+% Note: counters and macros below depends on specific order; but this makes drawings much more straighforward. Just be very careful if changing anything as it may have unexpected effects on other nodes!
+
+\newcounter{DMAHeaderIndex}         % Current bit header index; used with \DMABitParHeader
+\newcounter{DMABitParameterIndex}		% Current parameter index
+\newcounter{DMABitDescIndex}		% Current bit description index
+\newcounter{DMABitDescItemIndex}	% Current bit description item index
+
+% This declares all styles used within tikz drawings for DMA commands so we don't have to repeat
+\tikzset{
+	dmatitle/.style={font=\small\bf},
+	dmacode/.style={font=\ttfamily},
+	dmalegend/.style={font=\scriptsize\bf, text=PrintableLightGray},
+	dmabit/.style={minimum width=1.3em, minimum height=1.3em},
+	dmabyte/.style={
+		dmabit, 
+		draw=PrintableLightGray, 
+		rectangle split,
+		rectangle split parts=8,
+		rectangle split horizontal,
+		rectangle split empty part width=0.2em},
+	dmabyteouter/.style={dmabit, draw, minimum width=10.68em},
+	dmamono/.style={dmabit, dmacode, draw, inner sep=0pt, outer sep=0pt},
+	dmaheader/.style={dmabit, dmatitle, draw, fill=PrintableLightGray},
+	dmaconnector/.style={Circle-stealth', line width=0.6pt},
+	dmavalue/.style={dmacode},
+	dmabyteexpl/.style={font=\small\it, text=PrintableDarkGray},
+	dmaexpl/.style={},
+}
+
+% Returns various IDs for the given bit, taking into account current DMAHeaderIndex
+\newcommand{\DMALegendID}{LegendHor\arabic{DMAHeaderIndex}}					% LegendHor0...
+\newcommand{\DMABitDefAnyID}[2]{BitDef#1_#2}								% BitDef0_0, BitDef0_1...
+\newcommand{\DMABitDefID}[1]{\DMABitDefAnyID{\arabic{DMAHeaderIndex}}{#1}}	% BitDef0_0, BitDef0_1...
+\newcommand{\DMABitValID}[1]{BitVal\arabic{DMAHeaderIndex}_#1}				% BitVal0_0, BitVal0_1...
+\newcommand{\DMABitDescTitleID}[1]{Bit\arabic{DMAHeaderIndex}_#1Title}		% Bit0_0Title, Bit0_1Title...
+\newcommand{\DMABitDescItemAnyID}[2]{Bit\arabic{DMAHeaderIndex}_#1Item#2}	% Bit0_0Item0...
+\newcommand{\DMABitDescItemID}[1]{\DMABitDescItemAnyID{#1}{\arabic{DMABitDescItemIndex}}}			% Bit0_0Item0...
+\newcommand{\DMABitDescExplID}[1]{Bit\arabic{DMAHeaderIndex}_#1Expl\arabic{DMABitDescItemIndex}}	% Bit0_0Expl0...
+\newcommand{\DMABitParID}[1]{Bit\arabic{DMAHeaderIndex}_#1ParByte}									% Bit0_0ParByte
+\newcommand{\DMABitParExplID}[1]{Bit\arabic{DMAHeaderIndex}_\arabic{DMABitDescIndex}_#1ParExpl}		% Bit0_0_0ParExpl
+
+
+% ▒█▀▀▄ ▒█▀▀█ ░█▀▀█ ▒█░░▒█ ▀█▀ ▒█▄░▒█ ▒█▀▀█ ▒█▀▀▀█ 　 ░░ 　 ▒█▀▀█ ▒█▀▀▀█ ▒█▀▄▀█ ▒█▀▀█ ▒█▀▀▀█ ▒█▄░▒█ ▒█▀▀▀ ▒█▄░▒█ ▀▀█▀▀ ▒█▀▀▀█ 
+% ▒█░▒█ ▒█▄▄▀ ▒█▄▄█ ▒█▒█▒█ ▒█░ ▒█▒█▒█ ▒█░▄▄ ░▀▀▀▄▄ 　 ▀▀ 　 ▒█░░░ ▒█░░▒█ ▒█▒█▒█ ▒█▄▄█ ▒█░░▒█ ▒█▒█▒█ ▒█▀▀▀ ▒█▒█▒█ ░▒█░░ ░▀▀▀▄▄ 
+% ▒█▄▄▀ ▒█░▒█ ▒█░▒█ ▒█▄▀▄█ ▄█▄ ▒█░░▀█ ▒█▄▄█ ▒█▄▄▄█ 　 ░░ 　 ▒█▄▄█ ▒█▄▄▄█ ▒█░░▒█ ▒█░░░ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄ ▒█░░▀█ ░▒█░░ ▒█▄▄▄█
+
+% Inserts enough spacing to properly render double bit configuration (0 0, 0 1, 1 0, 1 1). Parameters:
+% - #1 First bit value
+% - #2 Second bit value
+\newcommand{\DMATwoBits}[2]{#1\hspace*{1.8ex}#2}
+
+% Renders header with all 8 bits. Parameters:
+% - (optional) #1 empty (default) for main header, otherwise it will be treated as parameter positioning wise
+\newcommand{\DMABitHeader}{
+	\begin{scope}
+		\node[dmaheader] (\DMABitDefID{7}) {7};
+		\node[dmaheader, right=0pt of \DMABitDefID{7}] (\DMABitDefID{6}) {6};
+		\node[dmaheader, right=0pt of \DMABitDefID{6}] (\DMABitDefID{5}) {5};
+		\node[dmaheader, right=0pt of \DMABitDefID{5}] (\DMABitDefID{4}) {4};
+		\node[dmaheader, right=0pt of \DMABitDefID{4}] (\DMABitDefID{3}) {3};
+		\node[dmaheader, right=0pt of \DMABitDefID{3}] (\DMABitDefID{2}) {2};
+		\node[dmaheader, right=0pt of \DMABitDefID{2}] (\DMABitDefID{1}) {1};
+		\node[dmaheader, right=0pt of \DMABitDefID{1}] (\DMABitDefID{0}) {0};
+		
+		% description at the right side
+		\node[dmabyteexpl, anchor=west]
+			at(\DMABitDefID{0}.south east)
+			{Base Register Byte};
+
+		% Reset all command related counters
+		\setcounter{DMAHeaderIndex}{0}
+		\setcounter{DMABitDescIndex}{-1}
+		\setcounter{DMABitParameterIndex}{-1}
+	\end{scope}
+}
+
+% Renders individual bit below header. Parameters:
+% - (optional) #1 number of bits to span (default = 1)
+% - #2 bit number (0-7) - used to generate node ID
+% - #3 bit value (empty for no value)
+\newcommand{\DMABitValue}[3][1]{
+	\begin{scope}
+		\IfEq{#1}{1}{
+			% single bit
+			\node[dmamono, 
+				fit=(\DMABitDefID{#2}.west)(\DMABitDefID{#2}.east),
+				anchor=north west,
+				text height=1.35ex] 
+				at(\DMABitDefID{#2}.south west)
+				(\DMABitValID{#2}) 
+				{#3};
+		}{
+			% span multiple bits
+			\pgfmathtruncatemacro{\DMATo}{#2 - #1 + 1}
+			\node[dmamono, 
+				fit=(\DMABitDefID{#2}.west)(\DMABitDefID{\DMATo}.east),
+				anchor=north west,
+				text height=1.35ex]
+				at(\DMABitDefID{#2}.south west)
+				(\DMABitValID{#2})
+				{#3};
+		}
+	\end{scope}
+}
+
+% Renders legend on the left side. Parameters:
+% - #1 bit number for the top parameter (0-7)
+% - (optional) #2 title for paramters part (default = PARAMETERS)
+% - (optional) #3 title for command part (default = REGISTER)
+\NewDocumentCommand{\DMALegend}{ m O{PARAMETERS} O{REGISTER} }{
+	\begin{scope}[
+		every path/.style={PrintableLightGray, line width=0.6pt},
+		every node/.style={rotate=90}]
+
+		% Horizontal delimiter
+		\draw
+			([xshift=1ex,yshift=1ex]#1.north west) -- 
+			([xshift=-1.5em,yshift=1ex]#1.north west) 
+			node (\DMALegendID) {};
+
+		% Command text above delimiter
+		\node[dmalegend, above=0pt of \DMALegendID, anchor=north west, yshift=-1.5pt] {#3};
+		
+		% Parameters text below delimiter
+		\node[dmalegend, below=0pt of \DMALegendID, anchor=east] {#2};
+	\end{scope}
+}
+
+% Renders title for bit description group. Parameters:
+% - (optional) #1 left offset (default = -1.6ex)
+% - #2 Bit number (0-7)
+% - #3 Description text
+% - (optional) #4 top offset when first parameter (default = 2ex)
+\NewDocumentCommand{\DMABitDescTitle}{ O{-1.6ex} m m O{2ex} }{
+	\begin{scope}
+		\IfEq{\arabic{DMABitDescIndex}}{-1}{
+			% If this is first description group, position it below bit "table"
+			\node[
+				dmatitle, 
+				xshift=#1, 
+				below=#4 of \DMABitValID{#2}, 
+				anchor=north west]
+				(\DMABitDescTitleID{#2})
+				{#3};
+		}{
+			% Subsequent description groups should be positioned below last item of the previous group
+			\node[
+				dmatitle, 
+				anchor=north west, 
+				xshift=#1, 
+				yshift=-1em]
+				at(\DMABitValID{#2} |- \DMABitDescItemID{\arabic{DMABitDescIndex}})
+				(\DMABitDescTitleID{#2})
+				{#3};
+		}
+		
+		% Draw vertical connecting line from bit to title
+		\draw[dmaconnector] 
+			([yshift=2pt]\DMABitValID{#2}.center) -- 
+			([yshift=-1pt]\DMABitValID{#2}.center |- \DMABitDescTitleID{#2}.north);
+		
+		% Change bit description counter to given bit number and reset item counter
+		\setcounter{DMABitDescIndex}{#2}
+		\setcounter{DMABitDescItemIndex}{-1}
+	\end{scope}
+}
+
+% Renders individual bit description item. Parameters:
+% - #1 Bit number (0-7)
+% - #2 Bit value (0/1)
+% - #3 Explanation text
+\newcommand{\DMABitDescItem}[3]{
+	\begin{scope}
+		% Update item counter for next item
+		\stepcounter{DMABitDescItemIndex}
+
+		\IfEq{\arabic{DMABitDescItemIndex}}{0}{
+			% if this is first item for this group, position it below previously generated title
+			\node[dmavalue, below=1ex of \DMABitDescTitleID{#1}.west, anchor=north west]
+				(\DMABitDescItemID{#1})
+				{#2};
+		}{
+			% Otherwise position it below previous item
+			\pgfmathtruncatemacro{\prev}{\arabic{DMABitDescItemIndex}-1}
+			\node[dmavalue]
+				at([yshift=-5pt]\DMABitDescItemAnyID{#1}{\prev}.south) 
+				(\DMABitDescItemID{#1}) 
+				{#2};
+		}
+
+		% render explanation text
+		\node[dmaexpl, anchor=west] 
+			at(\DMABitDescItemID{#1}.east) 
+			(\DMABitDescExplID{#1}) 
+			{#3};
+	\end{scope}
+}
+
+% Renders parameter for given bit. Parameters:
+% - #1 Bit number (0-7)
+% - #2 Parameter description text
+% - (optional) #3 vertical spacing from parent when this is first parameter (default = 1ex)
+% - (optional) #4 positioning for "bit=1" text on connector line (default = near start)
+% - (optional) #5 text to use in front of parameter description (default = +1 byte) (note: if empty, then connector node also doesn't display text on it)
+\NewDocumentCommand{\DMABitPar}{ m m O{1ex} O{near start} O{+1 byte} }{
+	\begin{scope}
+		% increment parameter counter
+		\stepcounter{DMABitParameterIndex}
+
+		\IfEq{\arabic{DMABitParameterIndex}}{0}{
+			% if this is first parameter, position it below bit table
+			\node[dmabyte, 
+				below=#3 of \DMABitValID{7}.west |- \DMABitDescExplID{\arabic{DMABitDescIndex}}.south, 
+				anchor=north west]
+				(\DMABitParID{#1})
+				{};
+		}{
+			\IfEq{\arabic{DMABitDescIndex}}{-1}{
+				\IfEq{#1}{0}{
+					% if this is the first parameter for current header and it's for bit 0, position it below previous parameter or header. But we can't use -1 as it will end up in negative index...
+						\node[dmabyte, 
+							below=#3 of \DMABitValID{7}.south west,
+							anchor=north west]
+							(\DMABitParID{#1})
+							{};
+					}{
+					% if this is the first parameter for current header, position it below previous parameter or header
+					\pgfmathtruncatemacro{\prev}{#1-1}
+					\node[dmabyte, 
+						below=2pt of \DMABitParID{\prev}]
+						(\DMABitParID{#1})
+						{};
+				}
+			}{
+				% if this is the first parameter for current header, position it below last item of the previous group
+				\pgfmathtruncatemacro{\prev}{\arabic{DMABitParameterIndex}-1}
+				\node[dmabyte, 
+					below=2.7ex of \DMABitValID{7}.west |- \DMABitDescItemID{\arabic{DMABitDescIndex}},
+					anchor=north west]
+					(\DMABitParID{#1})
+					{};
+					
+				% afterwards reset desc index; once parameters are listed, this no longer applies
+				\setcounter{DMABitDescIndex}{-1}
+			}
+		}
+		
+		% above node renders all 8 bits with lighter color, this one renders black frame around all bits
+		\node[dmabyteouter, left=0pt of \DMABitParID{#1}, anchor=west] {};
+		
+		% render description and explanation text
+		\IfStrEq{#5}{}{
+			% if empty string, render only explanation text
+			\node[dmaexpl, anchor=west]
+				at(\DMABitParID{#1}.east)
+				(\DMABitParExplID{#1})
+				{#2};
+		}{
+			% otherwise render both
+			\node[dmabyteexpl, anchor=west]
+				at(\DMABitParID{#1}.east)
+				(\DMABitParExplID{#1}ByteText)
+				{#5};
+			\node[dmaexpl, anchor=base west, xshift=-3pt]
+				at(\DMABitParExplID{#1}ByteText.base east)
+				(\DMABitParExplID{#1})
+				{#2};
+		}
+		
+		% render connection arrow from bit to parameter
+		\draw[dmaconnector]
+			([yshift=2pt]\DMABitValID{#1}.center) -- 
+			node[dmabyteexpl, above, #4, xshift=3pt, font=\tiny, rotate=90] {\IfStrEq{#5}{}{}{\fbox{#1}={\tt 1}}}
+			([yshift=-3pt]\DMABitValID{#1}.center |- \DMABitParID{#1}.north);
+
+		% Reset all parameter related counters
+		\setcounter{DMABitDescIndex}{-1}
+	\end{scope}
+}
+
+% Same as \DMABitHeader but when used as parameter for given bit. Parameters:
+% - #1 Bit number (0-7), leave empty for no bit
+% - #2 parameter description
+% - (optional) #3 text to use in front of parameter description (default = +1 byte) (note: if this is empty, then connector line also doesn't display text on it)
+\NewDocumentCommand{\DMABitParHeader}{ m m O{+1 byte} }{
+	\begin{scope}
+		% increment parameter counter
+		\stepcounter{DMABitParameterIndex}
+
+		\pgfmathtruncatemacro{\DMAHeadNextID}{\arabic{DMAHeaderIndex}+1}
+
+		\IfEq{\arabic{DMABitParameterIndex}}{0}{
+			% if this is first parameter, position it below bit table
+			\node[dmaheader, 
+				below=1ex of \DMABitValID{7}.west |- \DMABitDescExplID{\arabic{DMABitDescIndex}}.south, 
+				anchor=north west]
+				(\DMABitDefAnyID{\DMAHeadNextID}{7})
+				{7};
+		}{
+			\IfEq{\arabic{DMABitDescIndex}}{-1}{
+				% if this is the first parameter for current header, position it below previous parameter
+				\pgfmathtruncatemacro{\prev}{\arabic{DMABitParameterIndex}-1}
+				\node[dmaheader, 
+					below=2pt of \DMABitParID{\prev}]
+					(\DMABitDefAnyID{\DMAHeadNextID}{7})
+					{7};
+			}{
+				% if this is the first parameter for current header, position it below last item of the previous group
+				\node[dmaheader, 
+					below=2.7ex of \DMABitValID{7}.west |- \DMABitDescItemID{\arabic{DMABitDescIndex}},
+					anchor=north west] 
+					(\DMABitDefAnyID{\DMAHeadNextID}{7})
+					{7};
+			}
+		}
+		
+		\node[dmaheader, right=0pt of \DMABitDefAnyID{\DMAHeadNextID}{7}] (\DMABitDefAnyID{\DMAHeadNextID}{6}) {6};
+		\node[dmaheader, right=0pt of \DMABitDefAnyID{\DMAHeadNextID}{6}] (\DMABitDefAnyID{\DMAHeadNextID}{5}) {5};
+		\node[dmaheader, right=0pt of \DMABitDefAnyID{\DMAHeadNextID}{5}] (\DMABitDefAnyID{\DMAHeadNextID}{4}) {4};
+		\node[dmaheader, right=0pt of \DMABitDefAnyID{\DMAHeadNextID}{4}] (\DMABitDefAnyID{\DMAHeadNextID}{3}) {3};
+		\node[dmaheader, right=0pt of \DMABitDefAnyID{\DMAHeadNextID}{3}] (\DMABitDefAnyID{\DMAHeadNextID}{2}) {2};
+		\node[dmaheader, right=0pt of \DMABitDefAnyID{\DMAHeadNextID}{2}] (\DMABitDefAnyID{\DMAHeadNextID}{1}) {1};
+		\node[dmaheader, right=0pt of \DMABitDefAnyID{\DMAHeadNextID}{1}] (\DMABitDefAnyID{\DMAHeadNextID}{0}) {0};
+		
+		% if bit is provided, render connector and explanation
+		\IfEq{#1}{}{}{
+			% render connection arrow from bit to parameter
+			\draw[dmaconnector]
+				([yshift=2pt]\DMABitValID{#1}.center) -- 
+				node[dmabyteexpl, above, near start, xshift=3pt, font=\tiny, rotate=90] {\IfStrEq{#3}{}{}{\fbox{#1}={\tt 1}}}
+				([yshift=-2pt]\DMABitValID{#1}.center |- \DMABitDefAnyID{\DMAHeadNextID}{#1}.north);
+		}
+		
+		% increment header index
+		\stepcounter{DMAHeaderIndex}
+   
+		% Reset all parameter related counters
+		\setcounter{DMABitDescIndex}{-1}
+
+		% render description and explanation text
+		\IfStrEq{#3}{}{
+			% if empty string, render only explanation text
+			\node[dmaexpl, anchor=west]
+				at(\DMABitDefAnyID{\DMAHeadNextID}{0}.south east)
+				(\DMABitParExplID{#1})
+				{#2};
+		}{
+			% otherwise render both
+			\node[dmabyteexpl, anchor=west]
+				at(\DMABitDefAnyID{\DMAHeadNextID}{0}.south east)
+				(\DMABitParExplID{#1}ByteText)
+				{#3};
+			\node[dmaexpl, anchor=base west, xshift=-3pt]
+				at(\DMABitParExplID{#1}ByteText.base east)
+				(\DMABitParExplID{#1})
+				{#2};
+		}
+
+	\end{scope}
+}

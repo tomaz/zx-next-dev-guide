@@ -56,6 +56,12 @@
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1.5ex}
 
+% add sub-sub-sub-section and sub-sub-sub-sub-section commands!
+\makeatletter
+\newcommand\subsubsubsection{\@startsection{paragraph}{4}{\z@}{-0.5ex\@plus -0ex \@minus -.01ex}{.01ex \@plus .25ex}{\normalfont\normalsize\bfseries}}
+\newcommand\subsubsubsubsection{\@startsection{subparagraph}{5}{\z@}{-0.5ex\@plus -0ex \@minus -.01ex}{.01ex \@plus .25ex}{\normalfont\small\bfseries}}
+\makeatother
+
 % redefine the default "plain" pagestyle (used by chapter pages)
 % only show page number
 \fancypagestyle{plain}{
