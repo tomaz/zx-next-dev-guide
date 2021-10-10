@@ -151,7 +151,7 @@ This section might be relevant even if you don't do anything with hardware; it m
 
 \begin{description}[leftmargin=1.5em]
 
-	\item[$\mathtt{A_{15}-A_0}$] 
+	\item[$\mathtt{\overline{A_{15}}-\overline{A_0}}$] 
 	{\em Address bus} (output, active high, 3-state). This bus is used for accessing the memory and for I/O ports. During the refresh cycle the IR register is put on this bus.
 
 	\item[$\mathtt{\overline{BUSACK}}$]
@@ -160,7 +160,7 @@ This section might be relevant even if you don't do anything with hardware; it m
 	\item[$\mathtt{\overline{BUSREQ}}$]
 	{\em Bus Request} (input, active low). Bus Request has a higher priority than $\mathtt{\overline{NMI}}$ and is always recognised at the end of the current machine cycle. $\mathtt{\overline{BUSREQ}}$ forces the CPU address bus, data bus and control signals $\mathtt{\overline{MREQ}}$, $\mathtt{\overline{IORQ}}$, $\mathtt{\overline{RD}}$ and $\mathtt{\overline{WR}}$ to go to a high-impedance state so that other devices can control these lines. $\mathtt{\overline{BUSREQ}}$ is normally wired-OR and requires an external pullup for these applications. Extended $\mathtt{\overline{BUSREQ}}$ periods due to extensive DMA operations can prevent the CPU from refreshing dynamic RAMs.
 
-	\item[$\mathtt{D_7-D_0}$]
+	\item[$\mathtt{\overline{D_7}-\overline{D_0}}$]
 	{\em Data Bus} (input/output, active low, 3-state). Used for data exchanges with memory, I/O and interrupts.
 
 	\item[$\mathtt{\overline{HALT}}$]
