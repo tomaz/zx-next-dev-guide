@@ -222,7 +222,7 @@ Regardless, Next Dev Wiki\footnote{\url{https://wiki.specnext.dev/Interrupts}} i
 
 \subsection{Hardware Interrupt Mode 2}
 
-In addition to regular IM2, Next also supports a ``Hardware IM2'' mode. This mode is still a work in progress, there's very little documentation available at this point. Therefore I will only scratch the surface. In a nutshell: hardware IM2 works similar to legacy IM2 in that we still need to provide vector tables. But each Next interrupter can be associated with its own vector. Let's go over the details with an example. First, the initialization:
+In addition to regular IM2, Next also supports a ``Hardware IM2'' mode. This mode works similar to legacy IM2 in that we still need to provide vector tables. But it properly implements the Z80 IM2 scheme with daisy chain priority. So when particular interrupt subroutine is called, we know exactly which device caused it without having to figure it out as needed in legacy IM2. Let's go over the details with an example. First, the initialization:
 
 % note: Band will be converted to & and Bor to | when rendering...
 \begin{tcblisting}{}
@@ -297,8 +297,10 @@ With hardware IM2 mode it's possible to interrupt DMA operations. The choice of 
 
 \vspace*{-1ex}
 \begin{quote}
-	In this mode, it is also possible to program interrupters to interrupt DMA operations. Interrupting a DMA operation comes with a new caveat since the Z80 cannot see an interrupt until the end of an instruction. So if the DMA gives up the bus temporarily for an interrupt, then the Z80 will execute one instruction in the main program until the interrupt is seen. The isr will execute and {\tt RETI} will return control to the DMA. Anyway there is another rabbit hole here.
+	In this mode, it is also possible to program interrupters to interrupt DMA operations. Interrupting a DMA operation comes with a new caveat since the Z80 cannot see an interrupt until the end of an instruction. So if the DMA gives up the bus temporarily for an interrupt, then the Z80 will execute one instruction in the main program until the interrupt is seen. The interrups subroutine will execute and {\tt RETI} will return control to the DMA. Anyway there is another rabbit hole here.
 \end{quote}
+
+For details and more, see this discussion on Discord\footnote{\url{https://discord.com/channels/556228195767156758/692885312296190102/894284968614854749}}, highly recommended!
 
 Very special thanks to the folks from Next Discord server: {\tt AA} for mentioning\footnote{\url{https://discord.com/channels/556228195767156758/692885312296190102/865955247552462848}} hardware IM2 mode and {\tt varmfskii} whos discussion\footnote{\url{https://discord.com/channels/556228195767156758/692885353161293895/817807486744526886}} and sample code was the basis for my exploration into this mode!
 
@@ -366,7 +368,7 @@ Since a change in offset takes effect when the ULA reaches row 0, the change can
 		\PortDesc{Maskable interrupt mode: {\tt 1} IM2, {\tt 0} pulse}
 \end{NextPort}
 
-If bit 3 is set, the return address pushed during an NMI acknowledge cycle will be written to \PortLink{NMI Return Address}{C2 \& \$C3} instead of the memory (the stack pointer will be decremented). The first {\tt RETN} after the NMI acknowledge will then take its return address from the registers instead of memory (the stack pointer will be incremented). If bit 3 is {\tt 0}, {\tt RETN} functions normally.
+If bit 3 is set, the return address pushed during an NMI acknowledge cycle will be written to \PortLink{NMI Return Address}{C2 \& \$C3} instead of the memory (the stack pointer will be decremented). The first {\tt RETN} after the NMI acknowledge will then take its return address from the registers instead of memory (the stack pointer will be incremented). If bit 3 is {\tt 0}, and in other circumstances (if there is no NMI first), {\tt RETN} functions normally.
 
 
 \subsubsection{NMI Return Address LSB \MemAddr{C2}}
@@ -383,7 +385,7 @@ If bit 3 is set, the return address pushed during an NMI acknowledge cycle will 
 
 \begin{NextPort}
 	\PortBits{7}
-		\PortDesc{Expansion bus /INT ({\tt 1} after reset)}
+		\PortDesc{Expansion bus $\mathtt{\overline{INT}}$ ({\tt 1} after reset)}
 	\PortBits{6-2}
 		\PortDesc{Reserved, must be 0}
 	\PortBits{1}
@@ -425,7 +427,7 @@ All bits {\tt 0} after reset.
 	\PortBits{6}
 		\PortDesc{UART1 Tx empty}
 	\PortBits{5}
-		\PortDesc{UART1 Rx near full}
+		\PortDesc{UART1 Rx half full}
 	\PortBits{4}
 		\PortDesc{UART1 Rx available}
 	\PortBits{3}
@@ -433,12 +435,12 @@ All bits {\tt 0} after reset.
 	\PortBits{2}
 		\PortDesc{UART0 Tx empty}
 	\PortBits{1}
-		\PortDesc{UART0 Rx near full}
+		\PortDesc{UART0 Rx half full}
 	\PortBits{0}
 		\PortDesc{UART0 Rx available}
 \end{NextPort}
 
-All bits {\tt 0} after reset. Rx near full overrides Rx available.
+All bits {\tt 0} after reset. Rx half full overrides Rx available.
 
 
 \subsubsection{Interrupt Status 0 \MemAddr{C8}}
@@ -535,8 +537,6 @@ Read indicates whether the given interrupt was generated in the past. Write with
 	\PortBits{0}
 		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 0 interrupt from interrupting DMA}
 \end{NextPort}
-
-All bits {\tt 0} after reset.
 
 
 \subsubsection{DMA Interrupt Enable 2 \MemAddr{CE}}
