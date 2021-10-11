@@ -133,7 +133,11 @@
 	\setcounter{page}{1}
 
 	% TOC should only display up to depth 1 (chapter+section)
-	\setcounter{tocdepth}{1}
+	\ifdefined\PRINTED
+		\setcounter{tocdepth}{1}
+	\else
+		\setcounter{tocdepth}{2}
+	\fi
 
 	% use plain page style with just page number for following pages
 	\pagestyle{plain}
@@ -141,6 +145,9 @@
 
 % foramt for the book content pages, after TOC
 \newcommand{\SetupPageFormattingBook}{
+	% we should only include sections for chapter mini-TOCs; this is only needed for non-print builds where we increase tocdepth to 2 for main TOC. But it doesn't hurt to include for both builds
+	\setcounter{tocdepth}{1}
+
 	% use default page style for all content pages
 	\pagestyle{clean}
 }

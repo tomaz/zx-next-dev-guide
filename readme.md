@@ -17,6 +17,7 @@ The book is available in two formats:
 
 Note: both books are the same apart from couple small differences:
 
+- PDF shows sub-sections in main TOC, printed book not; typically only a small portion of page is visible on screen at once and TOC is clickable, so it makes sense to allow reaching specific areas. Printable book on the other hand provides much better overview, including sub-sections would only add noise.
 - PDF doesn't include alphabetical instructions table; mainly because it's searchable so I felt it just adds noise
 - Email addresses are obfuscated in PDF, printed book uses proper `name@domain.nnn` notation
 
