@@ -70,8 +70,9 @@ Companion code on GitHub, folder {\tt sound} includes expanded code as well as a
 
 \pagebreak
 \subsection{Sound Ports and Registers}
+\label{zx_next_sound_registers}
 
-\subsubsection{Turbo Sound Next Control \MemAddr{FFFD}}
+\subsubsection{\PortTitle{Turbo Sound Next Control}{FFFD}}
 
 When bit {\tt 7} is {\tt 1}:
 
@@ -106,7 +107,7 @@ When bit {\tt 7} is {\tt 0}:
 \end{NextPort}
 
 
-\subsubsection{Sound Chip Register Write \MemAddr{BFFD}}
+\subsubsection{\PortTitle{Sound Chip Register Write}{BFFD}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -244,7 +245,7 @@ When bit {\tt 7} is {\tt 0}:
 	\end{tabular}
 \endgroup
 
-\subsubsection{Peripheral 2 Register \MemAddr{06}}
+\subsubsection{\PortTitle{Peripheral 2 Register}{06}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -273,7 +274,7 @@ When bit {\tt 7} is {\tt 0}:
 		}
 \end{NextPort}
 
-\subsubsection{Peripheral 3 Register \MemAddr{08}}
+\subsubsection{\PortTitle{Peripheral 3 Register}{08}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -294,9 +295,9 @@ When bit {\tt 7} is {\tt 0}:
 		\PortDesc{Implement Issue 2 keyboard (port \MemAddr{FE} reads as early ZX boards) ({\tt 0} after hard reset)}
 \end{NextPort}
 
-\subsubsection{Peripheral 4 Register \MemAddr{09}}
+\subsubsection{\PortTitleLink{Peripheral 4 Register}{09}}
 
-\PortReference{zx_next_sprite_registers}{Sprite}
+\PortReference{zx_next_sprites_registers}{Sprites}
 
 
 \pagebreak

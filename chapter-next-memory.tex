@@ -250,13 +250,13 @@ Allows selecting:
 Ports involved:
 
 \begin{itemize}[topsep=0pt,itemsep=0pt]
-	\item \PortLink{Plus 3 Memory Paging Control}{1FFD} bit 2 as LSB for selecting ROM bank for slot 0
+	\item \PortLink{+3 Memory Paging Control}{1FFD} bit 2 as LSB for selecting ROM bank for slot 0
 	\item \PortLink{Memory Paging Control}{7FFD} bit 4 forms MSB for selecting ROM bank for slot 0
 	\item \PortLink{Memory Paging Control}{7FFD} bits 2-0 select one of 8 RAM banks for slot 3
 	\item \PortLink{Next Memory Bank Select}{DFFD} bits 3-0 are added as MSB to 2-0 from \MemAddr{7FFD} to form 128 banks for slot 3 (Next specific)
 \end{itemize}
 
-If you are using the standard interrupt handler or OS routines, then any time you write to \PortLink{Plus 3 Memory Paging Control}{1FFD} you should also store the same value at \MemAddr{5B67} and every time your write to \PortLink{Memory Paging Control}{7FFD} you should also store the value at \MemAddr{5B5C}.
+If you are using the standard interrupt handler or OS routines, then any time you write to \PortLink{+3 Memory Paging Control}{1FFD} you should also store the same value at \MemAddr{5B67} and every time your write to \PortLink{Memory Paging Control}{7FFD} you should also store the value at \MemAddr{5B5C}.
 
 
 \subsubsection{+3 All-RAM Mode}
@@ -277,11 +277,11 @@ Also called ``Special Mode'' or ``CP/M Mode''. Allows selecting all 4 slots from
 Ports involved:
 
 \begin{itemize}[topsep=0pt,itemsep=0pt]
-	\item \PortLink{Plus 3 Memory Paging Control}{1FFD} bit 0 enables All-RAM (if {\tt 1}) or normal mode ({\tt 0})
-	\item \PortLink{Plus 3 Memory Paging Control}{1FFD} bits 2-1 select memory configuration
+	\item \PortLink{+3 Memory Paging Control}{1FFD} bit 0 enables All-RAM (if {\tt 1}) or normal mode ({\tt 0})
+	\item \PortLink{+3 Memory Paging Control}{1FFD} bits 2-1 select memory configuration
 \end{itemize}
 
-If you are using the standard interrupt handler or OS routines, then any time you write to \PortLink{Plus 3 Memory Paging Control}{1FFD} you should also store the same value at \MemAddr{5B67}.
+If you are using the standard interrupt handler or OS routines, then any time you write to \PortLink{+3 Memory Paging Control}{1FFD} you should also store the same value at \MemAddr{5B67}.
 
 
 \subsubsection{Pentagon 512K/1024K Mode}
@@ -396,7 +396,7 @@ Layer 2 uses specific ports and registers that are can be used to change memory 
 \subsection{Paging Mode Ports and Registers}
 \label{zx_next_memorypaging_registers}
 
-\subsubsection{+3 Memory Paging Control \MemAddr{1FFD}}
+\subsubsection{\PortTitle{+3 Memory Paging Control}{1FFD}}
 
 \begin{NextPort}
 	\PortBits{7-3}
@@ -418,7 +418,7 @@ Layer 2 uses specific ports and registers that are can be used to change memory 
 		\PortDesc{Paging mode: 0 = normal, 1 = special}
 \end{NextPort}
 
-\subsubsection{Memory Paging Control \MemAddr{7FFD}}
+\subsubsection{\PortTitle{Memory Paging Control}{7FFD}}
 
 \begin{NextPort}
 	\PortBits{7-6}
@@ -434,7 +434,7 @@ Layer 2 uses specific ports and registers that are can be used to change memory 
 		\PortDesc{Bank number for slot 4 (\MemAddr{C000})}
 \end{NextPort}
 
-\subsubsection{Next Memory Bank Select \MemAddr{DFFD}}
+\subsubsection{\PortTitle{Next Memory Bank Select}{DFFD}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -444,7 +444,21 @@ Layer 2 uses specific ports and registers that are can be used to change memory 
 \end{NextPort}
 
 
-\subsubsection{Memory Management Slot 0-7 Bank \MemAddr{50}-\MemAddr{57}}
+\subsubsection{\PortTitle{Memory Management Slot 0 Bank}{50}}
+\vspace*{-2ex}
+\subsubsection{\PortTitle{Memory Management Slot 1 Bank}{51}}
+\vspace*{-2ex}
+\subsubsection{\PortTitle{Memory Management Slot 2 Bank}{52}}
+\vspace*{-2ex}
+\subsubsection{\PortTitle{Memory Management Slot 3 Bank}{53}}
+\vspace*{-2ex}
+\subsubsection{\PortTitle{Memory Management Slot 4 Bank}{54}}
+\vspace*{-2ex}
+\subsubsection{\PortTitle{Memory Management Slot 5 Bank}{55}}
+\vspace*{-2ex}
+\subsubsection{\PortTitle{Memory Management Slot 6 Bank}{56}}
+\vspace*{-2ex}
+\subsubsection{\PortTitle{Memory Management Slot 7 Bank}{57}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -452,7 +466,7 @@ Layer 2 uses specific ports and registers that are can be used to change memory 
 \end{NextPort}
 
 
-\subsubsection{Memory Mapping Register \MemAddr{8E}}
+\subsubsection{\PortTitle{Memory Mapping Register}{8E}}
 
 \begin{NextPort}
 	\PortBits{7}

@@ -76,7 +76,7 @@ Note: subroutine requires that colours are stored in 2 bytes with first containi
 \subsection{Palette Registers}
 \label{zx_next_palette_registers}
 
-\subsubsection{Palette Index Register \MemAddr{40}}
+\subsubsection{\PortTitle{Palette Index Register}{40}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -146,7 +146,7 @@ While Tilemap, Layer 2 and Sprites palettes use all 256 distinct colours (with s
 
 
 \pagebreak
-\subsubsection{Palette Value Register \MemAddr{41}}
+\subsubsection{\PortTitle{Palette Value Register}{41}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -175,7 +175,7 @@ Least significant bit of blue is set to {\tt OR} between $B_2$ and $B_1$.
 Writing the value will automatically increment index in \PortLink{Palette Index Register}{40}, if auto-increment is enabled in \PortLink{Enhanced ULA Control Register}{43}. Read doesn't auto-increment index.
 
 
-\subsubsection{Enhanced ULA Ink Colour Mask \MemAddr{42}}
+\subsubsection{\PortTitle{Enhanced ULA Ink Colour Mask}{42}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -196,7 +196,7 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 \end{NextPort}
 
 
-\subsubsection{Enhanced ULA Control Register \MemAddr{43}}
+\subsubsection{\PortTitle{Enhanced ULA Control Register}{43}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -228,7 +228,7 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 Write will also reset the index of \PortLink{Enhanced ULA Palette Extension}{44} so next write there will be considered as first byte of first colour.
 
 
-\subsubsection{Enhanced ULA Palette Extension \MemAddr{44}}
+\subsubsection{\PortTitle{Enhanced ULA Palette Extension}{44}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -278,7 +278,7 @@ After the second write palette colour index in \PortLink{Palette Index Register}
 Note: reading will always return the second byte of the colour (least significant bit of blue) and will not auto-increment index. You can read {\tt RRRGGGBB} part with \PortLink{Palette Value Register}{41}.
 
 
-\subsubsection{Transparency Colour Fallback Register \MemAddr{4A}}
+\subsubsection{\PortTitle{Transparency Colour Fallback Register}{4A}}
 
 \begin{NextPort}
 	\PortBits{7-0}

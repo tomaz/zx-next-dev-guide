@@ -38,11 +38,11 @@ By default, Layer 2 will use 256$\times$192 with 256 colours, supported across a
 
 After Layer 2 is enabled, we can start writing into memory banks. As mentioned, Layer 2 requires 3-5 contiguous 16K banks. Upon boot, Next assigns it 16K banks 8-10. However, that gets modified by NextZXOS to 9-11 soon afterwards. You can use this configuration, but it's a good idea to set it up manually to future proof our programs.
 
-There are two pieces to the ``puzzle'' of Layer 2 paging: first, we need to tell the hardware which banks are used. Since banks are always contiguous we only need to write the starting 16K bank number into \PortLink{Layer 2 Ram Page Register}{12}. Then we need to swap the banks into one or more slots to write or read the data. Any supported mode can be used for paging, as described in section \ref{zx_next_memorypaging}. But the recommended and simplest is MMU mode. It's recommended to only use 16K banks 9 or greater for Layer 2.
+There are two pieces to the ``puzzle'' of Layer 2 paging: first, we need to tell the hardware which banks are used. Since banks are always contiguous we only need to write the starting 16K bank number into \PortLink{Layer 2 RAM Page Register}{12}. Then we need to swap the banks into one or more slots to write or read the data. Any supported mode can be used for paging, as described in section \ref{zx_next_memorypaging}. But the recommended and simplest is MMU mode. It's recommended to only use 16K banks 9 or greater for Layer 2.
 
 16K slot 3 (\MemAddr{C000}-\MemAddr{FFFF}, MMU7 and 8) is typically used for Layer 2 banks. But any other slot will work. You can use MMU registers to swap banks. Alternatively \PortLink{Layer 2 Access Port}{123B} also allows setting up paging for Layer 2. Either way, make sure paging is reset before passing control back from Layer 2 handling code.
 
-Similar to ULA, Layer 2 can also be set up to use a double-buffering scheme. \PortLink{Layer 2 Ram Shadow Page Register}{13} defines starting 16K bank number for ``shadow screen'' (back buffer) in this case. This is mainly used when paging is set up through \PortLink{Layer 2 Access Port}{123B}; bit 3 is used to switch configuration between normal and shadow banks. Or we can use MMU registers instead. If we track shadow banks manually, we don't have to use register \MemAddr{13} at all. We still need to assign starting shadow screen bank to register \PortLink{Layer 2 Ram Page Register}{12} in order to make it visible on screen.
+Similar to ULA, Layer 2 can also be set up to use a double-buffering scheme. \PortLink{Layer 2 RAM Shadow Page Register}{13} defines starting 16K bank number for ``shadow screen'' (back buffer) in this case. This is mainly used when paging is set up through \PortLink{Layer 2 Access Port}{123B}; bit 3 is used to switch configuration between normal and shadow banks. Or we can use MMU registers instead. If we track shadow banks manually, we don't have to use register \MemAddr{13} at all. We still need to assign starting shadow screen bank to register \PortLink{Layer 2 RAM Page Register}{12} in order to make it visible on screen.
 
 
 \subsection{Drawing}
@@ -304,7 +304,7 @@ In contrast with 256$\times$192, this mode allows drawing to the whole screen, i
 
 Addressing is more complicated though. As we need 9 bits for X and 8 for Y, we can't address all screen pixels with single 16-bit register pair. But we can use 16-bit register pair to address all pixels within each bank. From this perspective, the setup is similar to 256$\times$192 mode, except that X and Y are reversed: if the upper byte is used for X and lower for Y, then most significant 2 bits of 16-bit register pair represent lower 2 bits of 16K bank number. And for 8K banks, the most significant 3 bits correspond to the lower 3 bits of 8K bank number. In either case, the most significant bit of the bank number arrives from the 9th bit of the X coordinate ($X_8$ in the table above). The rest of the X + Y is memory location within the bank.
 
-To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to set clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
+To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to set clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip Window Control Register}{1C}, as demonstrated in example below:
 
 \begin{tcblisting}{}
 START_16K_BANK  = 9
@@ -452,7 +452,7 @@ You can find fully working example in companion code on GitHub in folder {\tt la
 
 Addressing wise, this mode is the same as 230$\times$256. Using 16-bit register pair we can't address all pixels on the screen, but we can address all pixels within each bank. Again, assuming upper byte of 16-bit register pair is used for X and lower for Y and using 9th bit of X coordinate (bit $X_8$ in the table above) as the most significant bit of bank number, then most significant 2 bits of 16-bit register pair represent lower 2 bits of 16K bank number. And for 8K banks, the most significant 3 bits correspond to the lower 3 bits of 8K bank number. The rest of the X + Y is memory location within the bank. Don't forget: each colour byte represents 2 screen pixels, so the memory X coordinate (as described above) needs to be multiplied by 2 to convert to screen X coordinate.
 
-To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to set clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip/ Window Control Register}{1C}, as demonstrated in example below:
+To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to set clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip Window Control Register}{1C}, as demonstrated in example below:
 
 \begin{tcblisting}{}
 START_16K_BANK  = 9
@@ -516,7 +516,7 @@ You can find fully working example in companion code on GitHub in folder {\tt la
 \subsection{Layer 2 Registers}
 \label{zx_next_layer2_registers}
 
-\subsubsection{Layer 2 Access Port \MemAddr{123B}}
+\subsubsection{\PortTitle{Layer 2 Access Port}{123B}}
 
 \begin{NextPort}
 	\PortBits{7-6}
@@ -538,7 +538,7 @@ You can find fully working example in companion code on GitHub in folder {\tt la
 		\PortDescOnly{
 			\begin{PortBitConfig}
 				\PortBitLine{0}{Map \PortLink{Layer 2 RAM Page Register}{12}}
-				\PortBitLine{1}{Map \PortLink{Layer 2 RAM Shadow Page}{13}}
+				\PortBitLine{1}{Map \PortLink{Layer 2 RAM Shadow Page Register}{13}}
 			\end{PortBitConfig}
 		}
 	\PortBits{2}
@@ -570,7 +570,7 @@ With this, all 5 banks needed for 320$\times$256 and 640$\times$256 modes can be
 Note: read and write access to Layer 2 banks (or any other bank for that matter) can also be achieved using Next MMU registers which is arguably simpler to use. Regardless, don't forget to reset banks back to the original after you're done handling Layer 2!
 
 
-\subsubsection{Layer 2 Ram Page Register \MemAddr{12}}
+\subsubsection{\PortTitle{Layer 2 RAM Page Register}{12}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -586,7 +586,7 @@ Changes to this registers are immediately visible on screen.
 Note: this register uses 16K bank numbers. If you're using 8K banks, you have to multiply this value by 2. For example, 16K bank 9 corresponds to 8K banks 18 and 19.
 
 
-\subsubsection{Layer 2 Ram Shadow Page Register \MemAddr{13}}
+\subsubsection{\PortTitle{Layer 2 RAM Shadow Page Register}{13}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -599,8 +599,14 @@ Similar to \PortLink{Layer 2 RAM Page Register}{12} except this register sets up
 
 Note: this register doesn't affect the shadow screen in any way besides when bit 3 is set in \PortLink{Layer 2 Access Port}{123B}. We can circumvent it completely if a manual paging scheme is used to swap banks for reading and writing.
 
+\subsubsection{\PortTitle{Global Transparency Register}{14}}
 
-\subsubsection{Layer 2 X Offset Register \MemAddr{16}}
+\begin{NextPort}
+	\PortBits{7-0}\PortDesc{Sets index of transparent colour for Layer 2, ULA and LoRes pixel data (\MemAddr{E3} after reset).}
+\end{NextPort}
+
+
+\subsubsection{\PortTitle{Layer 2 X Offset Register}{16}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -610,7 +616,8 @@ Note: this register doesn't affect the shadow screen in any way besides when bit
 This can be used for creating scrolling effects. For 320$\times$256 and 640$\times$256 modes, 9 bits are required; use \PortLink{Layer 2 X Offset MSB Register}{71} to set it up.
 
 
-\subsubsection{Layer 2 Y Offset Register \MemAddr{17}}
+\pagebreak
+\subsubsection{\PortTitle{Layer 2 Y Offset Register}{17}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -626,7 +633,7 @@ Valid range is:
 \end{itemize}
 
 
-\subsubsection{Clip Window Layer 2 Register \MemAddr{18}}
+\subsubsection{\PortTitle{Clip Window Layer 2 Register}{18}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -647,7 +654,7 @@ Valid range is:
 \end{tabular}
 
 
-\subsubsection{Clip Window Control Register \MemAddr{1C}}
+\subsubsection{\PortTitle{Clip Window Control Register}{1C}}
 
 Write:
 
@@ -678,17 +685,31 @@ Read:
 \end{NextPort}
 
 
-\subsubsection{Palette Index Register \MemAddr{40}}
+\subsubsection{\PortTitleLink{Palette Index Register}{40}}
 \vspace*{-2ex}
-\subsubsection{Palette Value Register \MemAddr{41}}
+\subsubsection{\PortTitleLink{Palette Value Register}{41}}
 \vspace*{-2ex}
-\subsubsection{Enhanced ULA Control Register \MemAddr{43}}
+\subsubsection{\PortTitleLink{Enhanced ULA Control Register}{43}}
 \vspace*{-2ex}
-\subsubsection{Enhanced ULA Palette Extension \MemAddr{44}}
+\subsubsection{\PortTitleLink{Enhanced ULA Palette Extension}{44}}
 \PortReference{zx_next_palette_registers}{Palette}
 
 
-\subsubsection{Layer 2 Control Register \MemAddr{70}}
+\subsubsection{\PortTitle{Display Control 1 Register}{69}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{{\tt 1} to enable Layer 2 (alias for bit 1 in \PortLink{Layer 2 Access Port}{123B})}
+	\PortBits{6}
+		\PortDesc{{\tt 1} to enable ULA shadow display (alias for bit 3 in \PortLink{Memory Paging Control}{7FFD})}
+	\PortBits{5-0}
+		\PortDesc{Alias for bits 5-0 in Timex Sinclair Video Mode Control \MemAddr{xxFF}}
+\end{NextPort}
+
+ULA shadow screen from Bank 7 has higher priority than Timex modes.
+
+
+\subsubsection{\PortTitle{Layer 2 Control Register}{70}}
 
 \begin{NextPort}
 	\PortBits{7-6}
@@ -707,7 +728,7 @@ Read:
 \end{NextPort}
 
 
-\subsubsection{Layer 2 X Offset MSB Register \MemAddr{71}}
+\subsubsection{\PortTitle{Layer 2 X Offset MSB Register}{71}}
 
 \begin{NextPort}
 	\PortBits{7-1}

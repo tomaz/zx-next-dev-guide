@@ -1058,7 +1058,7 @@ CopyMemory:
 
 The code includes both, the routine that copies the program into DMA memory and the program itself.
 
-Copy routine relies on {\tt OTIR} to upload the program to DMA memory through port \MemAddr{XX6B}. {\tt OTIR} does all the heavy lifting for us - continuously copies bytes until {\tt B} becomes 0. Perhaps worth noting: {\tt .dmaProgramSize} is used to establish the length of the program that will be sent. We can safely add or remove instructions and it will continue to work (as long as the size stays within 256 bytes).
+Copy routine relies on {\tt OTIR} to upload the program to DMA memory through port \MemAddr{xx6B}. {\tt OTIR} does all the heavy lifting for us - continuously copies bytes until {\tt B} becomes 0. Perhaps worth noting: {\tt .dmaProgramSize} is used to establish the length of the program that will be sent. We can safely add or remove instructions and it will continue to work (as long as the size stays within 256 bytes).
 
 The program itself, lines 9-25, should be self-explanatory. But we'll go through it anyway since this is how most DMA programs look like:
 
@@ -1234,13 +1234,13 @@ When zxnDMA controls the bus (when transfer is in progress), Z80 can't respond t
 
 However, when operating in burst mode, with large enough prescalar, the CPU will be able to respond to interrupts.
 
-It's also possible to program interrupters to interrupt DMA using Next specific Hardware IM2 mode. Which interrupters can interrupt DMA is configured with Next registers \PortLink{DMA Interrupt Enable 0-2}{CC-\$CE}. See chapter \ref{zx_next_interrupts} for more details on interrupts.
+It's also possible to program interrupters to interrupt DMA using Next specific Hardware IM2 mode. Which interrupters can interrupt DMA is configured with Next registers \PortLink{DMA Interrupt Enable 0}{CC}, \PortLink{DMA Interrupt Enable 1}{CD} and \PortLink{DMA Interrupt Enable 2}{CE}. See section \ref{zx_next_interrupts} for more details on interrupts.
 
 
 \subsection{DMA Registers}
 \label{zx_next_dma_registers}
 
-\subsubsection{Video Timing Register \MemAddr{11}}
+\subsubsection{\PortTitle{Video Timing Register}{11}}
 
 \newcommand{\DMATimingItem}[4]{{\tt #1} & clk28=#2#3 & #4 \\}
 
@@ -1264,9 +1264,9 @@ It's also possible to program interrupters to interrupt DMA using Next specific 
 \end{NextPort}
 
 
-\subsubsection{DMA Interrupt Enable 0 \MemAddr{CC}}
+\subsubsection{\PortTitleLink{DMA Interrupt Enable 0}{CC}}
 \vspace*{-2ex}
-\subsubsection{DMA Interrupt Enable 1 \MemAddr{CD}}
+\subsubsection{\PortTitleLink{DMA Interrupt Enable 1}{CD}}
 \vspace*{-2ex}
-\subsubsection{DMA Interrupt Enable 2 \MemAddr{CE}}
+\subsubsection{\PortTitleLink{DMA Interrupt Enable 2}{CE}}
 \PortReference{zx_next_interrupts_registers}{Interrupts}

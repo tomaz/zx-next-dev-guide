@@ -255,7 +255,7 @@ Not the most impressive display of Copper capabilities, I give you that. You can
 \label{zx_next_copper_registers}
 
 
-\subsubsection{Copper Data \MemAddr{60}}
+\subsubsection{\PortTitle{Copper Data}{60}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -265,7 +265,7 @@ Not the most impressive display of Copper capabilities, I give you that. You can
 After the write, the index is auto-incremented to the next memory position. The index wraps to {\tt 0} when the last byte of the program memory is written to position {\tt 2047}. Since Copper instructions are 16-bits in size, two writes are required to complete each one.
 
 
-\subsubsection{Copper Control Low Byte \MemAddr{61}}
+\subsubsection{\PortTitle{Copper Control Low Byte}{61}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -273,7 +273,7 @@ After the write, the index is auto-incremented to the next memory position. The 
 \end{NextPort}
 
 
-\subsubsection{Copper Control High Byte \MemAddr{62}}
+\subsubsection{\PortTitle{Copper Control High Byte}{62}}
 
 \begin{NextPort}
 	\PortBits{7-6}
@@ -295,7 +295,7 @@ After the write, the index is auto-incremented to the next memory position. The 
 When control mode is identical to currentl one, it's ignored. This allows change of the upload index without restarting the program.
 
 
-\subsubsection{Copper Data 16-bit Write Register \MemAddr{63}}
+\subsubsection{\PortTitle{Copper Data 16-bit Write}{63}}
 
 \begin{NextPort}
 	\PortBits{7-0}

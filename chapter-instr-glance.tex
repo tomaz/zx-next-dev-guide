@@ -14,42 +14,42 @@
 % █░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░██░░░░░░█░░░░░░██████████░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
 % ███████████████████████████████████████████████████████████████████████████████████████████████████
 
-This chapter presents all instructions at a glance for quick info and to easily compare them when choosing the most optimal combination for the task at hand. Instructions are grouped into logical sections based on the area they operate on.
 
 \ChapterTOC[]
 
 \pagebreak
 \thispagestyle{plain} % use toc style without headers for this explanation page, it better matches chapter start page
 
+This chapter presents all instructions at a glance for quick info and to easily compare them when choosing the most optimal combination for the task at hand. Instructions are grouped into logical sections based on the area they operate on.
+\ifdefined\PRINTED The chapter ends with alphabetical list of all instructions to make them easier to find when searching by mnemonic. \fi
+
 \subsubsection{Instruction Execution}
 
 \begin{tabular}{ll}
-	B & 
-		Number of bytes instruction uses in RAM\\
-	Mc\notet & 
-		Number of machine cycles instruction takes to complete\\
-	Ts\notet & 
-		Number of clock periods instruction requires to complete\\
+	B & Number of bytes instruction uses in RAM\\
+	Mc\notet & Number of machine cycles instruction takes to complete\\
+	Ts\notet & Number of clock periods instruction requires to complete\\
 \end{tabular}
 
-\subsubsection{Flags}
+\subsubsection{Flags \textnormal{(copied from section \ref{flags} as convenience)}}
 
-\begin{tabular}{lp{13cm}}
+\begin{tabularx}{\linewidth}{lX}
 	SF & 
-		Set if 2-complement value is negative.\\
+		\textbf{Sign} Set if 2-complement value is negative.\\
 	ZF\notet & 
-		Set if the result is zero. \\
+		\textbf{Zero} Set if the result is zero. \\
 	HY\notet & 
-		The half-carry of an addition/subtraction (from bit 3 to 4). Needed for BCD correction with {\tt DAA} \\
+		\textbf{Half-Carry} The half-carry of an addition/subtraction (from bit 3 to 4)\See{*}. \\
 	PV\notet & 
-		This flag can either be the parity of the result ({\tt \FPP}), or 2-complement signed overflow ({\tt \FPV}): set if 2-complement value doesn’t fit in the register \\
+		\textbf{Parity/Overflow} This flag can either be the parity of the result ({\tt \FPP}), or 2-complement signed overflow ({\tt \FPV}). \\
 	NF\notet & 
-		Shows whether the last operation was an addition ({\tt 0}) or a subtraction ({\tt 1}). This information is needed for {\tt DAA} \\
+		\textbf{Add/Subtract} Indicates the last operation was an addition ({\tt 0}) or a subtraction ({\tt 1})\See{*}. \\
 	CF\notet & 
-		The carry flag, set if there was a carry from the most significant bit \\
-\end{tabular}
+		\textbf{Carry} Set if there was a carry from the most significant bit. \\
+\end{tabularx}
 
-(copied from section \ref{flags} as convenience)
+\See{*} \small{Primarily used for BCD operations.}
+
 
 \subsubsection{Effects}
 
@@ -65,7 +65,7 @@ This chapter presents all instructions at a glance for quick info and to easily 
 
 \subsubsection{Notes}
 
-{\tt YF} and {\tt XF} flags are not represented in the tables; they're irrelevant from the programmer point of view. They usually contain a copy of bit 5 and 3 of the accumulator {\tt A}, but special cases are described.
+{\tt YF} and {\tt XF} flags are not represented; they're irrelevant from the programmer point of view.
 	
 I used 4 sources for comparing effects: Z80 undocumented\footnote{\url{http://www.myquest.nl/z80undocumented/}}, Programming the Z80 third edition\footnote{\url{http://www.z80.info/zaks.html}}, Zilog Z80 manual\footnote{\url{https://www.zilog.com/docs/z80/um0080.pdf}} and Next Dev Wiki\footnote{\url{https://wiki.specnext.dev/Extended_Z80_instruction_set}}. Where different and I couldn't verify, I opted for variant that matches most sources with slightly greater precedence for Next Dev Wiki side.
 

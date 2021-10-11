@@ -98,12 +98,20 @@
 \newcommand{\FPV}{VF}			% PV=Overflow
 \newcommand{\FPP}{PF}			% PV=Parity
 
-% PortLink is short link to port with description and address, suitable for inline use, while PortReference is longer reference with chapter title and section number mostly used for register lists when referring to previously described register
-\newcommand{\PortLink}[2]{{\small \textbf{#1} \MemAddr{#2}}}
+% PortNoLink is short link to port with description and address, suitable for inline use. It doesn't create hyperlink though, so suitable for ports that are not described.
+\newcommand{\PortNoLink}[2]{{\small \textbf{#1} \MemAddr{#2}}}
+% PortLink is short link to port with description and address, suitable for inline use. It automatically embeds the whole text within hyperlink to the port with the same name.
+\newcommand{\PortLink}[2]{\hyperref[#1]{\PortNoLink{#1}{#2}}}
+% PortReference is longer reference with chapter title and section number mostly used for register lists when referring to previously described register.
 \newcommand{\PortReference}[2]{
 	\vspace*{-2ex}
-	See description under #2 chapter, section \ref{#1}.
+	See description under section \ref{#1}, #2.
 }
+
+% PortTitle creates a title with label for the given port/register (use PortLink to refer back to the same named register)
+\newcommand{\PortTitle}[2]{#1 \MemAddr{#2}\label{#1}}
+% PortTitleLink is also used for titles, but where title itself functions as mention and links to the actual port/register description in another section (similar to \PortLink in this sense, but while PortLink isn't usable in the context of \subsection, PortTitleLink is!)
+\newcommand{\PortTitleLink}[2]{\protect\hyperref[#1]{#1 \MemAddr{#2}}}
 
 % other commonly used definitions
 \newcommand{\MemAddr}[1]{{\tt \$#1}}
