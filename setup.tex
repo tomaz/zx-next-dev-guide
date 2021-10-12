@@ -147,5 +147,20 @@
 	\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
 }
 
+
+% ▒█▀▀▄ ▒█▀▀▀█ ▒█▀▀█ ▒█░▒█ ▒█▀▄▀█ ▒█▀▀▀ ▒█▄░▒█ ▀▀█▀▀ 　 ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀▀ ░█▀▀█ ▒█░▒█ ▒█░░░ ▀▀█▀▀ ▒█▀▀▀█ 
+% ▒█░▒█ ▒█░░▒█ ▒█░░░ ▒█░▒█ ▒█▒█▒█ ▒█▀▀▀ ▒█▒█▒█ ░▒█░░ 　 ▒█░▒█ ▒█▀▀▀ ▒█▀▀▀ ▒█▄▄█ ▒█░▒█ ▒█░░░ ░▒█░░ ░▀▀▀▄▄ 
+% ▒█▄▄▀ ▒█▄▄▄█ ▒█▄▄█ ░▀▄▄▀ ▒█░░▒█ ▒█▄▄▄ ▒█░░▀█ ░▒█░░ 　 ▒█▄▄▀ ▒█▄▄▄ ▒█░░░ ▒█░▒█ ░▀▄▄▀ ▒█▄▄█ ░▒█░░ ▒█▄▄▄█
+
 % don't stretch content into empty space vertically
 \raggedbottom
+
+% ignore underful/overful hbox/vbox info messages. Note the values are set to suppress all messages at this point in time, but larger dimensions in the future will result in them being shown again. Each such instance should be investigated and determined if it's legit or it can be suppressed too. Not ideal, but some of these messages are really weird - PDF is rendered correctly.
+\hbadness=99999
+\hfuzz=140pt
+\vfuzz=115pt
+
+% prevent other packages/code to change these 
+\newcount\hbadness
+\newdimen\hfuzz
+\newdimen\vfuzz
