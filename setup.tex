@@ -1,0 +1,151 @@
+% this must be included **after** defines.tex!
+
+% ▒█▀▀█ ░█▀▀█ ▒█▀▀█ ▒█░▄▀ ░█▀▀█ ▒█▀▀█ ▒█▀▀▀ ▒█▀▀▀█ 
+% ▒█▄▄█ ▒█▄▄█ ▒█░░░ ▒█▀▄░ ▒█▄▄█ ▒█░▄▄ ▒█▀▀▀ ░▀▀▀▄▄ 
+% ▒█░░░ ▒█░▒█ ▒█▄▄█ ▒█░▒█ ▒█░▒█ ▒█▄▄█ ▒█▄▄▄ ▒█▄▄▄█
+
+\usetikzlibrary{
+	matrix,
+	fit,
+	positioning,
+	calc,
+	arrows,
+	arrows.meta,
+	decorations.pathreplacing,
+	shapes.multipart
+}
+
+\hypersetup{
+	pdftitle={\BookTitle},
+	pdfsubject={\BookTitle},
+	pdfauthor={\AuthorNameSurname},
+	pdfkeywords={\BookKeywords},
+	pdfborderstyle={/W 0},	% don't use borders
+	colorlinks=false,		% don't use colors for links
+	linktoc=all				% link TOC
+}
+
+% ▒█▀▀█ ░█▀▀█ ▒█▀▀█ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▄▀█ ░█▀▀█ ▀▀█▀▀ ▀▀█▀▀ ▀█▀ ▒█▄░▒█ ▒█▀▀█ 
+% ▒█▄▄█ ▒█▄▄█ ▒█░▄▄ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█░░▒█ ▒█▄▄▀ ▒█▒█▒█ ▒█▄▄█ ░▒█░░ ░▒█░░ ▒█░ ▒█▒█▒█ ▒█░▄▄ 
+% ▒█░░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄▄ 　 ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ▒█░░▒█ ▒█░▒█ ░▒█░░ ░▒█░░ ▄█▄ ▒█░░▀█ ▒█▄▄█
+
+% added these as compiler was complaining about too small margins; doesn't seem to change anything visually, but if compiler is happier, then I'm so too :)
+\setlength{\headheight}{14.49998pt}
+\addtolength{\topmargin}{-2.49998pt}
+
+% define default paragraph styles
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1.5ex}
+
+% add sub-sub-sub-section and sub-sub-sub-sub-section commands!
+\makeatletter
+\newcommand\subsubsubsection{\@startsection{paragraph}{4}{\z@}{-0.5ex\@plus -0ex \@minus -.01ex}{.01ex \@plus .25ex}{\normalfont\normalsize\bfseries}}
+\newcommand\subsubsubsubsection{\@startsection{subparagraph}{5}{\z@}{-0.5ex\@plus -0ex \@minus -.01ex}{.01ex \@plus .25ex}{\normalfont\small\bfseries}}
+\makeatother
+
+% redefine the default "plain" pagestyle (used by chapter pages)
+% only show page number
+\fancypagestyle{plain}{
+	\fancyhf{} 
+	\fancyhead{}
+	\fancyfoot[LO,RE]{\sffamily\footnotesize\thepage}
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
+}
+
+% define style used for normal pages
+% odd pages (aka left) shows chapter marker
+% even pages (aka right) shows section name
+\fancypagestyle{clean}{
+	\fancyhf{}
+	\fancyhead[LO]{\sffamily\footnotesize\leftmark}
+	\fancyhead[RE]{\sffamily\footnotesize\rightmark}
+	\fancyfoot[RE,LO]{\sffamily\footnotesize\thepage}
+	\renewcommand{\headrulewidth}{0.1pt}
+	\renewcommand{\footrulewidth}{0pt}
+}
+
+% define style used for pages where section mark doesn't make sense
+% odd and even pages show chapter marker on the outer edge
+\fancypagestyle{nosectionmarker}{
+	\fancyhf{}
+	\fancyhead[RE,LO]{\sffamily\footnotesize\leftmark}
+	\fancyfoot[RE,LO]{\sffamily\footnotesize\thepage}
+	\renewcommand{\headrulewidth}{0.1pt}
+	\renewcommand{\footrulewidth}{0pt}
+}
+
+% empty pages before chapters should use empty style (aka nothing)
+\let\mtcleardoublepage\cleardoublepage
+\renewcommand{\cleardoublepage}{\clearpage{\pagestyle{empty}\mtcleardoublepage}}
+
+% section marker should only use name, without number
+\renewcommand{\sectionmark}[1]{\uppercase{\markright{#1}}}
+
+% -------------------------------------------------------------------------
+% couple main page formats - used in main tex file where needed; mainly to avoid having to implement this within individual chapter files which would be much less readable and more prone to issues should the order change in the future. But also makes main file more consistent and understandable; even though some of the macros are simple one lines
+
+% format for first couple pages
+\newcommand{\SetupPageFormattingTitle}{
+	% use empty style for first couple pages (no headers or footers), until defined otherwise
+	\pagestyle{empty}
+}
+
+\newcommand{\SetupPageFormattingIntro}{
+	% LaTeX assumes document starts with an odd page, however in our case the first page is an even page (the right side, then second one will be printed on the back of the same paper). This is how lulu expects it. However, since we use asymmetrical horizontal margins (to accomodate binding), leaving defaults would render the pages the other way ("inner" side where binding is would use smaller margin). It's interesting that only intro pages are affected, TOC and content is fine, even though pages are layed out the same ¯\_(ツ)_/¯ I didn't figure this one out, so am using a hack in manually setting up horizontal margins for intro pages (title is fine, text is right aligned and doesn't wrap so it naturally fits to odd page). However this messes up head rules for content pages which are not rendered the whole width of the page. To compensate we must call `\restoregeometry` before laying out the rest of the document.
+	
+	% Note: interestingly `\restoregeometry` produces correct results for content pages, even though they are still odd/even in the same "way" as intro pages, not sure why this custom margins are needed here!?
+
+	% Note: we could of course add an empty page in front of the title which would eliminate this whole hacking. But we'd need to remember to remove it from generated PDF before uploading to lulu. And this is something I'm afraid I would too easily forget. The result would be very bad layout in printed book. So I prefer using the hack...
+
+	% Note: the same left/right margin works find for odd and even pages as twopage formatter reverses margins when crossing page boundaries. These margins are larger than the rest of the document, but that's fine as intro pages show very little content.
+	\newgeometry{left=3cm,right=2cm}
+}
+
+% format for TOC pages, after intro
+\newcommand{\SetupPageFormattingTOC}{
+	% this prevents empty page from being inserted before TOC (by default LaTeX will start chapters on odd pages which is fine for all pages except TOC - we have acknowlegements here instread)
+	\let\cleardoublepage\clearpage
+
+	% restore geometry to the one from `usepacakge` at the top of main file; this is needed to reset custom horizontal marings set for intro pages
+	\restoregeometry
+	
+	% start numbering from 1 with TOC
+	\setcounter{page}{1}
+
+	% TOC should only display up to depth 1 (chapter+section)
+	\ifdefined\PRINTED
+		\setcounter{tocdepth}{1}
+	\else
+		\setcounter{tocdepth}{2}
+	\fi
+
+	% use plain page style with just page number for following pages
+	\pagestyle{plain}
+}
+
+% foramt for the book content pages, after TOC
+\newcommand{\SetupPageFormattingBook}{
+	% we should only include sections for chapter mini-TOCs; this is only needed for non-print builds where we increase tocdepth to 2 for main TOC. But it doesn't hurt to include for both builds
+	\setcounter{tocdepth}{1}
+
+	% use default page style for all content pages
+	\pagestyle{clean}
+}
+
+% format for instruction pages
+\newcommand{\SetupPageFormattingInstructions}{
+	% instruction pages should show chapter name on both odd & even
+	\pagestyle{nosectionmarker}
+}
+
+\newcommand{\SetupPageFormattingAppendix}{
+	% all chapters from hereon should be marked as appendix
+	\appendix
+
+	% only print chapters in appendices, not sections and subsections
+	\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+}
+
+% don't stretch content into empty space vertically
+\raggedbottom
