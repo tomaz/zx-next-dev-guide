@@ -15,7 +15,7 @@
 % ─██████████─██████──────────██████─────██████─────██████──██████████─
 % ─────────────────────────────────────────────────────────────────────
 
-Like many other functionalities, Next also inherits interrupts handling from ZX Spectrum. As described in the Z80 chapter, section \ref{interrupts}, Interrupt Mode 0 is used for a short period of time after booting up, before ROM activates Mode 1. IM1 remains active unless we explicitly change it. To replace the default IM1 interrupt handler, we can page out ROM or change to Interrupt Mode 2.
+Like many other functionalities, Next also inherits interrupts handling from ZX Spectrum. As described in the Z80 chapter, section \ref{z80_interrupts}, Interrupt Mode 0 is used for a short period of time after booting up, before ROM activates Mode 1. IM1 remains active unless we explicitly change it. To replace the default IM1 interrupt handler, we can page out ROM or change to Interrupt Mode 2.
 
 Both IM1 and IM2 are triggered by standard Spectrum ULA on every video frame. However timing can be adjusted using \PortLink{Video Line Interrupt Control Register}{22} and \PortLink{Video Line Interrupt Value Register}{23}. This allows disabling standard ULA interrupt, or add an extra interrupt that occurs on a particular video line.
 

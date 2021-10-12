@@ -88,6 +88,7 @@ The addressing modes of the Z80 have been enhanced with Stack pointer relative l
 
 
 \subsection{Pin Descriptions \cite{datasheet}}
+\label{z80_pin_descriptions}
 
 This section might be relevant even if you don't do anything with hardware; it might give you insight into how the Z80 operates. Besides, it took me hours to draw this.
 
@@ -200,7 +201,7 @@ This section might be relevant even if you don't do anything with hardware; it m
 
 
 \subsection{Power on Defaults}
-\label{pon}
+\label{z80_power_on_defaults}
 
 Matt\footnote{\email{redflame}{xmission}{com}} has done some excellent research on this. He found that AF and SP are always set to \MemAddr{FFFF} after a reset, and all other registers are undefined (different depending on how long the CPU has been powered off, different for different Z80 chips). Of course, the PC should be set to 0 after a reset, and so should the {\tt IFF1} and {\tt IFF2} flags (otherwise strange things could happen). Also since the Z80 is 8080 compatible, the interrupt mode is probably 0.
 
@@ -254,7 +255,7 @@ Probably the best way to simulate this in an emulator is to set {\tt PC}, {\tt I
 
 
 \subsection{Flags}
-\label{flags}
+\label{z80_flags}
 
 The conventional way of denoting the flags is with one letter, ``C'' for the carry flag for example. It could be confused with the C register, so I've chosen to use the ``CF'' notation for flags (except ``P'' which uses ``PV'' notation due to having dual-purpose, either as parity or overflow). And for YF and XF the same notation is used in MAME\footnote{\url{http://www.mame.net/}}.
 
@@ -303,7 +304,7 @@ The following prefixes exist: {\tt CB}, {\tt ED}, {\tt DD}, {\tt FD}, {\tt DDCB}
 
 
 \subsection{CB Prefix \cite{gerton}}
-\label{prefix_cb}
+\label{z80_undocumented_prefix_cb}
 
 An opcode with a {\tt CB} prefix is a rotate, shift or bit test/set/reset instruction. A few instructions are missing from the official list, for example {\tt SLL} (Shift Logical Left). It works like {\tt SLA}, for one exception: it sets bit 0 ({\tt SLA} resets it).
 
@@ -332,7 +333,7 @@ In general, the instruction following the {\tt DD} prefix is executed as is, but
 	
 	\item Any access to {\tt L} is treated as an access to {\tt IX\Low} (the low byte of {\tt IX}) except if {\tt (IX+d)} is used as well.
 	
-	\item A {\tt DD} prefix before a {\tt CB} selects a completely different instruction set, see section {\ref{prefix_cbdd}}.
+	\item A {\tt DD} prefix before a {\tt CB} selects a completely different instruction set, see section {\ref{z80_undocumented_prefix_cbdd}}.
 \end{itemize}
 
 Some examples:
@@ -437,7 +438,7 @@ According to Gerton Lunter\footnote{\email{gerton}{math.rug}{nl}}:
 	The instructions {\tt ED 4E} and {\tt ED 6E} are {\tt IM 0} equivalents: when {\tt FF} was put on the bus (physically) at interrupt time, the Spectrum continued to execute normally, whereas when an {\tt EF} ({\tt RST \$28}) was put on the bus it crashed, just as it does in that case when the Z80 is in the official interrupt mode 0. In {\tt IM 1} the Z80 just executes a {\tt RST \$38} (opcode {\tt FF}) no matter what is on the bus.
 \end{quote}
 
-All the {\tt RETI/RETN} instructions are the same, all like the {\tt RETN} instruction. So they all, including {\tt RETI}, copy {\tt IFF2} to {\tt IFF1}. See section \ref{flipflop} for more information on {\tt RETI} and {\tt RETN} and {\tt IM x}.
+All the {\tt RETI/RETN} instructions are the same, all like the {\tt RETN} instruction. So they all, including {\tt RETI}, copy {\tt IFF2} to {\tt IFF1}. See section \ref{z80_interrupts_flipflop} for more information on {\tt RETI} and {\tt RETN} and {\tt IM x}.
 
 
 \subsection{FD Prefix \cite{gerton}}
@@ -446,7 +447,7 @@ This prefix has the same effect as the {\tt DD} prefix, though {\tt IY} is used 
 
 
 \subsection{DDCB Prefix}
-\label{prefix_cbdd}
+\label{z80_undocumented_prefix_cbdd}
 
 The undocumented {\tt DDCB} instructions store the result (if any) of the operation in one of the seven all-purpose registers. Which one depends on the lower 3 bits of the last byte of the opcode (not operand, so not the offset).
 
@@ -529,7 +530,7 @@ If {\tt CB} or {\tt ED} is encountered, that byte plus the next make up an instr
 \section{Undocumented Effects}
 
 \subsection{BIT Instructions}
-\label{bit_flags}
+\label{z80_undocumented_flags_bit}
 
 {\tt BIT n,r} behaves much like {\tt AND r,2{\raisebox{1ex}{n}}} with the result thrown away, and CF flag unaffected. Compare {\tt BIT 7,A} with {\tt AND \$80}: flag YF and XF are reset, SF is set if bit 7 was actually set; ZF is set if the result was 0 (bit was reset), and PV is effectively set if ZF is set (the result of the AND leaves either no bits set (PV set - parity even) or one bit set (PV reset - parity odd). So the rules for the flags are:
 
@@ -583,7 +584,7 @@ Any help here would be most appreciated!
 
 \pagebreak
 \subsection{Memory Block Instructions \cite{mrison}}
-\label{block_mem}
+\label{z80_undocumented_instructions_memory_block}
 
 The {\tt LDI}/{\tt LDIR}/{\tt LDD}/{\tt LDDR} instructions affect the flags in a strange way. At every iteration, a byte is copied. Take that byte and add the value of register {\tt A} to it. Call that value {\tt n}. Now, the flags are:
 
@@ -632,7 +633,7 @@ And now for {\tt CPI}/{\tt CPIR}/{\tt CPD}/{\tt CPDR}. These instructions compar
 
 
 \subsection{I/O Block Instructions}
-\label{block_io}
+\label{z80_undocumented_instructions_io_block}
 
 These are the most bizarre instructions, as far as the flags are concerned. Ramsoft found all of the flags. The ``out'' instructions behave differently than the ``in'' instructions, which doesn't make the CPU very symmetrical. 
 
@@ -704,7 +705,7 @@ The 16-bit additions are a bit more complicated than the 8-bit ones. Since the Z
 
 
 \subsection{DAA Instruction}
-\label{daa}
+\label{z80_undocumented_instruction_daa}
 
 This instruction is useful when you're using BCD values. After addition or subtraction, {\tt DAA} corrects the value back to BCD again.  Note that it uses the CF flag, so it cannot be used after {\tt INC} and {\tt DEC}.
 
@@ -824,7 +825,7 @@ SF, YF, XF are copies of bit 7, 5, 3 of the result respectively; ZF is set accor
 
 
 \section{Interrupts}
-\label{interrupts}
+\label{z80_interrupts}
 
 There are two types of interrupts, maskable and non-maskable. The maskable type is ignored if {\tt IFF1} is reset. Non-maskable interrupts (NMI) will are always accepted, and they have a higher priority, so if both are requested at the same time, the NMI will be accepted first.
 
@@ -882,7 +883,7 @@ You can use {\tt RET} instead of {\tt RETI}, depending on the hardware setup. {\
 
 
 \subsection{Things Affecting the Interrupt Flip-Flops}
-\label{flipflop}
+\label{z80_interrupts_flipflop}
 
 All the IFF related things are:
 
