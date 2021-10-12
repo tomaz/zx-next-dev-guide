@@ -253,9 +253,7 @@
 			
 \end{instrtablesimple}
 
-% first page has title, so we offset successive page a bit to achieve perfect fit.
-\vspace*{0.55cm}
-
+\vspace*{3ex} % ensure this table starts at the same height as the one on the odd page
 \begin{instrtablesimple}
 	
 	\begin{instruction}{BIT b,r} 
@@ -2270,9 +2268,7 @@
 	
 \end{instrtablesimple}
 
-% even `lastinstrucion` in above table still pushes this one too low, so we manually move it up
-\vspace*{-1.7em}
-
+\vspace*{-4.4ex} % previous table pushes this one too far down, so we manually move it up
 \begin{instrtablesimple}
 	
 	\begin{instruction}{RET} 
@@ -2485,7 +2481,7 @@
 			\Cycles{}{}
 	\end{instruction}
 			
-	\begin{instruction}{RRD}
+	\begin{lastinstruction}{RRD}
 		\Symbol{\vspace*{-12pt}\hspace*{-0.8cm}\SymRRD}
 			\FlagsRRD
 			\OpCode{11}{101}{101}
@@ -2494,7 +2490,7 @@
 		\SkipToOpCode 
 			\OpCode{01}{100}{111}
 			\Hex{67}{}
-	\end{instruction}
+	\end{lastinstruction}
 
 	\EmptySeparator
 
