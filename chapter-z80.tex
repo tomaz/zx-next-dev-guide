@@ -105,11 +105,11 @@ This section might be relevant even if you don't do anything with hardware; it m
 		\multiput(15,76)(0,-3.9){20}{\stepcounter{pinno}\makebox(2,2){\arabic{pinno}}}
 		\multiput(33,2)(0,3.9){20}{\stepcounter{pinno}\makebox(2,2)[r]{\arabic{pinno}}}
 
-		\put(9,2){\makebox(2,2)[r]{$\mathtt{\overline{IORQ}}$}}
-		\put(9,5.9){\makebox(2,2)[r]{$\mathtt{\overline{MREQ}}$}}
-		\put(9,9.8){\makebox(2,2)[r]{$\mathtt{\overline{HALT}}$}}
-		\put(9,13.7){\makebox(2,2)[r]{$\mathtt{\overline{NMI}}$}}
-		\put(9,17.6){\makebox(2,2)[r]{$\mathtt{\overline{INT}}$}}
+		\put(9,2){\makebox(2,2)[r]{\NoLinkChipPinLabel{IORQ}}}
+		\put(9,5.9){\makebox(2,2)[r]{\NoLinkChipPinLabel{MREQ}}}
+		\put(9,9.8){\makebox(2,2)[r]{\NoLinkChipPinLabel{HALT}}}
+		\put(9,13.7){\makebox(2,2)[r]{\NoLinkChipPinLabel{NMI}}}
+		\put(9,17.6){\makebox(2,2)[r]{\NoLinkChipPinLabel{INT}}}
 		\put(9,21.5){\makebox(2,2)[r]{$\mathtt{D_1}$}}
 		\put(9,25.4){\makebox(2,2)[r]{$\mathtt{D_0}$}}
 		\put(9,29.3){\makebox(2,2)[r]{$\mathtt{D_7}$}}
@@ -126,14 +126,14 @@ This section might be relevant even if you don't do anything with hardware; it m
 		\put(9,72.2){\makebox(2,2)[r]{$\mathtt{A_{12}}$}}
 		\put(9,76.1){\makebox(2,2)[r]{$\mathtt{A_{11}}$}}
 
-		\put(39,2){\makebox(2,2)[l]{$\mathtt{\overline{RD}}$}}
-		\put(39,5.9){\makebox(2,2)[l]{$\mathtt{\overline{WR}}$}}
-		\put(39,9.8){\makebox(2,2)[l]{$\mathtt{\overline{BUSACK}}$}}
-		\put(39,13.7){\makebox(2,2)[l]{$\mathtt{\overline{WAIT}}$}}
-		\put(39,17.6){\makebox(2,2)[l]{$\mathtt{\overline{BUSREQ}}$}}
-		\put(39,21.5){\makebox(2,2)[l]{$\mathtt{\overline{RESET}}$}}
-		\put(39,25.4){\makebox(2,2)[l]{$\mathtt{\overline{M1}}$}}
-		\put(39,29.3){\makebox(2,2)[l]{$\mathtt{\overline{RFSH}}$}}
+		\put(39,2){\makebox(2,2)[l]{\NoLinkChipPinLabel{RD}}}
+		\put(39,5.9){\makebox(2,2)[l]{\NoLinkChipPinLabel{WR}}}
+		\put(39,9.8){\makebox(2,2)[l]{\NoLinkChipPinLabel{BUSACK}}}
+		\put(39,13.7){\makebox(2,2)[l]{\NoLinkChipPinLabel{WAIT}}}
+		\put(39,17.6){\makebox(2,2)[l]{\NoLinkChipPinLabel{BUSREQ}}}
+		\put(39,21.5){\makebox(2,2)[l]{\NoLinkChipPinLabel{RESET}}}
+		\put(39,25.4){\makebox(2,2)[l]{\NoLinkChipPinLabel{M1}}}
+		\put(39,29.3){\makebox(2,2)[l]{\NoLinkChipPinLabel{RFSH}}}
 		\put(39,33.2){\makebox(2,2)[l]{$\mathtt{GND}$}}
 		\put(39,37.1){\makebox(2,2)[l]{$\mathtt{A_0}$}}
 		\put(39,41.0){\makebox(2,2)[l]{$\mathtt{A_1}$}}
@@ -152,49 +152,49 @@ This section might be relevant even if you don't do anything with hardware; it m
 
 \begin{description}[leftmargin=1.5em]
 
-	\item[$\mathtt{\overline{A_{15}}-\overline{A_0}}$] 
+	\item[$A_{15}$-${A_0}$] 
 	{\em Address bus} (output, active high, 3-state). This bus is used for accessing the memory and for I/O ports. During the refresh cycle the IR register is put on this bus.
 
-	\item[$\mathtt{\overline{BUSACK}}$]
-	{\em Bus Acknowledge} (output, active low). Bus Acknowledge indicates to the requesting device that the CPU address bus, data bus, and control signals $\mathtt{\overline{MREQ}}$, $\mathtt{\overline{IORQ}}$, $\mathtt{\overline{RD}}$ and $\mathtt{\overline{WR}}$ have been entered into their high-impedance states. The external device now control these lines.
+	\item[\NoLinkChipPinLabel{BUSACK}]
+	{\em Bus Acknowledge} (output, active low). Bus Acknowledge indicates to the requesting device that the CPU address bus, data bus, and control signals \NoLinkChipPinLabel{MREQ}, \NoLinkChipPinLabel{IORQ}, \NoLinkChipPinLabel{RD} and \NoLinkChipPinLabel{WR} have been entered into their high-impedance states. The external device now control these lines.
 
-	\item[$\mathtt{\overline{BUSREQ}}$]
-	{\em Bus Request} (input, active low). Bus Request has a higher priority than $\mathtt{\overline{NMI}}$ and is always recognised at the end of the current machine cycle. $\mathtt{\overline{BUSREQ}}$ forces the CPU address bus, data bus and control signals $\mathtt{\overline{MREQ}}$, $\mathtt{\overline{IORQ}}$, $\mathtt{\overline{RD}}$ and $\mathtt{\overline{WR}}$ to go to a high-impedance state so that other devices can control these lines. $\mathtt{\overline{BUSREQ}}$ is normally wired-OR and requires an external pullup for these applications. Extended $\mathtt{\overline{BUSREQ}}$ periods due to extensive DMA operations can prevent the CPU from refreshing dynamic RAMs.
+	\item[\NoLinkChipPinLabel{BUSREQ}]
+	{\em Bus Request} (input, active low). Bus Request has a higher priority than \NoLinkChipPinLabel{NMI} and is always recognised at the end of the current machine cycle. \NoLinkChipPinLabel{BUSREQ} forces the CPU address bus, data bus and control signals \NoLinkChipPinLabel{MREQ}, \NoLinkChipPinLabel{IORQ}, \NoLinkChipPinLabel{RD} and \NoLinkChipPinLabel{WR} to go to a high-impedance state so that other devices can control these lines. \NoLinkChipPinLabel{BUSREQ} is normally wired-OR and requires an external pullup for these applications. Extended \NoLinkChipPinLabel{BUSREQ} periods due to extensive DMA operations can prevent the CPU from refreshing dynamic RAMs.
 
-	\item[$\mathtt{\overline{D_7}-\overline{D_0}}$]
+	\item[${D_7}$-${D_0}$]
 	{\em Data Bus} (input/output, active low, 3-state). Used for data exchanges with memory, I/O and interrupts.
 
-	\item[$\mathtt{\overline{HALT}}$]
+	\item[\NoLinkChipPinLabel{HALT}]
 	{\em Halt State} (output, active low). Indicates that the CPU has executed a {\tt HALT} instruction and is waiting for either a maskable or nonmaskable interrupt (with the mask enabled) before operation can resume. While halted, the CPU stops increasing the PC so the instruction is re-executed, to maintain memory refresh.
 
-	\item[$\mathtt{\overline{INT}}$]
-	{\em Interrupt Request} (input, active low). Interrupt Request is generated by I/O devices. The CPU honours a request at the end of the current instruction if {\tt IFF1} is set. $\mathtt{\overline{INT}}$ is normally wired-OR and requires an external pullup for these applications.
+	\item[\NoLinkChipPinLabel{INT}]
+	{\em Interrupt Request} (input, active low). Interrupt Request is generated by I/O devices. The CPU honours a request at the end of the current instruction if {\tt IFF1} is set. \NoLinkChipPinLabel{INT} is normally wired-OR and requires an external pullup for these applications.
 
-	\item[$\mathtt{\overline{IORQ}}$]
-	{\em Input/Output Request} (output, active low, 3-state). Indicates that the address bus holds a valid I/O address for an I/O read or write operation. $\mathtt{\overline{IORQ}}$ is also generated concurrently with $\mathtt{\overline{M1}}$ during an interrupt acknowledge cycle to indicate that an interrupt response vector can be placed on the databus.
+	\item[\NoLinkChipPinLabel{IORQ}]
+	{\em Input/Output Request} (output, active low, 3-state). Indicates that the address bus holds a valid I/O address for an I/O read or write operation. \NoLinkChipPinLabel{IORQ} is also generated concurrently with \NoLinkChipPinLabel{M1} during an interrupt acknowledge cycle to indicate that an interrupt response vector can be placed on the databus.
 
-	\item[$\mathtt{\overline{M1}}$]
-	{\em Machine Cycle One} (output, active low). $\mathtt{\overline{M1}}$, together with $\mathtt{\overline{MREQ}}$, indicates that the current machine cycle is the opcode fetch cycle of an instruction execution. $\mathtt{\overline{M1}}$, together with $\mathtt{\overline{IORQ}}$, indicates an interrupt acknowledge cycle.
+	\item[\NoLinkChipPinLabel{M1}]
+	{\em Machine Cycle One} (output, active low). \NoLinkChipPinLabel{M1}, together with \NoLinkChipPinLabel{MREQ}, indicates that the current machine cycle is the opcode fetch cycle of an instruction execution. \NoLinkChipPinLabel{M1}, together with \NoLinkChipPinLabel{IORQ}, indicates an interrupt acknowledge cycle.
 
-	\item[$\mathtt{\overline{MREQ}}$]
+	\item[\NoLinkChipPinLabel{MREQ}]
 	{\em Memory Request} (output, active low, 3-state). Indicates that the address holds a valid address for a memory read or write cycle operations.
 
-	\item[$\mathtt{\overline{NMI}}$]
-	{\em Non-Maskable Interrupt} (input, negative edge-triggered). $\mathtt{\overline{NMI}}$ has a higher priority than $\mathtt{\overline{INT}}$. $\mathtt{\overline{NMI}}$ is always recognised at the end of an instruction, independent of the status of the interrupt flip-flops and automatically forces the CPU to restart at location \$0066.
+	\item[\NoLinkChipPinLabel{NMI}]
+	{\em Non-Maskable Interrupt} (input, negative edge-triggered). \NoLinkChipPinLabel{NMI} has a higher priority than \NoLinkChipPinLabel{INT}. \NoLinkChipPinLabel{NMI} is always recognised at the end of an instruction, independent of the status of the interrupt flip-flops and automatically forces the CPU to restart at location \$0066.
 
-	\item[$\mathtt{\overline{RD}}$]
+	\item[\NoLinkChipPinLabel{RD}]
 	{\em Read} (output, active low, 3-state). Indicates that the CPU wants to read data from memory or an I/O device. The addressed I/O device or memory should use this signal to place data onto the data bus.
 
-	\item[$\mathtt{\overline{RESET}}$]
-	{\em Reset} (input, active low). Initializes the CPU as follows: it resets the interrupt flip-flops, clears the PC and IR registers, and set the interrupt mode to 0. During reset time, the address bus and data bus go to a high-impedance state, and all control output signals go to the inactive state. Note that $\mathtt{\overline{RESET}}$ must be active for a minimum of three full clock cycles before the reset operation is complete. Note that Matt found that SP and AF are set to \$FFFF.
+	\item[\NoLinkChipPinLabel{RESET}]
+	{\em Reset} (input, active low). Initializes the CPU as follows: it resets the interrupt flip-flops, clears the PC and IR registers, and set the interrupt mode to 0. During reset time, the address bus and data bus go to a high-impedance state, and all control output signals go to the inactive state. Note that \NoLinkChipPinLabel{RESET} must be active for a minimum of three full clock cycles before the reset operation is complete. Note that Matt found that SP and AF are set to \$FFFF.
 
-	\item[$\mathtt{\overline{RFSH}}$]
-	{\em Refresh} (output, active low). $\mathtt{\overline{RFSH}}$, together with $\mathtt{\overline{MREQ}}$, indicates that the IR registers are on the address bus (note that only the lower 7 bits are useful) and can be used for the refresh of dynamic memories.
+	\item[\NoLinkChipPinLabel{RFSH}]
+	{\em Refresh} (output, active low). \NoLinkChipPinLabel{RFSH}, together with \NoLinkChipPinLabel{MREQ}, indicates that the IR registers are on the address bus (note that only the lower 7 bits are useful) and can be used for the refresh of dynamic memories.
 
-	\item[$\mathtt{\overline{WAIT}}$]
+	\item[\NoLinkChipPinLabel{WAIT}]
 	{\em Wait} (input, active low). Indicates to the CPU that the addressed memory or I/O device are not ready for data transfer. The CPU continues to enter a wait state as long as this signal is active. Note that during this period memory is not refreshed.
 
-	\item[$\mathtt{\overline{WR}}$]
+	\item[\NoLinkChipPinLabel{WR}]
 	{\em Write} (output, active low, 3-state). Indicates that the CPU wants to write data to memory or an I/O device. The addressed I/O device or memory should use this signal to store the data on the data bus.
 
 \end{description}
@@ -838,7 +838,7 @@ Both types of interrupts increase the {\tt R} register by one when accepted.
 
 When an NMI is accepted, {\tt IFF1} is reset. At the end of the routine, {\tt IFF1} must be restored (so the running program is not affected). That's why {\tt IFF2} is there; to keep a copy of {\tt IFF1}.
 
-An NMI is accepted when the $\mathtt{\overline{NMI}}$ pin on the Z80 is made low (edge-triggered). The Z80 responds to the change of the line from +5 to 0 - so the interrupt line doesn't have a state, it's just a pulse. When this happens, a call is done to address \MemAddr{0066} and {\tt IFF1} is reset so the routine isn't bothered by maskable interrupts. The routine should end with an {\tt RETN} (RETurn from Nmi) which is just a usual {\tt RET} but also copies {\tt IFF2} to {\tt IFF1}, so the IFFs are the same as before the interrupt.
+An NMI is accepted when the \NoLinkChipPinLabel{NMI} pin on the Z80 is made low (edge-triggered). The Z80 responds to the change of the line from +5 to 0 - so the interrupt line doesn't have a state, it's just a pulse. When this happens, a call is done to address \MemAddr{0066} and {\tt IFF1} is reset so the routine isn't bothered by maskable interrupts. The routine should end with an {\tt RETN} (RETurn from Nmi) which is just a usual {\tt RET} but also copies {\tt IFF2} to {\tt IFF1}, so the IFFs are the same as before the interrupt.
 
 You can check whether interrupts were disabled or not during an NMI by using the {\tt LD A,I} or {\tt LD A,R} instruction. These instructions copy {\tt IFF2} to the PV flag.
 
@@ -847,7 +847,7 @@ Accepting an NMI costs 11 t-states.
 
 \subsection{Maskable Interrupts (INT)}
 
-If the $\mathtt{\overline{INT}}$ line is low and {\tt IFF1} is set, a maskable interrupt is accepted - whether or not the last interrupt routine has finished. That's why you should not enable interrupts during such a routine, and make sure that the device that generated it has put the $\mathtt{\overline{INT}}$ line up again before ending the routine. So unlike NMI interrupts, the interrupt line has a state; it's not a pulse.
+If the \NoLinkChipPinLabel{INT} line is low and {\tt IFF1} is set, a maskable interrupt is accepted - whether or not the last interrupt routine has finished. That's why you should not enable interrupts during such a routine, and make sure that the device that generated it has put the \NoLinkChipPinLabel{INT} line up again before ending the routine. So unlike NMI interrupts, the interrupt line has a state; it's not a pulse.
 
 When an interrupt is accepted, both {\tt IFF1} and {\tt IFF2} are cleared, preventing another interrupt from occurring which would end up as an infinite loop (and overflowing the stack). What happens next depends on the Interrupt Mode.
 
@@ -875,7 +875,7 @@ InterruptRoutine:
 	RETI or RET
 \end{tcblisting}
 
-Note a fact about {\tt EI}: a maskable interrupt isn't accepted directly after it, so the next opportunity for an interrupt is after the {\tt RETI}. This is very useful; if the $\mathtt{\overline{INT}}$ line is still low, an interrupt is accepted again.  If this happens a lot and the interrupt is generated before the {\tt RETI}, the stack could overflow (since the routine would be called again and again). But this property of {\tt EI} prevents this.
+Note a fact about {\tt EI}: a maskable interrupt isn't accepted directly after it, so the next opportunity for an interrupt is after the {\tt RETI}. This is very useful; if the \NoLinkChipPinLabel{INT} line is still low, an interrupt is accepted again.  If this happens a lot and the interrupt is generated before the {\tt RETI}, the stack could overflow (since the routine would be called again and again). But this property of {\tt EI} prevents this.
 
 {\tt DI} is not necessary at the start of the interrupt routine: the interrupt flip-flops are cleared when accepting the interrupt.
 
@@ -966,7 +966,7 @@ Also see section \ref{zx_next_interrupts} for details on handling interrupts on 
 
 \subsection{R register and memory refresh}
 
-During every first machine cycle (beginning of instruction or part of it - prefixes have their own M1 two), the memory refresh cycle is issued. The whole IR register is put on the address bus, and the $\mathtt{\overline{RFSH}}$ pin is lowered.  It's unclear whether the Z80 increases the {\tt R} register before or after putting IR on the bus. 
+During every first machine cycle (beginning of instruction or part of it - prefixes have their own M1 two), the memory refresh cycle is issued. The whole IR register is put on the address bus, and the \NoLinkChipPinLabel{RFSH} pin is lowered.  It's unclear whether the Z80 increases the {\tt R} register before or after putting IR on the bus. 
 
 The {\tt R} register is increased at every first machine cycle (M1). Bit 7 of the register is never changed by this; only the lower 7 bits are included in the addition. So bit 7 stays the same, but it can be changed using the
 {\tt LD R,A} instruction.
@@ -999,7 +999,7 @@ Some official Zilog documentation contains errors. Not every documentation has a
 	Also, the table says about {\tt INI}/{\tt OUTD}/etc ``Z=0 if B $<>$ 0 otherwise Z=0''; of course the latter should be Z=1.
 
 	\item
-	The {\tt INI}/{\tt INIR}/{\tt IND}/{\tt INDR}/{\tt OUTI}/{\tt OUTD}/{\tt OTIR}/{\tt OTDR} instructions do affect the CF flag (some official documentation says they leave it unaffected, important!) and the NF flag isn't always set but may also be reset (see \ref{block_io} for exact operation).
+	The {\tt INI}/{\tt INIR}/{\tt IND}/{\tt INDR}/{\tt OUTI}/{\tt OUTD}/{\tt OTIR}/{\tt OTDR} instructions do affect the CF flag (some official documentation says they leave it unaffected, important!) and the NF flag isn't always set but may also be reset (see \ref{z80_undocumented_instructions_io_block} for exact operation).
 
 	\item
 	When an NMI is accepted, the {\tt IFF1} isn't copied to {\tt IFF2}. Only {\tt IFF1} is reset.

@@ -268,8 +268,8 @@ Altogether, DMA programs can be up to 256 bytes long (but the data being transfe
 
 			% Bit 4 description
 			\DMABitDescTitle{4}{Ready Configuration}
-			\DMABitDescItem{4}{0}{$\mathtt{\overline{CE}}$ only}
-			\DMABitDescItem{4}{1}{$\mathtt{\overline{CE}}$ and $\mathtt{\overline{WAIT}}$ multiplexed}
+			\DMABitDescItem{4}{0}{\DMAPinLabel{CE} only}
+			\DMABitDescItem{4}{1}{\DMAPinLabel{CE} and \DMAPinLabel{}{WAIT} multiplexed}
 	
 			% Bit 5 description
 			\DMABitDescTitle{5}{Stop Configuration}
@@ -848,8 +848,8 @@ Whether the address represents memory or I/O port is defined with \DMARegName{WR
 
 	% Bit 4 description
 	\DMABitDescTitle{4}{Ready Configuration}
-	\DMABitDescItem{4}{0}{$\mathtt{\overline{CE}}$ only}
-	\DMABitDescItem{4}{1}{$\mathtt{\overline{CE}}$ and $\mathtt{\overline{WAIT}}$ multiplexed}
+	\DMABitDescItem{4}{0}{\DMAPinLabel{CE} only}
+	\DMABitDescItem{4}{1}{\DMAPinLabel{CE} and \DMAPinLabel{WAIT} multiplexed}
 	
 	% Bit 5 description
 	\DMABitDescTitle{5}{Stop Configuration}
@@ -874,9 +874,9 @@ Whether the address represents memory or I/O port is defined with \DMARegName{WR
 
 	\DMADescriptionItem{4}{Ready Configuration}{
 		\begin{DMAList}
-			\item[{\tt 0}] $\mathtt{\overline{CE}}$/$\mathtt{\overline{WAIT}}$ line functions only as chip enable line, allowing CPU to read and write control and status bytes when DMA is not bus master.
+			\item[{\tt 0}] \DMAPinLabel{CE}/\DMAPinLabel{WAIT} line functions only as chip enable line, allowing CPU to read and write control and status bytes when DMA is not bus master.
 
-			\item[{\tt 1}] This mode is implemented but currently not used in zxnDMA. This mode has an external device using the DMA's $\mathtt{\overline{CE}}$ pin to insert wait states during the DMA's transfer.
+			\item[{\tt 1}] This mode is implemented but currently not used in zxnDMA. This mode has an external device using the DMA's \DMAPinLabel{CE} pin to insert wait states during the DMA's transfer.
 		\end{DMAList}
 	}
 
@@ -1103,7 +1103,7 @@ The program itself, lines 9-25, should be self-explanatory. But we'll go through
 
 	\item 16-bit port B starting address follows in line 20.
 	
-	\item Line 22 has \DMARegName{WR5} register with bit 4 and 5 reset. Bit 4 tells DMA to use $\mathtt{\overline{CE}}$ only and bit 5 to stop at the end of the block, after all bytes are transferred.
+	\item Line 22 has \DMARegName{WR5} register with bit 4 and 5 reset. Bit 4 tells DMA to use \DMAPinLabel{CE} only and bit 5 to stop at the end of the block, after all bytes are transferred.
 	
 	\item Line 24 uses \DMARegName{WR6} with bits 6-2 set to {\tt \%10011} which tells DMA to load source and destination addresses into its own internal pointers. This command must always be included at the end of the program, otherwise DMA internal pointers may point to old values.
 	
@@ -1229,7 +1229,7 @@ When zxnDMA controls the bus (when transfer is in progress), Z80 can't respond t
 
 \vspace*{-1ex}
 \begin{quote}
-	On the Z80, the NMI interrupt is edge triggered so if an NMI occurs the fact that it occurred is stored internally in the Z80 so that it will respond when it is woken up. On the other hand, maskable interrupts are level triggered. That is, the Z80 must be active to regularly sample the $\mathtt{\overline{INT}}$ line to determine if a maskable interrupt is occurring. On the Spectrum and the ZX Next, the ULA (and line interrupt) are only asserted for a fixed amount of time \~30 cycles at 3.5MHz. If the DMA is executing a transfer while the interrupt is asserted, the CPU will not be able to see this and it will most likely miss the interrupt.
+	On the Z80, the NMI interrupt is edge triggered so if an NMI occurs the fact that it occurred is stored internally in the Z80 so that it will respond when it is woken up. On the other hand, maskable interrupts are level triggered. That is, the Z80 must be active to regularly sample the \ZilogPinLabel{INT} line to determine if a maskable interrupt is occurring. On the Spectrum and the ZX Next, the ULA (and line interrupt) are only asserted for a fixed amount of time \~30 cycles at 3.5MHz. If the DMA is executing a transfer while the interrupt is asserted, the CPU will not be able to see this and it will most likely miss the interrupt.
 \end{quote}
 
 However, when operating in burst mode, with large enough prescalar, the CPU will be able to respond to interrupts.

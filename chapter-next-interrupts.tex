@@ -313,7 +313,7 @@ Very special thanks to the folks from Next Discord server: {\tt AA} for mentioni
 
 \begin{NextPort}
 	\PortBits{7}
-		\PortDesc{Read: $\mathtt{\overline{INT}}$ signal (even when Z80N has interrupts disabled) ({\tt 1} = interrupt is requested)}
+		\PortDesc{Read: \ZilogPinLabel{INT} signal (even when Z80N has interrupts disabled) ({\tt 1} = interrupt is requested)}
 		\PortDescOnly{Write: Reserved, must be {\tt 0}}
 	\PortBits{6-3}
 		\PortDesc{Reserved, must be {\tt 0}}
@@ -325,7 +325,7 @@ Very special thanks to the folks from Next Discord server: {\tt AA} for mentioni
 		\PortDesc{MSB of interrupt line value ({\tt 0} after reset)}
 \end{NextPort}
 
-Line value starts with 0 for the first line of pixels. But the line-interrupt happens already when the previous line's pixel area is finished (i.e. the raster-line counter still reads "previous line" and not the one programmed for interrupt). The $\mathtt{\overline{INT}}$ signal is raised while display beam horizontal position is between 256-319 standard pixels, precise timing of interrupt handler execution then depends on how-quickly/if the Z80 will process the $\mathtt{\overline{INT}}$ signal.
+Line value starts with 0 for the first line of pixels. But the line-interrupt happens already when the previous line's pixel area is finished (i.e. the raster-line counter still reads "previous line" and not the one programmed for interrupt). The \ZilogPinLabel{INT} signal is raised while display beam horizontal position is between 256-319 standard pixels, precise timing of interrupt handler execution then depends on how-quickly/if the Z80 will process the \ZilogPinLabel{INT} signal.
 
 
 \subsubsection{\PortTitle{Video Line Interrupt Value Register}{23}}
@@ -384,7 +384,7 @@ If bit 3 is set, the return address pushed during an NMI acknowledge cycle will 
 
 \begin{NextPort}
 	\PortBits{7}
-		\PortDesc{Expansion bus $\mathtt{\overline{INT}}$ ({\tt 1} after reset)}
+		\PortDesc{Expansion bus \ZilogPinLabel{INT} ({\tt 1} after reset)}
 	\PortBits{6-2}
 		\PortDesc{Reserved, must be 0}
 	\PortBits{1}

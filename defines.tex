@@ -113,6 +113,13 @@
 % PortTitleLink is also used for titles, but where title itself functions as mention and links to the actual port/register description in another section (similar to \PortLink in this sense, but while PortLink isn't usable in the context of \subsection, PortTitleLink is!)
 \newcommand{\PortTitleLink}[2]{\protect\hyperref[#1]{#1 \MemAddr{#2}}}
 
+% generic renderer for any chip pin label (uses line above); this is used for all concrete chip labels internally.
+\newcommand{\NoLinkChipPinLabel}[1]{$\mathtt{\overline{#1}}$}
+% renders the given Z80 chip pin label with link to Z80 chip diagram. Needless to say - only use for links to Z80 chip pins!
+\newcommand{\ZilogPinLabel}[1]{\hyperref[z80_pin_descriptions]{\NoLinkChipPinLabel{#1}}}
+% renders the given DMA chip pin label with link to DMA chip diagram (once we actually have it)
+\newcommand{\DMAPinLabel}[1]{\NoLinkChipPinLabel{#1}}
+
 % other commonly used definitions
 \newcommand{\MemAddr}[1]{{\tt \$#1}}
 
