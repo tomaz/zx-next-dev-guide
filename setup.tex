@@ -87,6 +87,9 @@
 
 % format for first couple pages
 \newcommand{\SetupPageFormattingTitle}{
+	% use arabic numerals for starting pages
+	\frontmatter
+
 	% use empty style for first couple pages (no headers or footers), until defined otherwise
 	\pagestyle{empty}
 }
@@ -126,6 +129,9 @@
 
 % foramt for the book content pages, after TOC
 \newcommand{\SetupPageFormattingBook}{
+	% use arabic numerals for page numbers and clean page style for the rest of the document
+	\mainmatter
+
 	% we should only include sections for chapter mini-TOCs; this is only needed for non-print builds where we increase tocdepth to 2 for main TOC. But it doesn't hurt to include for both builds
 	\setcounter{tocdepth}{1}
 
