@@ -19,7 +19,7 @@
 
 The ZX Spectrum Next DMA (zxnDMA) is a single channel direct memory access device that implements a subset of the Z80 DMA functionality. The subset is large enough to be compatible with common uses of the similar Datagear interface available for standard ZX Spectrums but without the idiosyncracies and requirements on the order of commands.
 
-zxnDMA defines two ``ports'', called ``A'' and ``B'' (port is just a word used for source and destination). Either one can be used as a source, the other as the destination. They can be memory location or I/O port, auto-increment, auto-decrement or stay fixed. zxnDMA can operate in continuous or burst mode and implements a special feature that can force each byte transfer to take a fixed amount of time, which can be used to deliver sampled audio.
+zxnDMA defines two ``ports'', called ``A'' and ``B'' (port is just a word used for referring to both, source and destination). Either one can be used as a source, the other as the destination. They can be memory location or I/O port, auto-increment, auto-decrement or stay fixed. zxnDMA can operate in continuous or burst mode and implements a special feature that can force each byte transfer to take a fixed amount of time, which can be used to deliver sampled audio.
 
 
 \subsection{Programming}
@@ -62,7 +62,7 @@ Similar to Z80 DMA, zxnDMA also has 7 write registers named \DMARegName{WR0}-\DM
 
 Each register can include zero or more parameters. Most often specific bits in the payload define whether and which parameters are used. Each parameter is one byte long. Parameters are written immediately after the base register byte. If multiple parameters are used, the order is specified by the bit position within the base payload. The order is from right to left, the parameter associated with bit {\tt 0} is written first, the one from bit {\tt 7} last.
 
-Sometimes it's also possible that a specific configuration of parameter byte requires additional bytes to be inserted. If so, these bytes are inserted immediately after their ``parent'' parameter byte following the same ``rules'' as indicated above. Only after all child parameters are written, we continue with other parents' parameters, if there are more. This forms a sort of recursive pattern.
+Sometimes it's also possible that a specific configuration of parameter byte requires additional bytes to be inserted. If so, these bytes are inserted immediately after their ``parent'' parameter byte following the same rules as indicated above. Only after all child parameters are written, we continue with other parents' parameters, if there are more. This forms a sort of recursive pattern.
 
 After all parameters are written, we can start with a new register byte again. This is then repeated until zxnDMA program is started using \DMARegName{WR3} or (preferably) \DMARegName{WR6}. The same registers can be repeated multiple times within the same DMA program.
 
@@ -342,7 +342,7 @@ DMA programs can be up to 256 bytes long (but the data being transferred can be 
 % ▒█▒█▒█ ▒█▄▄▀ █▄▀█ 
 % ▒█▄▀▄█ ▒█░▒█ █▄▄█
 
-\DMARegName{WR0} specifies the direction of the transfer, the length of the data that will be transferred and inital port A configuration. Base register byte can be followed by up to four parameter bytes:
+\DMARegName{WR0} specifies the direction of the transfer, the length of the data that will be transferred and port A address. Base register byte can be followed by up to four parameter bytes:
 
 \begin{tikzpicture}
 
@@ -436,7 +436,7 @@ Or, if we have a label that points to the start of the memory:
 \end{tcblisting}
 \vspace*{-1ex}
 
-Whether the address represents memory or I/O port is defined with \DMARegName{WR1}.
+Whether the address represents a memory location or I/O port is defined with \DMARegName{WR1}.
 
 
 \subsubsection{Transfer Length}{
@@ -444,7 +444,7 @@ Whether the address represents memory or I/O port is defined with \DMARegName{WR
 Setting bit 5 of the base register byte is associated with LSB of transfer length and bit 6 with MSB. If both bits are set, which is the usual case, then LSB is written first, followed by MSB. Again, 16-bit length can be written directly in this case, as shown above with port A starting address.
 
 
-\subsubsection{Miscellaneous}
+\subsubsection{Notes}
 
 Since all parameters in \DMARegName{WR0} are important for DMA transfer, they are typically always included. The configuration would most often look something like this:
 
@@ -522,12 +522,12 @@ This is where we provide details about port A. Base register byte may be followe
 
 		\begin{DMAList}
 			\item[{\tt 0}] Port A address is memory location.
-			\item[{\tt 1}] Port A address is I/O.
+			\item[{\tt 1}] Port A address is I/O port.
 		\end{DMAList}
 	}
 
 	\DMADescriptionItem{5-4}{Port A Address Handling}{
-		The combination of the two bits determines how port A address will be handled after each byte is transferred:
+		The combination of these two bits determines how port A address will be handled after each byte is transferred:
 
 		\begin{DMAList}
 			\item[{\tt 00}] Address is decremented after byte is transferred.
@@ -641,7 +641,7 @@ This register is similar to \DMARegName{WR1} except it sets the configuration fo
 
 		\begin{DMAList}
 			\item[{\tt 0}] Port B address is memory location.
-			\item[{\tt 1}] Port B address is I/O.
+			\item[{\tt 1}] Port B address is I/O port.
 		\end{DMAList}
 	}
 
@@ -797,7 +797,7 @@ Another register where zxnDMA uses only a small portion of functionality from Z8
 \begin{DMADescription}
 
 	\DMADescriptionItem{3-2}{Port B Starting Address}{
-		Similar to bits 4-3 of \DMARegName{WR0}, these two bits indicate that port B address will follow. Bit 3 enables LSB and bit 2 MSB. Each byte can be enabled separately, though most commonly they are both used together. The address is interpreted either as memory or I/O port, based on the configuration from \DMARegName{WR2}.
+		Similar to bits 4-3 of \DMARegName{WR0}, these two bits indicate that port B address will follow. Bit 3 enables LSB and bit 2 MSB of the address. Each byte can be enabled separately, though most commonly, both are used. The address is interpreted either as memory or I/O port, based on the configuration from \DMARegName{WR2}.
 	}
 	
 	\DMADescriptionItem{6-5}{DMA Mode}{
@@ -819,7 +819,7 @@ Another register where zxnDMA uses only a small portion of functionality from Z8
 
 \subsubsection{Port B Starting Address}
 
-This works exactly the same as port A starting address in \DMARegName{WR0}, but for port B. And different bits: bit 3 of base register enabled LSB and bit 4 MSB od the port B address. If both are set, then LSB is written before MSB. As port B address is also required for each DMA operation, both bytes are usually provided. And because the 16-bit value uses little-endian notation, it can be written directly. For example:
+This works exactly the same as port A starting address in bits 4-3 of \DMARegName{WR0}, but for port B. Bit 3 of base register enables LSB and bit 4 MSB of the port B address. If both are set, then LSB is written before MSB. As port B address is also required for each DMA operation, both bytes are usually provided. And because the 16-bit value uses little-endian notation, it can be written directly. For example:
 
 \begin{tcblisting}{}
 	DW &253B          ; Port B starts at &253B
@@ -864,21 +864,21 @@ Whether the address represents memory or I/O port is defined with \DMARegName{WR
 \subsubsection{Base Register Byte}
 
 \begin{DMADescription}
-	
+
+	\DMADescriptionItem{4}{Ready Configuration}{
+		\begin{DMAList}
+			\item[{\tt 0}] \DMAPinLabel{CE}/\DMAPinLabel{WAIT} line functions only as chip enable line, allowing CPU to read and write control and status bytes when DMA is not owning the.
+
+			\item[{\tt 1}] This mode is implemented but currently not used in zxnDMA. This mode has an external device using the DMA's \DMAPinLabel{CE} pin to insert wait states during the DMA's transfer.
+		\end{DMAList}
+	}
+
 	\DMADescriptionItem{5}{Stop Configuration}{
-		Specifies what happens when DMA reached the end of the block:
+		Specifies what happens when DMA reaches the end of the block:
 
 		\begin{DMAList}
 			\item[{\tt 0}] DMA stops once the end of the block is reached.
 			\item[{\tt 1}] DMA will auto repeat at the end of the block.
-		\end{DMAList}
-	}
-
-	\DMADescriptionItem{4}{Ready Configuration}{
-		\begin{DMAList}
-			\item[{\tt 0}] \DMAPinLabel{CE}/\DMAPinLabel{WAIT} line functions only as chip enable line, allowing CPU to read and write control and status bytes when DMA is not bus master.
-
-			\item[{\tt 1}] This mode is implemented but currently not used in zxnDMA. This mode has an external device using the DMA's \DMAPinLabel{CE} pin to insert wait states during the DMA's transfer.
 		\end{DMAList}
 	}
 
@@ -932,7 +932,7 @@ This register is the most complex, but usually only a small subset of functional
 	\DMABitValue{0}{}
 	
 	% Read bytes
-	\DMABitPar{0}{Status}[4em][pos=0.5][]
+	\DMABitPar{0}{Status}[2em][pos=0.5][]
 	\DMABitPar{1}{Byte Counter LSB {\small (MSB in core 3.0.5 - bug)}}[][pos=0.39][]
 	\DMABitPar{2}{Byte Counter MSB {\small (LSB in core 3.0.5 - bug)}}[][pos=0.33][]
 	\DMABitPar{3}{Port A Address LSB}[][pos=0.29][]
@@ -945,13 +945,13 @@ This register is the most complex, but usually only a small subset of functional
 
 	% Render horizontal line and explanation text below last command parameter.
 	\begin{scope}
-		\draw[PrintableDarkGray, line width=0.6pt]
-			([xshift=15.5em,yshift=-1ex]\DMABitValID{0}.south east) -- 
-			([xshift=-1.5em,yshift=-1ex]\DMABitValID{7}.south west)
+		\draw[PrintableLightGray, line width=0.6pt]
+			([xshift=15.5em,yshift=0ex]\DMABitValID{0}.east |- \DMALegendParID.west) -- 
+			([xshift=-1.5em,yshift=0ex]\DMABitValID{7}.west |- \DMALegendParID.west)
 			node (ReadDelimiterLine) {};
 
 		% Read data text below delimiter
-		\node[dmalegend, anchor=north east, rotate=90]
+		\node[dmalegend, anchor=north east, rotate=90, yshift=-1pt]
 			at(ReadDelimiterLine.west)
 			{READ FROM DMA I/O PORT};
 	\end{scope}
@@ -977,8 +977,8 @@ This register is the most complex, but usually only a small subset of functional
 		This is required for DMA to copy port A and B addresses into its internal pointers. Usually, this is used just before \textbf{Enable DMA}.
 	}
 
-	\DMADescriptionByte{Read Mask Follows}{
-		This is not one of the frequently used commands, but it's mentioned because it works differently: it indicates that parameter byte with reading mask will follow.
+	\DMADescriptionByte{Read Mask}{
+		This is not one of the frequently used commands, but it's mentioned because it works differently: instead of indicating parameter bytes that will follow the register as part of the DMA program, it specifies which bytes will be read from the DMA port in the ``future''. See below for more details.
 	}
 
 \end{DMADescription}
@@ -986,7 +986,7 @@ This register is the most complex, but usually only a small subset of functional
 
 \subsubsection{Read Mask}
 
-This parameter provides a bit mask that defines which bytes will be read from DMA. While read mask parameter byte has to be written immediately after base register byte, as any other parameter, reading happens separately as I/O read from the DMA port \MemAddr{6B}.
+This parameter provides a bit mask that defines which bytes will be read from DMA. While read mask parameter byte has to be written immediately after base register byte, as any other parameter, reading happens separately as I/O read from the DMA port.
 
 \begin{DMADescription}
 	
@@ -1004,7 +1004,7 @@ This parameter provides a bit mask that defines which bytes will be read from DM
 	}
 
 	\DMADescriptionItem{3-4}{Port A Address}{
-		Indicates that the current internal 16-bit port A address will be read from the I/O port. This is the last used address and will be used for the next transfer. Bit 3 indicates LSB and bit 4 MSB of the value will be read.
+		Indicates that the current internal 16-bit port A address will be read from the I/O port. Bit 3 indicates LSB and bit 4 MSB of the value will be read. Usually the address it read as the whole 16-bit value, so both bits are set.
 	}
 
 	\DMADescriptionItem{5-6}{Port B Address}{
@@ -1016,7 +1016,7 @@ This parameter provides a bit mask that defines which bytes will be read from DM
 
 \subsubsection{Reading From DMA I/O Port}
 
-Registers can be read via an I/O read from the DMA port after setting the read mask. Register values are the current internal DMA values. Or in other words: the values that will be used for the next transfer operation. Once the end of the read mask is reached, further reads loop around to the first one.
+Registers can be read via an I/O read from the DMA port \MemAddr{6B} after setting the read mask. Register values are the current internal DMA values. Or in other words: the values that will be used for the next transfer operation. Once the end of the read mask is reached, further reads loop around to the first one.
 
 
 \subsection{Examples}
@@ -1060,7 +1060,7 @@ CopyMemory:
 
 The code includes both, the routine that copies the program into DMA memory and the program itself.
 
-Copy routine relies on {\tt OTIR} to upload the program to DMA memory through port \MemAddr{xx6B}. {\tt OTIR} does all the heavy lifting for us - continuously copies bytes until {\tt B} becomes 0. Perhaps worth noting: {\tt .dmaProgramSize} is used to establish the length of the program that will be sent. We can safely add or remove instructions and it will continue to work (as long as the size stays within 256 bytes).
+Copy routine relies on {\tt OTIR} to upload the program to DMA memory through port \MemAddr{xx6B}. {\tt OTIR} does all the heavy lifting for us - continuously copies bytes until {\tt B} becomes 0. Perhaps worth noting: {\tt .dmaProgramSize} is used to establish the length of the program that will be sent. This way we can safely add or remove instructions and it will continue to work (as long as the size stays within 256 bytes).
 
 The program itself, lines 9-25, should be self-explanatory. But we'll go through it anyway since this is how most DMA programs look like:
 
@@ -1079,9 +1079,9 @@ The program itself, lines 9-25, should be self-explanatory. But we'll go through
 
 	\item Since we enabled all 4 parameters with \DMARegName{WR0} register, we have to append all 4 bytes immediately afterwards. In this case, it's a 16-bit port A starting address first, followed by the 16-bit transfer length. Since little-endian format is expected (LSB first, then MSB), we can simply use a {\tt DW} and write the exact address in a natural and readable way. Lines 12-13 is where the parameters are written.
     
-	Note: we could also use {\tt DB} to write each individual byte (mainly useful when only one of the bytes is set). In such case, the program would look like this:
+	Note: we could also use {\tt DB} to write each byte separately. It emphasizes the fact two bytes are written, but obfuscates the address. Regardless, the program would then look like this:
 
-		\begin{tcblisting}{}
+		\begin{tcblisting}{listing options={style=CodeStyle,firstnumber=12}}
 	DB &00
 	DB &C0    ; &C000
 	DB &00
@@ -1107,9 +1107,9 @@ The program itself, lines 9-25, should be self-explanatory. But we'll go through
 	
 	\item Line 22 has \DMARegName{WR5} register with bit 4 and 5 reset. Bit 4 tells DMA to use \DMAPinLabel{CE} only and bit 5 to stop at the end of the block, after all bytes are transferred.
 	
-	\item Line 24 uses \DMARegName{WR6} with bits 6-2 set to {\tt \%10011} which tells DMA to load source and destination addresses into its own internal pointers. This command must always be included at the end of the program, otherwise DMA internal pointers may point to old values.
+	\item Line 24 uses \DMARegName{WR6} with bits 6-2 set to {\tt \%10011} which tells DMA to load source and destination addresses into its own internal pointers. This command must always be included before the end of the program, otherwise DMA internal pointers may point to old values.
 	
-	\item And finally, once everything is configured, line 25 includes another \DMARegName{WR6} with bits 6-2 set to {\tt \%00001}. This corresponds to ``Enable DMA''. After encountering this command, DMA will start running the program. Since we told it to ``load'' the pointers, it will start running at given start addresses as expected.
+	\item And finally, once everything is configured, line 25 includes another \DMARegName{WR6} with bits 6-2 set to {\tt \%00001}. This corresponds to ``Enable DMA''. After encountering this command, DMA will start running the program.
 \end{itemize}
 
 Note the use of apostrophes to delimit bits. This is special syntax for binary values, {\tt sjasmplus} will strip them out, so {\tt \%1'00000'11} will become {\tt \%10000011} for example. I used it to emphasize individual bits and bit groups. You can use whichever you prefer though.
@@ -1157,20 +1157,20 @@ Apart from the obvious differences - source and destination addresses and size i
 The only other difference is port B setup in line 17. Because we're sending the bytes to an I/O port, which exists on a specific address and doesn't change, we need to tweak \DMARegName{WR2} register data:
 
 \begin{DMAList}
-	\item Bit 3 is now set to indicate port B is I/O port.
+	\item Bit 3 is now set to indicate port B is an I/O port.
 	\item Bits 5-4 are {\tt \%10} to indicate port B address is fixed.
 \end{DMAList}
 
 With this change, port B address will remain fixed at the given value of \MemAddr{5B} throughout the whole transfer, while port A address will be incremented after each byte.
 
-While the result is quite different, the two programs share a lot of similarities. Even more so if we consider reusing the same DMA program for uploading data to port \MemAddr{5B} from any memory address and of any size. As it stands now, we'd have to repeat the above program, only replace port A source and transfer length in lines 12-13.
+While the result is quite different, the two programs share a lot of similarities. Even more so if we want to use this program multiple times, for transferring data to the same port but from another memory address or of a different size. As it stands now, we'd have to repeat the above program, only replace port A source and transfer length in lines 12-13.
 
 Well, we can use a neat trick to have a reusable DMA program and pass in the address and length as parameters! And it's right on the next page for easy comparison.
 
 
 \subsubsection{Using Generic Routine for DMA Transfer}
 
-Routine gets the address of the source memory through {\tt HL} and length in {\tt BC} register pair:
+The routine gets the address of the source memory through {\tt HL} and length in {\tt BC} register pair:
 
 \begin{tcblisting}{}
 CopyMemory:
@@ -1208,7 +1208,7 @@ CopyMemory:
 
 DMA program is exactly the same, except for the two \DMARegName{WR0} parameters.
 
-The labels in lines 15 and 17 are the first part of the puzzle. They are used to get the exact memory address of the first byte of the 16-bit value declared with {\tt DW 0}. Lines 2 and 3 are where the second half of the magic happens. We take the address from the labels and load the value from the corresponding register pair over it.
+The labels in lines 15 and 17 are the first part of the puzzle. They are used to get the exact memory address of the first byte of the 16-bit value declared with {\tt DW 0}. Lines 2 and 3 are where the magic happens. We take the address from the labels and load the value from the corresponding register pair over it.
 
 That's all there is to it. This is one of the most frequent implementations of DMA routines, you likely saw it in various code listings.
 
@@ -1220,7 +1220,7 @@ The technique is called ``self-modifying code'', for obvious reasons: we are mod
 
 \subsubsection{Operating Speed}
 
-The zxnDMA operates at the same speed as the CPU. However it automatically slows down if speed exceeds 7MHz and Layer 2 display is being generated. It also automatically resumes in high speed operation once Layer 2 display finished generating.
+The zxnDMA operates at the same speed as the CPU. However it automatically slows down if the speed exceeds 7MHz and Layer 2 display is being generated. It also automatically resumes in high speed operation once Layer 2 display finishes generating.
 
 Programmer doesn't have to account for these speed changes as it all happens automatically. We can safely set cycle lengths for both ports to their minimum settings. Cycle lengths are intended to selectively slow down read or write cycles for hardware that can't operate at the DMA full speed.
 
@@ -1231,12 +1231,12 @@ When zxnDMA controls the bus (when transfer is in progress), Z80 can't respond t
 
 \vspace*{-1ex}
 \begin{quote}
-	On the Z80, the NMI interrupt is edge triggered so if an NMI occurs the fact that it occurred is stored internally in the Z80 so that it will respond when it is woken up. On the other hand, maskable interrupts are level triggered. That is, the Z80 must be active to regularly sample the \ZilogPinLabel{INT} line to determine if a maskable interrupt is occurring. On the Spectrum and the ZX Next, the ULA (and line interrupt) are only asserted for a fixed amount of time \~30 cycles at 3.5MHz. If the DMA is executing a transfer while the interrupt is asserted, the CPU will not be able to see this and it will most likely miss the interrupt.
+	On the Z80, the NMI interrupt is edge triggered so if an NMI occurs the fact that it occurred is stored internally in the Z80 so that it will respond when it is woken up. On the other hand, maskable interrupts are level triggered. That is, the Z80 must be active to regularly sample the \ZilogPinLabel{INT} line to determine if a maskable interrupt is occurring. On the Spectrum and the ZX Next, the ULA (and line interrupt) are only asserted for a fixed amount of time, $\sim$30 cycles at 3.5MHz. If the DMA is executing a transfer while the interrupt is asserted, the CPU will not be able to see this and it will most likely miss the interrupt.
 \end{quote}
 
 However, when operating in burst mode, with large enough prescalar, the CPU will be able to respond to interrupts.
 
-It's also possible to program interrupters to interrupt DMA using Next specific Hardware IM2 mode. Which interrupters can interrupt DMA is configured with Next registers \PortLink{DMA Interrupt Enable 0}{CC}, \PortLink{DMA Interrupt Enable 1}{CD} and \PortLink{DMA Interrupt Enable 2}{CE}. See section \ref{zx_next_interrupts} for more details on interrupts.
+It's also possible to allow or prevent specific interrupters from interrupting DMA using Next specific Hardware IM2 mode. This is configured with Next registers \PortLink{DMA Interrupt Enable 0}{CC}, \PortLink{DMA Interrupt Enable 1}{CD} and \PortLink{DMA Interrupt Enable 2}{CE}. See section \ref{zx_next_interrupts} for more details on interrupts.
 
 
 \pagebreak
@@ -1245,14 +1245,14 @@ It's also possible to program interrupters to interrupt DMA using Next specific 
 
 \subsubsection{\PortTitle{MB02 DMA Port}{xx0B}}
 
-Core 3.1.2+ Always in Zilog DMA mode for uploading legacy DMA programs. For zxnDMA, use \PortLink{Datagear DMA Port}{xx6B}.
+Core 3.1.2+: Always in Zilog DMA mode for uploading legacy DMA programs. For zxnDMA, use \PortLink{Datagear DMA Port}{xx6B}.
 
 Older cores: this port is not supported, set bit 6 of \PortLink{Peripheral 2 Register}{06} and use \PortLink{Datagear DMA Port}{xx6B}.
 
 
 \subsubsection{\PortTitle{Datagear DMA Port}{xx6B}}
 
-Core 3.1.2+ Always in zxnDMA mode. For legacy Zilog DMA, use \PortLink{MB02 DMA Port}{xx0B}.
+Core 3.1.2+: Always in zxnDMA mode. For legacy Zilog DMA, use \PortLink{MB02 DMA Port}{xx0B}.
 
 Older cores: this port behaves either in zxnDMA or legacy Zilog DMA mode based on bit 6 of \PortLink{Peripheral 2 Register}{06}: if bit 6 is {\tt 0}, zxnDMA mode is enabled, otherwise Zilog DMA.
 

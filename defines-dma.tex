@@ -92,6 +92,8 @@
 
 % Returns various IDs for the given bit, taking into account current DMAHeaderIndex
 \newcommand{\DMALegendID}{LegendHor\arabic{DMAHeaderIndex}}					% LegendHor0...
+\newcommand{\DMALegendRegID}{LegendReg\arabic{DMAHeaderIndex}}				% LegendReg0...
+\newcommand{\DMALegendParID}{LegendPar\arabic{DMAHeaderIndex}}				% LegendPar0...
 \newcommand{\DMABitDefAnyID}[2]{BitDef#1_#2}								% BitDef0_0, BitDef0_1...
 \newcommand{\DMABitDefID}[1]{\DMABitDefAnyID{\arabic{DMAHeaderIndex}}{#1}}	% BitDef0_0, BitDef0_1...
 \newcommand{\DMABitValID}[1]{BitVal\arabic{DMAHeaderIndex}_#1}				% BitVal0_0, BitVal0_1...
@@ -182,10 +184,14 @@
 			node (\DMALegendID) {};
 
 		% Command text above delimiter
-		\node[dmalegend, above=0pt of \DMALegendID, anchor=north west, yshift=-1.5pt] {#3};
+		\node[dmalegend, above=0pt of \DMALegendID, anchor=north west, yshift=-1.5pt]
+			(\DMALegendRegID)
+			{#3};
 		
 		% Parameters text below delimiter
-		\node[dmalegend, below=0pt of \DMALegendID, anchor=east] {#2};
+		\node[dmalegend, below=0pt of \DMALegendID, anchor=east]
+			(\DMALegendParID)
+			{#2};
 	\end{scope}
 }
 
