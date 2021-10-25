@@ -1,4 +1,6 @@
-\newcommand*{\PRINTED}{}	% comment this line for generating online variant
+\newcommand*{\isPDF}{1}
+\newcommand*{\isWIP}{1}
+
 
 % ░█▀▀█ ▒█▀▀█ ▒█▀▀▀█ ▒█░▒█ ▀▀█▀▀ 
 % ▒█▄▄█ ▒█▀▀▄ ▒█░░▒█ ▒█░▒█ ░▒█░░ 
@@ -33,8 +35,10 @@
 % ▒█▀▀▀ ▒█░░░ ▒█▀▀▀ ▒█▒█▒█ ▒█▀▀▀ ▒█▒█▒█ ░▒█░░ ░▀▀▀▄▄ 
 % ▒█▄▄▄ ▒█▄▄█ ▒█▄▄▄ ▒█░░▒█ ▒█▄▄▄ ▒█░░▀█ ░▒█░░ ▒█▄▄▄█
 
-% definitions based on whether PDF is generated for book or online.
-\newcommand{\email}[3]{\ifdefined\PRINTED{\tt #1@#2.#3}\else{\tt #1 AT #2 DOT #3}\fi}
+% creates an email (obfuscated for PDF variant), Discord or Twitter user text
+\newcommand{\email}[3]{\ifdefined\isPDF{\tt #1 AT #2 DOT #3}\else{\tt #1@#2.#3}\fi}
+\newcommand{\discord}[1]{{\tt @#1}}
+\newcommand{\twitter}[1]{{\tt @#1}}
 
 % creates minitoc without any headers; parameters:
 % - (optional) #1 boolean; if star present, no styling will be applied after TOC, otherwise default styling will be applied (which is the default)
@@ -62,6 +66,19 @@
 	\end{center}
 	\vfill
 	\mbox{}
+}
+
+% renders "work in progress" text using current font and size.
+\newcommand{\WorkInProgress}{\ifdefined\isWIP\color{red}\textbf{WORK IN PROGRESS}\fi}
+
+% renders "work in progress" sign for use on "full screen" pages; uses \Huge font by default, but that can be changed with optional parameter
+\newcommand{\WorkInProgressFullScreen}[1][\Huge]{
+	\ifdefined\isWIP
+		#1
+		\begin{center}
+			\WorkInProgress
+		\end{center}
+	\fi
 }
 
 

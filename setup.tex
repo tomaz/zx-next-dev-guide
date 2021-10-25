@@ -48,7 +48,9 @@
 \fancypagestyle{plain}{
 	\fancyhf{} 
 	\fancyhead{}
+	\fancyhead[C]{\sffamily\footnotesize\WorkInProgress}
 	\fancyfoot[LO,RE]{\sffamily\footnotesize\thepage}
+	\fancyfoot[C]{\sffamily\footnotesize\WorkInProgress}
 	\renewcommand{\headrulewidth}{0pt}
 	\renewcommand{\footrulewidth}{0pt}
 }
@@ -58,9 +60,10 @@
 % even pages (aka right) shows section name
 \fancypagestyle{clean}{
 	\fancyhf{}
-	\fancyhead[LO]{\sffamily\footnotesize\leftmark}
-	\fancyhead[RE]{\sffamily\footnotesize\rightmark}
+	\fancyhead[RO,LE]{\sffamily\footnotesize\WorkInProgress}
+	\fancyhead[LO,RE]{\sffamily\footnotesize\leftmark}
 	\fancyfoot[RE,LO]{\sffamily\footnotesize\thepage}
+	\fancyfoot[C]{\sffamily\footnotesize\WorkInProgress}
 	\renewcommand{\headrulewidth}{0.1pt}
 	\renewcommand{\footrulewidth}{0pt}
 }
@@ -69,8 +72,10 @@
 % odd and even pages show chapter marker on the outer edge
 \fancypagestyle{nosectionmarker}{
 	\fancyhf{}
+	\fancyhead[RO,LE]{\sffamily\footnotesize\WorkInProgress}
 	\fancyhead[RE,LO]{\sffamily\footnotesize\leftmark}
 	\fancyfoot[RE,LO]{\sffamily\footnotesize\thepage}
+	\fancyfoot[C]{\sffamily\footnotesize\WorkInProgress}
 	\renewcommand{\headrulewidth}{0.1pt}
 	\renewcommand{\footrulewidth}{0pt}
 }
@@ -117,10 +122,10 @@
 	\setcounter{page}{1}
 
 	% TOC should only display up to depth 1 (chapter+section)
-	\ifdefined\PRINTED
-		\setcounter{tocdepth}{1}
-	\else
+	\ifdefined\isPDF
 		\setcounter{tocdepth}{2}
+	\else
+		\setcounter{tocdepth}{1}
 	\fi
 
 	% use plain page style with just page number for following pages
