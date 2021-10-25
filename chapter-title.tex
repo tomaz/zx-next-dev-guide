@@ -12,10 +12,6 @@
 % █████░░░░░░█████░░░░░░░░░░█████░░░░░░█████░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
 % ████████████████████████████████████████████████████████████████████████
 
-
-% first page should be offset to the right to accomodate the binding; default setup assumes this is odd page so sets it up the other way around (binding offset on the right side), but it gets printed as even page
-\newgeometry{left=4cm,right=3cm}
-
 \title{\BookTitle}
 \author{\AuthorNameSurname}
 \date{\LatestRevisionName}
@@ -23,11 +19,13 @@
 
 \begin{titlepage}
 	\newcommand{\BigFont}[1]{\fontsize{30}{30}\selectfont #1}
-	\newcommand{\MidFont}[1]{\fontsize{20.4}{20}\selectfont #1}
+	\newcommand{\MidFont}[1]{\fontsize{21.4}{21}\selectfont #1}
 	\newcommand{\SmallFont}[1]{\fontsize{14}{14}\selectfont #1}
 	\newcommand{\MiniFont}[1]{\fontsize{8}{8}\selectfont #1}
 
 	\vspace*{\fill}
+
+	\WorkInProgressFullScreen
 
 	\begin{flushright}
 		\sffamily
@@ -35,14 +33,23 @@
 		\textbf{
 			\BigFont{\BookTitleMain}
 			\\[0.5cm]
-			\MidFont{\BookTitleSub}
+			\MidFont{\BookTitleSub\hspace*{-0.8ex}}
+			% ^^^ for some reason there's some horizontal space at the right side of subtitle instead of being nicely aligned with the rest of the text... \hspace takes care of that
 		}
 
-		\vspace*{4cm}
+		\vspace*{2cm}
 
 		\MidFont{\AuthorNameSurname}
 
+		\vspace*{5cm}
+
+		\SmallFont{Z80 Undocumented by}\\
+		\SmallFont{Jan Wilmans}\\
+		\SmallFont{Sean Young}
+
 	\end{flushright}
+
+	\WorkInProgressFullScreen
 
 	\vspace*{\fill}
 

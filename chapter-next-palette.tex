@@ -3,19 +3,19 @@
 
 Next greatly enhances ZX Spectrum video capabilities by offering several new ways to draw graphics on a screen. We'll see how to program each in later chapters, but let's check common behaviour first - colour management.
 
+To draw a pixel on a screen, we need to set its colour as data in memory. Next shares implementation to other contemporary 8-bit computers - all possible colours are stored together in a palette, as an array of RGB values, and each pixel is simply an index into this array. This approach requires less memory and allows creating efficient effects such as fade to/from black, transitions from day to night, water animations etc.
+
 
 \subsection{Palette Selection}
 
-To draw a pixel on a screen, we need to set its colour as data in memory. There are different approaches to how this data is defined. Next shares implementation to other 8-bit computers of the era - all possible colours are stored together in a palette, as an array of RGB values, and each pixel is simply an index into this array. This approach requires less memory and allows creating efficient effects such as fade to/from black, transitions from day to night, water animations etc.
+Each graphics mode or layer has not one but two palettes, each of which can be changed independently. Of course, only one of two can be active at any given time for each mode. The other can be initialized with alternate colours and can be quickly activated to achieve colour animation effects.
 
-Contrary to most computers of the era that only had predefined palettes, Next allows changing all colours. Furthermore, each layer has not one but two palettes, each of which can be changed independently. Of course, only one of two can be active at any given time for each mode. The other can be initialized with alternate colours and can be quickly activated to achieve colour animation effects. Active palette is set with \PortLink{Enhanced ULA Control Register}{43} for ULA, Layer 2 and Sprites and \PortLink{Tilemap Control Register}{6B} for Tilemap.
+Active palette is set with \PortLink{Enhanced ULA Control Register}{43} for ULA, Layer 2 and Sprites and \PortLink{Tilemap Control Register}{6B} for Tilemap.
 
 
 \subsection{Palette Editing}
 
-Data for each pixel for most layers and modes is 1 byte long, meaning each palette can have up to 256 colours.
-
-All palettes are initialized with default colours, so they are usable out of the box. But it's also possible to change individual colours. Regardless of the palette, the procedure to read or write colours is:
+Next palettes have 256 colours. All are initialized with default values, so they are usable out of the box. But it's also possible to change every colour. Regardless of the palette, the procedure to read or write colours is:
 
 \begin{enumerate}[topsep=1pt,itemsep=1pt]
 	\item \PortLink{Enhanced ULA Control Register}{43} selects palette which colours you want to edit
@@ -42,15 +42,17 @@ Copy8BitPalette:
 	DJNZ Copy8BitPalette      ; Repeat until B=0
 \end{tcblisting}
 
-To use the subroutine, we'd do something like:
+And we'd call the subroutine with something like:
 
 \begin{tcblisting}{}
-	NEXTREG &43, %00010000    ; Auto increment, L2 first palette for read/write
+	NEXTREG &43, %00010000    ; Auto increment, Layer 2 first palette for read/write
 	NEXTREG &40, 0            ; Start copying into index 0
 	LD HL, palette            ; Address to copy RRRGGGBB values from
 	LD B, 255                 ; Copy 255 colours
 	CALL Copy8BitPalette
 \end{tcblisting}
+
+Note: we could also use DMA to transfer all the bytes. I won't show it here, but feel free to implement it as an excercise - see section \ref{zx_next_dma} for details on programming the DMA.
 
 
 \subsection{9 Bit Colours}
@@ -62,19 +64,19 @@ Copy9BitPalette:
 	LD A, (HL)                ; Load RRRGGGBB into A
 	INC HL                    ; Increment to next byte
 	NEXTREG &44, A            ; Send colour data to Next HW
-	LD A, (HL)                ; Load LSB of B into A
+	LD A, (HL)                ; Load remaining byte with LSB of B component into A
 	INC HL                    ; Increment to next colour entry
 	NEXTREG &44, A            ; Send colour data to Next HW and increment index
 	DJNZ Copy9BitPalette      ; Repeat until B=0
 \end{tcblisting}
 
-Note: subroutine requires that colours are stored in 2 bytes with first containing {\tt RRRGGGBB} part and second least significant bit of blue. Which is how typically drawing programs store a 9-bit palette anyways. The calling subroutine is exactly the same as for the 8-bit colours above.
+Note: subroutine requires that colours are stored in 2 bytes with first containing {\tt RRRGGGBB} part and second least significant bit of blue. Which is how typically drawing programs store a 9-bit palette anyways. The code for calling this subroutine is exactly the same as for the 8-bit colours above.
 
 
 \subsection{Palette Registers}
 \label{zx_next_palette_registers}
 
-\subsubsection{Palette Index Register \MemAddr{40}}
+\subsubsection{\PortTitle{Palette Index Register}{40}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -144,7 +146,7 @@ While Tilemap, Layer 2 and Sprites palettes use all 256 distinct colours (with s
 
 
 \pagebreak
-\subsubsection{Palette Value Register \MemAddr{41}}
+\subsubsection{\PortTitle{Palette Value Register}{41}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -173,7 +175,7 @@ Least significant bit of blue is set to {\tt OR} between $B_2$ and $B_1$.
 Writing the value will automatically increment index in \PortLink{Palette Index Register}{40}, if auto-increment is enabled in \PortLink{Enhanced ULA Control Register}{43}. Read doesn't auto-increment index.
 
 
-\subsubsection{Enhanced ULA Ink Colour Mask \MemAddr{42}}
+\subsubsection{\PortTitle{Enhanced ULA Ink Colour Mask}{42}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -194,7 +196,7 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 \end{NextPort}
 
 
-\subsubsection{Enhanced ULA Control Register \MemAddr{43}}
+\subsubsection{\PortTitle{Enhanced ULA Control Register}{43}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -226,7 +228,7 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 Write will also reset the index of \PortLink{Enhanced ULA Palette Extension}{44} so next write there will be considered as first byte of first colour.
 
 
-\subsubsection{Enhanced ULA Palette Extension \MemAddr{44}}
+\subsubsection{\PortTitle{Enhanced ULA Palette Extension}{44}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -271,12 +273,12 @@ Two consequtive writes are needed:
 
 Bit 7 of the second write must be {\tt 0} except for Layer 2 palettes where it specifies colour priority. If set to {\tt 1}, then the colour will always be on top, above all other layers, regardless of priority set with \PortLink{Sprite and Layers System Register}{15}. So if you need exactly the same colour with priority and non-priority, you will need to set the same data twice, to different indexes, once with priority bit {\tt 1} and then with {\tt 0}.
 
-After second write palette colour index in \PortLink{Palette Index Register}{40} is automatically increment, if auto-increment is enabled in \PortLink{Enhanced ULA Control Register}{43}.
+After the second write palette colour index in \PortLink{Palette Index Register}{40} is automatically increment, if auto-increment is enabled in \PortLink{Enhanced ULA Control Register}{43}.
 
 Note: reading will always return the second byte of the colour (least significant bit of blue) and will not auto-increment index. You can read {\tt RRRGGGBB} part with \PortLink{Palette Value Register}{41}.
 
 
-\subsubsection{Transparency Colour Fallback Register \MemAddr{4A}}
+\subsubsection{\PortTitle{Transparency Colour Fallback Register}{4A}}
 
 \begin{NextPort}
 	\PortBits{7-0}

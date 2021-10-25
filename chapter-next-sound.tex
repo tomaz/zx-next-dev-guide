@@ -26,9 +26,9 @@ AY chip is controlled by 14 internal registers. To program them, we first need t
 
 \subsection{Editing and Players}
 
-Several applications can produce sounds or music compatible with the AY chip. For sounds, Shiru's AYFX Player\footnote{\url{https://shiru.untergrund.net/software.shtml#old}} can be used. This program also includes a Z80 native player that can directly load and play sound effects. Alternatively, Remy's AY audio generator website\footnote{\url{https://zx.remysharp.com/audio/}} can produce exactly the same results and is fully compatible with AYFX Player.
+Several applications can produce sounds or music compatible with the AY chip. For sounds, Shiru's AYFX Player\footnote{\url{https://shiru.untergrund.net/software.shtml\#old}} can be used. This program also includes a Z80 native player that can directly load and play sound effects. Alternatively, Remy's AY audio generator website\footnote{\url{https://zx.remysharp.com/audio/}} can produce exactly the same results and is fully compatible with AYFX Player.
 
-A different way of playing sounds is to convert the WAV file into 1, 2 or 4-bit per sample sound with the ChibiWave application. Sounds take a bit more memory this way but are much easier to create. You can find the application, as well as tutorial and playback source code on Chibi Akumas website\footnote{\url{https://www.chibiakumas.com/z80/platform4.php#LessonP35}}. While there, definitely check other tutorials too - they're all high quality and available as both, written posts and YouTube videos.
+A different way of playing sounds is to convert the WAV file into 1, 2 or 4-bit per sample sound with the ChibiWave application. Sounds take a bit more memory this way but are much easier to create. You can find the application, as well as tutorial and playback source code on Chibi Akumas website\footnote{\url{https://www.chibiakumas.com/z80/platform4.php\#LessonP35}}. While there, definitely check other tutorials too - they're all high quality and available as both, written posts and YouTube videos.
 
 For creating music there are also several options. NextDAW\footnote{\url{https://nextdaw.biasillo.com/}} is native composer that runs on ZX Spectrum Next itself. Or if you prefer cross-platform, Arkos Tracker\footnote{\url{https://www.julien-nevo.com/arkostracker/}} or Vortex Tracker\footnote{\url{https://bulba.untergrund.net/vortex_e.htm}} should do the job. All include ``drivers''; Z80 code you can include in your program that can load and play created music.
 
@@ -65,13 +65,14 @@ WriteDToAYReg:
 	RET
 \end{tcblisting}
 
-Companion code on GitHub includes expanded code as well as a simple player that plays multiple tones in sequence. For the purposes of this book, I used Remy's AY audio generator website to load one of the example effects, then manually copied raw values into the source code. Laborious process to say the least - this is not how effects should be handled in real life. But I wanted to learn and demonstrate how to program AY chip, not how to use ready-made drivers to play effects or music. Furthermore, my ``player'' blocks the main loop; ideally, sound effects and music would play on the interrupt handler. This could be a nice homework for the reader - example in section \ref{zx_next_interrupts} should give you an idea of how to achieve this - happy coding!
+Companion code on GitHub, folder {\tt sound} includes expanded code as well as a simple player that plays multiple tones in sequence. For the purposes of this book, I used Remy's AY audio generator website to load one of the example effects, then manually copied raw values into the source code. Laborious process to say the least - this is not how effects should be handled in real life. But I wanted to learn and demonstrate how to program AY chip, not how to use ready-made drivers to play effects or music. Furthermore, my ``player'' blocks the main loop; ideally, sound effects and music would play on the interrupt handler. This could be a nice homework for the reader - example in section \ref{zx_next_interrupts} should give you an idea of how to achieve this - happy coding!
 
 
 \pagebreak
-\subsection{Sound Registers}
+\subsection{Sound Ports and Registers}
+\label{zx_next_sound_registers}
 
-\subsubsection{Turbo Sound Next Control \MemAddr{FFFD}}
+\subsubsection{\PortTitle{Turbo Sound Next Control}{FFFD}}
 
 When bit {\tt 7} is {\tt 1}:
 
@@ -106,7 +107,7 @@ When bit {\tt 7} is {\tt 0}:
 \end{NextPort}
 
 
-\subsubsection{Sound Chip Register Write \MemAddr{BFFD}}
+\subsubsection{\PortTitle{Sound Chip Register Write}{BFFD}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -244,7 +245,7 @@ When bit {\tt 7} is {\tt 0}:
 	\end{tabular}
 \endgroup
 
-\subsubsection{Peripheral 2 Register \MemAddr{06}}
+\subsubsection{\PortTitle{Peripheral 2 Register}{06}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -273,7 +274,7 @@ When bit {\tt 7} is {\tt 0}:
 		}
 \end{NextPort}
 
-\subsubsection{Peripheral 3 Register \MemAddr{08}}
+\subsubsection{\PortTitle{Peripheral 3 Register}{08}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -294,9 +295,9 @@ When bit {\tt 7} is {\tt 0}:
 		\PortDesc{Implement Issue 2 keyboard (port \MemAddr{FE} reads as early ZX boards) ({\tt 0} after hard reset)}
 \end{NextPort}
 
-\subsubsection{Peripheral 4 Register \MemAddr{09}}
+\subsubsection{\PortTitleLink{Peripheral 4 Register}{09}}
 
-\PortReference{zx_next_sprite_registers}{Sprite}
+\PortReference{zx_next_sprites_registers}{Sprites}
 
 
 \pagebreak

@@ -1,3 +1,6 @@
+## Ignored project files and folders
+Tools
+
 ## Core latex/pdflatex auxiliary files:
 *.ptc
 *.aux
@@ -284,3 +287,6 @@ TSWLatexianTemp*
 # option is specified. Footnotes are the stored in a file with suffix Notes.bib.
 # Uncomment the next line to have this generated file ignored.
 #*Notes.bib
+
+## Auto generated files for companion code
+.tmp

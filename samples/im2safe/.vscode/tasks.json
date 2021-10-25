@@ -1,0 +1,51 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build",
+			"type": "shell",
+			"command": "${workspaceRoot}/../Tools/sjasmplus/sjasmplus.exe",
+			"args": [
+				"--sld=${workspaceRoot}/build/test.sld",
+				"--sym=${workspaceRoot}/build/test.labels",
+				"--fullpath",
+				"main.asm"
+			],
+			"problemMatcher": {
+				"fileLocation": [
+					"relative",
+					"${workspaceRoot}"
+				],
+				"pattern": {
+					"regexp": "^(.*)\\((\\d+)\\):\\s+(warning|error):\\s+(.*)$",
+					"file": 1,
+					"line": 2,
+					"severity": 3,
+					"message": 4
+				}
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+
+		{
+			"label": "Launch ZEsarUX",
+			"type": "shell",
+			"command": "${workspaceRoot}/../Tools/ZEsarUX/ZEsarUX.exe",
+			"options": {
+				"cwd": "${workspaceRoot}/../Tools/ZEsarUX"
+			}
+		},
+
+		{
+			"label": "Launch CSpect",
+			"type": "shell",
+			"command": "${workspaceRoot}/../Tools/CSpect/CSpect.exe -debug -exit -brk -sound -tv -esc -zxnext -nextrom -mmc=./cspect-next-2gb.img > output.log",
+			"options": {
+				"cwd": "${workspaceRoot}/../Tools/CSpect"
+			}
+		}
+	]
+}

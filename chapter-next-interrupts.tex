@@ -15,60 +15,551 @@
 % ─██████████─██████──────────██████─────██████─────██████──██████████─
 % ─────────────────────────────────────────────────────────────────────
 
-Maskable interrupts on ZX Spectrum:
+Like many other functionalities, Next also inherits interrupts handling from ZX Spectrum. As described in the Z80 chapter, section \ref{z80_interrupts}, Interrupt Mode 0 is used for a short period of time after booting up, before ROM activates Mode 1. IM1 remains active unless we explicitly change it. To replace the default IM1 interrupt handler, we can page out ROM or change to Interrupt Mode 2.
 
-\begin{itemize}
-	\item {\textbf Mode 0}: meant for interrupts triggered by an external device. Instruction to be executed needs to be placed on the data bus ({\tt RST} or {\tt CALL} for example). On ZX Spectrum this is the mode that is enabled by default when the device powers up. But ROM soon sets up mode 1.
-	
-	\item {\textbf Mode 1}: on ZX Spectrum, this interrupt is triggered by vertical blanking if the screen refresh, roughly 50 times per second. When this occurs, current contents of {\tt PC} counter are pushed onto stack {\tt SP}, then the address of \MemAddr{0038} is loaded and a program stored on that location will start running. On ZX Spectrum Next this interrupt is responsible for updating the system variable frame counter and scanning the keyboard.
-	
-	\item {\textbf Mode 2}: similar to {\tt IM 1} in frequency and handling, but uses vector table to jump to interrupt program instead of executing hard code ROM routine thus allowing the user to set their own interrupt handler.
-\end{itemize}
+Both IM1 and IM2 are triggered by standard Spectrum ULA on every video frame. However timing can be adjusted using \PortLink{Video Line Interrupt Control Register}{22} and \PortLink{Video Line Interrupt Value Register}{23}. This allows disabling standard ULA interrupt, or add an extra interrupt that occurs on a particular video line.
 
-On ZX Spectrum Next interrupt handler can be replaced by either:
+Interrupts are most frequently used for driving music playback. Though they can also be used for other purposes such as synchronizing game state etc.
 
-\begin{itemize}
-	\item Setting Z80 to {\tt IM 2} mode and configuring custom interrupt handler routine
-	
-	\item Paging out ROM (as described in section \ref{zx_next_memorypaging}) and replace it with RAM page with custom interrupt routine at address \MemAddr{0038}
-\end{itemize}
 
-You can also adjust timing of the interrupts with Next/TBBlue Feature Control Registers \MemAddr{22} and \MemAddr{23}.
+\subsection{Interrupt Mode 1}
 
-\pagebreak
-Example of setting up custom interrupt vectors with {\tt IM 2}\footnote{Based on \url{http://codersbucket.blogspot.com/2015/04/interrupts-on-zx-spectrum-what-are.html}}:
+In Interrupt Mode 1, an interrupt handler is expected on address \MemAddr{0038} in ROM. Default handler updates frame counter system variable, scans the keyboard and updates keyboard state system variables. We can replace it with our routine by paging out ROM.
+
+Let's see how to do this with an example. We will use the interrupt routine to update an 8-bit counter. The example uses {\tt sjasmplus} directives to establish paging. If you are using a different assembler, you may need to change! First, let's prepare the groundwork - declare the variable and main part of the program:
 
 \begin{tcblisting}{}
-	DI
-	
-	LD HL, vectorTable    ; HL=address of vector table
-	LD DE, IM2Handler     ; DE=address of IM2 handler routine
-	LD B, 128             ; 128 vector addresses
+	DEVICE ZXSPECTRUMNEXT ; this is Next program - important for paging setup!
 
-	LD A, H
-	LD I, A               ; I=high byte of vector table
+	ORG &8000              ; set PC to &8000
+Start:
+	DI                     ; disable interrupts while we page out ROM
+	NEXTREG &50, 28        ; page out ROM in slot 0 (&000-&1FFF) with page 28
+	IM 1                   ; enable Interrupt Mode 1
+	EI                     ; enable interrupts
 
-setupVectorTable:         ; fills in vector table 128x
-	LD (HL), E
-	INC HL
-	LD (HL), D
-	INC HL
-	DJNZ setupVectorTable 
+.loop:
+	JP .loop               ; infinite loop
+	RET                    ; this is never reached...
 
-	IM 2                  ; enable mode 2 interrupts
-	EI
-	RET
-
-IM2Handler:               ; this is called every time IM2 interrupt occurs
-	...                   ; implement interrupt handler here
-	EI                    ; when complete call EI
-	RETI                  ; end return from interrupt
-
-	ORG &F000             ; needs to be on 256 byte boundary
-vectorTable:
-	DEFS 256              ; 128x2
+counter: DB 0              ; counter variable
 \end{tcblisting}
 
+The first directive tells {\tt sjasmplus} to generate the code for Next. This will become important later on. Then we set the program counter to \MemAddr{8000}; all subsequent instructions and data will be assembled starting at this address.
+
+Next, we are paging out ROM in 8K slot 0 with bank 28. We'll write our interrupt handler subroutine into this bank later on. Afterwards, we enable Interrupt Mode 1. This is optional; by default, Next will run in this mode already, but being explicit is more future proof. Maybe another program would change to IM2. Note how we disable interrupts during this setup to prevent undesired side effects.
+
+The remaining part is simply an infinite loop to prevent the program from exiting. And finally, we declare our counter variable.
+
+The interrupt subroutine is expected at \MemAddr{0038}. There are several ways to achieve this with {\tt sjasmplus}. I opted for explicit slot/bank technique so we're in control of the paging:
+
+\begin{tcblisting}{}
+	SLOT 6             ; activate slot 6
+	PAGE 28            ; load page 28K to active slot
+	ORG &C038          ; set PC to &C038
+
+InterruptHandler:
+	LD HL, counter     ; load address of counter var
+	INC (HL)           ; increment it
+	EI                 ; enable interrupts
+	RETI               ; return from interrupt
+\end{tcblisting}
+
+This is where the previously mentioned {\tt DEVICE} directive comes to play - {\tt sjasmplus} decides slot and bank configuration based on it. {\tt ZXSPECTRUMNEXT} assumes 8K slot and bank size. Lines 1-3 are the key to ensure our interrupt handler will be present on \MemAddr{0038}:
+
+\begin{itemize}
+	\item {\tt SLOT} directive tells {\tt sjasmplus} we want the following section to be loaded into 8K slot 6, addresses \MemAddr{C000}-\MemAddr{DFFF}.
+	
+	\item Next, we specify 8K bank number to load into the selected slot with {\tt PAGE} directive. Subsequent code will be assembled into this bank. This step is optional; default bank would be used otherwise, 0 in this case (see section \ref{zx_next_memorypaging}). Being explicit is more future proof though. I chose bank 28 but feel free to use others. What's important is to use the same bank with {\tt NEXTREG} instruction when paging out ROM!
+	
+	\item Since we selected slot 6, we also need to set the program counter to the corresponding address - we want the code to be assembled into the selected bank that we will page into ROM slot 0 at runtime. Because interrupt handler is expected on \MemAddr{0038}, we need to start at \MemAddr{C038} (slot 6 starts at \MemAddr{C000}, but this will be loaded into slot 0 at \MemAddr{0000}).
+\end{itemize}
+
+Not that hard, right!? It may take a while to wrap the head around those {\tt SLOT}, {\tt PAGE} and {\tt ORG} directives and addresses, but it's quite straightforward otherwise. While at it: this same technique can be used to load assets into specific banks and then page them in during runtime!
+
+You can find the full source code for this example in companion code, folder {\tt im1}. Feel free to run it, set breakpoints and see how the counter is being changed.
+
+Note there's one potentially deal-breaking issue with this approach: since we are paging out ROM, we can't use any of its functionality. For example, ROM routines like print text at \MemAddr{203C}. But we can do this with IM2 - read on!
 
 
+\subsection{Interrupt Mode 2}
+
+Once Interrupt Mode 2 is activated, mode 1 handler at \MemAddr{0038} isn't called anymore. Instead, when an interrupt occurs, Z80 performs the following steps:
+
+\begin{itemize}[topsep=1pt,itemsep=1pt]
+	\item First, a 16-bit address is formed where the value for the most significant byte is taken from the {\tt I} register and the value for the least significant byte from the current value of the data bus.
+	
+	\item Two bytes are read from this address (little endian format is assumed - low byte first, then high byte); these 2 bytes form another 16-bit address.
+	
+	\item It's this second address that the CPU treats as an interrupt routine and starts executing from.
+\end{itemize}
+
+\vspace*{1ex}
+\begin{tabularx}{\linewidth}{p{6cm}X}
+	\begin{tikzpicture}[
+		baseline=(bus.base),
+		framed/.style={draw, font=\ttfamily, minimum width=2cm, minimum height=0.6cm},
+		filled/.style={framed, fill=PrintableLightGray}
+	]
+		
+		\node[filled, minimum height=1.5cm] (contentstart) {};
+		\node[framed, below=0pt of contentstart] (contentxx00) {yy\Low};
+		\node[framed, below=0pt of contentxx00] (contentxx01) {yy\High};
+		\node[framed, below=0pt of contentxx01] (contentxx02) {yy\Low};
+		\node[framed, below=0pt of contentxx02] (contentxx03) {yy\High};
+		\node[framed, minimum height=1cm, below=0pt of contentxx03] (contentxx04) {\vdots};
+		\node[framed, below=0pt of contentxx04] (contentxxfe) {yy\Low};
+		\node[framed, below=0pt of contentxxfe] (contentxxff) {yy\High};
+		\node[filled, minimum height=1cm, below=0pt of contentxxff] (contentmiddle) {};
+		\node[framed, minimum height=1.5cm, text width=1.5cm, below=0pt of contentmiddle] (contentyyyy) {\rmfamily interrupt handler};
+			
+		\node[left=0pt of contentstart.north west, anchor=north east] (bus) {data bus};
+		\node[left=8pt of contentstart.north west, anchor=north east, yshift=-15pt] (I) {\tt I(xx)};
+			
+		\node[left=0pt of contentxx00] (memxx00) {\MemAddr{xx00}};
+		\node[left=0pt of contentxx01] (memxx01) {\MemAddr{xx01}};
+		\node[left=0pt of contentxx02] (memxx02) {\MemAddr{xx02}};
+		\node[left=0pt of contentxx03] (memxx03) {\MemAddr{xx03}};
+		\node[left=0pt of contentxxfe] (memxxfe) {\MemAddr{xxFE}};
+		\node[left=0pt of contentxxff] (memxxff) {\MemAddr{xxFF}};
+		\node[left=0pt of contentyyyy.north west, anchor=north east] (memyyyy) {\MemAddr{yyyy}};
+			
+		\draw[decorate,decoration={brace,amplitude=5pt,raise=3pt},yshift=0pt]
+			(contentxx00.north east) -- (contentxx01.south east)
+			node[midway,xshift=1.5ex] (yyyyaddress) {};
+		
+		\path[->, bend left, out=100, in=90] (yyyyaddress.east) edge (contentyyyy.north east);
+			
+		\path[->, draw] (I.295) -- (memxx00.105);
+		\path[->, draw] (bus.335) -- (memxx00.45);
+		
+	\end{tikzpicture}
+
+	&
+
+	\vspace*{-1em}
+
+	% paragraphs don't work within tabular, so we use left aligned description instead...
+	\begin{description}[topsep=0pt,itemsep=1pt,labelindent=-1.25ex,leftmargin=0cm]
+		\item In other words:
+		
+		\item Because the LSB for the vector table address is effectively a random number, we need to allocate 256 bytes in the memory, on 256-byte boundary (meaning any address with low byte \MemAddr{00} - \MemAddr{xx00}). This gives us a chunk of memory where low byte starts at \MemAddr{00} up to \MemAddr{FF}, thus covering all possible 8-bit values the data bus can ``throw'' at us. This chunk, called ``vector table'', is 256 bytes long and consists of 128 16-bit addresses (vectors), all pointing to the IM2 interrupt handler routine.
+		
+		\item We are responsible for assigning the high byte of the vector table address to {\tt I} register though. Together 16-bit address for vector table lookup looks like this:
+	\end{description}
+	
+	\vspace*{1ex}
+
+	{ % tabularx requires inner table to be embedded within curlies...
+	\begin{ElegantTable}{|C{3cm}|C{3cm}|}
+		\ElegantHeader{\EH{15-8} & \EH{7-0}}
+
+		\rowcolor{white} % not sure why header colour is spilled over the whole table in this instance!?
+		{\tt I} register & Data Bus \\
+	\end{ElegantTable}
+	}
+
+	\\
+\end{tabularx}
+
+Phew, a lot of words and concepts to grasp. But it's simpler than it sounds - let's rewrite the IM1 example, but this time with IM2. The main program first:
+
+\begin{tcblisting}{}
+	ORG &8000              ; set PC to &8000
+Start:
+	DI                     ; disable interrupts while we setup interrupts
+	CALL SetupInterruptVectors
+	IM 2                   ; enable Interrupt Mode 2
+	EI                     ; enable interrupts
+	|(the rest is the same as in IM1 example)|
+\end{tcblisting}
+
+Almost the same except for the {\tt NEXTREG} replaced with {\tt SetupInterruptVectors} subroutine call that initializes vector table:
+
+\begin{tcblisting}{}
+SetupInterruptVectors:
+	LD DE, InterruptHandler        ; prepare pointer to IM2 routine
+	LD HL, InterruptVectorTable   ; prepare pointer to vector table
+	LD B, 128                      ; we need to fill 128 addresses
+.loop:
+	LD (HL), E                     ; copy low byte
+	INC HL                         ; increment vector table pointer
+	LD (HL), D	                   ; copy high byte
+	INC HL                         ; increment vector table pointer
+	DJNZ .loop                     ; repeat until the end of the vector table
+	LD A, InterruptVectorTable >> 8
+	LD I, A                        ; I now holds high byte of vector table
+	RET
+\end{tcblisting}
+
+The subroutine fills in all 128 entries of the vector table with the address of our actual interrupt routine. The only remaining piece is the declaration of the vector table itself; I chose {\tt .ALIGN 256} directive that fills in bytes until 256-byte boundary is reached:
+
+\begin{tcblisting}{}
+	.ALIGN 256                     ; section must start on 256-byte boundary &xx00
+InterruptVectorTable:              ; I register should therefore have value &xx
+	DEFS 128*2                     ; 128 16-bit vectors	
+\end{tcblisting}
+
+The interrupt handler itself can reside anywhere in the memory. Code-wise it's the same as for IM1 mode previously.
+
+So there's some more work when using IM2 mode, but it leaves ROM untouched so we can rely on its routines and other functionality. I only demonstrated relevant bits here. You can find a fully working example in companion code, folder {\tt im2}.
+
+
+\subsubsection{What About Odd Data Bus Values?}
+
+Sharp-eyed readers may be wondering what would happen if the value from the data bus is odd? Given our IM2 example from above, our interrupt handler happens to be on address \MemAddr{802A}. Therefore the vector table would have the following contents:
+
+\begin{ElegantTable}{|c|c|c|c|C{3cm}|c|c|}
+	\ElegantHeader{\MemAddr{xx00} & \MemAddr{xx01} & \MemAddr{xx02} & \MemAddr{xx03} & ... & \MemAddr{xxFE} & \MemAddr{xxFF}}
+
+	\MemAddr{2A} & \MemAddr{80} & \MemAddr{2A} & \MemAddr{80} & ... & \MemAddr{2A} & \MemAddr{80} \\
+\end{ElegantTable}
+
+If the bus value is even, for example {\tt 0}, {\tt 2}, {\tt 4} etc, then the address of the interrupt handler would be correctly read as \MemAddr{802A} (remember, Z80 is little-endian). But what if the value is odd, {\tt 1}, {\tt 3}, {\tt 5} etc? In this case, 16-bit interrupt handler address would be wrong - \MemAddr{2A80}! During my tests, this never happened - either the data bus always had an even number, or, more likely, Z80 always reset bit 0 before constructing vector lookup address.
+
+Regardless, Next Dev Wiki\footnote{\url{https://wiki.specnext.dev/Interrupts}} in fact recommends that the interrupt handler routine is placed on an address where high and low bytes are equal. So it's better to follow this advice. The changes to the code are minimal, so I won't show it here - it could be a nice exercise though! Just a tip - to be extra safe, make vector table 257 bytes long in case the data bus has \MemAddr{FF}. You can find a working example in companion code, folder {\tt im2safe}.
+
+
+\subsection{Hardware Interrupt Mode 2}
+
+In addition to regular IM2, Next also supports a ``Hardware IM2'' mode. This mode works similar to legacy IM2 in that we still need to provide vector tables. But it properly implements the Z80 IM2 scheme with daisy chain priority. So when particular interrupt subroutine is called, we know exactly which device caused it without having to figure it out as needed in legacy IM2. Let's go over the details with an example. First, the initialization:
+
+% note: Band will be converted to & and Bor to | when rendering...
+\begin{tcblisting}{}
+	DI                             ; disable interrupts
+	NEXTREG &C0, (InterruptVectorTable Band %11100000) Bor %00000001
+	NEXTREG &C4, %10000001         ; enable expansion bus INT and ULA interrupts
+	NEXTREG &C5, %00000000         ; disable all CTC channel interrupts
+	NEXTREG &C6, %00000000         ; disable UART interrupts
+	
+	LD A, InterruptVectorTable >> 8
+	LD I, A                        ; I now holds high byte of vector table
+
+	IM 2                           ; enable HW Interrupt Mode 2
+	EI                             ; enable interrupts
+\end{tcblisting}
+
+Line 3 is where hardware IM2 mode is established. The crucial part is \PortLink{Interrupt Control}{C0} register: firstly, we are supplying the top 3 bits of LSB of the vector table to bits 7-5, and secondly, we enable IM2 mode by setting bit 0.
+
+Lines 4-6 enable or disable specific interrupters with \PortLink{Interrupt Enable 0}{C4}, \PortLink{Interrupt Enable 1}{C5} and \PortLink{Interrupt Enable 2}{C6}.
+
+Lines 8-12 are the same as with legacy IM2 mode - we assign the LSB of the vector table address to {\tt I} register. Then we enable IM2 mode and interrupts.
+
+Interrupt vectors table is quite a bit different (in a good way though):
+
+\begin{tcblisting}{}
+	.ALIGN 32
+InterruptVectorTable:
+	DW InterruptHandler        ; 0 = line interrupt (highest priority)
+	DW InterruptHandler        ; 1 = UART0 Rx
+	DW InterruptHandler        ; 2 = UART1 Rx
+	DW InterruptHandler        ; 3 = CTC channel 0
+	DW InterruptHandler        ; 4 = CTC channel 1
+	DW InterruptHandler        ; 5 = CTC channel 2
+	DW InterruptHandler        ; 6 = CTC channel 3
+	DW InterruptHandler        ; 7 = CTC channel 4
+	DW InterruptHandler        ; 8 = CTC channel 5
+	DW InterruptHandler        ; 9 = CTC channel 6
+	DW InterruptHandler        ; 10 = CTC channel 7
+	DW InterruptHandlerULA     ; 11 = ULA
+	DW InterruptHandler        ; 12 = UART0 Tx
+	DW InterruptHandler        ; 13 = UART1 Tx (lowest priority)
+	DW InterruptHandler
+	DW InterruptHandler
+\end{tcblisting}
+
+As you can see, each interrupter gets its own vector. In the above example, all except ULA are pointing to the same interrupt routine. Since there are only a handful, we can use a much clearer declaration with {\tt DW <routine address>}. This way we don't need any initialization code that would fill in the routine address as we used with legacy IM2 mode. Of course, we could use the same {\tt DW} approach there too, but it would be quite a handful to write the address 128 times...
+
+The thing to note: {\tt .ALIGN 32} is used to ensure the interrupt table is placed on a 32-byte boundary; the least significant 5 bits of the address must be {\tt 0} ($2^5=32=$ {\tt \%100000}). This is important due to how hardware IM2 mode vector table address is provided:
+
+\begin{BitTableWord}
+	\BitStartMulti{8}{{\tt I} register: MSB} & \BitMulti{3}{\MemAddr{C0}: LSB 7-5} & \BitMulti{5}{Interrupt specific} \\
+\end{BitTableWord}
+
+As with legacy IM2 mode, the most significant byte of the vector table address is assigned to {\tt I} register. But the least significant byte is not random. We provide the top 3 bits through \PortLink{Interrupt Control}{C0} Next register, the rest are filled in based on interrupt type:
+
+\begin{tabular}{cl}
+	{\tt 0} & Line interrupt (highest priority) \\
+	{\tt 1} & UART0 Rx \\
+	{\tt 2} & UART1 Rx \\
+	{\tt 3-10} & CTC Channels 0-7 \\
+	{\tt 11} & ULA \\
+	{\tt 12} & UART0 Tx \\
+	{\tt 13} & UART1 Tx (lowest priority) \\
+\end{tabular}
+
+Interrupt routines can reside anywhere in the memory.
+
+You can find fully working example in companion code, folder {\tt im2hw}.
+
+With hardware IM2 mode it's possible to interrupt DMA operations. The choice of interrupters that can interrupt DMA is made with \PortLink{DMA Interrupt Enable 0}{CC}, \PortLink{DMA Interrupt Enable 1}{CD} and \PortLink{DMA Interrupt Enable 2}{CE} registers. Here's what \discord{AA} wrote about this possibility on Next Discord server:
+
+\vspace*{-1ex}
+\begin{quote}
+	In this mode, it is also possible to program interrupters to interrupt DMA operations. Interrupting a DMA operation comes with a new caveat since the Z80 cannot see an interrupt until the end of an instruction. So if the DMA gives up the bus temporarily for an interrupt, then the Z80 will execute one instruction in the main program until the interrupt is seen. The interrups subroutine will execute and {\tt RETI} will return control to the DMA. Anyway there is another rabbit hole here.
+\end{quote}
+
+For details and more, see this discussion on Discord\footnote{\url{https://discord.com/channels/556228195767156758/692885312296190102/894284968614854749}}, highly recommended!
+
+Very special thanks to the folks from Next Discord server: \discord{AA} for mentioning\footnote{\url{https://discord.com/channels/556228195767156758/692885312296190102/865955247552462848}} hardware IM2 mode and \discord{varmfskii} whos discussion\footnote{\url{https://discord.com/channels/556228195767156758/692885353161293895/817807486744526886}} and sample code was the basis for my exploration into this mode!
+
+
+
+\pagebreak
+\subsection{Interrupt Registers}
+\label{zx_next_interrupts_registers}
+
+\subsubsection{\PortTitle{Video Line Interrupt Control Register}{22}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{Read: \ZilogPinLabel{INT} signal (even when Z80N has interrupts disabled) ({\tt 1} = interrupt is requested)}
+		\PortDescOnly{Write: Reserved, must be {\tt 0}}
+	\PortBits{6-3}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{2}
+		\PortDesc{{\tt 1} disables original ULA interrupt ({\tt 0} after reset)}
+	\PortBits{1}
+		\PortDesc{{\tt 1} enables Line Interrupt ({\tt 0} after reset)}
+	\PortBits{0}
+		\PortDesc{MSB of interrupt line value ({\tt 0} after reset)}
+\end{NextPort}
+
+Line value starts with 0 for the first line of pixels. But the line-interrupt happens already when the previous line's pixel area is finished (i.e. the raster-line counter still reads "previous line" and not the one programmed for interrupt). The \ZilogPinLabel{INT} signal is raised while display beam horizontal position is between 256-319 standard pixels, precise timing of interrupt handler execution then depends on how-quickly/if the Z80 will process the \ZilogPinLabel{INT} signal.
+
+
+\subsubsection{\PortTitle{Video Line Interrupt Value Register}{23}}
+
+\begin{NextPort}
+	\PortBits{7-0}
+		\PortDesc{LSB of interrupt line value ({\tt 0} after reset)}
+\end{NextPort}
+
+On core 3.1.5+ line numbering can be offset by \PortLink{Vertical Video Line Offset Register}{64}.
+
+
+\subsubsection{\PortTitle{Vertical Video Line Offset Register}{64}}
+
+\begin{NextPort}
+	\PortBits{7-0}
+		\PortDesc{Vertical line offset value {\tt 0}-{\tt 255} added to Copper, Video Line Interrupt and Active Video Line readings.}
+\end{NextPort}
+
+Core 3.1.5+ only.
+
+Normally the ULA's pixel row 0 aligns with vertical line count 0. With a non-zero offset, the ULA's pixel row 0 will align with the vertical line offset. For example, if the offset is 32 then video line 32 will correspond to the first pixel row in the ULA and video line 0 will align with the first pixel row of the Tilemap and Sprites (in the top border area).
+
+Since a change in offset takes effect when the ULA reaches row 0, the change can take up to one frame to occur.
+
+
+\subsubsection{\PortTitle{Interrupt Control}{C0}}
+
+\begin{NextPort}
+	\PortBits{7-5}
+		\PortDesc{Programmable portion of IM2 vector}
+	\PortBits{4}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{3}
+		\PortDesc{{\tt 1} enables, {\tt 0} disabled stackless NMI response}
+	\PortBits{2-1}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{0}
+		\PortDesc{Maskable interrupt mode: {\tt 1} IM2, {\tt 0} pulse}
+\end{NextPort}
+
+If bit 3 is set, the return address pushed during an NMI acknowledge cycle will be written to \PortLink{NMI Return Address LSB}{C2} and \PortLink{NMI Return Address MSB}{C3} instead of the memory (the stack pointer will be decremented). The first {\tt RETN} after the NMI acknowledge will then take its return address from the registers instead of memory (the stack pointer will be incremented). If bit 3 is {\tt 0}, and in other circumstances (if there is no NMI first), {\tt RETN} functions normally.
+
+
+\subsubsection{\PortTitle{NMI Return Address LSB}{C2}}
+\vspace*{-2ex}
+\subsubsection{\PortTitle{NMI Return Address MSB}{C3}}
+
+\begin{NextPort}
+	\PortBits{7-0}
+		\PortDesc{LSB or MSB of the return address written during an NMI acknowledge cycle}
+\end{NextPort}
+
+
+\subsubsection{\PortTitle{Interrupt Enable 0}{C4}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{Expansion bus \ZilogPinLabel{INT} ({\tt 1} after reset)}
+	\PortBits{6-2}
+		\PortDesc{Reserved, must be 0}
+	\PortBits{1}
+		\PortDesc{{\tt 1} enables, {\tt 0} disables line interrupt ({\tt 0} after reset)}
+	\PortBits{0}
+		\PortDesc{{\tt 1} enables, {\tt 0} disabled ULA interrupt ({\tt 1} after reset)}
+\end{NextPort}
+
+
+\subsubsection{\PortTitle{Interrupt Enable 1}{C5}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{{\tt 1} enables, {\tt 0} disables CTC channel 7 interrupt}
+	\PortBits{6}
+		\PortDesc{{\tt 1} enables, {\tt 0} disables CTC channel 6 interrupt}
+	\PortBits{5}
+		\PortDesc{{\tt 1} enables, {\tt 0} disables CTC channel 5 interrupt}
+	\PortBits{4}
+		\PortDesc{{\tt 1} enables, {\tt 0} disables CTC channel 4 interrupt}
+	\PortBits{3}
+		\PortDesc{{\tt 1} enables, {\tt 0} disables CTC channel 3 interrupt}
+	\PortBits{2}
+		\PortDesc{{\tt 1} enables, {\tt 0} disables CTC channel 2 interrupt}
+	\PortBits{1}
+		\PortDesc{{\tt 1} enables, {\tt 0} disables CTC channel 1 interrupt}
+	\PortBits{0}
+		\PortDesc{{\tt 1} enables, {\tt 0} disables CTC channel 0 interrupt}  
+\end{NextPort}
+
+All bits {\tt 0} after reset.
+
+
+\subsubsection{\PortTitle{Interrupt Enable 2}{C6}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{6}
+		\PortDesc{UART1 Tx empty}
+	\PortBits{5}
+		\PortDesc{UART1 Rx half full}
+	\PortBits{4}
+		\PortDesc{UART1 Rx available}
+	\PortBits{3}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{2}
+		\PortDesc{UART0 Tx empty}
+	\PortBits{1}
+		\PortDesc{UART0 Rx half full}
+	\PortBits{0}
+		\PortDesc{UART0 Rx available}
+\end{NextPort}
+
+All bits {\tt 0} after reset. Rx half full overrides Rx available.
+
+
+\subsubsection{\PortTitle{Interrupt Status 0}{C8}}
+
+\begin{NextPort}
+	\PortBits{7-2}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{1}
+		\PortDesc{Line interrupt}
+	\PortBits{0}
+		\PortDesc{ULA interrupt}
+\end{NextPort}
+
+Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortLink{Interrupt Control}{C0}) with interrupts enabled.
+
+
+\subsubsection{\PortTitle{Interrupt Status 1}{C9}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{CTC channel 7 interrupt}
+	\PortBits{6}
+		\PortDesc{CTC channel 6 interrupt}
+	\PortBits{5}
+		\PortDesc{CTC channel 5 interrupt}
+	\PortBits{4}
+		\PortDesc{CTC channel 4 interrupt}
+	\PortBits{3}
+		\PortDesc{CTC channel 3 interrupt}
+	\PortBits{2}
+		\PortDesc{CTC channel 2 interrupt}
+	\PortBits{1}
+		\PortDesc{CTC channel 1 interrupt}
+	\PortBits{0}
+		\PortDesc{CTC channel 0 interrupt}
+\end{NextPort}
+
+Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortLink{Interrupt Control}{C0}) with interrupts enabled.
+
+
+\subsubsection{\PortTitle{Interrupt Status 2}{CA}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{6}
+		\PortDesc{UART1 Tx empty interrupt}
+	\PortBits{5}
+		\PortDesc{UART1 Rx half full interrupt}
+	\PortBits{4}
+		\PortDesc{UART1 Rx available interrupt}
+	\PortBits{3}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{2}
+		\PortDesc{UART0 Tx empty interrupt}
+	\PortBits{1}
+		\PortDesc{UART0 Rx half full interrupt}
+	\PortBits{0}
+		\PortDesc{UART0 Rx available interrupt}
+\end{NextPort}
+
+Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortLink{Interrupt Control}{C0}) with interrupts enabled.
+
+
+\subsubsection{\PortTitle{DMA Interrupt Enable 0}{CC}}
+
+\begin{NextPort}
+	\PortBits{7-2}
+		\PortDesc{Reserved, must be 0}
+	\PortBits{1}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents line interrupt from interrupting DMA}
+	\PortBits{0}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents ULA interrupt from interrupting DMA}
+\end{NextPort}
+
+
+\subsubsection{\PortTitle{DMA Interrupt Enable 1}{CD}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 7 interrupt from interrupting DMA}
+	\PortBits{6}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 6 interrupt from interrupting DMA}
+	\PortBits{5}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 5 interrupt from interrupting DMA}
+	\PortBits{4}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 4 interrupt from interrupting DMA}
+	\PortBits{3}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 3 interrupt from interrupting DMA}
+	\PortBits{2}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 2 interrupt from interrupting DMA}
+	\PortBits{1}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 1 interrupt from interrupting DMA}
+	\PortBits{0}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents CTC channel 0 interrupt from interrupting DMA}
+\end{NextPort}
+
+
+\subsubsection{\PortTitle{DMA Interrupt Enable 2}{CE}}
+
+\begin{NextPort}
+	\PortBits{7}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{6}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents UART1 Tx empty from interrupting DMA}
+	\PortBits{5}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents UART1 Rx half full from interrupting DMA}
+	\PortBits{4}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents UART1 Rx available from interrupting DMA}
+	\PortBits{3}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{2}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents UART0 Tx empty from interrupting DMA}
+	\PortBits{1}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents UART0 Rx half full from interrupting DMA}
+	\PortBits{0}
+		\PortDesc{{\tt 1} allows, {\tt 0} prevents UART0 Rx available from interrupting DMA}
+\end{NextPort}
+
+
+\pagebreak
+\IntentionallyEmpty
 \pagebreak

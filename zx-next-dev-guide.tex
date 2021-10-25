@@ -2,6 +2,7 @@
 
 \usepackage{fancyhdr}
 \usepackage{a4wide}
+\usepackage{etoc}
 \usepackage{afterpage}
 \usepackage{amsfonts}
 \usepackage{anyfontsize}
@@ -13,18 +14,19 @@
 \usepackage{enumitem}
 \usepackage{etoolbox}
 \usepackage{mdwlist}
-\usepackage{minitoc}
 \usepackage{tabularx}
 \usepackage{mathabx}
 \usepackage{numprint}
 \usepackage{bigdelim}
 \usepackage{xfp}
-\usepackage{xurl}
 \usepackage{xstring}
 \usepackage{xparse}
 \usepackage[table]{xcolor}
+\usepackage[bottom]{footmisc}
 \usepackage[nottoc,numbib]{tocbibind}
 \usepackage[xparse,breakable,skins,listings]{tcolorbox}
+\usepackage{hyperref}
+\usepackage{microtype}
 \usepackage{tikz}
 \usepackage[
 	a4paper,
@@ -35,15 +37,15 @@
 	bottom=2.5cm			% page numbers should be much lower on the page
 ]{geometry}
 
-\usetikzlibrary{matrix,fit,positioning,calc,arrows.meta}
+% include definitions from external files (note: order of inputs is important!)
+\input{defines.tex}
+\input{setup.tex}
+\input{tables.tex}
+\input{instructions.tex}
+
 
 % ASCII text created with https://fsymbols.com/generators/carty/
 % in case it's not obvious - these large titles are nicely visible in minimap¯\_(ツ)_/¯
-
-% include definitions from external files.
-\input{defines.tex}
-\input{tables.tex}
-\input{instructions.tex}
 
 \begin{document}
 
@@ -53,25 +55,25 @@
 	% ▒█▀▀▀ ▒█▄▄▀ ▒█░░▒█ ▒█▒█▒█ ░▒█░░ 
 	% ▒█░░░ ▒█░▒█ ▒█▄▄▄█ ▒█░░▀█ ░▒█░░
 
-	% use arabic numerals for starting pages
-	\frontmatter
-
-	% use empty style for first couple pages, until defined otherwise
-	\pagestyle{empty}
+	\SetupPageFormattingTitle
 
 	\include{chapter-title.tex}
+
+	\SetupPageFormattingIntro
+	
 	\include{chapter-copyright.tex}
+	\include{chapter-acknowledge.tex}
+
+	\SetupPageFormattingTOC
+
 	\include{chapter-toc.tex}
+
 
 	% ▒█▀▀█ ▒█▀▀▀█ ▒█▄░▒█ ▀▀█▀▀ ▒█▀▀▀ ▒█▄░▒█ ▀▀█▀▀ 
 	% ▒█░░░ ▒█░░▒█ ▒█▒█▒█ ░▒█░░ ▒█▀▀▀ ▒█▒█▒█ ░▒█░░ 
 	% ▒█▄▄█ ▒█▄▄▄█ ▒█░░▀█ ░▒█░░ ▒█▄▄▄ ▒█░░▀█ ░▒█░░
 
-	% use arabic numerals for page numbers and clean page style for the rest of the document
-	\mainmatter
-
-	% use default page style for all content pages
-	\pagestyle{clean}
+	\SetupPageFormattingBook
 
 	\include{chapter-introduction.tex}
 
@@ -80,19 +82,38 @@
 	\include{chapter-next.tex}
 	\include{chapter-next-ports.tex}
 	\include{chapter-next-memory.tex}
+	\include{chapter-next-dma.tex}
 	\include{chapter-next-palette.tex}
 	\include{chapter-next-ula.tex}
 	\include{chapter-next-layer2.tex}
 	\include{chapter-next-tilemap.tex}
 	\include{chapter-next-sprites.tex}
+	\include{chapter-next-copper.tex}
 	\include{chapter-next-sound.tex}
 	\include{chapter-next-keyboard.tex}
 	\include{chapter-next-interrupts.tex}
 
-	% instruction pages should show chapter name on both odd & even
-	\pagestyle{nosectionmarker}
+	\SetupPageFormattingInstructions
 
+	% note: we are using input instead of include here, include will insert empty pages as it treats each file as its own section.
 	\include{chapter-instr-glance.tex}
+	\input{chapter-instr-glance-8bit-arithmetic.tex}
+	\input{chapter-instr-glance-16bit-arithmetic.tex}
+	\input{chapter-instr-glance-8bit-load.tex}
+	\input{chapter-instr-glance-general.tex}
+	\input{chapter-instr-glance-16bit-load.tex}
+	\input{chapter-instr-glance-stack.tex}
+	\input{chapter-instr-glance-exchange.tex}
+	\input{chapter-instr-glance-bit.tex}
+	\input{chapter-instr-glance-rotate-shift.tex}
+	\input{chapter-instr-glance-jump.tex}
+	\input{chapter-instr-glance-call-return.tex}
+	\input{chapter-instr-glance-block.tex}
+	\input{chapter-instr-glance-input.tex}
+	\input{chapter-instr-glance-output.tex}
+	\input{chapter-instr-glance-next.tex}
+	\input{chapter-instr-glance-alphabetical.tex}
+
 	\include{chapter-instr-close.tex}
 
 
@@ -100,9 +121,7 @@
 	% ▒█▄▄█ ▒█▄▄█ ▒█▄▄█ ▒█▀▀▀ ▒█▒█▒█ ▒█░▒█ ▒█░ ░▒█░░ 
 	% ▒█░▒█ ▒█░░░ ▒█░░░ ▒█▄▄▄ ▒█░░▀█ ▒█▄▄▀ ▄█▄ ▄▀▒▀▄
 
-	\appendix
-	% only print chapters in appendices, not sections and subsections
-	\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+	\SetupPageFormattingAppendix
 
 	\include{chapter-instr-sorted-mnemonic.tex}
 	\include{chapter-instr-sorted-opcode.tex}

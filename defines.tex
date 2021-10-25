@@ -1,4 +1,6 @@
-\newcommand*{\PRINTED}{}	% comment this line for generating online variant
+\newcommand*{\isPDF}{1}
+\newcommand*{\isWIP}{1}
+
 
 % ░█▀▀█ ▒█▀▀█ ▒█▀▀▀█ ▒█░▒█ ▀▀█▀▀ 
 % ▒█▄▄█ ▒█▀▀▄ ▒█░░▒█ ▒█░▒█ ░▒█░░ 
@@ -8,8 +10,9 @@
 \newcommand{\AuthorName}{Toma\v{z}}
 \newcommand{\AuthorNameSurname}{\AuthorName ~Kragelj}
 \newcommand{\BookTitleMain}{ZX Spectrum Next}
-\newcommand{\BookTitleSub}{Assembler Developer Guide}
+\newcommand{\BookTitleSub}{Assembly Developer Guide}
 \newcommand{\BookTitle}{\BookTitleMain~\BookTitleSub}
+\newcommand{\BookKeywords}{zx,next,spectrum,retro,documentation,manual,guide,assembly,language,programming}
 
 
 % ▒█▀▀█ ▒█▀▀▀ ▒█░░▒█ ▀█▀ ▒█▀▀▀█ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ ▒█▀▀▀█ 
@@ -17,9 +20,9 @@
 % ▒█░▒█ ▒█▄▄▄ ░░▀▄▀░ ▄█▄ ▒█▄▄▄█ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
 
 \newcommand{\LatestYear}{2021}
-\newcommand{\LatestMonthName}{September}
-\newcommand{\LatestMonth}{09}
-\newcommand{\LatestDay}{15}
+\newcommand{\LatestMonthName}{December}
+\newcommand{\LatestMonth}{12}
+\newcommand{\LatestDay}{1}
 
 % revision name is nicely structured variant with named month
 \newcommand{\LatestRevisionName}{\LatestDay~\LatestMonthName~\LatestYear}
@@ -32,71 +35,26 @@
 % ▒█▀▀▀ ▒█░░░ ▒█▀▀▀ ▒█▒█▒█ ▒█▀▀▀ ▒█▒█▒█ ░▒█░░ ░▀▀▀▄▄ 
 % ▒█▄▄▄ ▒█▄▄█ ▒█▄▄▄ ▒█░░▒█ ▒█▄▄▄ ▒█░░▀█ ░▒█░░ ▒█▄▄▄█
 
-% definitions based on whether PDF is generated for book or online.
-\newcommand{\email}[3]{\ifdefined\PRINTED{\tt #1@#2.#3}\else{\tt #1 AT #2 DOT #3}\fi}
+% creates an email (obfuscated for PDF variant), Discord or Twitter user text
+\newcommand{\email}[3]{\ifdefined\isPDF{\tt #1 AT #2 DOT #3}\else{\tt #1@#2.#3}\fi}
+\newcommand{\discord}[1]{{\tt @#1}}
+\newcommand{\twitter}[1]{{\tt @#1}}
 
-
-% ▒█▀▀█ ▒█▀▀▀█ ▒█░░░ ▒█▀▀▀█ ▒█░▒█ ▒█▀▀█ ▒█▀▀▀█ 
-% ▒█░░░ ▒█░░▒█ ▒█░░░ ▒█░░▒█ ▒█░▒█ ▒█▄▄▀ ░▀▀▀▄▄ 
-% ▒█▄▄█ ▒█▄▄▄█ ▒█▄▄█ ▒█▄▄▄█ ░▀▄▄▀ ▒█░▒█ ▒█▄▄▄█
-
-\definecolor{PrintableLightGray}{rgb}{0.85, 0.85, 0.85}
-\definecolor{PrintableDarkGray}{rgb}{0.5, 0.5, 0.5}
-
-
-% ▒█▀▀█ ░█▀▀█ ▒█▀▀█ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▄▀█ ░█▀▀█ ▀▀█▀▀ ▀▀█▀▀ ▀█▀ ▒█▄░▒█ ▒█▀▀█ 
-% ▒█▄▄█ ▒█▄▄█ ▒█░▄▄ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█░░▒█ ▒█▄▄▀ ▒█▒█▒█ ▒█▄▄█ ░▒█░░ ░▒█░░ ▒█░ ▒█▒█▒█ ▒█░▄▄ 
-% ▒█░░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄▄ 　 ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ▒█░░▒█ ▒█░▒█ ░▒█░░ ░▒█░░ ▄█▄ ▒█░░▀█ ▒█▄▄█
-
-% these are here to avoid compiler warnings
-\setlength{\headheight}{14.49998pt}
-\addtolength{\topmargin}{-2.49998pt}
-
-% section marker should only use name, without number
-\renewcommand{\sectionmark}[1]{\uppercase{\markright{#1}}}
-
-% redefine the default "plain" pagestyle (used by chapter pages)
-% only show page number
-\fancypagestyle{plain}{
-	\fancyhf{} 
-	\fancyhead{}
-	\fancyfoot[LO,RE]{\sffamily\footnotesize\thepage}
-	\renewcommand{\headrulewidth}{0pt}
-	\renewcommand{\footrulewidth}{0pt}
-}
-
-% define style used for normal pages
-% odd pages (aka left) shows chapter marker
-% even pages (aka right) shows section name
-\fancypagestyle{clean}{
-	\fancyhf{}
-	\fancyhead[LO]{\sffamily\footnotesize\leftmark}
-	\fancyhead[RE]{\sffamily\footnotesize\rightmark}
-	\fancyfoot[RE,LO]{\sffamily\footnotesize\thepage}
-	\renewcommand{\headrulewidth}{0.1pt}
-	\renewcommand{\footrulewidth}{0pt}
-}
-
-% define style used for pages where section mark doesn't make sense
-% odd and even pages show chapter marker on the outer edge
-\fancypagestyle{nosectionmarker}{
-	\fancyhf{}
-	\fancyhead[RE,LO]{\sffamily\footnotesize\leftmark}
-	\fancyfoot[RE,LO]{\sffamily\footnotesize\thepage}
-	\renewcommand{\headrulewidth}{0.1pt}
-	\renewcommand{\footrulewidth}{0pt}
-}
-
-% empty pages before chapters should use empty style (aka nothing)
-\let\mtcleardoublepage\cleardoublepage
-\renewcommand{\cleardoublepage}{\clearpage{\pagestyle{empty}\mtcleardoublepage}}
-
-% creates minitoc without any headers
-\newcommand{\ChapterTOC}[1][\pagestyle{clean}]{
+% creates minitoc without any headers; parameters:
+% - (optional) #1 boolean; if star present, no styling will be applied after TOC, otherwise default styling will be applied (which is the default)
+% - (optional) #1 boolean; if present, chapter TOC is generated, otherwise not (default will create TOC)
+\NewDocumentCommand{\ChapterTOC}{ o o }{
 	\pagestyle{nosectionmarker}
-	\minitoc
-	\thispagestyle{plain}
-	#1
+
+	% if #2 is present (aka not "[]"), render TOC.
+	\IfValueF{#2}{
+		\etocsettocstyle{}{}	% no title
+		\localtableofcontents
+	}
+	\thispagestyle{plain}	% simple TOC pages without headers
+	
+	% if #1 is present (aka not "[]"), set page style to clean
+	\IfValueF{#1}{\pagestyle{clean}}
 }
 
 % we can use this for pages that are intentionally left blank
@@ -110,12 +68,26 @@
 	\mbox{}
 }
 
-% define default paragraph styles
-\setlength{\parindent}{0em}
-\setlength{\parskip}{1.5ex}
+% renders "work in progress" text using current font and size.
+\newcommand{\WorkInProgress}{\ifdefined\isWIP\color{red}\textbf{WORK IN PROGRESS}\fi}
 
-% don't stretch content into empty space vertically
-\raggedbottom
+% renders "work in progress" sign for use on "full screen" pages; uses \Huge font by default, but that can be changed with optional parameter
+\newcommand{\WorkInProgressFullScreen}[1][\Huge]{
+	\ifdefined\isWIP
+		#1
+		\begin{center}
+			\WorkInProgress
+		\end{center}
+	\fi
+}
+
+
+% ▒█▀▀█ ▒█▀▀▀█ ▒█░░░ ▒█▀▀▀█ ▒█░▒█ ▒█▀▀█ ▒█▀▀▀█ 
+% ▒█░░░ ▒█░░▒█ ▒█░░░ ▒█░░▒█ ▒█░▒█ ▒█▄▄▀ ░▀▀▀▄▄ 
+% ▒█▄▄█ ▒█▄▄▄█ ▒█▄▄█ ▒█▄▄▄█ ░▀▄▄▀ ▒█░▒█ ▒█▄▄▄█
+
+\definecolor{PrintableLightGray}{rgb}{0.85, 0.85, 0.85}
+\definecolor{PrintableDarkGray}{rgb}{0.5, 0.5, 0.5}
 
 
 % ▒█▀▀▀█ ▒█░▒█ ▒█▀▀▀█ ▒█▀▀█ ▀▀█▀▀ ▒█░▒█ ░█▀▀█ ▒█▄░▒█ ▒█▀▀▄ ▒█▀▀▀█ 
@@ -143,12 +115,27 @@
 \newcommand{\FPV}{VF}			% PV=Overflow
 \newcommand{\FPP}{PF}			% PV=Parity
 
-% PortLink is short link to port with description and address, suitable for inline use, while PortReference is longer reference with chapter title and section number mostly used for register lists when referring to previously described register
-\newcommand{\PortLink}[2]{{\small \textbf{#1} \MemAddr{#2}}}
+% PortNoLink is short link to port with description and address, suitable for inline use. It doesn't create hyperlink though, so suitable for ports that are not described.
+\newcommand{\PortNoLink}[2]{{\small \textbf{#1} \MemAddr{#2}}}
+% PortLink is short link to port with description and address, suitable for inline use. It automatically embeds the whole text within hyperlink to the port with the same name.
+\newcommand{\PortLink}[2]{\hyperref[#1]{\PortNoLink{#1}{#2}}}
+% PortReference is longer reference with chapter title and section number mostly used for register lists when referring to previously described register.
 \newcommand{\PortReference}[2]{
 	\vspace*{-2ex}
-	See description under #2 chapter, section \ref{#1}.
+	See description under section \ref{#1}, #2.
 }
+
+% PortTitle creates a title with label for the given port/register (use PortLink to refer back to the same named register)
+\newcommand{\PortTitle}[2]{#1 \MemAddr{#2}\label{#1}}
+% PortTitleLink is also used for titles, but where title itself functions as mention and links to the actual port/register description in another section (similar to \PortLink in this sense, but while PortLink isn't usable in the context of \subsection, PortTitleLink is!)
+\newcommand{\PortTitleLink}[2]{\protect\hyperref[#1]{#1 \MemAddr{#2}}}
+
+% generic renderer for any chip pin label (uses line above); this is used for all concrete chip labels internally.
+\newcommand{\NoLinkChipPinLabel}[1]{$\mathtt{\overline{#1}}$}
+% renders the given Z80 chip pin label with link to Z80 chip diagram. Needless to say - only use for links to Z80 chip pins!
+\newcommand{\ZilogPinLabel}[1]{\hyperref[z80_pin_descriptions]{\NoLinkChipPinLabel{#1}}}
+% renders the given DMA chip pin label with link to DMA chip diagram (once we actually have it)
+\newcommand{\DMAPinLabel}[1]{\NoLinkChipPinLabel{#1}}
 
 % other commonly used definitions
 \newcommand{\MemAddr}[1]{{\tt \$#1}}
@@ -198,6 +185,8 @@
 	morecomment=[l]{;},
 	moredelim=[is][\rmfamily\itshape]{|}{|},	% any text within |...| will be roman/italic
 	literate={&}{\$}1							% replace `&` with `$` (to avoid syntax higlight issues)
+			{Band}{\&~}1						% replace `Band` with `&` (to allow bitwise and output without & being consumed for $ from previous rule)
+			{Bor}{|~}1							% replace `Bor' with `|` (to allow bitwise or output without | being consumed for roman/italic from moredelim rule above)
 }
 
 % define default settings for all tcolorbox instances

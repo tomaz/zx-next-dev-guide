@@ -17,9 +17,10 @@
 % ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ 　 ▒█▀▀▀ ▒█░░▒█ ▒█▄▄▀ ▒█▒█▒█ ▒█▄▄█ ░▒█░░ ░▒█░░ ▒█░ ▒█▒█▒█ ▒█░▄▄ 
 % ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄ 　 ▒█░░░ ▒█▄▄▄█ ▒█░▒█ ▒█░░▒█ ▒█░▒█ ░▒█░░ ░▒█░░ ▄█▄ ▒█░░▀█ ▒█▄▄█
 
-% same as X and p{size} respectively, but centers text horizontally
-\newcolumntype{Y}{>{\centering\arraybackslash}X}
-\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+% couple columns for tabularx
+\newcolumntype{Y}{>{\centering\arraybackslash}X}			% same as X but vertically centers content in cell
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}		% same as p{size} but vertically centers content in cell
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}	% same as p{size} but right aligned
 
 % top and bottom "struts" for instruction lines (note different height can be passed in via optional parameter)
 \newcommand{\instrt}[1][2.5ex]{\rule{0pt}{#1}}
@@ -28,6 +29,8 @@
 % top and bottom "struts" for note lines
 \newcommand{\notet}{\rule{0pt}{2.4ex}}
 \newcommand{\noteb}{\rule[-1.3ex]{0pt}{0pt}}
+
+\newcommand{\TableDefaultRowHeightRatio}{1.2}
 
 
 % ▀▀█▀▀ ░█▀▀█ ▒█▀▀█ ▒█░░░ ▒█▀▀▀ ▒█▀▀▀█ 　 ▒█░░▒█ ▀█▀ ▀▀█▀▀ ▒█░▒█ 　 ▒█░▒█ ▒█▀▀▀ ░█▀▀█ ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀█ ▒█▀▀▀█ 
@@ -39,8 +42,8 @@
 % - (optional) commands that should only be available to main environment block (note only \NewExpandableDocumentCommand or \newcommand is allowed!)
 % - (optional) suffix; string, default = \hline
 % - (optional) table width; default = \linewidth
-% - (optional) row stretch ratio; float, empty for builtin, default = 1.2
-\NewDocumentEnvironment{ElegantTableX}{ m O{} O{\hline} O{\linewidth} O{1.2} +!b }{
+% - (optional) row stretch ratio; float, empty for built-in, default = \TableDefaultRowHeightRatio
+\NewDocumentEnvironment{ElegantTableX}{ m O{} O{\hline} O{\linewidth} O{\TableDefaultRowHeightRatio} +!b }{
 	\begingroup
 
 		% execute any group only commands
@@ -62,7 +65,7 @@
 	\endgroup
 }{}
 % same as above except using tabular instead of tabularx
-\NewDocumentEnvironment{ElegantTable}{ m O{} O{\hline} O{1.2} +!b }{
+\NewDocumentEnvironment{ElegantTable}{ m O{} O{\hline} O{\TableDefaultRowHeightRatio} +!b }{
 	\begingroup
 
 		% execute any group only commands
@@ -139,7 +142,7 @@
 % ▒█▄▄█ ▄█▄ ░▒█░░ 　 ▒█▄▄█ ▒█▄▄▄█ ▒█░░▒█ ▒█▄▄█ ▄█▄ ▒█░░▀█ ▒█░▒█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
 
 % internal table for defining values for specific bit combinations (usually used within `PortDescOnly`)
-\NewDocumentEnvironment{PortBitConfig}{ +b }{
+\NewDocumentEnvironment{PortBitConfig}{ +!b }{
 	{ % we are nesting this tabularx within parent tabularx, so we need to embed it within braces
 	\begin{tabularx}{\linewidth}{lX}
 		#1
@@ -161,6 +164,8 @@
 \newcommand{\BitMulti}[2]{\multicolumn{#1}{c|}{#2}}
 \newcommand{\BitStartMulti}[2]{\multicolumn{#1}{|c|}{#2}}
 
+% renders 8-bit table. Parameters:
+% - (optional) column format; default = c
 \NewDocumentEnvironment{BitTableByte}{ O{c} +b }{
 	\begin{ElegantTable}{|#1|#1|#1|#1|#1|#1|#1|#1|}
 		\ElegantHeader{
@@ -178,11 +183,16 @@
 		
 	\end{ElegantTable}
 }{}
-\NewDocumentEnvironment{BitTableWord}{ +b } {
-	\begin{ElegantTable}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+
+% similar to BitTableByte, except it's for 16-bits. In addition to show each bit header, it also uses header row above with 2 multirow columns, one for each byte. Parmeters:
+% - (optional) column format; default = c
+% - (optional) header for high byte; default = High Byte
+% - (optional) header for low byte: default = Low Byte
+\NewDocumentEnvironment{BitTableWord}{ O{c} O{High Byte} O{Low Byte} +b } {
+	\begin{ElegantTable}{|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|#1|}
 		\hline
 
-		\ElegantHeader{\multicolumn{8}{|c|}{High Byte} & \multicolumn{8}{c|}{Low Byte}}
+		\ElegantHeader{\multicolumn{8}{|c|}{#2} & \multicolumn{8}{c|}{#3}}
 
 		\ElegantHeader{
 			\BitHead{15} &
@@ -203,7 +213,7 @@
 				\BitHead{0}
 		}
 		
-		#1
+		#4
 
 	\end{ElegantTable}
 }{}
@@ -351,8 +361,8 @@
 \newcommand{\EmptySeparator}{\\[-6px]}
 
 % writes a table break with vertical spacing so table starts at the same vertical postiion as the one on previous page
-\newcommand{\InstrTableContinue}{
-	\vspace*{-2.5ex}
+\newcommand{\InstrTableContinue}[1][-2.5ex]{
+	\vspace*{#1}
 	{
 		\scriptsize
 		(continued on next page)
@@ -382,8 +392,10 @@
 	}
 }{}
 
-% note item
+% note item + variants where item is manually split between multiple lines (use "cont" variant for first and subsequent, "end" for last)
 \newcommand{\NoteItem}[1]{& #1 \\}
+\newcommand{\NoteItemCont}[1]{& #1 \\[-1pt]}
+\newcommand{\NoteItemEnd}[1]{& #1 \\[1pt]}
 
 % add this above `NoteItem` when there's only single item in the table; in such case compiler creates almost 1 item empty gap on top for some reason... I couldn't find better solution unfortunately and couldn't figure out why this happens
 \newcommand{\NoteTableSingleItemSpaceCorrection}{

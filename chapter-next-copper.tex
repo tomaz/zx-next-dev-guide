@@ -1,0 +1,312 @@
+\section{Copper}
+\label{zx_next_copper}
+
+% ───────────────────────────────────────────────────────────────────────────────────────────────
+% ─██████████████─██████████████─██████████████─██████████████─██████████████─████████████████───
+% ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
+% ─██░░██████████─██░░██████░░██─██░░██████░░██─██░░██████░░██─██░░██████████─██░░████████░░██───
+% ─██░░██─────────██░░██──██░░██─██░░██──██░░██─██░░██──██░░██─██░░██─────────██░░██────██░░██───
+% ─██░░██─────────██░░██──██░░██─██░░██████░░██─██░░██████░░██─██░░██████████─██░░████████░░██───
+% ─██░░██─────────██░░██──██░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───
+% ─██░░██─────────██░░██──██░░██─██░░██████████─██░░██████████─██░░██████████─██░░██████░░████───
+% ─██░░██─────────██░░██──██░░██─██░░██─────────██░░██─────────██░░██─────────██░░██──██░░██─────
+% ─██░░██████████─██░░██████░░██─██░░██─────────██░░██─────────██░░██████████─██░░██──██░░██████─
+% ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░██─────────██░░██─────────██░░░░░░░░░░██─██░░██──██░░░░░░██─
+% ─██████████████─██████████████─██████─────────██████─────────██████████████─██████──██████████─
+% ───────────────────────────────────────────────────────────────────────────────────────────────
+
+Copper stands for ``co-processor''. If the name sounds familiar, there's a reason - it functions similarly to the Copper from the Commodore Amiga Agnus chip. It allows changing a subset of Next registers at certain scanline positions, which frees the Z80 processor for other tasks.
+
+Copper uses 2K of dedicated write-only memory for its programs. A program consists of a series of instructions. Instructions are 16-bits in size, meaning we can store up to 1024 instructions. Internally, Copper uses a 10-bit program counter ({\tt CPC}) that by default auto-increments and wraps around from the last to the first instruction. But we can change this behaviour if needed.
+
+Timing for Copper is 14MHz on core 2.0 and 28MHz on core 3.0. If interested, this document describes the timing and many other details for core 2.0 in great detail\footnote{\url{https://gitlab.com/thesmog358/tbblue/blob/master/docs/extra-hw/copper/COPPER-v0.1c.TXT}}.
+
+
+\subsection{Instructions}
+
+There are only two types of instructions ZX Next Copper understands, but each type has a special case, so in total, we can say there are four operations:
+
+\begin{ElegantTableX}{|l|l|X|l|}[
+	\newcommand{\CopperInstr}[4]{{\tt #1} & {\tt #2} & \raggedright{#3} & #4 \\}
+]
+	\ElegantHeader{
+		\EH{Op.} &
+		\EH{Bit Pattern} &
+		\EH{Effect} &
+		\EH{Dur.}
+	}
+
+	\CopperInstr{WAIT}
+		{1HHHHHHV VVVVVVVV}
+		{Wait for raster line \textbf{V} ({\tt 0}-{\tt 311}) and horizontal position \textbf{H} ({\tt 0}-{\tt 55})}
+		{1 cycle}
+
+	\hline
+
+	\CopperInstr{HALT}
+		{11111111 11111111}
+		{Special case of {\tt WAIT}; works as ``halt''}
+		{1 cycle}
+
+	\hline
+		
+	\CopperInstr{MOVE}
+		{0RRRRRRR VVVVVVVV}
+		{Write value \textbf{V} to Next register \textbf{R}}
+		{2 cycles}
+
+	\hline
+
+	\CopperInstr{NOOP}
+		{00000000 00000000}
+		{Special case of {\tt MOVE}; works as ``no operation''}
+		{1 cycle}
+
+\end{ElegantTableX}
+
+
+\subsubsection{WAIT}
+
+\begin{BitTableWord}
+	\BitMono{1} &
+	\BitMulti{6}{Horizontal ({\tt 0}-{\tt 55})} &
+	\BitMulti{9}{Vertical ({\tt 0}-{\tt 311})} \\	
+\end{BitTableWord}
+
+{\tt WAIT} blocks Copper program until the current raster line reaches the 9-bit vertical position from bits 8-0. When the line matches, it further waits until the given 6-bit horizontal position is reached.
+
+\begin{tabularx}{\linewidth}{@{}lX}
+	
+	\begin{tikzpicture}[
+		baseline=(raster.north),
+		framed/.style={draw},
+		filled/.style={framed, fill=PrintableLightGray}
+	]
+		\node[framed, minimum width=6cm, minimum height=4cm, anchor=north west, label={[yshift=1.5em]below:Raster Area}] at(0,0) (raster) {};
+		\node[filled, minimum width=4cm, minimum height=3cm, anchor=north west] at(0,0) (screen) {Screen};
+	
+		\begin{scope}[
+			every path/.style={>=stealth', <->, line width=0.5pt},
+			every node/.style={font=\footnotesize\ttfamily, midway, above}]
+					
+			\draw ([yshift=1.5ex]raster.north west) -- ([yshift=1.5ex]raster.north east) node {448};
+			\draw ([xshift=-1.5ex]raster.north west) -- ([xshift=-1.5ex]raster.south west) node[rotate=90] {312};
+					
+			\draw ([yshift=-3ex]screen.north west) -- ([yshift=-3ex]screen.north east) node {256};
+			\draw ([xshift=3ex]screen.north west) -- ([xshift=3ex]screen.south west) node[rotate=90] {192};
+				
+		\end{scope}
+	
+	\end{tikzpicture}
+
+	&
+
+	The raster area addressable by Copper is 448$\times$312 pixels. So for the standard 256$\times$192 resolution, one horizontal position translates into 8 pixels. The visible portion of the screen is positioned top-left within the raster area like shown in this drawing. This means Copper line 0 corresponds with the top line of the screen, just below the border.
+
+	\\
+\end{tabularx}
+
+
+\subsubsection{HALT}
+
+\begin{BitTableWord}
+	\BitMono{1} &
+		\BitMono{1} &
+		\BitMono{1} &
+		\BitMono{1} &
+		\BitMono{1} &
+		\BitMono{1} &
+		\BitMono{1} &
+		\BitMono{1} &
+	\BitMono{1} &
+		\BitMono{1} &
+		\BitMono{1} &
+		\BitMono{1} &
+		\BitMono{1} &
+		\BitMono{1} &
+		\BitMono{1} &
+		\BitMono{1} \\
+\end{BitTableWord}
+
+{\tt HALT} is a special case of {\tt WAIT} instruction that tells Copper to wait for the vertical position 511 and horizontal 63. As these are unreachable positions, it will effectively stop all further Copper processing until Next is reset.
+
+However, when mode {\tt 11} is used (bits 7-6 of \PortLink{Copper Control High Byte}{62}, see section \ref{zx_next_copper_configuration} for details), Copper will auto-wrap to the first instruction on every vertical blank. This allows us to use {\tt HALT} to mark the end of the Copper program without having to fill in the remaining bytes with {\tt 0}. Quite convenient! In fact, I'd imagine this would be the most commonly used mode. If you're used to Copper on Amiga, this is also how it behaved there.
+
+
+\subsubsection{MOVE}
+
+\begin{BitTableWord}
+	\BitMono{0} &
+	\BitMulti{7}{Next Register ({\tt 0}-{\tt 127})} &
+	\BitMulti{8}{Value ({\tt 0}-{\tt 255})} \\
+\end{BitTableWord}
+
+{\tt MOVE} writes the given 8-bit value to the given Next register. Any register between {\tt 1} and {\tt 127} (\MemAddr{7F}) can be written to. Register {\tt 0} is a special case, see {\tt NOOP} below.
+
+{\tt MOVE} can be used for all sorts of neat effects. For example: change Layer 2 offsets to achieve parallax scrolling effect, change palette at specific screen coordinates to achieve sky gradient or simulate above and under-water colours etc.
+
+
+\subsubsection{NOOP}
+
+\begin{BitTableWord}
+	\BitMono{0} &
+		\BitMono{0} &
+		\BitMono{0} &
+		\BitMono{0} &
+		\BitMono{0} &
+		\BitMono{0} &
+		\BitMono{0} &
+		\BitMono{0} &
+	\BitMono{0} &
+		\BitMono{0} &
+		\BitMono{0} &
+		\BitMono{0} &
+		\BitMono{0} &
+		\BitMono{0} &
+		\BitMono{0} &
+		\BitMono{0} \\
+\end{BitTableWord}
+
+{\tt NOOP} is a special case of {\tt MOVE} that effectively does nothing for a period of one horizontal position. It can be used to fine-tune timing, align colour and display changes etc.
+
+
+\pagebreak
+\subsection{Configuration}
+\label{zx_next_copper_configuration}
+
+To load a program, we need to send it, byte by byte, through \PortLink{Copper Data}{60} or \PortLink{Copper Data 16-bit Write}{63} registers. As instructions are 16-bits in size, two writes are required. The difference between the two registers is that \MemAddr{60} sends bytes immediately while \MemAddr{63} only after both bytes of an instruction are provided, thus preventing half-written instructions from executing.
+
+Copper is controlled through 16-bit control word accessible through \PortLink{Copper Control High Byte}{62} and \PortLink{Copper Control Low Byte}{61} registers:
+
+\begin{BitTableWord}[c][\PortLink{Copper Control High Byte}{62}][\PortLink{Copper Control Low Byte}{61}]
+	\BitStartMulti{2}{Mode} &
+		\BitMono{0} & 
+		\BitMono{0} & 
+		\BitMono{0} &
+		\BitMulti{11}{Index for program upload} \\
+\end{BitTableWord}
+
+Mode can be one of the following:
+
+\begin{PortBitConfig}
+	\PortBitLine{00}{Stops the Copper, {\tt CPC} keeps its current value. This is useful during program upload, to prevent Copper from executing incomplete instructions and programs.}
+	\PortBitLine{01}{Resets {\tt CPC} to {\tt 0}, then starts Copper. From here on, Copper will start executing the first instruction in the program and continue until {\tt CPC} reaches 1023, then wrap around back to first. However it will stop if {\tt HALT} instruction is encountered.}
+	\PortBitLine{10}{Starts or resumes Copper from current {\tt CPC}. Similar to {\tt 01}, except that {\tt CPC} is not changed. Instead, Copper resumes execution from current instruction.}
+	\PortBitLine{11}{Same as {\tt 01}, but also auto-resets {\tt CPC} to 0 on vertical blank. In this mode we can use {\tt HALT} to mark the end of the program and still repeat it without having to fill-in {\tt NOOP}s from the last instruction of our program to the end of Copper 2K memory.}
+\end{PortBitConfig}
+
+The other value we set is the index for program upload. This is 11-bit value ({\tt 0}-{\tt 2047}) specifying the byte offset for write commands with \PortLink{Copper Data}{60} or \PortLink{Copper Data 16-bit Write}{63} registers. In other words: this is the index for the location into which data will be uploaded, not the value of the {\tt CPC}. We can't change {\tt CPC} programmatically, apart from resetting it to {\tt 0}.
+
+
+\subsection{Example}
+
+Enough theory, let's see how it works in practice, Copper program first. It changes palette colour to green at the top of the screen and then to red in the middle:
+
+\begin{tcblisting}{}
+CopperList:
+	DB &80, 0           ; Wait line 0
+	DB &41, %00011100 ; Set palette entry to green
+	DB &80, 96          ; Wait line 96
+	DB &41, %11100000 ; Set palette entry to red
+	DB &FF, &FF         ; HALT
+CopperListSize = &-CopperList
+\end{tcblisting}
+
+In case you may be wondering: we should also ensure we update the correct colour with \PortLink{Enhanced ULA Control Register}{43} and \PortLink{Palette Index Register}{40}. But I wanted to keep the program simple for demonstration purposes.
+
+With Copper program in place, we can upload it to Copper memory. We can use DMA or directly upload values through Next registers. The code here demonstrates later, but companion code implements both so you can compare:
+
+\begin{tcblisting}{}
+	; Stop Copper and set data upload index to 0
+	NEXTREG &61, %00000000
+	NEXTREG &62, %00000000
+
+	; Copy list into Copper memory
+	LD HL, CopperList           ; HL points to start of copper list
+	LD B, CopperListSize        ; B = size of our Copper list in bytes
+.nextByte:
+	LD A, (HL)                  ; Load current byte to A
+	NEXTREG &63, A              ; Copy it to Copper memory
+	INC HL                      ; Increment HL to next byte
+	DJNZ .nextByte              ; Repeat or continue
+
+	; Start Copper in mode %11 - reset on every vertical blank
+	NEXTREG &61, %00000000
+	NEXTREG &62, %11000000
+\end{tcblisting}
+
+Again, this is an overly simplified example. It only works for lists that are less than 256 bytes long.
+
+The next step is... Well, there is no next step - if we enabled Layer 2 and filled it with the colour we're changing in our Copper list, we should see the screen divided into two halves with top in green and bottom red colour.
+
+Not the most impressive display of Copper capabilities, I give you that. You can find a more complex example in companion code on GitHub, folder {\tt copper} with couple additional points of interest:
+
+\begin{itemize}[topsep=1pt,itemsep=1pt]
+	\item Upload routine that supports programs of arbitrary size (within 1024 instructions limit)
+	\item Example of upload routine using DMA
+	\item Using DMA to fill in Layer 2 banks
+	\item Macros that hopefully make Copper programs easier to read and write
+	\item Usage of \PortLink{Copper Data}{60} to dynamically update individual bytes of the program in memory to achieve couple effects
+\end{itemize}
+
+
+\pagebreak
+\subsection{Copper Registers}
+\label{zx_next_copper_registers}
+
+
+\subsubsection{\PortTitle{Copper Data}{60}}
+
+\begin{NextPort}
+	\PortBits{7-0}
+		\PortDesc{Data to upload to Copper memory}
+\end{NextPort}
+
+The data is written to the index specified with \PortLink{Copper Control Low Byte}{61} and \PortLink{Copper Control High Byte}{62}. After the write, the index is auto-incremented to the next memory position. The index wraps to {\tt 0} when the last byte of the program memory is written to position {\tt 2047}. Since Copper instructions are 16-bits in size, two writes are required to complete each one.
+
+
+\subsubsection{\PortTitle{Copper Control Low Byte}{61}}
+
+\begin{NextPort}
+	\PortBits{7-0}
+		\PortDesc{Least significant 8 bits of Copper list index}
+\end{NextPort}
+
+
+\subsubsection{\PortTitle{Copper Control High Byte}{62}}
+
+\begin{NextPort}
+	\PortBits{7-6}
+		\PortDesc{Control mode}
+		\PortDescOnly{
+			\begin{PortBitConfig}
+				\PortBitLine{00}{Stops the Copper, {\tt CPC} keeps its current value}
+				\PortBitLine{01}{Resets {\tt CPC} to {\tt 0}, then starts Copper}
+				\PortBitLine{10}{Starts or resumes Copper from current {\tt CPC}}
+				\PortBitLine{11}{Same as {\tt 01}, but also auto-resets {\tt CPC} to 0 on vertical blank}
+			\end{PortBitConfig}
+		}
+	\PortBits{5-3}
+		\PortDesc{Reserved, must be {\tt 0}}
+	\PortBits{2-0}
+		\PortDesc{Most significant 3 bits of Copper list index}
+\end{NextPort}
+
+When control mode is identical to current one, it's ignored. This allows change of the upload index without restarting the program.
+
+
+\subsubsection{\PortTitle{Copper Data 16-bit Write}{63}}
+
+\begin{NextPort}
+	\PortBits{7-0}
+		\PortDesc{Data to upload to Copper memory}
+\end{NextPort}
+
+Similar to \PortLink{Copper Data}{60} except that writes are only committed to Copper memory after two bytes are written. This prevents half-written instructions to be executed.
+
+The first write to this register is for MSB of the Copper instruction or even instruction address and second write for LSB or odd instruction address.
+
+
+\pagebreak
+\IntentionallyEmpty
+\pagebreak

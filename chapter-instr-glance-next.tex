@@ -57,7 +57,7 @@
 			\Hex{..}{} 
 	\end{instruction}
 
-	\begin{instruction}{BSLA DE,B\See{1}} 
+	\begin{instruction}{BSLA DE,B\See{2}} 
 		\Symbol{\SymBSLA[0]}
 			\FlagsBSLA
 			\OpCode{11}{101}{101}
@@ -68,7 +68,7 @@
 			\Hex{28}{}
 	\end{instruction}
 
-	\begin{instruction}{BSRA DE,B\See{1}} 
+	\begin{instruction}{BSRA DE,B\See{2}} 
 		\SymbolS{\SymBSRA[0]}
 			\FlagsBSRA
 			\OpCode{11}{101}{101}
@@ -81,7 +81,7 @@
 			\Hex{29}{}
 	\end{instruction}
 
-	\begin{instruction}{BSRL DE,B\See{1}} 
+	\begin{instruction}{BSRL DE,B\See{2}} 
 		\SymbolS{\SymBSRL[0]}
 			\FlagsBSRL
 			\OpCode{11}{101}{101}
@@ -94,7 +94,7 @@
 			\Hex{2A}{}
 	\end{instruction}
 
-	\begin{instruction}{BSRF DE,B\See{1}} 
+	\begin{instruction}{BSRF DE,B\See{2}} 
 		\SymbolS{\SymBSRF[0]}
 			\FlagsBSRF
 			\OpCode{11}{101}{101}
@@ -107,7 +107,7 @@
 			\Hex{2B}{}
 	\end{instruction}
 		
-	\begin{instruction}{BRLC DE,B\See{1}} 
+	\begin{instruction}{BRLC DE,B\See{2}} 
 		\Symbol{\SymBRLC[0]}
 			\FlagsBRLC
 			\OpCode{11}{101}{101}
@@ -239,18 +239,20 @@
 \end{instrtable}
 
 \begin{notestable}
-	\NoteItem{\See{1}Core v2+ only}
-	\NoteItem{\See{2}PV set to {\tt 1} if {\tt D} was {\tt \$7F} before increment, otherwise {\tt 0}}
+	\NoteItemCont{\See{1}CF is undefined, recently discovered, thanks to Peter Ped Helcmanovsky}
+	\NoteItemEnd{\url{https://discord.com/channels/556228195767156758/695180116040351795/888099852725133412}}
+	\NoteItem{\See{2}Core v2+ only}
+	\NoteItem{\See{3}PV set to {\tt 1} if {\tt D} was {\tt \$7F} before increment, otherwise {\tt 0}}
 \end{notestable}
 
 % we need to have "continue" within minipage, and pagebreak outside...
-\InstrTableContinue
+\InstrTableContinue[-1.5ex]
 	
 \end{minipage}
 
 \pagebreak
-\vspace*{0.45cm}
 
+\vspace*{3ex} % ensure this table starts at the same height as the one on the odd page
 \begin{minipage}{\textwidth}
 
 \begin{instrtable}	

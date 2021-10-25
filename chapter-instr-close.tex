@@ -15,7 +15,7 @@
 % █░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
 % ████████████████████████████████████████████████████████████████████████████
 
-\input{details.tex}
+\input{defines-instr-close.tex}
 
 The following pages describe all instructions in detail. Alphabetical order is used as much as possible, but some deviations were made to better fit to pages. Each instruction includes:
 
@@ -127,11 +127,13 @@ Where possible, multiple variants of same instruction are grouped together and w
 		
 		Similar to {\tt ADC} except carry flag is not used in calculation: adds operand {\tt s} or contents of the memory location addressed by {\tt s} to destination {\tt d}. Result is then stored to destination {\tt d}.
 
-		In case of ZX Next Extended instructions for adding {\tt A} to 16-bit register pair, {\tt A} is zero extended to 16-bits.
+		ZX Next Extended instructions for adding {\tt A} to 16-bit register pair, zero extend {\tt A} to 16-bits.
 
 		\begin{DetailEffects}[v]
 			\FlagsADDr[8-bit]
 			\FlagsADDrr[16-bit]
+			\FlagsADDrra[\tt ADD rr,A]
+			\FlagsADDrrnn[\tt ADD rr,nn]
 			\DetailFlagsComments{
 				\item 16-bit HF is set by carry from bit 11 (half carry in high byte)
 			}
@@ -180,16 +182,22 @@ Where possible, multiple variants of same instruction are grouped together and w
 			AND IYL\UNDOC
 		\end{DetailVariants}
 
-		Performs bitwise AND between accumulator {\tt A} and the given operand. The result is then stored back to the accumulator. Individual bits are AND'ed like this:
+		\begin{tabularx}{\linewidth}{@{}Xl}
+			Performs bitwise AND between accumulator {\tt A} and the given operand. The result is then stored back to the accumulator. Individual bits are AND'ed as shown on the right:
 
-		\begin{tabular}{cc|c}
-			{\tt A} & {\tt s} & Result \\
-			\hline
-			{\tt 0} & {\tt 0} & {\tt 0} \\
-			{\tt 0} & {\tt 1} & {\tt 0} \\
-			{\tt 1} & {\tt 0} & {\tt 0} \\
-			{\tt 1} & {\tt 1} & {\tt 1} \\
-		\end{tabular}
+			&
+
+			\begin{tabular}[t]{cc|c}
+				{\tt A} & {\tt s} & Result \\
+				\hline
+				{\tt 0} & {\tt 0} & {\tt 0} \\
+				{\tt 0} & {\tt 1} & {\tt 0} \\
+				{\tt 1} & {\tt 0} & {\tt 0} \\
+				{\tt 1} & {\tt 1} & {\tt 1} \\
+			\end{tabular}
+
+			\\
+		\end{tabularx}
 
 		\begin{DetailEffects}[p]
 			\FlagsANDr
@@ -577,6 +585,7 @@ CPDR
 
 	\DetailItemRef{CPL}{DetailRefCPL}
 
+	\pagebreak
 	\begin{DetailItem}{DAA}
 		{\IH{D}ecimal \IH{A}djust \IH{A}ccumulator}
 		{}
@@ -662,7 +671,7 @@ CPDR
 		{\IH{D}isable \IH{I}nterrupts}
 		{\SymDI}
 
-		Disables all maskable interrupts (mode 1 and 2). Interrupts are disabled after execution of the instruction following {\tt DI}. See sections \ref{interrupts} and \ref{zx_next_interrupts} for more details on interrupts.
+		Disables all maskable interrupts (mode 1 and 2). Interrupts are disabled after execution of the instruction following {\tt DI}. See sections \ref{z80_interrupts} and \ref{zx_next_interrupts} for more details on interrupts.
 		
 		\begin{DetailEffects}
 			\FlagsDI
@@ -695,7 +704,7 @@ CPDR
 		{\IH{E}nable \IH{I}nterrupts}
 		{\SymEI}
 
-		Enables maskable interrupts (mode 1 and 2). Interrupts are enabled after execution of the instruction following {\tt EI}; typically {\tt RETI} or {\tt RETN}. See sections \ref{interrupts} and \ref{zx_next_interrupts} for more details on interrupts.
+		Enables maskable interrupts (mode 1 and 2). Interrupts are enabled after execution of the instruction following {\tt EI}; typically {\tt RETI} or {\tt RETN}. See sections \ref{z80_interrupts} and \ref{zx_next_interrupts} for more details on interrupts.
 
 		\begin{DetailEffects}
 			\FlagsEI
@@ -800,7 +809,7 @@ CPDR
 			~
 		\end{DetailVariants}
 
-		Sets the interrupt mode. All 3 interrupts are maskable, meaning they can be disabled using {\tt DI} instruction. See sections \ref{interrupts} and \ref{zx_next_interrupts} for details and example.
+		Sets the interrupt mode. All 3 interrupts are maskable, meaning they can be disabled using {\tt DI} instruction. See sections \ref{z80_interrupts} and \ref{zx_next_interrupts} for details and example.
 
 		\begin{DetailEffects}
 			\FlagsIM		
@@ -936,7 +945,7 @@ IN A, (&FE)
 		\begin{DetailEffects}
 			\FlagsIND
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{block_io}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
 				\item {\tt ZF} set if {\tt B} becomes zero after decrementing, otherwise reset
 			}
 		\end{DetailEffects}
@@ -956,7 +965,7 @@ IN A, (&FE)
 		\begin{DetailEffects}
 			\FlagsINDR
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{block_io}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
 			}
 			\end{DetailEffects}
 				
@@ -977,7 +986,7 @@ IN A, (&FE)
 		\begin{DetailEffects}
 			\FlagsINI
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{block_io}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
 				\item {\tt ZF} set if {\tt B} becomes zero after decrementing, otherwise reset
 			}
 			\end{DetailEffects}
@@ -997,7 +1006,7 @@ IN A, (&FE)
 		\begin{DetailEffects}
 			\FlagsINIR
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{block_io}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
 			}
 			\end{DetailEffects}
 				
@@ -1338,6 +1347,7 @@ LDDR
 
 	\end{DetailItem}
 
+	\pagebreak
 	\label{DetailRefLDDX}
 	\begin{DetailItem}{LDDX\ZXN}
 		{\IH{L}oa\IH{D} and \IH{D}ecrement e\IH{X}tended}		
@@ -1554,16 +1564,22 @@ LDDR
 			OR IYL\UNDOC
 		\end{DetailVariants}
 
-		Performs bitwise or between the accumulator {\tt A} and operand {\tt s} or contents of memory addressed by {\tt s}. Then stores the result back to {\tt A}. Individual bits are OR'ed like this:
+		\begin{tabularx}{\linewidth}{@{}Xl}
+			Performs bitwise or between the accumulator {\tt A} and operand {\tt s} or contents of memory addressed by {\tt s}. Then stores the result back to {\tt A}. Individual bits are OR'ed as shown on the right:
+	
+			&
 
-		\begin{tabular}{cc|c}
-			{\tt A} & {\tt s} & Result \\
-			\hline
-			{\tt 0} & {\tt 0} & {\tt 0} \\
-			{\tt 0} & {\tt 1} & {\tt 1} \\
-			{\tt 1} & {\tt 0} & {\tt 1} \\
-			{\tt 1} & {\tt 1} & {\tt 1} \\
-		\end{tabular}
+			\begin{tabular}[t]{cc|c}
+				{\tt A} & {\tt s} & Result \\
+				\hline
+				{\tt 0} & {\tt 0} & {\tt 0} \\
+				{\tt 0} & {\tt 1} & {\tt 1} \\
+				{\tt 1} & {\tt 0} & {\tt 1} \\
+				{\tt 1} & {\tt 1} & {\tt 1} \\
+			\end{tabular}
+
+			\\
+		\end{tabularx}
 
 		\begin{DetailEffects}[p]
 			\FlagsORr
@@ -1589,7 +1605,7 @@ LDDR
 		\begin{DetailEffects}
 			\FlagsOTDR
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{block_io}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
 			}
 		\end{DetailEffects}
 				
@@ -1609,7 +1625,7 @@ LDDR
 		\begin{DetailEffects}
 			\FlagsOTIR
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{block_io}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
 			}
 		\end{DetailEffects}
 				
@@ -1675,7 +1691,7 @@ LDDR
 		\begin{DetailEffects}
 			\FlagsOUTD
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{block_io}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
 				\item {\tt ZF} set if {\tt B=0} after decrement, reset otherwise
 			}
 		\end{DetailEffects}
@@ -1697,7 +1713,7 @@ LDDR
 		\begin{DetailEffects}
 			\FlagsOUTI
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{block_io}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
 				\item {\tt ZF} set if {\tt B=0} after decrement, reset otherwise
 			}
 		\end{DetailEffects}
@@ -2870,17 +2886,23 @@ digits = &-number   ;(2)
 			XOR IYH\UNDOC\\
 			XOR IYL\UNDOC
 		\end{DetailVariants}
+		
+		\begin{tabularx}{\linewidth}{@{}Xl}
+			Performs exclusive or between accumulator {\tt A} and operand {\tt s} or memory location addressed by {\tt s}. Result is then stored back to {\tt A}. Individual bits are XOR'ed as shown on the right:
+	
+			&
 
-		Performs exclusive or between accumulator {\tt A} and operand {\tt s} or memory location addressed by {\tt s}. Result is then stored back to {\tt A}. Individual bits are XOR'ed like this:
+			\begin{tabular}[t]{cc|c}
+				{\tt A} & {\tt s} & Result \\
+				\hline
+				{\tt 0} & {\tt 0} & {\tt 0} \\
+				{\tt 0} & {\tt 1} & {\tt 1} \\
+				{\tt 1} & {\tt 0} & {\tt 1} \\
+				{\tt 1} & {\tt 1} & {\tt 0} \\
+			\end{tabular}
 
-		\begin{tabular}{cc|c}
-			{\tt A} & {\tt s} & Result \\
-			\hline
-			{\tt 0} & {\tt 0} & {\tt 0} \\
-			{\tt 0} & {\tt 1} & {\tt 1} \\
-			{\tt 1} & {\tt 0} & {\tt 1} \\
-			{\tt 1} & {\tt 1} & {\tt 0} \\
-		\end{tabular}
+			\\
+		\end{tabularx}
 
 		\begin{DetailEffects}[p]
 			\FlagsXORr

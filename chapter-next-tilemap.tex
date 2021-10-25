@@ -33,7 +33,7 @@ All tiles definitions are specified in a contiguous memory block. The offset of 
 
 \subsection{Tilemap Data}
 
-Tilemap data specifies the tile definition index for each of the 40x32 or 80x32 tiles. Each tile takes 2 bytes:
+Tilemap data requires 2 bytes per tile:
 
 \begin{BitTableWord}
 	\BitStartMulti{4}{\rotatebox[origin=c]{90}{Palette Offset}} &
@@ -112,26 +112,26 @@ Regardless of the editor, we need 3 pieces of data: palette, tile definitions an
 \begin{tcblisting}{}
 tilemap:
 	INCBIN "tiles.map"
-tilemapLength: EQU & - tilemap
+tilemapLength = &-tilemap
 
 tiles:
 	INCBIN "tiles.spr"
-tilesLength:   EQU & - tiles
+tilesLength = &-tiles
 
 palette:
 	INCBIN "tiles.pal"
-paletteLength: EQU &-palette
+paletteLength = &-palette
 \end{tcblisting}
 
 With all data in place, we can start setting up tilemap:
 
 \begin{tcblisting}{}
-START_OF_BANK_5     EQU &4000
-START_OF_TILEMAP    EQU &6000     ; Just after ULA attributes and system vars
-START_OF_TILES      EQU &6600     ; Just after 40x32 tilemap
+START_OF_BANK_5     = &4000
+START_OF_TILEMAP    = &6000     ; Just after ULA attributes and system vars
+START_OF_TILES      = &6600     ; Just after 40x32 tilemap
 
-OFFSET_OF_MAP       EQU (START_OF_TILEMAP - START_OF_BANK_5) >> 8
-OFFSET_OF_TILES     EQU (START_OF_TILES - START_OF_BANK_5) >> 8
+OFFSET_OF_MAP       = (START_OF_TILEMAP - START_OF_BANK_5) >> 8
+OFFSET_OF_TILES     = (START_OF_TILES - START_OF_BANK_5) >> 8
 
 	; Enable tilemap mode
 	NEXTREG &6B, %10100001       ; 40x32, 8-bit entries
@@ -187,12 +187,14 @@ CopyTileMap:
 	RET
 \end{tcblisting}
 
+You can find fully working example in companion code on GitHub in folder {\tt tilemap}.
+
 
 \pagebreak
 \subsection{Tilemap Registers}
 \label{zx_next_tilemap_registers}
 
-\subsubsection{Sprite and Layers System Register \MemAddr{15}}
+\subsubsection{\PortTitle{Sprite and Layers System Register}{15}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -225,7 +227,7 @@ CopyTileMap:
 \end{NextPort}
 
 
-\subsubsection{Clip Window Tilemap Register \MemAddr{1B}}
+\subsubsection{\PortTitle{Clip Window Tilemap Register}{1B}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -237,12 +239,12 @@ CopyTileMap:
 Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset the index to 0 in \PortLink{Clip Window Control Register}{1C}, then write all 4 coordinates in succession.
 
 
-\subsubsection{Clip Window Control Register \MemAddr{1C}}
+\subsubsection{\PortTitleLink{Clip Window Control Register}{1C}}
 
 \PortReference{zx_next_layer2_registers}{Layer 2}
 
 
-\subsubsection{Tilemap Offset X MSB Register \MemAddr{2F}}
+\subsubsection{\PortTitle{Tilemap Offset X MSB Register}{2F}}
 
 \begin{NextPort}
 	\PortBits{7-2}
@@ -254,7 +256,7 @@ Which coordinate gets set, is determined by index. As each write to this registe
 In 40x32 mode, meaningful range is {\tt 0-319}, for 80x32 {\tt 0-639}. Low 8-bits are stored in \PortLink{Tilemap Offset X LSB Register}{30}.
 
 
-\subsubsection{Tilemap Offset X LSB Register \MemAddr{30}}
+\subsubsection{\PortTitle{Tilemap Offset X LSB Register}{30}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -264,7 +266,7 @@ In 40x32 mode, meaningful range is {\tt 0-319}, for 80x32 {\tt 0-639}. Low 8-bit
 Tilemap X offset in pixels. Meaningful range is {\tt 0-319} for 40x32 and {\tt 0-639} for 80x32 mode. To write values larger than 255, \PortLink{Tilemap Offset X MSB Register}{2F} is used to store MSB.
 
 
-\subsubsection{Tilemap Offset Y Register \MemAddr{31}}
+\subsubsection{\PortTitle{Tilemap Offset Y Register}{31}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -274,17 +276,17 @@ Tilemap X offset in pixels. Meaningful range is {\tt 0-319} for 40x32 and {\tt 0
 Y offset is {\tt 0-255}.
 
 
-\subsubsection{Palette Index Register \MemAddr{40}}
+\subsubsection{\PortTitleLink{Palette Index Register}{40}}
 \vspace*{-2ex}
-\subsubsection{Palette Value Register \MemAddr{41}}
+\subsubsection{\PortTitleLink{Palette Value Register}{41}}
 \vspace*{-2ex}
-\subsubsection{Enhanced ULA Control Register \MemAddr{43}}
+\subsubsection{\PortTitleLink{Enhanced ULA Control Register}{43}}
 \vspace*{-2ex}
-\subsubsection{Enhanced ULA Palette Extension \MemAddr{44}}
+\subsubsection{\PortTitleLink{Enhanced ULA Palette Extension}{44}}
 \PortReference{zx_next_palette_registers}{Palette}
 
 
-\subsubsection{Tilemap Transparency Index Register \MemAddr{4C}}
+\subsubsection{\PortTitle{Tilemap Transparency Index Register}{4C}}
 
 \begin{NextPort}
 	\PortBits{7-5}
@@ -296,7 +298,7 @@ Y offset is {\tt 0-255}.
 The pixel index from tile definitions is compared before palette offset is applied to the upper 4 bits, so there's always one index between {\tt 0} and {\tt 15} that works as transparent colour.
 
 
-\subsubsection{ULA Control Register \MemAddr{68}}
+\subsubsection{\PortTitle{ULA Control Register}{68}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -326,7 +328,7 @@ The pixel index from tile definitions is compared before palette offset is appli
 See \PortLink{Sprite and Layers System Register}{15} for different priorities and mixing of ULA, Layer 2 and Sprites.
 
 
-\subsubsection{Tilemap Control Register \MemAddr{6B}}
+\subsubsection{\PortTitle{Tilemap Control Register}{6B}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -351,7 +353,7 @@ See \PortLink{Sprite and Layers System Register}{15} for different priorities an
 
 
 \pagebreak
-\subsubsection{Default Tilemap Attribute Register \MemAddr{6C}}
+\subsubsection{\PortTitle{Default Tilemap Attribute Register}{6C}}
 
 If single byte tilemap mode is selected (bit 5 of \PortLink{Tilemap Control Register}{6B} set), this register defines attributes for all tiles.
 
@@ -370,7 +372,7 @@ If single byte tilemap mode is selected (bit 5 of \PortLink{Tilemap Control Regi
 \end{NextPort}
 
 
-\subsubsection{Tilemap Base Address Register \MemAddr{6E}}
+\subsubsection{\PortTitle{Tilemap Base Address Register}{6E}}
 
 \begin{NextPort}
 	\PortBits{7-6}
@@ -380,7 +382,7 @@ If single byte tilemap mode is selected (bit 5 of \PortLink{Tilemap Control Regi
 \end{NextPort}
 
 
-\subsubsection{Tile Definitions Base Address Register \MemAddr{6F}}
+\subsubsection{\PortTitle{Tile Definitions Base Address Register}{6F}}
 
 \begin{NextPort}
 	\PortBits{7-6}

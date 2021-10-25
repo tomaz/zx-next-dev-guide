@@ -762,9 +762,11 @@
 % rr = 16 bit register pair or number
 % nn = 16 bit number (only if we already use rr)
 % note: we need to pass 1 optional parameter to Flags; we need it in details section
+
+% order of the parameters: SF, ZF, HF, PV, NF, CF
 \newcommand{\FlagsADDr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{0}{\FS}}
 \newcommand{\FlagsADDrr}[1][]{\Flags[#1]{\FN}{\FN}{\FS\FlagsSee{2}}{\FN}{0}{\FS\FlagsSee{1}}}
-\newcommand{\FlagsADDrra}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
+\newcommand{\FlagsADDrra}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FU\FlagsSee{1}}}
 \newcommand{\FlagsADDrrnn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsADCr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{0}{\FS}}
 \newcommand{\FlagsADCrr}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FS\FlagsSee{1}}{\FS\FlagsSee{2}}{\FlagsFPV\FlagsSee{1}}{0}{\FS\FlagsSee{1}}}
@@ -822,7 +824,7 @@
 \newcommand{\FlagsLDIX}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsLDIRX}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsLDPIRX}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsLDWS}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV\FlagsSee{2}}{0}{\FN}}
+\newcommand{\FlagsLDWS}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV\FlagsSee{3}}{0}{\FN}}
 \newcommand{\FlagsMIRRORa}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsMULde}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsNEG}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPP}{1}{\FS}}

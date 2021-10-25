@@ -12,23 +12,13 @@
 % █████░░░░░░█████░░░░░░░░░░░░░░█░░░░░░░░░░░░░░█
 % ██████████████████████████████████████████████
 
-% start numbering pages with table of contents
-\setcounter{page}{0}
 
-% use plain page style without any headers
-\pagestyle{plain}
+\tableofcontents
 
-% print table of contents, but just chapters and sections, we'll print toc for each chapter separately that will include subsection as well
-\setcounter{tocdepth}{1}
-\dominitoc \tableofcontents
-
-% after TOC set style to clean so page numbers will be visible and other page styles reflected
-% \pagestyle{plain}
-
-% setup formatting for toc - no horizontal delimiters, offsets etc.
-\noptcrule
-\nomtcrule									% no horizontal delimiters on top and bottom
-\renewcommand{\mtcoffset}{-1.5em}			% render minitoc a bit more to the left for more centralized appearance
-\mtcsetfeature{minitoc}{open}{\vspace{1em}}	% add some vertical spacing between contents title and toc
-\def\mtcSfont{\normalsize}
-\def\mtcSSfont{\small}
+% Manually break the page before introduction in non-print version. Non-print PDF TOC includes sub-sub-sections as well therefore spreads much more pages and, more crutially, ends on odd page so introduction chapter that follows would begin on even one.
+% Note: when new sub/sections are added in the future that cause TOC to spread onto even page, this whole \ifdefined can be deleted (or commented out to leave it for the future). There's probably automated way to ensure chapters always start on odd page, but nothing I tried worked (I think part of the problem lies in the fact that odd/even is reversed in this document due to how lulu expects PDF to be formatted)
+\ifdefined\isPDF
+	\pagebreak
+	\IntentionallyEmpty
+	\pagebreak
+\fi
