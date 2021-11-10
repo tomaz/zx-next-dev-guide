@@ -24,7 +24,7 @@ zxnDMA defines two ``ports'', called ``A'' and ``B'' (port is just a word used f
 
 \subsection{Programming}
 
-Since core 3.1.2, zxnDMA is mapped to \PortLink{Datagear DMA Port}{xx6B} and Zilog DMA to \PortLink{MB02 DMA Port}{xx0B}.
+Since core 3.1.2, zxnDMA is mapped to \PortLink{zxnDMA Port}{xx6B} and Zilog DMA to \PortLink{MB02 DMA Port}{xx0B}.
 
 Similar to Z80 DMA, zxnDMA also has 7 write registers named \DMARegName{WR0}-\DMARegName{WR6}. Some of the bits are used to identify a register, while the rest represent the payload ({\tt x} in the table below):
 
@@ -1220,9 +1220,9 @@ The technique is called ``self-modifying code'', for obvious reasons: we are mod
 
 \subsubsection{Operating Speed}
 
-The zxnDMA operates at the same speed as the CPU. However it automatically slows down if the speed exceeds 7MHz and Layer 2 display is being generated. It also automatically resumes in high speed operation once Layer 2 display finishes generating.
+The zxnDMA operates at the same speed as the CPU.
 
-Programmer doesn't have to account for these speed changes as it all happens automatically. We can safely set cycle lengths for both ports to their minimum settings. Cycle lengths are intended to selectively slow down read or write cycles for hardware that can't operate at the DMA full speed.
+Note: at the moment of this writing, Next Dev Wiki\footnote{\url{https://wiki.specnext.dev/DMA\#Operating_speed}} states that DMA automatically slows down if the speed exceeds 7MHz and Layer 2 display is being generated and then automatically resumes in high speed operation once Layer 2 display finishes generating. However this is no longer true on latest cores. Thanks to Alvin Albrecht for clarifying this!
 
 
 \subsubsection{DMA and Interrupts}
@@ -1245,12 +1245,12 @@ It's also possible to allow or prevent specific interrupters from interrupting D
 
 \subsubsection{\PortTitle{MB02 DMA Port}{xx0B}}
 
-Core 3.1.2+: Always in Zilog DMA mode for uploading legacy DMA programs. For zxnDMA, use \PortLink{Datagear DMA Port}{xx6B}.
+Core 3.1.2+: Always in Zilog DMA mode for uploading legacy DMA programs. For zxnDMA, use \PortLink{zxnDMA Port}{xx6B}.
 
-Older cores: this port is not supported, set bit 6 of \PortLink{Peripheral 2 Register}{06} and use \PortLink{Datagear DMA Port}{xx6B}.
+Older cores: this port is not supported, set bit 6 of \PortLink{Peripheral 2 Register}{06} and use \PortLink{zxnDMA Port}{xx6B}.
 
 
-\subsubsection{\PortTitle{Datagear DMA Port}{xx6B}}
+\subsubsection{\PortTitle{zxnDMA Port}{xx6B}}
 
 Core 3.1.2+: Always in zxnDMA mode. For legacy Zilog DMA, use \PortLink{MB02 DMA Port}{xx0B}.
 

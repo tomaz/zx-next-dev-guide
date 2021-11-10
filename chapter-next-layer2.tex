@@ -274,7 +274,12 @@ You can find fully working example in companion code on GitHub in folder {\tt la
 
 	Banking Setup:
 
-	\begin{ElegantTableX}{|c|c|c|c|c|Y|}
+	\begin{ElegantTableX}{|c|C{1em}|C{1em}|C{1em}|C{2.5em}|Y|}
+		\ElegantHeader{
+			\BitHead{16} &
+			\BitMulti{4}{\BitHead{15-8}} &
+			\BitHead{7-0}
+		}
 		\ElegantHeader{
 			\BitHead{16} &
 			\BitHead{15} &
@@ -424,7 +429,12 @@ You can find fully working example in companion code on GitHub in folder {\tt la
 
 	Banking Setup:
 
-	\begin{ElegantTableX}{|c|c|c|c|c|Y|}
+	\begin{ElegantTableX}{|c|C{1em}|C{1em}|C{1em}|c|Y|}
+		\ElegantHeader{
+			\BitHead{16} &
+			\BitMulti{4}{\BitHead{15-8}} &
+			\BitHead{7-0}
+		}
 		\ElegantHeader{
 			\BitHead{16} &
 			\BitHead{15} &
@@ -433,24 +443,26 @@ You can find fully working example in companion code on GitHub in folder {\tt la
 			\BitHead{12-8} &
 			\BitHead{7-0}
 		}
-		\BitStartMulti{1}{$X_{8}\times 2$} & 
-			\BitMulti{4}{$X_{7-0}\times 2$} &
+		\BitStartMulti{1}{$X_{8}$} & 
+			\BitMulti{4}{$X_{7-0}$} &
 			\BitMulti{1}{$Y$} \\
 		\hline
 		\BitStartMulti{3}{16K} &
-			\BitMulti{2}{$X_{5-0}\times 2$} &
+			\BitMulti{2}{$X_{5-0}$} &
 			\BitMulti{1}{$Y$} \\
 		\hline
 		\BitStartMulti{4}{8K} &
-			\BitMulti{1}{$X_{4-0}\times 2$} &
+			\BitMulti{1}{$X_{4-0}$} &
 			\BitMulti{1}{$Y$} \\
 	\end{ElegantTableX}
 
 \end{multicols}
 
-640$\times$256 mode is very similar to 320$\times$256, except that each byte represents 2 colours instead of 1. It's also available on Next core 3.0.6 or later only. Pixels are laid out from top to bottom and left to right. Each pixel takes 4 bits, so each byte contains data for 2 pixels. To cover the whole screen, 5 16K banks of 128 columns or 10 8K banks of 64 columns are needed. Together colour data requires 80K of memory. Similar to 320$\times$256, this mode also covers the whole screen, including the border.
+640$\times$256 mode is very similar to 320$\times$256, except that each byte represents 2 colours instead of 1. It's also available on Next core 3.0.6 or later only. Pixels are laid out from top to bottom and left to right. Each pixel takes 4 bits, so each byte contains data for 2 pixels. Therefore division by 2 should be used to convert screen coordinate to $X$ for address, multiplication by 2 for the other way around.
 
-Addressing wise, this mode is the same as 230$\times$256. Using 16-bit register pair we can't address all pixels on the screen, but we can address all pixels within each bank. Again, assuming upper byte of 16-bit register pair is used for X and lower for Y and using 9th bit of X coordinate (bit $X_8$ in the table above) as the most significant bit of bank number, then most significant 2 bits of 16-bit register pair represent lower 2 bits of 16K bank number. And for 8K banks, the most significant 3 bits correspond to the lower 3 bits of 8K bank number. The rest of the X + Y is memory location within the bank. Don't forget: each colour byte represents 2 screen pixels, so the memory X coordinate (as described above) needs to be multiplied by 2 to convert to screen X coordinate.
+To cover the whole screen, 5 16K banks of 128 columns or 10 8K banks of 64 columns are needed. Together colour data requires 80K of memory. Similar to 320$\times$256, this mode also covers the whole screen, including the border.
+
+Addressing wise, this mode is the same as 320$\times$256. Using 16-bit register pair we can't address all pixels on the screen, but we can address all pixels within each bank. Again, assuming upper byte of 16-bit register pair is used for X and lower for Y and using 9th bit of X coordinate (bit $X_8$ in the table above) as the most significant bit of bank number, then most significant 2 bits of 16-bit register pair represent lower 2 bits of 16K bank number. And for 8K banks, the most significant 3 bits correspond to the lower 3 bits of 8K bank number. The rest of the X + Y is memory location within the bank. Don't forget: each colour byte represents 2 screen pixels, so the memory X coordinate (as described above) needs to be multiplied by 2 to convert to screen X coordinate.
 
 To use this mode, we must explicitly select it with \PortLink{Layer 2 Control Register}{70}. We must also not forget to set clip window correctly with \PortLink{Clip Window Layer 2 Register}{18} and \PortLink{Clip Window Control Register}{1C}, as demonstrated in example below:
 

@@ -202,7 +202,7 @@ InterruptVectorTable:              ; I register should therefore have value &xx
 
 The interrupt handler itself can reside anywhere in the memory. Code-wise it's the same as for IM1 mode previously.
 
-So there's some more work when using IM2 mode, but it leaves ROM untouched so we can rely on its routines and other functionality. I only demonstrated relevant bits here. You can find a fully working example in companion code, folder {\tt im2}.
+So there's some more work when using IM2 mode, but it leaves ROM untouched so we can rely on its routines and other functionality. I only demonstrated relevant bits here. You can find a fully working example in companion code, folder {\tt im2} (make sure to \textbf{read the next section}!).
 
 
 \subsubsection{What About Odd Data Bus Values?}
@@ -215,9 +215,9 @@ Sharp-eyed readers may be wondering what would happen if the value from the data
 	\MemAddr{2A} & \MemAddr{80} & \MemAddr{2A} & \MemAddr{80} & ... & \MemAddr{2A} & \MemAddr{80} \\
 \end{ElegantTable}
 
-If the bus value is even, for example {\tt 0}, {\tt 2}, {\tt 4} etc, then the address of the interrupt handler would be correctly read as \MemAddr{802A} (remember, Z80 is little-endian). But what if the value is odd, {\tt 1}, {\tt 3}, {\tt 5} etc? In this case, 16-bit interrupt handler address would be wrong - \MemAddr{2A80}! During my tests, this never happened - either the data bus always had an even number, or, more likely, Z80 always reset bit 0 before constructing vector lookup address.
+If the bus value is even, for example {\tt 0}, {\tt 2}, {\tt 4} etc, then the address of the interrupt handler would be correctly read as \MemAddr{802A} (remember, Z80 is little-endian). But what if the value is odd, {\tt 1}, {\tt 3}, {\tt 5} etc? In this case, 16-bit interrupt handler address would be wrong - \MemAddr{2A80}! During my tests, this didn't happen - whether by luck, the data bus always had an even number, or, maybe Z80 reset bit 0 before constructing vector lookup address. But we can't rely on luck!
 
-Regardless, Next Dev Wiki\footnote{\url{https://wiki.specnext.dev/Interrupts}} in fact recommends that the interrupt handler routine is placed on an address where high and low bytes are equal. So it's better to follow this advice. The changes to the code are minimal, so I won't show it here - it could be a nice exercise though! Just a tip - to be extra safe, make vector table 257 bytes long in case the data bus has \MemAddr{FF}. You can find a working example in companion code, folder {\tt im2safe}.
+In fact, Next Dev Wiki\footnote{\url{https://wiki.specnext.dev/Interrupts}} recommends that the interrupt handler routine is always placed on an address where high and low bytes are equal. It's best to follow this advice to avoid potential issues. The changes to the code are minimal, so I won't show it here - it could be a nice exercise though! Just a tip - to be extra safe, make vector table 257 bytes long in case the data bus has \MemAddr{FF}. You can find a working example in companion code, folder {\tt im2safe}.
 
 
 \subsection{Hardware Interrupt Mode 2}
@@ -292,7 +292,7 @@ Interrupt routines can reside anywhere in the memory.
 
 You can find fully working example in companion code, folder {\tt im2hw}.
 
-With hardware IM2 mode it's possible to interrupt DMA operations. The choice of interrupters that can interrupt DMA is made with \PortLink{DMA Interrupt Enable 0}{CC}, \PortLink{DMA Interrupt Enable 1}{CD} and \PortLink{DMA Interrupt Enable 2}{CE} registers. Here's what \discord{AA} wrote about this possibility on Next Discord server:
+With hardware IM2 mode it's possible to interrupt DMA operations. The choice of interrupters that can interrupt DMA is made with \PortLink{DMA Interrupt Enable 0}{CC}, \PortLink{DMA Interrupt Enable 1}{CD} and \PortLink{DMA Interrupt Enable 2}{CE} registers. Here's what Alvin Albrecht wrote about this possibility on Next Discord server:
 
 \vspace*{-1ex}
 \begin{quote}
@@ -301,7 +301,7 @@ With hardware IM2 mode it's possible to interrupt DMA operations. The choice of 
 
 For details and more, see this discussion on Discord\footnote{\url{https://discord.com/channels/556228195767156758/692885312296190102/894284968614854749}}, highly recommended!
 
-Very special thanks to the folks from Next Discord server: \discord{AA} for mentioning\footnote{\url{https://discord.com/channels/556228195767156758/692885312296190102/865955247552462848}} hardware IM2 mode and \discord{varmfskii} whos discussion\footnote{\url{https://discord.com/channels/556228195767156758/692885353161293895/817807486744526886}} and sample code was the basis for my exploration into this mode!
+Very special thanks to the folks from Next Discord server: Alvin Albrecht for mentioning\footnote{\url{https://discord.com/channels/556228195767156758/692885312296190102/865955247552462848}} hardware IM2 mode and \discord{varmfskii} whos discussion\footnote{\url{https://discord.com/channels/556228195767156758/692885353161293895/817807486744526886}} and sample code was the basis for my exploration into this mode!
 
 
 
