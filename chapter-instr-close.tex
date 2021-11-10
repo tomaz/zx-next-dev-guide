@@ -64,7 +64,7 @@ Where possible, multiple variants of same instruction are grouped together and w
 	{\tt \FX} & Special case, see notes below effects table \\
 	\DetailParityOverflow{v} & P/V flag is used as overflow \\
 	\DetailParityOverflow{p} & P/V flag is used as parity \\
-	\DetailParityOverflow{} & PV is undefined or indicates other result \\
+	\DetailParityOverflow{} & P/V is undefined or indicates other result \\
 \end{tabular}
 
 \begin{basedescript}{
@@ -1958,6 +1958,7 @@ LDDR
 
 	\end{DetailItem}
 
+	\pagebreak
 	\begin{DetailItem}{RETN}
 		{\IH{RET}urn from \IH{N}on-maskable interrupt}
 		{\SymRETN}
@@ -2128,7 +2129,7 @@ LDDR
 		\begin{tabular}{m{8cm}p{0.1cm}m{4.3cm}}
 
 			{ % tcblisting must be enclosed within {} inside tabular otherwise latex compiler gets confused
-			\begin{tcblisting}{beforeafter skip=0ex}
+			\begin{tcblisting}{}
 MultiplyBy10:		; number=0123
 	LD HL, number+digits-1
 	LD B, digits	; number of repeats
@@ -2150,23 +2151,23 @@ digits = &-number   ;(2)
 					node[xshift=#2, yshift=1.4ex, rotate=90]{$\lbrace$}
 					node[xshift=#2 + 0.1ex, yshift=0.2ex, indicator]{(HL)} (progress-#1-2.south)
 			}
-	
+		
 			\newcommand{\ByteIndicator}[1]{
 				\draw 
-					(progress-#1-2.west) ++(8.5pt,9pt) 
-					|- ++(5pt,-3pt) -| ++(6pt,3pt) 
+					(progress-#1-2.south west) ++(8pt,13pt) 
+					|- ++(5pt,-3pt) -| ++(5pt,3pt) 
 					++(1pt,0) 
-					|- ++(5pt,-3pt) -| ++(6pt,3pt);
+					|- ++(5pt,-3pt) -| ++(5pt,3pt);
 			}
-	
+		
 			\begin{tikzpicture}[
 				value/.style={font=\ttfamily},
 				leading/.style={value, inner xsep=8pt, xshift=2pt},
 				indicator/.style={inner sep=0, font=\ttfamily\scriptsize},
 				line/.style={inner sep=6pt, font=\ttfamily\tiny}]
-	
+		
 				\node (title) {Progression};
-	
+		
 				\matrix (progress)  [
 					below=0em of title,
 					matrix of nodes, 
@@ -2174,30 +2175,30 @@ digits = &-number   ;(2)
 					column 2/.style={value},
 					column 3/.style={value},
 					column 4/.style={leading}] {
-	
+		
 					line & number & A & B \\
 					\hline
-	
+		
 					2-4 & 0123 & 0 & 2 \\[-1.3ex]
 					$\downarrow$ & ~~~~~ & & \\[0.8em]
-	
+		
 					5-7 & 0130 & 2 & 1 \\[-1.3ex]
 					$\circlearrowright$ & ~~~~~ & & \\[0.8em]
-	
+		
 					5-7 & 1230 & 0 & 0 \\[-1.3ex]
 					$\circlearrowright$ & ~~~~~ & & \\
 				};
-	
+		
 				\ByteIndicator{3};
 				\ByteIndicator{5};
 				\ByteIndicator{7};
-	
+		
 				\HLindicator{3}{3.15ex};
 				\HLindicator{5}{0.8ex};
 				\HLindicator{7}{-1.45ex};
-	
+		
 			\end{tikzpicture}
-
+	
 		\end{tabular}
 
 		\begin{DetailEffects}[p]
@@ -2351,10 +2352,11 @@ digits = &-number   ;(2)
 		
 		Similar to {\tt RLD} (page \pageref{DetailRefRLD}) except rotation is to the right. If used with BCD values, this operation effectively divides 3-digit BCD number by {\tt 10} and stores remainder in {\tt A}. Taking the example from {\tt RLD}, we can easily convert it to division by 10 simply by using {\tt RRD}. Note however we also need to change the order - we start from MSB now (which is exactly how division would be performed by hand):
 
+		\pagebreak % we need this break as otherwise LaTeX gets confused due to page break and renders tcblisting very weird - no homogenous background etc. Remove it if future updates allow RRD from being displayed without a page break!
 		\begin{tabular}{m{8cm}p{0.1cm}m{4.3cm}}
 
 			{ % tcblisting must be enclosed within {} inside tabular otherwise latex compiler gets confused
-			\begin{tcblisting}{beforeafter skip=0ex}
+			\begin{tcblisting}{}
 DivideBy10:
 	LD HL, number	; number=0123
 	LD B, digits	; number of repeats
@@ -2379,10 +2381,10 @@ digits = &-number   ;(2)
 
 			\newcommand{\ByteIndicator}[1]{
 				\draw 
-					(progress-#1-2.west) ++(8.5pt,9pt) 
-					|- ++(5pt,-3pt) -| ++(6pt,3pt) 
+					(progress-#1-2.south west) ++(8pt,13pt) 
+					|- ++(5pt,-3pt) -| ++(5pt,3pt) 
 					++(1pt,0) 
-					|- ++(5pt,-3pt) -| ++(6pt,3pt);
+					|- ++(5pt,-3pt) -| ++(5pt,3pt);
 			}
 	
 			\begin{tikzpicture}[
@@ -2420,7 +2422,7 @@ digits = &-number   ;(2)
 		
 				\HLindicator{3}{0.8ex};
 				\HLindicator{5}{3.15ex};
-				\HLindicator{7}{5.4ex};
+				\HLindicator{7}{5.6ex};
 	
 			\end{tikzpicture}	
 

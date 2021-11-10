@@ -142,14 +142,16 @@
 % ▒█▀▀▀ ▒█▀▀▀ ▒█▀▀▀ ▒█▀▀▀ ▒█░░░ ░▒█░░ ░▀▀▀▄▄ 　 ░▒█░░ ▒█▄▄█ ▒█▀▀▄ ▒█░░░ ▒█▀▀▀ 
 % ▒█▄▄▄ ▒█░░░ ▒█░░░ ▒█▄▄▄ ▒█▄▄█ ░▒█░░ ▒█▄▄▄█ 　 ░▒█░░ ▒█░▒█ ▒█▄▄█ ▒█▄▄█ ▒█▄▄▄
 
-% renders PV title that also indicates whether the PV indicates parity or overflow; optional parameter:
+% renders PV title that also indicates whether the PV indicates parity or overflow; parameters:
+% (required) #1 parity type:
 % - p = indicate Parity
 % - v = indicate oVerflow
 % - default = just PV
-\newcommand{\DetailParityOverflow}[1]{
+\NewDocumentCommand{\DetailParityOverflow}{ m }{
 	\IfEqCase{#1}
 	{
 		{p}{
+			\hspace*{-0.9ex}	% this achieves better visually pleasing centering in the tables
 			\small
 			\begin{tikzpicture}[baseline=(p.base), plain/.style={}]
 				\node (p) [plain] {P};
@@ -158,6 +160,7 @@
 			\end{tikzpicture}
 		}
 		{v}{
+			\hspace*{-1.4ex}	% this achieves better visually pleasing centering in the tables
 			\small
 			\begin{tikzpicture}[baseline=(p.base), plain/.style={}]
 				\node (p) [plain] {P};
@@ -169,27 +172,30 @@
 	}
 }
 
+% renders header cell for effects table
+\NewDocumentCommand{\DetailEffectHead}{ m }{\cellcolor{PrintableLightGray}#1}
+
 % effects table for instruction; optional parameter:
 % - p = indicate Parity
 % - v = indicate oVerflow
 % - default = just PV
 \NewDocumentEnvironment{DetailEffects}{ O{} +b }{   
-	%                               spacer
-	%                               |note
-	\vspace{3pt}                   %|||SF     |ZF      |(YF)    |HF      |(XF)    |PV      |NF      |CF      |
+	%                               /spacer
+	%                               |/note
+	\vspace{3pt}                   %||/SF     /ZF      /(YF)    /HF      /(XF)    /PV      /NF      /CF      |
 	\begin{tabularx}{\linewidth}{@{}lXC{3.8ex}|C{3.8ex}|C{3.6ex}|C{3.8ex}|C{3.6ex}|C{3.8ex}|C{3.8ex}|C{3.8ex}|@{}}
-		\cline{3-10}
+		% we need to use hhline because \cellcolor renders on top of cline/hline, and we can't use \rowcolor because we only want some cells to use background...
+		\hhline{~~|*{8}{-|}}
 
-		\multicolumn{2}{@{}X}{\textbf{Effects}} & 
-			\multicolumn{1}{|c|}{SF} & 
-			ZF & 
-			& 
-			HF & 
-			&
-			\DetailParityOverflow{#1}
-			& 
-			NF & 
-			CF \notet\noteb\\[1pt]\cline{3-10}
+		\multicolumn{2}{@{}X}{\textbf{Effects}} &
+		\multicolumn{1}{|c|}{\DetailEffectHead{SF}} &
+		\DetailEffectHead{ZF} &
+		\DetailEffectHead{} &
+		\DetailEffectHead{HF} &
+		\DetailEffectHead{} &
+		\DetailEffectHead{\DetailParityOverflow{#1}} &
+		\DetailEffectHead{NF} &
+		\DetailEffectHead{CF}\notet\noteb\\[1pt]\cline{3-10}
 
 		#2
 
