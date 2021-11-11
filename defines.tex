@@ -72,7 +72,7 @@
 \newcommand{\WorkInProgress}{\ifdefined\isWIP\color{red}\textbf{WORK IN PROGRESS}\fi}
 
 % renders "work in progress" sign for use on "full screen" pages; uses \Huge font by default, but that can be changed with optional parameter
-\newcommand{\WorkInProgressFullScreen}[1][\Huge]{
+\newcommand{\WorkInProgressFullScreen}[1][\normalsize]{
 	\ifdefined\isWIP
 		#1
 		\begin{center}
