@@ -268,9 +268,9 @@ InterruptVectorTable:
 	DW InterruptHandler
 \end{tcblisting}
 
-As you can see, each interrupter gets its own vector. In the above example, all except ULA are pointing to the same interrupt routine. Since there are only a handful, we can use a much clearer declaration with {\tt DW <routine address>}. This way we don't need any initialization code that would fill in the routine address as we used with legacy IM2 mode. Of course, we could use the same {\tt DW} approach there too, but it would be quite a handful to write the address 128 times...
+As you can see, each interrupter gets its own vector. In the above example, all except ULA are pointing to the same interrupt routine. Since there are only a handful, we can use a much clearer declaration with {\tt DW <routine address>}. This way we don't need any initialization code that would fill in the routine address as we used with legacy IM2 mode.
 
-The thing to note: {\tt .ALIGN 32} is used to ensure the interrupt table is placed on a 32-byte boundary; the least significant 5 bits of the address must be {\tt 0} ($2^5=32=$ {\tt \%100000}). This is important due to how hardware IM2 mode vector table address is provided:
+The thing to note: {\tt .ALIGN 32} is used to ensure the interrupt table is placed on a 32-byte boundary; the least significant 5 bits of the address must be {\tt 0} ($2^5=32=$ {\tt \%100000}). This is important due to how hardware IM2 vector table lookup address is formed during interrupt:
 
 \begin{BitTableWord}
 	\BitStartMulti{8}{{\tt I} register: MSB} & \BitMulti{3}{\MemAddr{C0}: LSB 7-5} & \BitMulti{5}{Interrupt specific} \\
