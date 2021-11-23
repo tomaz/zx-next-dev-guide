@@ -61,7 +61,12 @@
 \fancypagestyle{clean}{
 	\fancyhf{}
 	\fancyhead[RO,LE]{\sffamily\footnotesize\WorkInProgress}
-	\fancyhead[LO,RE]{\sffamily\footnotesize\leftmark}
+	\ifdefined\isPDF
+		\fancyhead[LO,RE]{\sffamily\footnotesize\leftmark}
+	\else
+		\fancyhead[LO]{\sffamily\footnotesize\leftmark}
+		\fancyhead[RE]{\sffamily\footnotesize\rightmark}
+	\fi
 	\fancyfoot[RE,LO]{\sffamily\footnotesize\thepage}
 	\fancyfoot[C]{\sffamily\footnotesize\WorkInProgress}
 	\renewcommand{\headrulewidth}{0.1pt}
