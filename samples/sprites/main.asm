@@ -115,10 +115,10 @@ delay:
 ; BC = number of bytes to load
 ; A  = index of first sprite to load int5o
 loadSprites:
-	LD BC, $303B		; Prepare port for sprite index
-	OUT (C), A		; Load index of first sprite
 	LD (.dmaSource), HL	; Copy sprite sheet address from HL
 	LD (.dmaLength), BC	; Copy length in bytes from BC
+	LD BC, $303B		; Prepare port for sprite index
+	OUT (C), A		; Load index of first sprite
 	LD HL, .dmaProgram	; Setup source for OTIR
 	LD B, .dmaProgramLength	; Setup length for OTIR
 	LD C, $6B		; Setup DMA port
