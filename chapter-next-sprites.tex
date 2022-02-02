@@ -175,10 +175,10 @@ Before we can use sprites, we need to load their data into FPGA memory. This exa
 
 \begin{tcblisting}{}
 LoadSprites:
-	LD BC, &303B            ; Prepare port for sprite index
-	OUT (C), A              ; Load index of first sprite
 	LD (.dmaSource), HL     ; Copy sprite sheet address from HL
 	LD (.dmaLength), BC     ; Copy length in bytes from BC
+	LD BC, &303B            ; Prepare port for sprite index
+	OUT (C), A              ; Load index of first sprite
 	LD HL, .dmaProgram      ; Setup source for OTIR
 	LD B, .dmaProgramLength ; Setup length for OTIR
 	LD C, &6B               ; Setup DMA port
@@ -198,7 +198,7 @@ LoadSprites:
 	DB %10000010            ; WR5 - stop on end of block, CE only
 	DB %11001111            ; WR6 - load addresses into DMA counters
 	DB %10000111            ; WR6 - enable DMA
-.dmaProgramLength = &-.dmaCode
+.dmaProgramLength = &-.dmaProgram
 \end{tcblisting}
 
 See section \ref{zx_next_dma} for details on how to program the zxnDMA.
