@@ -39,10 +39,10 @@
 ]{geometry}
 
 % include definitions from external files (note: order of inputs is important!)
-\input{defines.tex}
-\input{setup.tex}
-\input{tables.tex}
-\input{instructions.tex}
+\input{defines}
+\input{setup}
+\input{tables}
+\input{instructions}
 
 
 % ASCII text created with https://fsymbols.com/generators/carty/
@@ -50,7 +50,8 @@
 
 \begin{document}
 
-	% note: includes cannot be nested, therefore we must include each section separately (where chapters are divided into multiple files)
+	% note: each section must be `\include{}`ed; LaTeX will do a `\clearpage` in front which is what is desired. However if we just want to split larger section into multiple files, `\input{}` should be used instead which imports the contents of the file as if they were typed here.
+	% important: regardles of whether `\include{}` or `\input{}` is used, `.tex` extension must be ommited. Some LaTeX compilers auto-add the extension so it ends up doubled (`*.tex.tex`) and therefore file cannot be found. Works with MikTEX either way.
 
 	% ▒█▀▀▀ ▒█▀▀█ ▒█▀▀▀█ ▒█▄░▒█ ▀▀█▀▀ 
 	% ▒█▀▀▀ ▒█▄▄▀ ▒█░░▒█ ▒█▒█▒█ ░▒█░░ 
@@ -58,16 +59,16 @@
 
 	\SetupPageFormattingTitle
 
-	\include{chapter-title.tex}
+	\include{chapter-title}
 
 	\SetupPageFormattingIntro
 	
-	\include{chapter-copyright.tex}
-	\include{chapter-acknowledge.tex}
+	\include{chapter-copyright}
+	\include{chapter-acknowledge}
 
 	\SetupPageFormattingTOC
 
-	\include{chapter-toc.tex}
+	\include{chapter-toc}
 
 
 	% ▒█▀▀█ ▒█▀▀▀█ ▒█▄░▒█ ▀▀█▀▀ ▒█▀▀▀ ▒█▄░▒█ ▀▀█▀▀ 
@@ -76,46 +77,47 @@
 
 	\SetupPageFormattingBook
 
-	\include{chapter-introduction.tex}
+	\include{chapter-introduction}
 
-	\include{chapter-z80.tex}
+	\include{chapter-z80}
 
-	\include{chapter-next.tex}
-	\include{chapter-next-ports.tex}
-	\include{chapter-next-memory.tex}
-	\include{chapter-next-dma.tex}
-	\include{chapter-next-palette.tex}
-	\include{chapter-next-ula.tex}
-	\include{chapter-next-layer2.tex}
-	\include{chapter-next-tilemap.tex}
-	\include{chapter-next-sprites.tex}
-	\include{chapter-next-copper.tex}
-	\include{chapter-next-sound.tex}
-	\include{chapter-next-keyboard.tex}
-	\include{chapter-next-interrupts.tex}
+	% note: for Next chapter, we use `\include{}` for each section; we want each to be treated as its own section, with `\clearpage` etc.
+	\include{chapter-next}
+	\include{chapter-next-ports}
+	\include{chapter-next-memory}
+	\include{chapter-next-dma}
+	\include{chapter-next-palette}
+	\include{chapter-next-ula}
+	\include{chapter-next-layer2}
+	\include{chapter-next-tilemap}
+	\include{chapter-next-sprites}
+	\include{chapter-next-copper}
+	\include{chapter-next-sound}
+	\include{chapter-next-keyboard}
+	\include{chapter-next-interrupts}
 
 	\SetupPageFormattingInstructions
 
-	% note: we are using input instead of include here, include will insert empty pages as it treats each file as its own section.
-	\include{chapter-instr-glance.tex}
-	\input{chapter-instr-glance-8bit-arithmetic.tex}
-	\input{chapter-instr-glance-16bit-arithmetic.tex}
-	\input{chapter-instr-glance-8bit-load.tex}
-	\input{chapter-instr-glance-general.tex}
-	\input{chapter-instr-glance-16bit-load.tex}
-	\input{chapter-instr-glance-stack.tex}
-	\input{chapter-instr-glance-exchange.tex}
-	\input{chapter-instr-glance-bit.tex}
-	\input{chapter-instr-glance-rotate-shift.tex}
-	\input{chapter-instr-glance-jump.tex}
-	\input{chapter-instr-glance-call-return.tex}
-	\input{chapter-instr-glance-block.tex}
-	\input{chapter-instr-glance-input.tex}
-	\input{chapter-instr-glance-output.tex}
-	\input{chapter-instr-glance-next.tex}
-	\input{chapter-instr-glance-alphabetical.tex}
+	% note: we use `\input{}` instead of `\include{}` here; we just want to split otherwise large file into multiple files but don't want empty pages to be inserted in between. Ideally, we'd `\input{}` inside chapter file, but LaTeX doesn't support nested inputs, so we need to do it here.
+	\include{chapter-instr-glance}
+	\input{chapter-instr-glance-8bit-arithmetic}
+	\input{chapter-instr-glance-16bit-arithmetic}
+	\input{chapter-instr-glance-8bit-load}
+	\input{chapter-instr-glance-general}
+	\input{chapter-instr-glance-16bit-load}
+	\input{chapter-instr-glance-stack}
+	\input{chapter-instr-glance-exchange}
+	\input{chapter-instr-glance-bit}
+	\input{chapter-instr-glance-rotate-shift}
+	\input{chapter-instr-glance-jump}
+	\input{chapter-instr-glance-call-return}
+	\input{chapter-instr-glance-block}
+	\input{chapter-instr-glance-input}
+	\input{chapter-instr-glance-output}
+	\input{chapter-instr-glance-next}
+	\input{chapter-instr-glance-alphabetical}
 
-	\include{chapter-instr-close.tex}
+	\include{chapter-instr-close}
 
 
 	% ░█▀▀█ ▒█▀▀█ ▒█▀▀█ ▒█▀▀▀ ▒█▄░▒█ ▒█▀▀▄ ▀█▀ ▀▄▒▄▀ 
@@ -124,9 +126,9 @@
 
 	\SetupPageFormattingAppendix
 
-	\include{chapter-instr-sorted-mnemonic.tex}
-	\include{chapter-instr-sorted-opcode.tex}
-	\include{chapter-bibliography.tex}
-	\include{chapter-license.tex}
+	\include{chapter-instr-sorted-mnemonic}
+	\include{chapter-instr-sorted-opcode}
+	\include{chapter-bibliography}
+	\include{chapter-license}
 
 \end{document}
