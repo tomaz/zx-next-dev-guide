@@ -867,7 +867,7 @@ Whether the address represents memory or I/O port is defined with \DMARegName{WR
 
 	\DMADescriptionItem{4}{Ready Configuration}{
 		\begin{DMAList}
-			\item[{\tt 0}] \DMAPinLabel{CE}/\DMAPinLabel{WAIT} line functions only as chip enable line, allowing CPU to read and write control and status bytes when DMA is not owning the.
+			\item[{\tt 0}] \DMAPinLabel{CE}/\DMAPinLabel{WAIT} line functions only as chip enable line, allowing CPU to read and write control and status bytes when DMA is not owning the bus.
 
 			\item[{\tt 1}] This mode is implemented but currently not used in zxnDMA. This mode has an external device using the DMA's \DMAPinLabel{CE} pin to insert wait states during the DMA's transfer.
 		\end{DMAList}
