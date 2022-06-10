@@ -84,6 +84,13 @@
 % - name (uses `DetailName` under the hood)
 % - symbolic operation (uses `DetailSymbol` under the hood)
 \newenvironment{DetailItem}[3]{
+	% insert invisible section marker for TOC (only for e-book)
+	\ifdefined\isPDF
+		\refstepcounter{section}
+		\addcontentsline{toc}{section}{\protect\numberline{\thesection}#1}
+		\sectionmark{#1}
+	\fi
+
 	\DetailMnemonic{#1}
 	\DetailName{#2}
 	% if symbolic operation is not given we should not use any spacing, otherwise, we should
@@ -100,7 +107,36 @@
 	% we want some spacing below each item
 	\vspace{1em}
 }
+% same as DetailItem but allows 2 lines for title:
+% - mnemonic line 1 (uses `DetailMnemonic` under the hood)
+% - name for line 1 (uses `DetailName` under the hood)
+% - mnemonic line 2 (for second line)
+% - name for line 2
+% - symbolic operation (uses `DetailSymbol` under the hood)
+\newenvironment{DetailItemMultiline}[5]{
+	% insert invisible section marker for TOC (only for e-book)
+	\ifdefined\isPDF
+		\refstepcounter{section}
+		\addcontentsline{toc}{section}{\protect\numberline{\thesection}#1 / #3}
+		\sectionmark{#1 / #3}
+	\fi
 
+	\DetailMnemonic{#1\\#3}
+	\DetailName{#2\\#4}
+	% if symbolic operation is not given we should not use any spacing, otherwise, we should
+	\if\relax\detokenize{#5}\relax
+		% we don't have symbolic operation
+	\else
+		\\[1.2ex]
+		\DetailSymbol{#5}
+	\fi
+	% reduce spacing before and after multicols
+	\setlength{\multicolsep}{1ex}
+
+}{
+	% we want some spacing below each item
+	\vspace{1em}
+}
 
 % ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀█ ▀█▀ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 　 ▒█▀▀▀█ ▒█▀▀▀ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 
 % ▒█░▒█ ▒█▀▀▀ ░▀▀▀▄▄ ▒█░░░ ▒█▄▄▀ ▒█░ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 　 ░▀▀▀▄▄ ▒█▀▀▀ ▒█░░░ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 
