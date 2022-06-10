@@ -1144,44 +1144,63 @@ IN A, (&FE)
 		Loads source {\tt s} into destination {\tt d}. The following combinations are allowed (source {\tt s} is represented horizontally, destination {\tt d} vertically):
 
 		{
-			\fontsize{9pt}{9pt}	% 9pt results in slightly wider table than the rest of the text, but the larger the font, more readable it is, so I prefer it this way (originally \scripsize was used which makes the table slightly slimer than the rest of the text)
+			\fontsize{10pt}{10pt}	% 9pt results in slightly wider table than the rest of the text, but the larger the font, more readable it is, so I prefer it this way (originally \scripsize was used which makes the table slightly slimer than the rest of the text)
 			\setlength{\tabcolsep}{1pt}
+
 			% note: OO and ii were chosen simply because the difference is noticable in the table below...
+			% note: OQ and ik are the same, but darker backgrounds
 			\newcommand{\OO}{$\bullet$}
+			\newcommand{\OQ}{\cellcolor{PrintableLightMidGray}$\bullet$}
 			\newcommand{\ii}{\cellcolor{PrintableLightGray}}
+			\newcommand{\ik}{\cellcolor{PrintableMidGray}}
+			\newcommand{\Small}[1]{\FontSize{8.5pt}{#1}}
+			\newcommand{\Mini}[1]{\FontSize{7.5pt}{#1}}
 
-			\begin{tabular}{@{}|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-				\arrayrulecolor{gray}
-				\hline
-				& {\tt A} & {\tt B} & {\tt C} & {\tt D} & {\tt E} & {\tt H} & {\tt L} & {\tt I} & {\tt R} & {\tt IXH} & {\tt IXL} & {\tt IYH} & {\tt IYL} & {\tt BC} & {\tt DE} & {\tt HL} & {\tt SP} & {\tt IX} & {\tt IY} & {\tt (BC)} & {\tt (DE)} & {\tt (HL)} & {\tt (IX+d)} & {\tt (IY+d)} & {\tt n} & {\tt nn} & {\tt (nn)} \\
-				\hline
+			\newcolumntype{A}{>{\centering\arraybackslash}p{2.6ex}}	% A...
+			\newcolumntype{B}{>{\centering\arraybackslash}p{2.8ex}}	% BC...
+			\newcolumntype{D}{>{\centering\arraybackslash}p{3.7ex}}	% (BC)...
+			\newcolumntype{E}{>{\centering\arraybackslash}p{5.0ex}}	% (IX+d)...
+			\newcolumntype{?}{!{\vrule width 0.6pt}} % wider vertical line
 
-				{\tt A}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\OO \\ \hline
-				{\tt B}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
-				{\tt C}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
-				{\tt D}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
-				{\tt E}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
-				{\tt H}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
-				{\tt L}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
-				{\tt I}      &\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
-				{\tt R}      &\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
-				{\tt IXH}    &\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\ii \\ \hline
-				{\tt IXL}    &\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\ii \\ \hline
-				{\tt IYH}    &\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\ii \\ \hline
-				{\tt IYL}    &\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\ii \\ \hline
-				{\tt BC}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
-				{\tt DE}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
-				{\tt HL}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
-				{\tt SP}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
-				{\tt IX}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
-				{\tt IY}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
-				{\tt (BC)}   &\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
-				{\tt (DE)}   &\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
-				{\tt (HL)}   &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
-				{\tt (IX+d)} &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
-				{\tt (IY+d)} &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
-				{\tt (nn)}   &\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
-			\end{tabular}
+			\begin{changemargin}{-3.2cm}{0cm}	% let the table extend below the title to allow more width, for more comfortable reading
+				\begin{tabular}{@{}|c?A|A|A|A|A|A|A?A|A?c|c|c|c?B|B|B|B|B|B?D|D|D?E|E?A|B|D|}
+					\arrayrulecolor{gray}
+					\hline
+					& {\tt A} & {\tt B} & {\tt C} & {\tt D} & {\tt E} & {\tt H} & {\tt L} & {\tt I} & {\tt R}
+					& {\tt IXH} & {\tt IXL} & {\tt IYH} & {\tt IYL}
+					& {\tt BC} & {\tt DE} & {\tt HL} & {\tt SP} & {\tt IX} & {\tt IY}
+					& {\tt \Small{(BC)}} & {\tt \Small{(DE)}} & {\tt \Small{(HL)}}
+					& {\tt \Mini{(IX+d)}} & {\tt \Mini{(IY+d)}}
+					& {\tt n} & {\tt nn} & {\tt \Small{(nn)}} \\
+					\hline
+
+					{\tt A}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\OO \\ \hline
+					{\tt B}      &\OQ&\OQ&\OQ&\OQ&\OQ&\OQ&\OQ&\ik&\ik&\OQ&\OQ&\OQ&\OQ&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\OQ&\OQ&\OQ&\OQ&\ik&\ik \\ \hline
+					{\tt C}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
+					{\tt D}      &\OQ&\OQ&\OQ&\OQ&\OQ&\OQ&\OQ&\ik&\ik&\OQ&\OQ&\OQ&\OQ&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\OQ&\OQ&\OQ&\OQ&\ik&\ik \\ \hline
+					{\tt E}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
+					{\tt H}      &\OQ&\OQ&\OQ&\OQ&\OQ&\OQ&\OQ&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\OQ&\OQ&\OQ&\OQ&\ik&\ik \\ \hline
+					{\tt L}      &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\ii&\ii \\ \hline
+					{\tt I}      &\OQ&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik \\ \hline
+					{\tt R}      &\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
+					{\tt IXH}    &\OQ&\OQ&\OQ&\OQ&\OQ&\ik&\ik&\ik&\ik&\OQ&\OQ&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\OQ&\ik&\ik \\ \hline
+					{\tt IXL}    &\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\ii \\ \hline
+					{\tt IYH}    &\OQ&\OQ&\OQ&\OQ&\OQ&\ik&\ik&\ik&\ik&\ik&\ik&\OQ&\OQ&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\OQ&\ik&\ik \\ \hline
+					{\tt IYL}    &\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\ii \\ \hline
+					{\tt BC}     &\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\OQ&\OQ \\ \hline
+					{\tt DE}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
+					{\tt HL}     &\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\OQ&\OQ \\ \hline
+					{\tt SP}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
+					{\tt IX}     &\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\OQ&\OQ \\ \hline
+					{\tt IY}     &\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO \\ \hline
+					{\tt (BC)}   &\OQ&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik \\ \hline
+					{\tt (DE)}   &\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
+					{\tt (HL)}   &\OQ&\OQ&\OQ&\OQ&\OQ&\OQ&\OQ&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\OQ&\ik&\ik \\ \hline
+					{\tt \Mini{(IX+d)}} &\OO&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\ii&\ii \\ \hline
+					{\tt \Mini{(IY+d)}} &\OQ&\OQ&\OQ&\OQ&\OQ&\OQ&\OQ&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\ik&\OQ&\ik&\ik \\ \hline
+					{\tt (nn)}   &\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\OO&\OO&\OO&\OO&\OO&\OO&\ii&\ii&\ii&\ii&\ii&\ii&\ii&\ii \\ \hline
+				\end{tabular}
+			\end{changemargin}
 		}
 
 		% while moving effects and timing tables to next page presents a gap below variants, it's nonetheless more readable to keep it all together
@@ -1191,11 +1210,10 @@ IN A, (&FE)
 			\FlagsLDr[Other variants]
 		\end{DetailEffects}
 						
-		\begin{DetailTiming}
+		\begin{DetailTiming}[Timing 8-bit]
 			\DetailTime[r,r]{1}{4}
-			\DetailTime[SP,HL]{1}{6}
 			\DetailTime[r,n]{2}{7}
-			\DetailTime[rr,A]{2}{7}
+			\DetailTime[(rr),A]{2}{7}
 			\DetailTime[A,(rr)]{2}{7}
 			\DetailTime[r,(HL)]{2}{7}
 			\DetailTime[(HL),r]{2}{7}
@@ -1203,22 +1221,26 @@ IN A, (&FE)
 			\DetailTime[A,R]{2}{9}
 			\DetailTime[I,A]{2}{9}
 			\DetailTime[R,A]{2}{9}
-			\DetailTime[SP,IX]{2}{10}
-			\DetailTime[SP,IY]{2}{10}
 			\DetailTime[(HL),n]{3}{10}
-			\DetailTime[rr,nn]{3}{10}
 			\DetailTime[A,(nn)]{4}{13}
 			\DetailTime[(nn),A]{4}{13}
-			\DetailTime[IX,nn]{4}{14}
-			\DetailTime[IY,nn]{4}{14}
-			\DetailTime[(HL),nn]{5}{16}
-			\DetailTime[(nn),HL]{5}{16}
 			\DetailTime[r,(IX+d)]{5}{19}
 			\DetailTime[r,(IY+d)]{5}{19}
 			\DetailTime[(IX+d),r]{5}{19}
 			\DetailTime[(IX+d),n]{5}{19}
 			\DetailTime[(IY+d),r]{5}{19}
 			\DetailTime[(IY+d),n]{5}{19}
+		\end{DetailTiming}
+						
+		\begin{DetailTiming}[Timing 16-bit]
+			\DetailTime[SP,HL]{1}{6}
+			\DetailTime[SP,IX]{2}{10}
+			\DetailTime[SP,IY]{2}{10}
+			\DetailTime[rr,nn]{3}{10}
+			\DetailTime[IX,nn]{4}{14}
+			\DetailTime[IY,nn]{4}{14}
+			\DetailTime[(HL),nn]{5}{16}
+			\DetailTime[(nn),HL]{5}{16}
 			\DetailTime[(IX),nn]{6}{20}
 			\DetailTime[(IY),nn]{6}{20}
 			\DetailTime[rr,(nn)]{6}{20}
