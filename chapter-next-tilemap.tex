@@ -105,7 +105,9 @@ ULA and Tilemap can be combined in two ways:
 
 \subsection{Examples}
 
-Using tilemaps is very simple. The most challenging part in my experience was finding a drawing program that would export to required formats in full. The best results I have achieved were with Remy's Sprite, Tile and Palette editor website\footnote{\url{https://zx.remysharp.com/sprites/}}. Even then, I had to manually tweak binary files to achieve desired results (single byte per tile).
+Using tilemaps is very simple. The most challenging part of my experience was finding a drawing program that would export to required formats in full. In my experience, Next Graphics\footnote{\url{https://github.com/infromthecold/Next-Graphics}} is the most feature-complete application for generating data for the Next. It takes images from your preferred editor and converts them into a format that can be easily consumed by Next hardware. It supports many different configurations too.
+
+Alternatively, Remy's Sprite, Tile and Palette editor website\footnote{\url{https://zx.remysharp.com/sprites/}} is the readily available editor and exporter. However, at the time of this writing, export is limited.
 
 Regardless of the editor, we need 3 pieces of data: palette, tile definitions and tileset itself. In this example, they are included as binary files:
 
