@@ -237,7 +237,7 @@ WaitAWhile:
 
 ; declares copper wait instruction for given horizontal (0-440) and vertical (0-311) position
 	MACRO COPPER_WAIT hor, ver
-	DB %10000000 | ((hor/8) << 1) | ((ver & $FF) >> 8)	; %1hhhhhhv (bit 9 of vertical)
+	DB %10000000 | ((hor/8) << 1) | ((ver & $1FF) >> 8)	; %1hhhhhhv (bit 9 of vertical)
 	DB (ver & $FF)						; %vvvvvvvv (lsb of vertical)
 	ENDM
 
