@@ -26,9 +26,9 @@ Tiles are 8x8 pixels with each pixel representing an index of the colour from th
 
 Each pixel occupies 4-bits, meaning tiles can use 16 colours. However, as we'll see in the next section, it's possible to specify a 4-bit palette offset for each tile which allows us to reach all 256 colours from the palette.
 
-A maximum of 256 tile definitions are possible, but this can be extended to 512 if needed using \PortLink{Tilemap Control Register}{6B}.
+A maximum of 256 tile definitions are possible, but this can be extended to 512 if needed using \PortTextXRef{6B}.
 
-All tiles definitions are specified in a contiguous memory block. The offset of tile definitions memory address relative to the start of bank 5 needs to be specified with \PortLink{Tile Definitions Base Address Register}{6F}.
+All tiles definitions are specified in a contiguous memory block. The offset of tile definitions memory address relative to the start of bank 5 needs to be specified with \PortTextXRef{6F}.
 
 
 \subsection{Tilemap Data}
@@ -64,9 +64,9 @@ Tilemap data requires 2 bytes per tile:
 	\RightItem{Tile Index} 8-bit tile index within the tile definitions.
 \end{basedescript}
 
-However, it's possible to eliminate attributes byte by setting bit 5 in \PortLink{Tilemap Control Register}{6B}. This only leaves an 8-bit tile index. Tileset then only occupies half the memory. But we lose the option to specify attributes for each tile separately. Instead attributes for all tiles are taken from \PortLink{Default Tilemap Attribute Register}{6C}.
+However, it's possible to eliminate attributes byte by setting bit 5 in \PortTextXRef{6B}. This only leaves an 8-bit tile index. Tileset then only occupies half the memory. But we lose the option to specify attributes for each tile separately. Instead attributes for all tiles are taken from \PortTextXRef{6C}.
 
-The offset of the tilemap data memory address relative to the start of bank 5 needs to be specified with \PortLink{Tilemap Base Address Register}{6E}.
+The offset of the tilemap data memory address relative to the start of bank 5 needs to be specified with \PortTextXRef{6E}.
 
 
 \subsection{Memory Organization}
@@ -85,7 +85,7 @@ If both ULA and tilemap are used, memory should be arranged to avoid overlap. Gi
 	Max Tile Definitions & 215 & 175 & 175 & 95 \\
 \end{ElegantTable}
 
-We as programmers need to tell hardware where in the memory tilemap and tile definitions are stored. \PortLink{Tilemap Base Address Register}{6E} and \PortLink{Tile Definitions Base Address Register}{6F} are used for that.
+We as programmers need to tell hardware where in the memory tilemap and tile definitions are stored. \PortTextXRef{6E} and \PortTextXRef{6F} are used for that.
 
 Both addresses are provided as most significant byte of the offset into memory slot 5 (which starts at \MemAddr{4000}). This means we can only store data at multiples of 256 bytes. For example, if data is stored at \MemAddr{6000}, the MSB offset value would be {\tt \$20} ({\tt \$6000 - \$4000 = \$\underline{20}00}).
 
@@ -196,7 +196,7 @@ You can find fully working example in companion code on GitHub in folder {\tt ti
 \subsection{Tilemap Registers}
 \label{zx_next_tilemap_registers}
 
-\subsubsection{\PortTitle{Sprite and Layers System Register}{15}}
+\subsubsection{\PortDeclaration{15}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -229,7 +229,7 @@ You can find fully working example in companion code on GitHub in folder {\tt ti
 \end{NextPort}
 
 
-\subsubsection{\PortTitle{Clip Window Tilemap Register}{1B}}
+\subsubsection{\PortDeclaration{1B}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -238,15 +238,15 @@ You can find fully working example in companion code on GitHub in folder {\tt ti
 
 4 coordinates need to be set: X1, X2, Y1 and Y2. Tilemap will only be visible within these coordinates. X coordinates are internally doubled for 40x32 or quadrupled for 80x32 mode. Positions are inclusive. Default values are {\tt 0}, {\tt 159}, {\tt 0}, {\tt 255}. Origin (0,0) is located 32 pixels to the top-left of ULA top-left coordinate.
 
-Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset the index to 0 in \PortLink{Clip Window Control Register}{1C}, then write all 4 coordinates in succession.
+Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset the index to 0 in \PortTextXRef{1C}, then write all 4 coordinates in succession.
 
 
-\subsubsection{\PortTitleLink{Clip Window Control Register}{1C}}
+\subsubsection{\PortTextXRef{1C}}
 
-\PortReference{zx_next_layer2_registers}{Layer 2}
+\PortDeclarationXRef{Layer 2}{1C}
 
 
-\subsubsection{\PortTitle{Tilemap Offset X MSB Register}{2F}}
+\subsubsection{\PortDeclaration{2F}}
 
 \begin{NextPort}
 	\PortBits{7-2}
@@ -255,20 +255,20 @@ Which coordinate gets set, is determined by index. As each write to this registe
 		\PortDesc{Most significant bit(s) of X offset}
 \end{NextPort}
 
-In 40x32 mode, meaningful range is {\tt 0-319}, for 80x32 {\tt 0-639}. Low 8-bits are stored in \PortLink{Tilemap Offset X LSB Register}{30}.
+In 40x32 mode, meaningful range is {\tt 0-319}, for 80x32 {\tt 0-639}. Low 8-bits are stored in \PortTextXRef{30}.
 
 
-\subsubsection{\PortTitle{Tilemap Offset X LSB Register}{30}}
+\subsubsection{\PortDeclaration{30}}
 
 \begin{NextPort}
 	\PortBits{7-0}
 		\PortDesc{X offset for drawing tilemap in pixels}
 \end{NextPort}
 
-Tilemap X offset in pixels. Meaningful range is {\tt 0-319} for 40x32 and {\tt 0-639} for 80x32 mode. To write values larger than 255, \PortLink{Tilemap Offset X MSB Register}{2F} is used to store MSB.
+Tilemap X offset in pixels. Meaningful range is {\tt 0-319} for 40x32 and {\tt 0-639} for 80x32 mode. To write values larger than 255, \PortTextXRef{2F} is used to store MSB.
 
 
-\subsubsection{\PortTitle{Tilemap Offset Y Register}{31}}
+\subsubsection{\PortDeclaration{31}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -278,17 +278,17 @@ Tilemap X offset in pixels. Meaningful range is {\tt 0-319} for 40x32 and {\tt 0
 Y offset is {\tt 0-255}.
 
 
-\subsubsection{\PortTitleLink{Palette Index Register}{40}}
+\subsubsection{\PortTextXRef{40}}
 \vspace*{-2ex}
-\subsubsection{\PortTitleLink{Palette Value Register}{41}}
+\subsubsection{\PortTextXRef{41}}
 \vspace*{-2ex}
-\subsubsection{\PortTitleLink{Enhanced ULA Control Register}{43}}
+\subsubsection{\PortTextXRef{43}}
 \vspace*{-2ex}
-\subsubsection{\PortTitleLink{Enhanced ULA Palette Extension}{44}}
-\PortReference{zx_next_palette_registers}{Palette}
+\subsubsection{\PortTextXRef{44}}
+\PortDeclarationXRefCustom{Palette}{section \ref{\PortReference{40}}, pages \PortPage{40}-\PortPage{44}}
 
 
-\subsubsection{\PortTitle{Tilemap Transparency Index Register}{4C}}
+\subsubsection{\PortDeclaration{4C}}
 
 \begin{NextPort}
 	\PortBits{7-5}
@@ -300,7 +300,7 @@ Y offset is {\tt 0-255}.
 The pixel index from tile definitions is compared before palette offset is applied to the upper 4 bits, so there's always one index between {\tt 0} and {\tt 15} that works as transparent colour.
 
 
-\subsubsection{\PortTitle{ULA Control Register}{68}}
+\subsubsection{\PortDeclaration{68}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -327,10 +327,10 @@ The pixel index from tile definitions is compared before palette offset is appli
 		\PortDesc{{\tt 1} to enable stencil mode when both the ULA and tilemap are enabled.}
 \end{NextPort}
 
-See \PortLink{Sprite and Layers System Register}{15} for different priorities and mixing of ULA, Layer 2 and Sprites.
+See \PortTextXRef{15} for different priorities and mixing of ULA, Layer 2 and Sprites.
 
 
-\subsubsection{\PortTitle{Tilemap Control Register}{6B}}
+\subsubsection{\PortDeclaration{6B}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -351,13 +351,13 @@ See \PortLink{Sprite and Layers System Register}{15} for different priorities an
 		\PortDesc{{\tt 1} to force tilemap on top of ULA}
 \end{NextPort}
 
-\See{1}In the text mode, tiles are defined as 1-bit B\&W bitmaps, same as original Spectrum UDGs. Each tile only requires 8 bytes. In this mode, the tilemap attribute byte is also interpreted differently: bit 0 is still ULA over Tilemap (or 9th bit of tile data index) but the top 7 bits are extended palette offset (the least significant bit is the value of the pixel itself). In this mode, transparency is checked against \PortLink{Global Transparency Register}{14} colour, not against the four-bit tilemap colour index.
+\See{1}In the text mode, tiles are defined as 1-bit B\&W bitmaps, same as original Spectrum UDGs. Each tile only requires 8 bytes. In this mode, the tilemap attribute byte is also interpreted differently: bit 0 is still ULA over Tilemap (or 9th bit of tile data index) but the top 7 bits are extended palette offset (the least significant bit is the value of the pixel itself). In this mode, transparency is checked against \PortTextXRef{14} colour, not against the four-bit tilemap colour index.
 
 
 \pagebreak
-\subsubsection{\PortTitle{Default Tilemap Attribute Register}{6C}}
+\subsubsection{\PortDeclaration{6C}}
 
-If single byte tilemap mode is selected (bit 5 of \PortLink{Tilemap Control Register}{6B} set), this register defines attributes for all tiles.
+If single byte tilemap mode is selected (bit 5 of \PortTextXRef{6B} set), this register defines attributes for all tiles.
 
 \begin{NextPort}
 	\PortBits{7-4}
@@ -374,7 +374,7 @@ If single byte tilemap mode is selected (bit 5 of \PortLink{Tilemap Control Regi
 \end{NextPort}
 
 
-\subsubsection{\PortTitle{Tilemap Base Address Register}{6E}}
+\subsubsection{\PortDeclaration{6E}}
 
 \begin{NextPort}
 	\PortBits{7-6}
@@ -384,7 +384,7 @@ If single byte tilemap mode is selected (bit 5 of \PortLink{Tilemap Control Regi
 \end{NextPort}
 
 
-\subsubsection{\PortTitle{Tile Definitions Base Address Register}{6F}}
+\subsubsection{\PortDeclaration{6F}}
 
 \begin{NextPort}
 	\PortBits{7-6}

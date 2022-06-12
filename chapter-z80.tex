@@ -333,7 +333,7 @@ In general, the instruction following the {\tt DD} prefix is executed as is, but
 	
 	\item Any access to {\tt L} is treated as an access to {\tt IX\Low} (the low byte of {\tt IX}) except if {\tt (IX+d)} is used as well.
 	
-	\item A {\tt DD} prefix before a {\tt CB} selects a completely different instruction set, see section {\ref{z80_undocumented_prefix_cbdd}}.
+	\item A {\tt DD} prefix before a {\tt CB} selects a completely different instruction set, see section {\XRef{z80_undocumented_prefix_cbdd}}.
 \end{itemize}
 
 Some examples:
@@ -438,7 +438,7 @@ According to Gerton Lunter\footnote{\email{gerton}{math.rug}{nl}}:
 	The instructions {\tt ED 4E} and {\tt ED 6E} are {\tt IM 0} equivalents: when {\tt FF} was put on the bus (physically) at interrupt time, the Spectrum continued to execute normally, whereas when an {\tt EF} ({\tt RST \$28}) was put on the bus it crashed, just as it does in that case when the Z80 is in the official interrupt mode 0. In {\tt IM 1} the Z80 just executes a {\tt RST \$38} (opcode {\tt FF}) no matter what is on the bus.
 \end{quote}
 
-All the {\tt RETI/RETN} instructions are the same, all like the {\tt RETN} instruction. So they all, including {\tt RETI}, copy {\tt IFF2} to {\tt IFF1}. See section \ref{z80_interrupts_flipflop} for more information on {\tt RETI} and {\tt RETN} and {\tt IM x}.
+All the {\tt RETI/RETN} instructions are the same, all like the {\tt RETN} instruction. So they all, including {\tt RETI}, copy {\tt IFF2} to {\tt IFF1}. See section \XRef{z80_interrupts_flipflop} for more information on {\tt RETI} and {\tt RETN} and {\tt IM x}.
 
 
 \subsection{FD Prefix \cite{gerton}}
@@ -959,7 +959,7 @@ This makes sense if you think of {\tt DD} and {\tt FD} as a prefix that sets the
 
 could be interpreted as a simple {\tt LD HL,0} if the interrupt was after the last {\tt DD}. Which never happens, so the implementation is correct. Although I haven't tested this, as I imagine the same holds for NMI interrupts.
 
-Also see section \ref{zx_next_interrupts} for details on handling interrupts on ZX Spectrum Next.
+Also see section \XRef{zx_next_interrupts} for details on handling interrupts on ZX Spectrum Next.
 
 
 \section{Timing and R register}
@@ -999,7 +999,7 @@ Some official Zilog documentation contains errors. Not every documentation has a
 	Also, the table says about {\tt INI}/{\tt OUTD}/etc ``Z=0 if B $<>$ 0 otherwise Z=0''; of course the latter should be Z=1.
 
 	\item
-	The {\tt INI}/{\tt INIR}/{\tt IND}/{\tt INDR}/{\tt OUTI}/{\tt OUTD}/{\tt OTIR}/{\tt OTDR} instructions do affect the CF flag (some official documentation says they leave it unaffected, important!) and the NF flag isn't always set but may also be reset (see \ref{z80_undocumented_instructions_io_block} for exact operation).
+	The {\tt INI}/{\tt INIR}/{\tt IND}/{\tt INDR}/{\tt OUTI}/{\tt OUTD}/{\tt OTIR}/{\tt OTDR} instructions do affect the CF flag (some official documentation says they leave it unaffected, important!) and the NF flag isn't always set but may also be reset (see \XRef{z80_undocumented_instructions_io_block} for exact operation).
 
 	\item
 	When an NMI is accepted, the {\tt IFF1} isn't copied to {\tt IFF2}. Only {\tt IFF1} is reset.

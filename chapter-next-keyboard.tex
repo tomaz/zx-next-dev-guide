@@ -20,7 +20,7 @@ Next inherits ZX Spectrum keyboard handling, so all legacy programs will work ou
 
 \subsection{Legacy Keyboard Status}
 
-ZX Spectrum uses 8$\times$5 matrix for reading keyboard status. This means 40 distinct keys can be represented. The keyboard is read from \PortLink{ULA Control Port Read}{xxFE} with particular high bytes. There are 8 possible bytes, each will return the status of 5 associated keys. If a key is pressed, the corresponding bit is set to {\tt 0} and vice versa.
+ZX Spectrum uses 8$\times$5 matrix for reading keyboard status. This means 40 distinct keys can be represented. The keyboard is read from \PortTextXRef{xxFE} with particular high bytes. There are 8 possible bytes, each will return the status of 5 associated keys. If a key is pressed, the corresponding bit is set to {\tt 0} and vice versa.
 
 Example for checking if {\tt P} or {\tt I} is pressed:
 	
@@ -38,7 +38,7 @@ checkI:
 continue:
 \end{tcblisting}
 
-As mentioned in Ports chapter, section \ref{zx_next_ports_examples}, we can slightly improve performance if we replace first two lines with:
+As mentioned in Ports chapter, section \XRef{zx_next_ports_examples}, we can slightly improve performance if we replace first two lines with:
 
 \begin{tcblisting}{}
 	LD A, &DF
@@ -52,13 +52,13 @@ The first program is more understandable at a glance - the port address is given
 
 \subsection{Next Extended Keys}
 
-Next uses larger 8$\times$7 matrix for keyboard, with 10 additional keys. By default, hardware is translating keys from extra two columns into the existing 8$\times$5 set. But you can turn this off with bit {\tt 4} of \PortLink{ULA Control Register}{68}. Extra keys can be read separately via \PortLink{Extended Keys 0 Register}{B0} and \PortLink{Extended Keys 1 Register}{B1}.
+Next uses larger 8$\times$7 matrix for keyboard, with 10 additional keys. By default, hardware is translating keys from extra two columns into the existing 8$\times$5 set. But you can turn this off with bit {\tt 4} of \PortTextXRef{B1}. Extra keys can be read separately via \PortTextXRef{B0} and \PortTextXRef{B1}, details on page \PortPage{B0}.
 
 
 \subsection{Keyboard Ports and Registers}
 \label{zx_next_keyboard_registers}
 
-\subsubsection{\PortTitle{ULA Control Port Read}{xxFE}}
+\subsubsection{\PortDeclaration{xxFE}}
 
 \vspace*{-1em} % for some reason LaTeX adds some unwanted vertical space between title and text!?
 Returns keyboard status when read with certain high byte values:
@@ -86,17 +86,17 @@ Returns keyboard status when read with certain high byte values:
 
 Bits are reversed: if a key is pressed, the corresponding bit is {\tt 0}, if a key is not pressed, bit is {\tt 1}.
 
-Note: when written to, \PortLink{ULA Control Port}{xxFE} is used to set border colour and audio devices. See description under ULA chapter, section \ref{zx_next_ula_registers} for details.
+Note: when written to, \PortTextXRef{xxFEWrite} is used to set border colour and audio devices. See section \PortXRef{xxFEWrite} for details.
 
 
-\subsubsection{\PortTitleLink{ULA Control Register}{68}}
+\subsubsection{\PortTextXRef{68}}
 
-\PortReference{zx_next_tilemap_registers}{Tilemap}
+\PortDeclarationXRef{Tilemap}{68}
 
 
-\subsubsection{\PortTitle{Extended Keys 0 Register}{B0}}
+\subsubsection{\PortDeclaration{B0}}
 \vspace*{-2ex}
-\subsubsection{\PortTitle{Extended Keys 1 Register}{B1}}
+\subsubsection{\PortDeclaration{B1}}
 
 \newcommand{\PortNextExtKey}[2]{{\tt 0} if key pressed, {\tt 1} otherwise & {\tt #1} & {\tt #2} \\ }
 \begin{NextPort}[cp{5.5cm}p{1.5cm}X][Bit & Effect & \MemAddr{B0} & \MemAddr{B1}]

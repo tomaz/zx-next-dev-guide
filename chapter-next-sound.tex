@@ -19,9 +19,9 @@ Next inherits the same 3 AY-3-8912 chips setup as used in 128K Spectrums. This a
 
 \subsection{AY Chip Registers}
 
-AY chip has 3 sound channels, called A, B and C. Combined with 3 chips, this allows us to produce 9 channel music. Programming wise, each of the 3 chips needs to be selected first via \PortLink{Turbo Sound Next Control}{FFFD} register. Afterwards, we can set various parameters through \PortLink{Peripheral 3 Register}{08} and \PortLink{Peripheral 4 Register}{09}.
+AY chip has 3 sound channels, called A, B and C. Combined with 3 chips, this allows us to produce 9 channel music. Programming wise, each of the 3 chips needs to be selected first via \PortTextXRef{FFFD} register. Afterwards, we can set various parameters through \PortTextXRef{08} and \PortTextXRef{09} registers.
 
-AY chip is controlled by 14 internal registers. To program them, we first need to select the register with \PortLink{Turbo Sound Next Control}{FFFD} and then write the value with \PortLink{Sound Chip Register Write}{BFFD}.
+AY chip is controlled by 14 internal registers. To program them, we first need to select the register with \PortTextXRef{FFFD} and then write the value with \PortTextXRef{BFFD}.
 
 
 \subsection{Editing and Players}
@@ -65,14 +65,14 @@ WriteDToAYReg:
 	RET
 \end{tcblisting}
 
-Companion code on GitHub, folder {\tt sound} includes expanded code as well as a simple player that plays multiple tones in sequence. For the purposes of this book, I used Remy's AY audio generator website to load one of the example effects, then manually copied raw values into the source code. Laborious process to say the least - this is not how effects should be handled in real life. But I wanted to learn and demonstrate how to program AY chip, not how to use ready-made drivers to play effects or music. Furthermore, my ``player'' blocks the main loop; ideally, sound effects and music would play on the interrupt handler. This could be a nice homework for the reader - example in section \ref{zx_next_interrupts} should give you an idea of how to achieve this - happy coding!
+Companion code on GitHub, folder {\tt sound} includes expanded code as well as a simple player that plays multiple tones in sequence. For the purposes of this book, I used Remy's AY audio generator website to load one of the example effects, then manually copied raw values into the source code. Laborious process to say the least - this is not how effects should be handled in real life. But I wanted to learn and demonstrate how to program AY chip, not how to use ready-made drivers to play effects or music. Furthermore, my ``player'' blocks the main loop; ideally, sound effects and music would play on the interrupt handler. This could be a nice homework for the reader - example in section \XRef{zx_next_interrupts} should give you an idea of how to achieve this - happy coding!
 
 
 \pagebreak
 \subsection{Sound Ports and Registers}
 \label{zx_next_sound_registers}
 
-\subsubsection{\PortTitle{Turbo Sound Next Control}{FFFD}}
+\subsubsection{\PortDeclaration{FFFD}}
 
 When bit {\tt 7} is {\tt 1}:
 
@@ -107,7 +107,7 @@ When bit {\tt 7} is {\tt 0}:
 \end{NextPort}
 
 
-\subsubsection{\PortTitle{Sound Chip Register Write}{BFFD}}
+\subsubsection{\PortDeclaration{BFFD}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -245,7 +245,7 @@ When bit {\tt 7} is {\tt 0}:
 	\end{tabular}
 \endgroup
 
-\subsubsection{\PortTitle{Peripheral 2 Register}{06}}
+\subsubsection{\PortDeclaration{06}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -274,11 +274,11 @@ When bit {\tt 7} is {\tt 0}:
 		}
 \end{NextPort}
 
-\subsubsection{\PortTitle{Peripheral 3 Register}{08}}
+\subsubsection{\PortDeclaration{08}}
 
 \begin{NextPort}
 	\PortBits{7}
-		\PortDesc{{\tt 1} unlock / {\tt 0} lock port \MemAddr{7FFD} paging}
+		\PortDesc{{\tt 1} unlock / {\tt 0} lock port \PortTextXRef{7FFD} paging}
 	\PortBits{6}
 		\PortDesc{{\tt 1} to disable RAM and I/O port contention ({\tt 0} after soft reset)}
 	\PortBits{5}
@@ -295,9 +295,9 @@ When bit {\tt 7} is {\tt 0}:
 		\PortDesc{Implement Issue 2 keyboard (port \MemAddr{FE} reads as early ZX boards) ({\tt 0} after hard reset)}
 \end{NextPort}
 
-\subsubsection{\PortTitleLink{Peripheral 4 Register}{09}}
+\subsubsection{\PortTextXRef{09}}
 
-\PortReference{zx_next_sprites_registers}{Sprites}
+\PortDeclarationXRef{Sprites}{09}
 
 
 \pagebreak

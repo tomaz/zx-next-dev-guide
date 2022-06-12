@@ -130,7 +130,7 @@ There are only two types of instructions ZX Next Copper understands, but each ty
 
 {\tt HALT} is a special case of {\tt WAIT} instruction that tells Copper to wait for the vertical position 511 and horizontal 63. As these are unreachable positions, it will effectively stop all further Copper processing until Next is reset.
 
-However, when mode {\tt 11} is used (bits 7-6 of \PortLink{Copper Control High Byte}{62}, see section \ref{zx_next_copper_configuration} for details), Copper will auto-wrap to the first instruction on every vertical blank. This allows us to use {\tt HALT} to mark the end of the Copper program without having to fill in the remaining bytes with {\tt 0}. Quite convenient! In fact, I'd imagine this would be the most commonly used mode. If you're used to Copper on Amiga, this is also how it behaved there.
+However, when mode {\tt 11} is used (bits 7-6 of \PortTextXRef{62}, see section \XRef{zx_next_copper_configuration} for details), Copper will auto-wrap to the first instruction on every vertical blank. This allows us to use {\tt HALT} to mark the end of the Copper program without having to fill in the remaining bytes with {\tt 0}. Quite convenient! In fact, I'd imagine this would be the most commonly used mode. If you're used to Copper on Amiga, this is also how it behaved there.
 
 
 \subsubsection{MOVE}
@@ -174,11 +174,11 @@ However, when mode {\tt 11} is used (bits 7-6 of \PortLink{Copper Control High B
 \subsection{Configuration}
 \label{zx_next_copper_configuration}
 
-To load a program, we need to send it, byte by byte, through \PortLink{Copper Data}{60} or \PortLink{Copper Data 16-bit Write}{63} registers. As instructions are 16-bits in size, two writes are required. The difference between the two registers is that \MemAddr{60} sends bytes immediately while \MemAddr{63} only after both bytes of an instruction are provided, thus preventing half-written instructions from executing.
+To load a program, we need to send it, byte by byte, through \PortTextXRef{60} or \PortTextXRef{63} registers. As instructions are 16-bits in size, two writes are required. The difference between the two registers is that \MemAddr{60} sends bytes immediately while \MemAddr{63} only after both bytes of an instruction are provided, thus preventing half-written instructions from executing.
 
-Copper is controlled through 16-bit control word accessible through \PortLink{Copper Control High Byte}{62} and \PortLink{Copper Control Low Byte}{61} registers:
+Copper is controlled through 16-bit control word accessible through \PortTextXRef{62} and \PortTextXRef{61} registers:
 
-\begin{BitTableWord}[c][\PortLink{Copper Control High Byte}{62}][\PortLink{Copper Control Low Byte}{61}]
+\begin{BitTableWord}[c][\PortTextXRef{62}][\PortTextXRef{61}]
 	\BitStartMulti{2}{Mode} &
 		\BitMono{0} & 
 		\BitMono{0} & 
@@ -195,7 +195,7 @@ Mode can be one of the following:
 	\PortBitLine{11}{Same as {\tt 01}, but also auto-resets {\tt CPC} to 0 on vertical blank. In this mode we can use {\tt HALT} to mark the end of the program and still repeat it without having to fill-in {\tt NOOP}s from the last instruction of our program to the end of Copper 2K memory.}
 \end{PortBitConfig}
 
-The other value we set is the index for program upload. This is 11-bit value ({\tt 0}-{\tt 2047}) specifying the byte offset for write commands with \PortLink{Copper Data}{60} or \PortLink{Copper Data 16-bit Write}{63} registers. In other words: this is the index for the location into which data will be uploaded, not the value of the {\tt CPC}. We can't change {\tt CPC} programmatically, apart from resetting it to {\tt 0}.
+The other value we set is the index for program upload. This is 11-bit value ({\tt 0}-{\tt 2047}) specifying the byte offset for write commands with \PortTextXRef{60} or \PortTextXRef{63} registers. In other words: this is the index for the location into which data will be uploaded, not the value of the {\tt CPC}. We can't change {\tt CPC} programmatically, apart from resetting it to {\tt 0}.
 
 
 \subsection{Example}
@@ -212,7 +212,7 @@ CopperList:
 CopperListSize = &-CopperList
 \end{tcblisting}
 
-In case you may be wondering: we should also ensure we update the correct colour with \PortLink{Enhanced ULA Control Register}{43} and \PortLink{Palette Index Register}{40}. But I wanted to keep the program simple for demonstration purposes.
+In case you may be wondering: we should also ensure we update the correct colour with \PortTextXRef{43} and \PortTextXRef{40}. But I wanted to keep the program simple for demonstration purposes.
 
 With Copper program in place, we can upload it to Copper memory. We can use DMA or directly upload values through Next registers. The code here demonstrates later, but companion code implements both so you can compare:
 
@@ -246,7 +246,7 @@ Not the most impressive display of Copper capabilities, I give you that. You can
 	\item Example of upload routine using DMA
 	\item Using DMA to fill in Layer 2 banks
 	\item Macros that hopefully make Copper programs easier to read and write
-	\item Usage of \PortLink{Copper Data}{60} to dynamically update individual bytes of the program in memory to achieve couple effects
+	\item Usage of \PortTextXRef{60} to dynamically update individual bytes of the program in memory to achieve couple effects
 \end{itemize}
 
 
@@ -255,17 +255,17 @@ Not the most impressive display of Copper capabilities, I give you that. You can
 \label{zx_next_copper_registers}
 
 
-\subsubsection{\PortTitle{Copper Data}{60}}
+\subsubsection{\PortDeclaration{60}}
 
 \begin{NextPort}
 	\PortBits{7-0}
 		\PortDesc{Data to upload to Copper memory}
 \end{NextPort}
 
-The data is written to the index specified with \PortLink{Copper Control Low Byte}{61} and \PortLink{Copper Control High Byte}{62}. After the write, the index is auto-incremented to the next memory position. The index wraps to {\tt 0} when the last byte of the program memory is written to position {\tt 2047}. Since Copper instructions are 16-bits in size, two writes are required to complete each one.
+The data is written to the index specified with \PortTextXRef{61} and \PortTextXRef{62}. After the write, the index is auto-incremented to the next memory position. The index wraps to {\tt 0} when the last byte of the program memory is written to position {\tt 2047}. Since Copper instructions are 16-bits in size, two writes are required to complete each one.
 
 
-\subsubsection{\PortTitle{Copper Control Low Byte}{61}}
+\subsubsection{\PortDeclaration{61}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -273,7 +273,7 @@ The data is written to the index specified with \PortLink{Copper Control Low Byt
 \end{NextPort}
 
 
-\subsubsection{\PortTitle{Copper Control High Byte}{62}}
+\subsubsection{\PortDeclaration{62}}
 
 \begin{NextPort}
 	\PortBits{7-6}
@@ -295,14 +295,14 @@ The data is written to the index specified with \PortLink{Copper Control Low Byt
 When control mode is identical to current one, it's ignored. This allows change of the upload index without restarting the program.
 
 
-\subsubsection{\PortTitle{Copper Data 16-bit Write}{63}}
+\subsubsection{\PortDeclaration{63}}
 
 \begin{NextPort}
 	\PortBits{7-0}
 		\PortDesc{Data to upload to Copper memory}
 \end{NextPort}
 
-Similar to \PortLink{Copper Data}{60} except that writes are only committed to Copper memory after two bytes are written. This prevents half-written instructions to be executed.
+Similar to \PortTextXRef{60} except that writes are only committed to Copper memory after two bytes are written. This prevents half-written instructions to be executed.
 
 The first write to this register is for MSB of the Copper instruction or even instruction address and second write for LSB or odd instruction address.
 

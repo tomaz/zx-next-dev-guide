@@ -10,7 +10,7 @@ To draw a pixel on a screen, we need to set its colour as data in memory. Next s
 
 Each graphics mode or layer has not one but two palettes, each of which can be changed independently. Of course, only one of two can be active at any given time for each mode. The other can be initialized with alternate colours and can be quickly activated to achieve colour animation effects.
 
-Active palette is set with \PortLink{Enhanced ULA Control Register}{43} for ULA, Layer 2 and Sprites and \PortLink{Tilemap Control Register}{6B} for Tilemap.
+Active palette is set with \PortTextXRef{43} for ULA, Layer 2 and Sprites and \PortTextXRef{6B} for Tilemap.
 
 
 \subsection{Palette Editing}
@@ -18,19 +18,19 @@ Active palette is set with \PortLink{Enhanced ULA Control Register}{43} for ULA,
 Next palettes have 256 colours. All are initialized with default values, so they are usable out of the box. But it's also possible to change every colour. Regardless of the palette, the procedure to read or write colours is:
 
 \begin{enumerate}[topsep=1pt,itemsep=1pt]
-	\item \PortLink{Enhanced ULA Control Register}{43} selects palette which colours you want to edit
-	\item \PortLink{Palette Index Register}{40} selects colour index that will be read or written
-	\item \PortLink{Palette Value Register}{41} or \PortLink{Enhanced ULA Palette Extension}{44} reads or writes data for selected colour
+	\item \PortTextXRef{43} selects palette which colours you want to edit
+	\item \PortTextXRef{40} selects colour index that will be read or written
+	\item \PortTextXRef{41} or \PortTextXRef{44} reads or writes data for selected colour
 \end{enumerate}
 
-When writing colours, we can chose to automatically increment colour indexes after each write. Bit 7 of \PortLink{Enhanced ULA Control Register}{43} is used for that purpose. This works the same for both write registers (\MemAddr{41} and \MemAddr{44}). Colour RGB values can either be 8-bit {\tt RRRGGGBB}, or 9-bit {\tt RRRGGGBBB} values. Use \PortLink{Palette Value Register}{41} for 8-bit and \PortLink{Enhanced ULA Palette Extension}{44} for 9-bit.
+When writing colours, we can chose to automatically increment colour indexes after each write. Bit 7 of \PortTextXRef{43} is used for that purpose. This works the same for both write registers (\MemAddr{41} and \MemAddr{44}). Colour RGB values can either be 8-bit {\tt RRRGGGBB}, or 9-bit {\tt RRRGGGBBB} values. Use \PortTextXRef{41} for 8-bit and \PortTextXRef{44} for 9-bit.
 
-Note: \PortLink{Enhanced ULA Control Register}{43} has two roles when working with palettes - it selects the active palette for display (out of two available - only for ULA, Layer 2 and Sprites) and selects palette for editing (for all layers, including Tilemap). Therefore care needs to be taken when updating colour entries to avoid accidentally changing the active palette for display at the same time. Depending on our program, we may first need to read the value and then only change bits affecting the palette for editing to ensure the rest of the data remains unaffected.
+Note: \PortTextXRef{43} has two roles when working with palettes - it selects the active palette for display (out of two available - only for ULA, Layer 2 and Sprites) and selects palette for editing (for all layers, including Tilemap). Therefore care needs to be taken when updating colour entries to avoid accidentally changing the active palette for display at the same time. Depending on our program, we may first need to read the value and then only change bits affecting the palette for editing to ensure the rest of the data remains unaffected.
 
 
 \subsection{8 Bit Colours}
 
-8-bit colours are stored as {\tt RRRGGGBB} values with 3 bits per red and green and 2 bits per blue component. Each colour is therefore stored as a single byte. \PortLink{Palette Value Register}{41} is used to read or write the value.
+8-bit colours are stored as {\tt RRRGGGBB} values with 3 bits per red and green and 2 bits per blue component. Each colour is therefore stored as a single byte. \PortTextXRef{41} is used to read or write the value.
 
 Here's a reusable subroutine for copying {\tt B} number of colours stored as a contiguous block in memory addressed by {\tt HL} register, starting at the currently selected colour index:
 
@@ -57,7 +57,7 @@ Note: we could also use DMA to transfer all the bytes. I won't show it here, but
 
 \subsection{9 Bit Colours}
 
-With 9 bits per colour, each RGB component uses full 3 bits, thus greatly increasing the available colour gamut. However, each colour needs 2 bytes in memory instead of 1. To read or write we use \PortLink{Enhanced ULA Palette Extension}{44} register instead of \MemAddr{41}. It works similarly to \MemAddr{41} except that each colour requires two writes: first one stores {\tt RRRGGGBB} part and second least significant bit of blue component. Subroutine for copying 9-bit colours:
+With 9 bits per colour, each RGB component uses full 3 bits, thus greatly increasing the available colour gamut. However, each colour needs 2 bytes in memory instead of 1. To read or write we use \PortTextXRef{44} register instead of \PortAddr{41}. It works similarly to \PortAddr{41}~except that each colour requires two writes: first one stores {\tt RRRGGGBB} part and second least significant bit of blue component. Subroutine for copying 9-bit colours:
 
 \begin{tcblisting}{}
 Copy9BitPalette:
@@ -76,14 +76,14 @@ Note: subroutine requires that colours are stored in 2 bytes with first containi
 \subsection{Palette Registers}
 \label{zx_next_palette_registers}
 
-\subsubsection{\PortTitle{Palette Index Register}{40}}
+\subsubsection{\PortDeclaration{40}}
 
 \begin{NextPort}
 	\PortBits{7-0}
 		\PortDesc{Reads or writes palette colour index to be manipulated}
 \end{NextPort}
 
-Writing an index {\tt 0-255} associates it with colour set through \PortLink{Palette Value Register}{41} or \PortLink{Enhanced ULA Palette Extension}{44} of currently selected pallette in \PortLink{Enhanced ULA Control Register}{43}. Write also resets value of \PortLink{Enhanced ULA Palette Extension}{44} so next write will occur for first colour of the palette.
+Writing an index {\tt 0-255} associates it with colour set through \PortTextXRef{41} or \PortTextXRef{44} of currently selected pallette in \PortTextXRef{43}. Write also resets value of \PortTextXRef{44} so next write will occur for first colour of the palette
 
 While Tilemap, Layer 2 and Sprites palettes use all 256 distinct colours (with some caveats, as described in specific chapters), ULA modes work like this:
 
@@ -119,7 +119,7 @@ While Tilemap, Layer 2 and Sprites palettes use all 256 distinct colours (with s
 		\PalIndexEntry{0-64}{Ink}
 	\end{PalIndexTable}
 
-	Paper and border are taken from \PortLink{Transparency Colour Fallback Register}{4A}.
+	Paper and border are taken from \PortTextXRef{4A}.
 
 
 	\vspace*{1em}
@@ -130,7 +130,7 @@ While Tilemap, Layer 2 and Sprites palettes use all 256 distinct colours (with s
 		\PalIndexEntry{128-255}{Paper (only a subset)}
 	\end{PalIndexTable}
 
-	Border is taken from paper colours. The number of active indices depends on the number of attribute bits assigned to ink and paper out of the attribute byte by \PortLink{Enhanced ULA Ink Colour Mask}{42}.
+	Border is taken from paper colours. The number of active indices depends on the number of attribute bits assigned to ink and paper out of the attribute byte by \PortTextXRef{42}.
 
 
 	\vspace*{1em}
@@ -140,13 +140,13 @@ While Tilemap, Layer 2 and Sprites palettes use all 256 distinct colours (with s
 		\PalIndexEntry{0-255}{Ink}
 	\end{PalIndexTable}
 
-	Paper and border are taken from \PortLink{Transparency Colour Fallback Register}{4A}.
+	Paper and border are taken from \PortTextXRef{4A}.
 
 \end{quote}
 
 
 \pagebreak
-\subsubsection{\PortTitle{Palette Value Register}{41}}
+\subsubsection{\PortDeclaration{41}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -172,14 +172,14 @@ Format is:
 
 Least significant bit of blue is set to {\tt OR} between $B_2$ and $B_1$.
 
-Writing the value will automatically increment index in \PortLink{Palette Index Register}{40}, if auto-increment is enabled in \PortLink{Enhanced ULA Control Register}{43}. Read doesn't auto-increment index.
+Writing the value will automatically increment index in \PortTextXRef{40}, if auto-increment is enabled in \PortTextXRef{43}. Read doesn't auto-increment index.
 
 
-\subsubsection{\PortTitle{Enhanced ULA Ink Colour Mask}{42}}
+\subsubsection{\PortDeclaration{42}}
 
 \begin{NextPort}
 	\PortBits{7-0}
-		\PortDesc{The number for last ink colour entry in the palette. Only used when ULANext mode is enabled (see \PortLink{Enhanced ULA Control Register}{43}). Only the following values are allowed, harware behavior is unpredictable for other values:}
+		\PortDesc{The number for last ink colour entry in the palette. Only used when ULANext mode is enabled (see \PortTextXRef{43}). Only the following values are allowed, harware behavior is unpredictable for other values:}
 		\PortDescOnly{
 			\begin{PortBitConfig}
 				\PortBitLine{1}{Ink and paper only use 1 colour each on indices {\tt 0} and {\tt 128} respectively}
@@ -189,14 +189,14 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 				\PortBitLine{31}{Ink and paper use 32 colours each, on indices {\tt 0}-{\tt 31} and {\tt 128}-{\tt 159}}
 				\PortBitLine{63}{Ink and paper use 64 colours each, on indices {\tt 0}-{\tt 63} and {\tt 128}-{\tt 191}}
 				\PortBitLine{127}{Ink and paper use 128 colours each, on indices {\tt 0}-{\tt 127} and {\tt 128}-{\tt 255}}
-				\PortBitLine{255}{Enables full-ink colour mode where all indices are ink. In this mode paper and border are taken from \PortLink{Transparency Colour Fallback Register}{4A}}
+				\PortBitLine{255}{Enables full-ink colour mode where all indices are ink. In this mode paper and border are taken from \PortTextXRef{4A}}
 			\end{PortBitConfig}
 		}
 		\PortDescOnly{Default value is {\tt 7} for core 3.0 and later, {\tt 15} for older cores.}
 \end{NextPort}
 
 
-\subsubsection{\PortTitle{Enhanced ULA Control Register}{43}}
+\subsubsection{\PortDeclaration{43}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -225,10 +225,10 @@ Writing the value will automatically increment index in \PortLink{Palette Index 
 		\PortDesc{Enables ULANext mode if {\tt 1} ({\tt 0} after reset)}
 \end{NextPort}
 
-Write will also reset the index of \PortLink{Enhanced ULA Palette Extension}{44} so next write there will be considered as first byte of first colour.
+Write will also reset the index of \PortTextXRef{44} so next write there will be considered as first byte of first colour.
 
 
-\subsubsection{\PortTitle{Enhanced ULA Palette Extension}{44}}
+\subsubsection{\PortDeclaration{44}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -271,21 +271,21 @@ Two consequtive writes are needed:
 
 \end{multicols}
 
-Bit 7 of the second write must be {\tt 0} except for Layer 2 palettes where it specifies colour priority. If set to {\tt 1}, then the colour will always be on top, above all other layers, regardless of priority set with \PortLink{Sprite and Layers System Register}{15}. So if you need exactly the same colour with priority and non-priority, you will need to set the same data twice, to different indexes, once with priority bit {\tt 1} and then with {\tt 0}.
+Bit 7 of the second write must be {\tt 0} except for Layer 2 palettes where it specifies colour priority. If set to {\tt 1}, then the colour will always be on top, above all other layers, regardless of priority set with \PortTextXRef{15}. So if you need exactly the same colour with priority and non-priority, you will need to set the same data twice, to different indexes, once with priority bit {\tt 1} and then with {\tt 0}.
 
-After the second write palette colour index in \PortLink{Palette Index Register}{40} is automatically increment, if auto-increment is enabled in \PortLink{Enhanced ULA Control Register}{43}.
+After the second write palette colour index in \PortTextXRef{40} is automatically increment, if auto-increment is enabled in \PortTextXRef{43}.
 
-Note: reading will always return the second byte of the colour (least significant bit of blue) and will not auto-increment index. You can read {\tt RRRGGGBB} part with \PortLink{Palette Value Register}{41}.
+Note: reading will always return the second byte of the colour (least significant bit of blue) and will not auto-increment index. You can read {\tt RRRGGGBB} part with \PortTextXRef{41}.
 
 
-\subsubsection{\PortTitle{Transparency Colour Fallback Register}{4A}}
+\subsubsection{\PortDeclaration{4A}}
 
 \begin{NextPort}
 	\PortBits{7-0}
 		\PortDesc{8-bit colour to be used when all layers contain transparent pixel. Format is {\tt RRRGGGBB}}
 \end{NextPort}
 
-This colour is also used for paper and border when ULANext full-ink mode is enabled - see \PortLink{Enhanced ULA Ink Colour Mask}{42}.
+This colour is also used for paper and border when ULANext full-ink mode is enabled - see \PortTextXRef{42}.
 
 
 \pagebreak

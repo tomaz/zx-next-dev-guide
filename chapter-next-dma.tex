@@ -24,7 +24,7 @@ zxnDMA defines two ``ports'', called ``A'' and ``B'' (port is just a word used f
 
 \subsection{Programming}
 
-Since core 3.1.2, zxnDMA is mapped to \PortLink{zxnDMA Port}{xx6B} and Zilog DMA to \PortLink{MB02 DMA Port}{xx0B}.
+Since core 3.1.2, zxnDMA is mapped to \PortTextXRef{xx0B}.
 
 Similar to Z80 DMA, zxnDMA also has 7 write registers named \DMARegName{WR0}-\DMARegName{WR6}. Some of the bits are used to identify a register, while the rest represent the payload ({\tt x} in the table below):
 
@@ -700,7 +700,7 @@ In contrast with Z80 DMA, zxnDMA doesn't support half-cycle timing for control s
 
 This byte is expected if bit 5 of ``Port B Timing'' is set. This is a feature of zxnDMA not present in Z80. If non-zero value is written, a delay will be inserted after each byte is transferred. The delay is calculated so that the total amount of time for each byte, including time required for actual transfer, is determined by the prescalar value.
 
-To calculate prescalar value, use formula: $prescalar = 875kHz / rate$ where rate is desired frequency. For example to have a constant rate of 16kHz, prescalar needs to be set to 55 (calculation gives 54.6875 which needs to be rounded). The constant 875kHz is assumed for 28MHz system clock. But exact system clock depends on video timing selected by user (HDMI, VGA). The actual value should therefore be adjusted according to exact frequency as described with \PortLink{Video Timing Register}{11}.
+To calculate prescalar value, use formula: $prescalar = 875kHz / rate$ where rate is desired frequency. For example to have a constant rate of 16kHz, prescalar needs to be set to 55 (calculation gives 54.6875 which needs to be rounded). The constant 875kHz is assumed for 28MHz system clock. But exact system clock depends on video timing selected by user (HDMI, VGA). The actual value should therefore be adjusted according to exact frequency as described with \PortTextXRef{11}.
 
 Fixed time transfer works in continuous and burst mode (see \DMARegName{WR4}). In burst mode, DMA will give up any waiting time to the CPU so it can run while DMA is idle.
 
@@ -1236,33 +1236,33 @@ When zxnDMA controls the bus (when transfer is in progress), Z80 can't respond t
 
 However, when operating in burst mode, with large enough prescalar, the CPU will be able to respond to interrupts.
 
-It's also possible to allow or prevent specific interrupters from interrupting DMA using Next specific Hardware IM2 mode. This is configured with Next registers \PortLink{DMA Interrupt Enable 0}{CC}, \PortLink{DMA Interrupt Enable 1}{CD} and \PortLink{DMA Interrupt Enable 2}{CE}. See section \ref{zx_next_interrupts} for more details on interrupts.
+It's also possible to allow or prevent specific interrupters from interrupting DMA using Next specific Hardware IM2 mode. This is configured with Next registers \PortTextXRef{CC}, \PortTextXRef{CD} and \PortTextXRef{CE}. See section \XRef{zx_next_interrupts} for more details on interrupts.
 
 
 \pagebreak
 \subsection{DMA Ports and Registers}
 \label{zx_next_dma_registers}
 
-\subsubsection{\PortTitle{MB02 DMA Port}{xx0B}}
+\subsubsection{\PortDeclaration{xx0B}}
 
-Core 3.1.2+: Always in Zilog DMA mode for uploading legacy DMA programs. For zxnDMA, use \PortLink{zxnDMA Port}{xx6B}.
+Core 3.1.2+: Always in Zilog DMA mode for uploading legacy DMA programs. For zxnDMA, use \PortTextXRef{xx6B}.
 
-Older cores: this port is not supported, set bit 6 of \PortLink{Peripheral 2 Register}{06} and use \PortLink{zxnDMA Port}{xx6B}.
-
-
-\subsubsection{\PortTitle{zxnDMA Port}{xx6B}}
-
-Core 3.1.2+: Always in zxnDMA mode. For legacy Zilog DMA, use \PortLink{MB02 DMA Port}{xx0B}.
-
-Older cores: this port behaves either in zxnDMA or legacy Zilog DMA mode based on bit 6 of \PortLink{Peripheral 2 Register}{06}: if bit 6 is {\tt 0}, zxnDMA mode is enabled, otherwise Zilog DMA.
+Older cores: this port is not supported, set bit 6 of \PortTextXRef{06} and use \PortTextXRef{xx6B}.
 
 
-\subsubsection{\PortTitleLink{Peripheral 2 Register}{06}}
+\subsubsection{\PortDeclaration{xx6B}}
 
-\PortReference{zx_next_sound_registers}{Sound}
+Core 3.1.2+: Always in zxnDMA mode. For legacy Zilog DMA, use \PortTextXRef{xx0B}.
+
+Older cores: this port behaves either in zxnDMA or legacy Zilog DMA mode based on bit 6 of \PortTextXRef{06}: if bit 6 is {\tt 0}, zxnDMA mode is enabled, otherwise Zilog DMA.
 
 
-\subsubsection{\PortTitle{Video Timing Register}{11}}
+\subsubsection{\PortTextXRef{06}}
+
+\PortDeclarationXRef{Sound}{06}
+
+
+\subsubsection{\PortDeclaration{11}}
 
 \newcommand{\DMATimingItem}[4]{{\tt #1} & clk28=#2#3 & #4 \\}
 
@@ -1286,9 +1286,9 @@ Older cores: this port behaves either in zxnDMA or legacy Zilog DMA mode based o
 \end{NextPort}
 
 
-\subsubsection{\PortTitleLink{DMA Interrupt Enable 0}{CC}}
+\subsubsection{\PortTextXRef{CC}}
 \vspace*{-2ex}
-\subsubsection{\PortTitleLink{DMA Interrupt Enable 1}{CD}}
+\subsubsection{\PortTextXRef{CD}}
 \vspace*{-2ex}
-\subsubsection{\PortTitleLink{DMA Interrupt Enable 2}{CE}}
-\PortReference{zx_next_interrupts_registers}{Interrupts}
+\subsubsection{\PortTextXRef{CE}}
+\PortDeclarationXRefMultiple{Interrupts}{CC}{CE}

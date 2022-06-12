@@ -671,7 +671,7 @@ CPDR
 		{\IH{D}isable \IH{I}nterrupts}
 		{\SymDI}
 
-		Disables all maskable interrupts (mode 1 and 2). Interrupts are disabled after execution of the instruction following {\tt DI}. See sections \ref{z80_interrupts} and \ref{zx_next_interrupts} for more details on interrupts.
+		Disables all maskable interrupts (mode 1 and 2). Interrupts are disabled after execution of the instruction following {\tt DI}. See sections \XRef{z80_interrupts} and \XRef{zx_next_interrupts} for more details on interrupts.
 		
 		\begin{DetailEffects}
 			\FlagsDI
@@ -704,7 +704,7 @@ CPDR
 		{\IH{E}nable \IH{I}nterrupts}
 		{\SymEI}
 
-		Enables maskable interrupts (mode 1 and 2). Interrupts are enabled after execution of the instruction following {\tt EI}; typically {\tt RETI} or {\tt RETN}. See sections \ref{z80_interrupts} and \ref{zx_next_interrupts} for more details on interrupts.
+		Enables maskable interrupts (mode 1 and 2). Interrupts are enabled after execution of the instruction following {\tt EI}; typically {\tt RETI} or {\tt RETN}. See sections \XRef{z80_interrupts} and \XRef{zx_next_interrupts} for more details on interrupts.
 
 		\begin{DetailEffects}
 			\FlagsEI
@@ -809,7 +809,7 @@ CPDR
 			~
 		\end{DetailVariants}
 
-		Sets the interrupt mode. All 3 interrupts are maskable, meaning they can be disabled using {\tt DI} instruction. See sections \ref{z80_interrupts} and \ref{zx_next_interrupts} for details and example.
+		Sets the interrupt mode. All 3 interrupts are maskable, meaning they can be disabled using {\tt DI} instruction. See sections \XRef{z80_interrupts} and \XRef{zx_next_interrupts} for details and example.
 
 		\begin{DetailEffects}
 			\FlagsIM		
@@ -850,7 +850,7 @@ CPDR
 		\end{tabular}
 		\vspace{1ex} % some spacing before next text for less cluttered layout
 
-		So these two have the same result (though, as mentioned in section \ref{zx_next_keyboard}, variant on the right is slightly faster, 18 vs 22 T states):
+		So these two have the same result (though, as mentioned in section \XRef{zx_next_keyboard}, variant on the right is slightly faster, 18 vs 22 T states):
 
 		\begin{multicols}{2}
 			\begin{tcblisting}{right skip=1em}
@@ -945,7 +945,7 @@ IN A, (&FE)
 		\begin{DetailEffects}
 			\FlagsIND
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
 				\item {\tt ZF} set if {\tt B} becomes zero after decrementing, otherwise reset
 			}
 		\end{DetailEffects}
@@ -965,7 +965,7 @@ IN A, (&FE)
 		\begin{DetailEffects}
 			\FlagsINDR
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
 			}
 			\end{DetailEffects}
 				
@@ -986,7 +986,7 @@ IN A, (&FE)
 		\begin{DetailEffects}
 			\FlagsINI
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
 				\item {\tt ZF} set if {\tt B} becomes zero after decrementing, otherwise reset
 			}
 			\end{DetailEffects}
@@ -1006,7 +1006,7 @@ IN A, (&FE)
 		\begin{DetailEffects}
 			\FlagsINIR
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
 			}
 			\end{DetailEffects}
 				
@@ -1529,7 +1529,7 @@ LDDR
 			NEXTREG n,n'
 		\end{DetailVariants}
 
-		Directly sets the Next Feature Control Registers without going through ports \PortLink{TBBlue Register Select}{243B} and \PortLink{TBBlue Register Access}{253B}. See section \ref{zx_next_tbblue_registers} for ports list.
+		Directly sets the Next Feature Control Registers without going through ports \PortTextXRef{243B} and \PortTextXRef{253B}. See section \XRef{zx_next_tbblue_registers} for registers list.
 
 		\begin{DetailEffects}
 			\FlagsNEXTREGna
@@ -1627,7 +1627,7 @@ LDDR
 		\begin{DetailEffects}
 			\FlagsOTDR
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
 			}
 		\end{DetailEffects}
 				
@@ -1647,7 +1647,7 @@ LDDR
 		\begin{DetailEffects}
 			\FlagsOTIR
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
 			}
 		\end{DetailEffects}
 				
@@ -1713,7 +1713,7 @@ LDDR
 		\begin{DetailEffects}
 			\FlagsOUTD
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
 				\item {\tt ZF} set if {\tt B=0} after decrement, reset otherwise
 			}
 		\end{DetailEffects}
@@ -1735,7 +1735,7 @@ LDDR
 		\begin{DetailEffects}
 			\FlagsOUTI
 			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \ref{z80_undocumented_instructions_io_block}
+				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
 				\item {\tt ZF} set if {\tt B=0} after decrement, reset otherwise
 			}
 		\end{DetailEffects}

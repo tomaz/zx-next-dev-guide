@@ -1,0 +1,161 @@
+% ────────────────────────────────────────────────────────────────────────────────
+% ─██████████████─██████████████─████████████████───██████████████─██████████████─
+% ─██░░░░░░░░░░██─██░░░░░░░░░░██─██░░░░░░░░░░░░██───██░░░░░░░░░░██─██░░░░░░░░░░██─
+% ─██░░██████░░██─██░░██████░░██─██░░████████░░██───██████░░██████─██░░██████████─
+% ─██░░██──██░░██─██░░██──██░░██─██░░██────██░░██───────██░░██─────██░░██─────────
+% ─██░░██████░░██─██░░██──██░░██─██░░████████░░██───────██░░██─────██░░██████████─
+% ─██░░░░░░░░░░██─██░░██──██░░██─██░░░░░░░░░░░░██───────██░░██─────██░░░░░░░░░░██─
+% ─██░░██████████─██░░██──██░░██─██░░██████░░████───────██░░██─────██████████░░██─
+% ─██░░██─────────██░░██──██░░██─██░░██──██░░██─────────██░░██─────────────██░░██─
+% ─██░░██─────────██░░██████░░██─██░░██──██░░██████─────██░░██─────██████████░░██─
+% ─██░░██─────────██░░░░░░░░░░██─██░░██──██░░░░░░██─────██░░██─────██░░░░░░░░░░██─
+% ─██████─────────██████████████─██████──██████████─────██████─────██████████████─
+% ────────────────────────────────────────────────────────────────────────────────
+
+% declares the data for specific port; used internally to simplify and unify port declaration. Parameters
+% #1 0 to return port address, 1 for name
+% #2 port address
+% #3 port name
+\newcommand{\PortRegisterInfo}[3]{\ignorespaces\IfEqCase{#1}{
+	{0}{\MemAddr{#2}}
+	{1}{#3}}}
+
+% returns the data of specific port or register. Parameters:
+% #1 (optional) type of data to return, 0 = address, 1 = name
+% #2 port address
+%
+% IMPORTANT: every port/register used through commands below MUST be represented here, failure to do so, will result in compilaton errors
+\newcommand{\PortRegister}[2][]{\ignorespaces\IfEqCase{#2}{
+	{123B}{\PortRegisterInfo{#1}{#2}{Layer 2 Access Port}}
+	{133B}{\PortRegisterInfo{#1}{#2}{UART TX}}
+	{1FFD}{\PortRegisterInfo{#1}{#2}{+3 Memory Paging Control}}
+	{243B}{\PortRegisterInfo{#1}{#2}{TBBlue Register Select}}
+	{253B}{\PortRegisterInfo{#1}{#2}{TBBlue Register Access}}
+	{303B}{\PortRegisterInfo{#1}{#2}{Sprite Status/Slot Select}}
+	{7FFD}{\PortRegisterInfo{#1}{#2}{Memory Paging Control}}
+	{BFFD}{\PortRegisterInfo{#1}{#2}{Sound Chip Register Write}}
+	{DFFD}{\PortRegisterInfo{#1}{#2}{Next Memory Bank Select}}
+	{FFFD}{\PortRegisterInfo{#1}{#2}{Turbo Sound Next Control}}
+	{xx0B}{\PortRegisterInfo{#1}{#2}{MB02 DMA Port}}
+	{xx57}{\PortRegisterInfo{#1}{#2}{Sprite Attribute Upload}}
+	{xx5B}{\PortRegisterInfo{#1}{#2}{Sprite Pattern Upload}}
+	{xx6B}{\PortRegisterInfo{#1}{#2}{zxnDMA Port}}
+	{xxFE}{\PortRegisterInfo{#1}{#2}{ULA Control Port Read}}
+	{xxFEWrite}{\PortRegisterInfo{#1}{xxFE}{ULA Control Port Write}}
+	{06}{\PortRegisterInfo{#1}{#2}{Peripheral 2}}
+	{08}{\PortRegisterInfo{#1}{#2}{Peripheral 3}}
+	{09}{\PortRegisterInfo{#1}{#2}{Peripheral 4}}
+	{11}{\PortRegisterInfo{#1}{#2}{Video Timing}}
+	{12}{\PortRegisterInfo{#1}{#2}{Layer 2 RAM Page}}
+	{13}{\PortRegisterInfo{#1}{#2}{Layer 2 RAM Shadow Page}}
+	{14}{\PortRegisterInfo{#1}{#2}{Global Transparency}}
+	{15}{\PortRegisterInfo{#1}{#2}{Sprite and Layers System}}
+	{16}{\PortRegisterInfo{#1}{#2}{Layer 2 X Offset}}
+	{17}{\PortRegisterInfo{#1}{#2}{Layer 2 Y Offset}}
+	{18}{\PortRegisterInfo{#1}{#2}{Clip Window Layer 2}}
+	{19}{\PortRegisterInfo{#1}{#2}{Clip Window Sprites}}
+	{1B}{\PortRegisterInfo{#1}{#2}{Clip Window Tilemap}}
+	{1C}{\PortRegisterInfo{#1}{#2}{Clip Window Control}}
+	{22}{\PortRegisterInfo{#1}{#2}{Video Line Interrupt Control}}
+	{23}{\PortRegisterInfo{#1}{#2}{Video Line Interrupt Value}}
+	{2F}{\PortRegisterInfo{#1}{#2}{Tilemap Offset X MSB}}
+	{30}{\PortRegisterInfo{#1}{#2}{Tilemap Offset X LSB}}
+	{31}{\PortRegisterInfo{#1}{#2}{Tilemap Offset Y}}
+	{34}{\PortRegisterInfo{#1}{#2}{Sprite Port-Mirror Index}}
+	{35}{\PortRegisterInfo{#1}{#2}{Sprite Port-Mirror Attribute 0}}
+	{36}{\PortRegisterInfo{#1}{#2}{Sprite Port-Mirror Attribute 1}}
+	{37}{\PortRegisterInfo{#1}{#2}{Sprite Port-Mirror Attribute 2}}
+	{38}{\PortRegisterInfo{#1}{#2}{Sprite Port-Mirror Attribute 3}}
+	{39}{\PortRegisterInfo{#1}{#2}{Sprite Port-Mirror Attribute 4}}
+	{40}{\PortRegisterInfo{#1}{#2}{Palette Index}}
+	{41}{\PortRegisterInfo{#1}{#2}{Palette Value}}
+	{42}{\PortRegisterInfo{#1}{#2}{Enhanced ULA Ink Colour Mask}}
+	{43}{\PortRegisterInfo{#1}{#2}{Enhanced ULA Control}}
+	{44}{\PortRegisterInfo{#1}{#2}{Enhanced ULA Palette Extension}}
+	{4A}{\PortRegisterInfo{#1}{#2}{Transparency Colour Fallback}}
+	{4B}{\PortRegisterInfo{#1}{#2}{Sprites Transparency Index}}
+	{4C}{\PortRegisterInfo{#1}{#2}{Tilemap Transparency Index}}
+	{50}{\PortRegisterInfo{#1}{#2}{Memory Management Slot 0 Bank}}
+	{51}{\PortRegisterInfo{#1}{#2}{Memory Management Slot 1 Bank}}
+	{52}{\PortRegisterInfo{#1}{#2}{Memory Management Slot 2 Bank}}
+	{53}{\PortRegisterInfo{#1}{#2}{Memory Management Slot 3 Bank}}
+	{54}{\PortRegisterInfo{#1}{#2}{Memory Management Slot 4 Bank}}
+	{55}{\PortRegisterInfo{#1}{#2}{Memory Management Slot 5 Bank}}
+	{56}{\PortRegisterInfo{#1}{#2}{Memory Management Slot 6 Bank}}
+	{57}{\PortRegisterInfo{#1}{#2}{Memory Management Slot 7 Bank}}
+	{60}{\PortRegisterInfo{#1}{#2}{Copper Data}}
+	{61}{\PortRegisterInfo{#1}{#2}{Copper Control Low Byte}}
+	{62}{\PortRegisterInfo{#1}{#2}{Copper Control High Byte}}
+	{63}{\PortRegisterInfo{#1}{#2}{Copper Data 16-bit Write}}
+	{64}{\PortRegisterInfo{#1}{#2}{Vertical Video Line Offset}}
+	{68}{\PortRegisterInfo{#1}{#2}{ULA Control}}
+	{69}{\PortRegisterInfo{#1}{#2}{Display Control 1}}
+	{6B}{\PortRegisterInfo{#1}{#2}{Tilemap Control}}
+	{6C}{\PortRegisterInfo{#1}{#2}{Default Tilemap Attribute}}
+	{6E}{\PortRegisterInfo{#1}{#2}{Tilemap Base Address}}
+	{6F}{\PortRegisterInfo{#1}{#2}{Tile Definitions Base Address}}
+	{70}{\PortRegisterInfo{#1}{#2}{Layer 2 Control}}
+	{71}{\PortRegisterInfo{#1}{#2}{Layer 2 X Offset MSB}}
+	{75}{\PortRegisterInfo{#1}{#2}{Sprite Port-Mirror Attribute 0 (With Increment)}}
+	{76}{\PortRegisterInfo{#1}{#2}{Sprite Port-Mirror Attribute 1 (With Increment)}}
+	{77}{\PortRegisterInfo{#1}{#2}{Sprite Port-Mirror Attribute 2 (With Increment)}}
+	{78}{\PortRegisterInfo{#1}{#2}{Sprite Port-Mirror Attribute 3 (With Increment)}}
+	{79}{\PortRegisterInfo{#1}{#2}{Sprite Port-Mirror Attribute 4 (With Increment)}}
+	{6E}{\PortRegisterInfo{#1}{#2}{Tilemap Base Address}}
+	{8E}{\PortRegisterInfo{#1}{#2}{Memory Mapping}}
+	{B0}{\PortRegisterInfo{#1}{#2}{Extended Keys 0}}
+	{B1}{\PortRegisterInfo{#1}{#2}{Extended Keys 1}}
+	{C0}{\PortRegisterInfo{#1}{#2}{Interrupt Control}}
+	{C2}{\PortRegisterInfo{#1}{#2}{NMI Return Address LSB}}
+	{C3}{\PortRegisterInfo{#1}{#2}{NMI Return Address MSB}}
+	{C4}{\PortRegisterInfo{#1}{#2}{Interrupt Enable 0}}
+	{C5}{\PortRegisterInfo{#1}{#2}{Interrupt Enable 1}}
+	{C6}{\PortRegisterInfo{#1}{#2}{Interrupt Enable 2}}
+	{C8}{\PortRegisterInfo{#1}{#2}{Interrupt Status 0}}
+	{C9}{\PortRegisterInfo{#1}{#2}{Interrupt Status 1}}
+	{CA}{\PortRegisterInfo{#1}{#2}{Interrupt Status 2}}
+	{CC}{\PortRegisterInfo{#1}{#2}{DMA Interrupt Enable 0}}
+	{CD}{\PortRegisterInfo{#1}{#2}{DMA Interrupt Enable 1}}
+	{CE}{\PortRegisterInfo{#1}{#2}{DMA Interrupt Enable 2}}}}
+
+% convenience for returning formatted port address, parameter is, well the port address ¯\_(ツ)_/¯
+\newcommand{\PortAddr}[1]{\PortRegister[0]{#1}}
+% convenience for returning port name, parameter is port address
+\newcommand{\PortName}[1]{\PortRegister[1]{#1}}
+% creates a reference (as used in label) to the given port or register, empty if port is not declared
+\newcommand{\PortReference}[1]{Port#1}
+
+% creates a nicely formatted text that includes given port name and address
+\newcommand{\PortText}[1]{\textbf{\small\PortName{#1}} \PortAddr{#1}}
+
+% creates a declaration of the port with the given address; only 1 declaration of each port should be made in a document. You can use `\PortXRef{addr}' to create a cross reference to this position.
+\newcommand{\PortDeclaration}[1]{\PortText{#1}\label{\PortReference{#1}}}
+
+% creates page number for the declaration of the given port or register
+\newcommand{\PortPage}[1]{\pageref{\PortReference{#1}}}
+% creates a cross reference to the declaration of the port with the given address that includes section and page number
+\newcommand{\PortXRef}[1]{\XRef{\PortReference{#1}}}
+% creates a cross reference to the declaration of the given port with the given address that uses `\PortText` as the cross reference text
+\newcommand{\PortTextXRef}[1]{\protect\hyperref[\PortReference{#1}]{\PortText{#1}}}
+
+% creates a longer text variant of the reference to the given port that includes chapter title and section number, mostly used for register lists when referring to previously described register. Parameters:
+% #1 section name
+% #2 port number
+\newcommand{\PortDeclarationXRef}[2]{
+	\vspace*{-2ex}
+	See description under #1, section \PortXRef{#2}.
+}
+% similar to `\PortDeclarationXRef' but allows creating a reference to single section but multiple pages
+% #1 section name
+% #2 first port number, for start page
+% #3 last port number, for last page
+\newcommand{\PortDeclarationXRefMultiple}[3]{
+	\vspace*{-2ex}
+	See description under #1, section section \ref{\PortReference{#2}}, pages \PortPage{#2}-\PortPage{#3}.
+}
+% similar to `\PortDeclarationXRef' but allows completely custom reference implementation
+%  #1 section name
+\newcommand{\PortDeclarationXRefCustom}[2]{
+	\vspace*{-2ex}
+	See description under #1, #2.
+}

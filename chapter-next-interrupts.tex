@@ -15,9 +15,9 @@
 % ─██████████─██████──────────██████─────██████─────██████──██████████─
 % ─────────────────────────────────────────────────────────────────────
 
-Like many other functionalities, Next also inherits interrupts handling from ZX Spectrum. As described in the Z80 chapter, section \ref{z80_interrupts}, Interrupt Mode 0 is used for a short period of time after booting up, before ROM activates Mode 1. IM1 remains active unless we explicitly change it. To replace the default IM1 interrupt handler, we can page out ROM or change to Interrupt Mode 2.
+Like many other functionalities, Next also inherits interrupts handling from ZX Spectrum. As described in the Z80 chapter, section \XRef{z80_interrupts}, Interrupt Mode 0 is used for a short period of time after booting up, before ROM activates Mode 1. IM1 remains active unless we explicitly change it. To replace the default IM1 interrupt handler, we can page out ROM or change to Interrupt Mode 2.
 
-Both IM1 and IM2 are triggered by standard Spectrum ULA on every video frame. However timing can be adjusted using \PortLink{Video Line Interrupt Control Register}{22} and \PortLink{Video Line Interrupt Value Register}{23}. This allows disabling standard ULA interrupt, or add an extra interrupt that occurs on a particular video line.
+Both IM1 and IM2 are triggered by standard Spectrum ULA on every video frame. However timing can be adjusted using \PortTextXRef{22} and \PortTextXRef{23}. This allows disabling standard ULA interrupt, or add an extra interrupt that occurs on a particular video line.
 
 Interrupts are most frequently used for driving music playback. Though they can also be used for other purposes such as synchronizing game state etc.
 
@@ -70,7 +70,7 @@ This is where the previously mentioned {\tt DEVICE} directive comes to play - {\
 \begin{itemize}
 	\item {\tt SLOT} directive tells {\tt sjasmplus} we want the following section to be loaded into 8K slot 6, addresses \MemAddr{C000}-\MemAddr{DFFF}.
 	
-	\item Next, we specify 8K bank number to load into the selected slot with {\tt PAGE} directive. Subsequent code will be assembled into this bank. This step is optional; default bank would be used otherwise, 0 in this case (see section \ref{zx_next_memorypaging}). Being explicit is more future proof though. I chose bank 28 but feel free to use others. What's important is to use the same bank with {\tt NEXTREG} instruction when paging out ROM!
+	\item Next, we specify 8K bank number to load into the selected slot with {\tt PAGE} directive. Subsequent code will be assembled into this bank. This step is optional; default bank would be used otherwise, 0 in this case (see section \XRef{zx_next_memorypaging}). Being explicit is more future proof though. I chose bank 28 but feel free to use others. What's important is to use the same bank with {\tt NEXTREG} instruction when paging out ROM!
 	
 	\item Since we selected slot 6, we also need to set the program counter to the corresponding address - we want the code to be assembled into the selected bank that we will page into ROM slot 0 at runtime. Because interrupt handler is expected on \MemAddr{0038}, we need to start at \MemAddr{C038} (slot 6 starts at \MemAddr{C000}, but this will be loaded into slot 0 at \MemAddr{0000}).
 \end{itemize}
@@ -239,9 +239,9 @@ In addition to regular IM2, Next also supports a ``Hardware IM2'' mode. This mod
 	EI                             ; enable interrupts
 \end{tcblisting}
 
-Line 3 is where hardware IM2 mode is established. The crucial part is \PortLink{Interrupt Control}{C0} register: firstly, we are supplying the top 3 bits of LSB of the vector table to bits 7-5, and secondly, we enable IM2 mode by setting bit 0.
+Line 3 is where hardware IM2 mode is established. The crucial part is \PortTextXRef{C0} register: firstly, we are supplying the top 3 bits of LSB of the vector table to bits 7-5, and secondly, we enable IM2 mode by setting bit 0.
 
-Lines 4-6 enable or disable specific interrupters with \PortLink{Interrupt Enable 0}{C4}, \PortLink{Interrupt Enable 1}{C5} and \PortLink{Interrupt Enable 2}{C6}.
+Lines 4-6 enable or disable specific interrupters with \PortTextXRef{C4}, \PortTextXRef{C5} and \PortTextXRef{C6}.
 
 Lines 8-12 are the same as with legacy IM2 mode - we assign the LSB of the vector table address to {\tt I} register. Then we enable IM2 mode and interrupts.
 
@@ -276,7 +276,7 @@ The thing to note: {\tt .ALIGN 32} is used to ensure the interrupt table is plac
 	\BitStartMulti{8}{{\tt I} register: MSB} & \BitMulti{3}{\MemAddr{C0}: LSB 7-5} & \BitMulti{5}{Interrupt specific} \\
 \end{BitTableWord}
 
-As with legacy IM2 mode, the most significant byte of the vector table address is assigned to {\tt I} register. But the least significant byte is not random. We provide the top 3 bits through \PortLink{Interrupt Control}{C0} Next register, the rest are filled in based on interrupt type:
+As with legacy IM2 mode, the most significant byte of the vector table address is assigned to {\tt I} register. But the least significant byte is not random. We provide the top 3 bits through \PortTextXRef{C0} Next register, the rest are filled in based on interrupt type:
 
 \begin{tabular}{cl}
 	{\tt 0} & Line interrupt (highest priority) \\
@@ -292,7 +292,7 @@ Interrupt routines can reside anywhere in the memory.
 
 You can find fully working example in companion code, folder {\tt im2hw}.
 
-With hardware IM2 mode it's possible to interrupt DMA operations. The choice of interrupters that can interrupt DMA is made with \PortLink{DMA Interrupt Enable 0}{CC}, \PortLink{DMA Interrupt Enable 1}{CD} and \PortLink{DMA Interrupt Enable 2}{CE} registers. Here's what Alvin Albrecht wrote about this possibility on Next Discord server:
+With hardware IM2 mode it's possible to interrupt DMA operations. The choice of interrupters that can interrupt DMA is made with \PortTextXRef{CC}, \PortTextXRef{CD} and \PortTextXRef{CE} registers. Here's what Alvin Albrecht wrote about this possibility on Next Discord server:
 
 \vspace*{-1ex}
 \begin{quote}
@@ -309,7 +309,7 @@ Very special thanks to the folks from Next Discord server: Alvin Albrecht for me
 \subsection{Interrupt Registers}
 \label{zx_next_interrupts_registers}
 
-\subsubsection{\PortTitle{Video Line Interrupt Control Register}{22}}
+\subsubsection{\PortDeclaration{22}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -328,17 +328,17 @@ Very special thanks to the folks from Next Discord server: Alvin Albrecht for me
 Line value starts with 0 for the first line of pixels. But the line-interrupt happens already when the previous line's pixel area is finished (i.e. the raster-line counter still reads "previous line" and not the one programmed for interrupt). The \ZilogPinLabel{INT} signal is raised while display beam horizontal position is between 256-319 standard pixels, precise timing of interrupt handler execution then depends on how-quickly/if the Z80 will process the \ZilogPinLabel{INT} signal.
 
 
-\subsubsection{\PortTitle{Video Line Interrupt Value Register}{23}}
+\subsubsection{\PortDeclaration{23}}
 
 \begin{NextPort}
 	\PortBits{7-0}
 		\PortDesc{LSB of interrupt line value ({\tt 0} after reset)}
 \end{NextPort}
 
-On core 3.1.5+ line numbering can be offset by \PortLink{Vertical Video Line Offset Register}{64}.
+On core 3.1.5+ line numbering can be offset by \PortTextXRef{64}.
 
 
-\subsubsection{\PortTitle{Vertical Video Line Offset Register}{64}}
+\subsubsection{\PortDeclaration{64}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -352,7 +352,7 @@ Normally the ULA's pixel row 0 aligns with vertical line count 0. With a non-zer
 Since a change in offset takes effect when the ULA reaches row 0, the change can take up to one frame to occur.
 
 
-\subsubsection{\PortTitle{Interrupt Control}{C0}}
+\subsubsection{\PortDeclaration{C0}}
 
 \begin{NextPort}
 	\PortBits{7-5}
@@ -367,12 +367,12 @@ Since a change in offset takes effect when the ULA reaches row 0, the change can
 		\PortDesc{Maskable interrupt mode: {\tt 1} IM2, {\tt 0} pulse}
 \end{NextPort}
 
-If bit 3 is set, the return address pushed during an NMI acknowledge cycle will be written to \PortLink{NMI Return Address LSB}{C2} and \PortLink{NMI Return Address MSB}{C3} instead of the memory (the stack pointer will be decremented). The first {\tt RETN} after the NMI acknowledge will then take its return address from the registers instead of memory (the stack pointer will be incremented). If bit 3 is {\tt 0}, and in other circumstances (if there is no NMI first), {\tt RETN} functions normally.
+If bit 3 is set, the return address pushed during an NMI acknowledge cycle will be written to \PortTextXRef{C3} and \PortTextXRef{C3} instead of the memory (the stack pointer will be decremented). The first {\tt RETN} after the NMI acknowledge will then take its return address from the registers instead of memory (the stack pointer will be incremented). If bit 3 is {\tt 0}, and in other circumstances (if there is no NMI first), {\tt RETN} functions normally.
 
 
-\subsubsection{\PortTitle{NMI Return Address LSB}{C2}}
+\subsubsection{\PortDeclaration{C2}}
 \vspace*{-2ex}
-\subsubsection{\PortTitle{NMI Return Address MSB}{C3}}
+\subsubsection{\PortDeclaration{C3}}
 
 \begin{NextPort}
 	\PortBits{7-0}
@@ -380,7 +380,7 @@ If bit 3 is set, the return address pushed during an NMI acknowledge cycle will 
 \end{NextPort}
 
 
-\subsubsection{\PortTitle{Interrupt Enable 0}{C4}}
+\subsubsection{\PortDeclaration{C4}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -394,7 +394,7 @@ If bit 3 is set, the return address pushed during an NMI acknowledge cycle will 
 \end{NextPort}
 
 
-\subsubsection{\PortTitle{Interrupt Enable 1}{C5}}
+\subsubsection{\PortDeclaration{C5}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -418,7 +418,7 @@ If bit 3 is set, the return address pushed during an NMI acknowledge cycle will 
 All bits {\tt 0} after reset.
 
 
-\subsubsection{\PortTitle{Interrupt Enable 2}{C6}}
+\subsubsection{\PortDeclaration{C6}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -442,7 +442,7 @@ All bits {\tt 0} after reset.
 All bits {\tt 0} after reset. Rx half full overrides Rx available.
 
 
-\subsubsection{\PortTitle{Interrupt Status 0}{C8}}
+\subsubsection{\PortDeclaration{C8}}
 
 \begin{NextPort}
 	\PortBits{7-2}
@@ -453,10 +453,10 @@ All bits {\tt 0} after reset. Rx half full overrides Rx available.
 		\PortDesc{ULA interrupt}
 \end{NextPort}
 
-Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortLink{Interrupt Control}{C0}) with interrupts enabled.
+Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortTextXRef{C0}) with interrupts enabled.
 
 
-\subsubsection{\PortTitle{Interrupt Status 1}{C9}}
+\subsubsection{\PortDeclaration{C9}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -477,10 +477,10 @@ Read indicates whether the given interrupt was generated in the past. Write with
 		\PortDesc{CTC channel 0 interrupt}
 \end{NextPort}
 
-Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortLink{Interrupt Control}{C0}) with interrupts enabled.
+Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortTextXRef{C0}) with interrupts enabled.
 
 
-\subsubsection{\PortTitle{Interrupt Status 2}{CA}}
+\subsubsection{\PortDeclaration{CA}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -501,10 +501,10 @@ Read indicates whether the given interrupt was generated in the past. Write with
 		\PortDesc{UART0 Rx available interrupt}
 \end{NextPort}
 
-Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortLink{Interrupt Control}{C0}) with interrupts enabled.
+Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortTextXRef{C0}) with interrupts enabled.
 
 
-\subsubsection{\PortTitle{DMA Interrupt Enable 0}{CC}}
+\subsubsection{\PortDeclaration{CC}}
 
 \begin{NextPort}
 	\PortBits{7-2}
@@ -516,7 +516,7 @@ Read indicates whether the given interrupt was generated in the past. Write with
 \end{NextPort}
 
 
-\subsubsection{\PortTitle{DMA Interrupt Enable 1}{CD}}
+\subsubsection{\PortDeclaration{CD}}
 
 \begin{NextPort}
 	\PortBits{7}
@@ -538,7 +538,7 @@ Read indicates whether the given interrupt was generated in the past. Write with
 \end{NextPort}
 
 
-\subsubsection{\PortTitle{DMA Interrupt Enable 2}{CE}}
+\subsubsection{\PortDeclaration{CE}}
 
 \begin{NextPort}
 	\PortBits{7}
