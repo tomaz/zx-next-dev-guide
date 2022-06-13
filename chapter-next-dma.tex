@@ -24,7 +24,8 @@ zxnDMA defines two ``ports'', called ``A'' and ``B'' (port is just a word used f
 
 \subsection{Programming}
 
-Since core 3.1.2, zxnDMA is mapped to \PortTextXRef{xx0B}.
+% note: since both ports are declared on the same page, we only link to the page once
+Since core 3.1.2, zxnDMA is mapped to \PortTextXRef[]{xx6B} and legacy Zilog DMA to \PortTextXRef[]{xx0B} (see page \PortPage{xx0B} for details).
 
 Similar to Z80 DMA, zxnDMA also has 7 write registers named \DMARegName{WR0}-\DMARegName{WR6}. Some of the bits are used to identify a register, while the rest represent the payload ({\tt x} in the table below):
 
@@ -1236,28 +1237,30 @@ When zxnDMA controls the bus (when transfer is in progress), Z80 can't respond t
 
 However, when operating in burst mode, with large enough prescalar, the CPU will be able to respond to interrupts.
 
-It's also possible to allow or prevent specific interrupters from interrupting DMA using Next specific Hardware IM2 mode. This is configured with Next registers \PortTextXRef{CC}, \PortTextXRef{CD} and \PortTextXRef{CE}. See section \XRef{zx_next_interrupts} for more details on interrupts.
+It's also possible to allow or prevent specific interrupters from interrupting DMA using Next specific Hardware IM2 mode. This is configured with Next registers \PortTextXRef[]{CC}, \PortTextXRef[]{CD} and \PortTextXRef[]{CE} (pages \PortPage{CC}-\PortPage{CE}). See section \XRef{zx_next_interrupts} for more details on interrupts.
 
 
 \pagebreak
 \subsection{DMA Ports and Registers}
 \label{zx_next_dma_registers}
 
+% note: page number is excluded from XRef for all ports that are declared on the same page
+
 \subsubsection{\PortDeclaration{xx0B}}
 
-Core 3.1.2+: Always in Zilog DMA mode for uploading legacy DMA programs. For zxnDMA, use \PortTextXRef{xx6B}.
+Core 3.1.2+: Always in Zilog DMA mode for uploading legacy DMA programs. For zxnDMA, use \PortTextXRef[]{xx6B}.
 
-Older cores: this port is not supported, set bit 6 of \PortTextXRef{06} and use \PortTextXRef{xx6B}.
+Older cores: this port is not supported, set bit 6 of \PortTextXRef{06} and use \PortTextXRef[]{xx6B}.
 
 
 \subsubsection{\PortDeclaration{xx6B}}
 
-Core 3.1.2+: Always in zxnDMA mode. For legacy Zilog DMA, use \PortTextXRef{xx0B}.
+Core 3.1.2+: Always in zxnDMA mode. For legacy Zilog DMA, use \PortTextXRef[]{xx0B}.
 
 Older cores: this port behaves either in zxnDMA or legacy Zilog DMA mode based on bit 6 of \PortTextXRef{06}: if bit 6 is {\tt 0}, zxnDMA mode is enabled, otherwise Zilog DMA.
 
 
-\subsubsection{\PortTextXRef{06}}
+\subsubsection{\PortTextXRef[]{06}}
 
 \PortDeclarationXRef{Sound}{06}
 
@@ -1286,9 +1289,9 @@ Older cores: this port behaves either in zxnDMA or legacy Zilog DMA mode based o
 \end{NextPort}
 
 
-\subsubsection{\PortTextXRef{CC}}
+\subsubsection{\PortTextXRef[]{CC}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{CD}}
+\subsubsection{\PortTextXRef[]{CD}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{CE}}
+\subsubsection{\PortTextXRef[]{CE}}
 \PortDeclarationXRefMultiple{Interrupts}{CC}{CE}

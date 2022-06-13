@@ -23,9 +23,10 @@ Next palettes have 256 colours. All are initialized with default values, so they
 	\item \PortTextXRef{41} or \PortTextXRef{44} reads or writes data for selected colour
 \end{enumerate}
 
-When writing colours, we can chose to automatically increment colour indexes after each write. Bit 7 of \PortTextXRef{43} is used for that purpose. This works the same for both write registers (\MemAddr{41} and \MemAddr{44}). Colour RGB values can either be 8-bit {\tt RRRGGGBB}, or 9-bit {\tt RRRGGGBBB} values. Use \PortTextXRef{41} for 8-bit and \PortTextXRef{44} for 9-bit.
+% note: since all mentioned registers already include page numbers in enumerate above, they are omitted in the description below, makes it more readable
+When writing colours, we can chose to automatically increment colour indexes after each write. Bit 7 of \PortTextXRef[]{43} is used for that purpose. This works the same for both write registers (\MemAddr{41} and \MemAddr{44}). Colour RGB values can either be 8-bit {\tt RRRGGGBB}, or 9-bit {\tt RRRGGGBBB} values. Use \PortTextXRef[]{41} for 8-bit and \PortTextXRef[]{44} for 9-bit.
 
-Note: \PortTextXRef{43} has two roles when working with palettes - it selects the active palette for display (out of two available - only for ULA, Layer 2 and Sprites) and selects palette for editing (for all layers, including Tilemap). Therefore care needs to be taken when updating colour entries to avoid accidentally changing the active palette for display at the same time. Depending on our program, we may first need to read the value and then only change bits affecting the palette for editing to ensure the rest of the data remains unaffected.
+Note: \PortTextXRef[]{43} has two roles when working with palettes - it selects the active palette for display (out of two available - only for ULA, Layer 2 and Sprites) and selects palette for editing (for all layers, including Tilemap). Therefore care needs to be taken when updating colour entries to avoid accidentally changing the active palette for display at the same time. Depending on our program, we may first need to read the value and then only change bits affecting the palette for editing to ensure the rest of the data remains unaffected.
 
 
 \subsection{8 Bit Colours}
@@ -83,7 +84,8 @@ Note: subroutine requires that colours are stored in 2 bytes with first containi
 		\PortDesc{Reads or writes palette colour index to be manipulated}
 \end{NextPort}
 
-Writing an index {\tt 0-255} associates it with colour set through \PortTextXRef{41} or \PortTextXRef{44} of currently selected pallette in \PortTextXRef{43}. Write also resets value of \PortTextXRef{44} so next write will occur for first colour of the palette
+% note: register $41 is declared on next page (same spread), so we omit page number, but others are declared on the following spreads, so we leave them
+Writing an index {\tt 0-255} associates it with colour set through \PortTextXRef[]{41} or \PortTextXRef{44} of currently selected pallette in \PortTextXRef{43}. Write also resets value of \PortTextXRef{44} so next write will occur for first colour of the palette
 
 While Tilemap, Layer 2 and Sprites palettes use all 256 distinct colours (with some caveats, as described in specific chapters), ULA modes work like this:
 
@@ -130,7 +132,8 @@ While Tilemap, Layer 2 and Sprites palettes use all 256 distinct colours (with s
 		\PalIndexEntry{128-255}{Paper (only a subset)}
 	\end{PalIndexTable}
 
-	Border is taken from paper colours. The number of active indices depends on the number of attribute bits assigned to ink and paper out of the attribute byte by \PortTextXRef{42}.
+	% note: register $42 is declared on next page (same spread), so we omit page number to keep text more readable
+	Border is taken from paper colours. The number of active indices depends on the number of attribute bits assigned to ink and paper out of the attribute byte by \PortTextXRef[]{42}.
 
 
 	\vspace*{1em}
@@ -172,7 +175,8 @@ Format is:
 
 Least significant bit of blue is set to {\tt OR} between $B_2$ and $B_1$.
 
-Writing the value will automatically increment index in \PortTextXRef{40}, if auto-increment is enabled in \PortTextXRef{43}. Read doesn't auto-increment index.
+% note: register $40 is declared on previous page (same spread), so we omit page number to keep text more readable
+Writing the value will automatically increment index in \PortTextXRef[]{40}, if auto-increment is enabled in \PortTextXRef{43}. Read doesn't auto-increment index.
 
 
 \subsubsection{\PortDeclaration{42}}
@@ -225,7 +229,8 @@ Writing the value will automatically increment index in \PortTextXRef{40}, if au
 		\PortDesc{Enables ULANext mode if {\tt 1} ({\tt 0} after reset)}
 \end{NextPort}
 
-Write will also reset the index of \PortTextXRef{44} so next write there will be considered as first byte of first colour.
+% note: register $44 is declared on the same page, so we omit page number to keep text more readable
+Write will also reset the index of \PortTextXRef[]{44} so next write there will be considered as first byte of first colour.
 
 
 \subsubsection{\PortDeclaration{44}}
@@ -273,7 +278,8 @@ Two consequtive writes are needed:
 
 Bit 7 of the second write must be {\tt 0} except for Layer 2 palettes where it specifies colour priority. If set to {\tt 1}, then the colour will always be on top, above all other layers, regardless of priority set with \PortTextXRef{15}. So if you need exactly the same colour with priority and non-priority, you will need to set the same data twice, to different indexes, once with priority bit {\tt 1} and then with {\tt 0}.
 
-After the second write palette colour index in \PortTextXRef{40} is automatically increment, if auto-increment is enabled in \PortTextXRef{43}.
+% note: register $43 is declared on the same page, therefore we omit page number to keep text more readable
+After the second write palette colour index in \PortTextXRef{40} is automatically increment, if auto-increment is enabled in \PortTextXRef[]{43}.
 
 Note: reading will always return the second byte of the colour (least significant bit of blue) and will not auto-increment index. You can read {\tt RRRGGGBB} part with \PortTextXRef{41}.
 

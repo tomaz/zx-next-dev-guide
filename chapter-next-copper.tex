@@ -130,7 +130,8 @@ There are only two types of instructions ZX Next Copper understands, but each ty
 
 {\tt HALT} is a special case of {\tt WAIT} instruction that tells Copper to wait for the vertical position 511 and horizontal 63. As these are unreachable positions, it will effectively stop all further Copper processing until Next is reset.
 
-However, when mode {\tt 11} is used (bits 7-6 of \PortTextXRef{62}, see section \XRef{zx_next_copper_configuration} for details), Copper will auto-wrap to the first instruction on every vertical blank. This allows us to use {\tt HALT} to mark the end of the Copper program without having to fill in the remaining bytes with {\tt 0}. Quite convenient! In fact, I'd imagine this would be the most commonly used mode. If you're used to Copper on Amiga, this is also how it behaved there.
+% note: we use comma for referencing port declaration page to avoid double closing parenthesis, more readable this way
+However, when mode {\tt 11} is used (bits 7-6 of \PortTextXRef[,]{62}), Copper will auto-wrap to the first instruction on every vertical blank. This allows us to use {\tt HALT} to mark the end of the Copper program without having to fill in the remaining bytes with {\tt 0}. Quite convenient! In fact, I'd imagine this would be the most commonly used mode. If you're used to Copper on Amiga, this is also how it behaved there.
 
 
 \subsubsection{MOVE}
@@ -174,9 +175,11 @@ However, when mode {\tt 11} is used (bits 7-6 of \PortTextXRef{62}, see section 
 \subsection{Configuration}
 \label{zx_next_copper_configuration}
 
-To load a program, we need to send it, byte by byte, through \PortTextXRef{60} or \PortTextXRef{63} registers. As instructions are 16-bits in size, two writes are required. The difference between the two registers is that \MemAddr{60} sends bytes immediately while \MemAddr{63} only after both bytes of an instruction are provided, thus preventing half-written instructions from executing.
+% note: we only show page number on second port xref since both are declared on the same page, but if this changes in the future, we should update this text accordingly
+To load a program, we need to send it, byte by byte, through \PortTextXRef[]{60} or \PortTextXRef[]{63} registers (page \PortPage{60}). As instructions are 16-bits in size, two writes are required. The difference between the two registers is that \MemAddr{60} sends bytes immediately while \MemAddr{63} only after both bytes of an instruction are provided, thus preventing half-written instructions from executing.
 
-Copper is controlled through 16-bit control word accessible through \PortTextXRef{62} and \PortTextXRef{61} registers:
+% note: we only show page number on second port xref since both are declared on the same page, but if this changes in the future, we should update this text accordingly
+Copper is controlled through 16-bit control word accessible through \PortTextXRef[]{62} and \PortTextXRef[]{61} registers (page \PortPage{62}):
 
 \begin{BitTableWord}[c][\PortTextXRef{62}][\PortTextXRef{61}]
 	\BitStartMulti{2}{Mode} &
@@ -195,7 +198,8 @@ Mode can be one of the following:
 	\PortBitLine{11}{Same as {\tt 01}, but also auto-resets {\tt CPC} to 0 on vertical blank. In this mode we can use {\tt HALT} to mark the end of the program and still repeat it without having to fill-in {\tt NOOP}s from the last instruction of our program to the end of Copper 2K memory.}
 \end{PortBitConfig}
 
-The other value we set is the index for program upload. This is 11-bit value ({\tt 0}-{\tt 2047}) specifying the byte offset for write commands with \PortTextXRef{60} or \PortTextXRef{63} registers. In other words: this is the index for the location into which data will be uploaded, not the value of the {\tt CPC}. We can't change {\tt CPC} programmatically, apart from resetting it to {\tt 0}.
+% note: we only show page number on second port xref since both are declared on the same page, but if this changes in the future, we should update this text accordingly
+The other value we set is the index for program upload. This is 11-bit value ({\tt 0}-{\tt 2047}) specifying the byte offset for write commands with \PortTextXRef[]{60} or \PortTextXRef[]{63} registers (page \PortPage{60}). In other words: this is the index for the location into which data will be uploaded, not the value of the {\tt CPC}. We can't change {\tt CPC} programmatically, apart from resetting it to {\tt 0}.
 
 
 \subsection{Example}
@@ -262,7 +266,8 @@ Not the most impressive display of Copper capabilities, I give you that. You can
 		\PortDesc{Data to upload to Copper memory}
 \end{NextPort}
 
-The data is written to the index specified with \PortTextXRef{61} and \PortTextXRef{62}. After the write, the index is auto-incremented to the next memory position. The index wraps to {\tt 0} when the last byte of the program memory is written to position {\tt 2047}. Since Copper instructions are 16-bits in size, two writes are required to complete each one.
+% note: port page is not used here since the declaration is on the same page
+The data is written to the index specified with \PortTextXRef[]{61} and \PortTextXRef[]{62} registers. After the write, the index is auto-incremented to the next memory position. The index wraps to {\tt 0} when the last byte of the program memory is written to position {\tt 2047}. Since Copper instructions are 16-bits in size, two writes are required to complete each one.
 
 
 \subsubsection{\PortDeclaration{61}}
@@ -302,7 +307,8 @@ When control mode is identical to current one, it's ignored. This allows change 
 		\PortDesc{Data to upload to Copper memory}
 \end{NextPort}
 
-Similar to \PortTextXRef{60} except that writes are only committed to Copper memory after two bytes are written. This prevents half-written instructions to be executed.
+% note: port page is not used here since the declaration is on the same page
+Similar to \PortTextXRef[]{60} except that writes are only committed to Copper memory after two bytes are written. This prevents half-written instructions to be executed.
 
 The first write to this register is for MSB of the Copper instruction or even instruction address and second write for LSB or odd instruction address.
 

@@ -146,7 +146,8 @@ The main difference is the hardware will automatically adjust relative sprites X
 
 \subsection{Attributes}
 
-Attributes are 4 or 5 bytes that define where and how the sprite is drawn. The data can be set either by selecting sprite index with \PortTextXRef{303B} and then continuously sending bytes to \PortTextXRef{xx57} (which automatically increments sprite index after all data for single sprite is transferred) or by calling individual direct access Next registers \PortAddr{35}-\PortAddr{39}~or their auto-increment variants \PortAddr{75}-\PortAddr{79}. See ports and registers section \ref{zx_next_sprites_registers} for a description of individual bytes:
+% note: we only show page number on second port xref since both are declared on the same page, but if this changes in the future, we should update this text accordingly
+Attributes are 4 or 5 bytes that define where and how the sprite is drawn. The data can be set either by selecting sprite index with \PortTextXRef[]{303B} and then continuously sending bytes to \PortTextXRef[]{xx57} (details on page \PortPage{303B}) which automatically increments sprite index after all data for single sprite is transferred or by calling individual direct access Next registers \PortAddr{35}-\PortAddr{39}~or their auto-increment variants \PortAddr{75}-\PortAddr{79}. See ports and registers section \XRef{zx_next_sprites_registers} for a description of individual bytes:
 
 \begin{itemize}[topsep=1pt,itemsep=1pt]
 	\item Byte 0: \PortTextXRef{35}
@@ -300,7 +301,7 @@ Because we use combined sprite, we only need to update the anchor to change all 
 
 \subsubsection{\PortDeclaration{303B}}
 
-Write: sets active sprite attribute and pattern slot index used by \PortTextXRef{xx57} and \PortTextXRef{xx5B}.
+Write: sets active sprite attribute and pattern slot index used by \PortTextXRef[]{xx57} and \PortTextXRef[]{xx5B} (see below).
 
 \begin{NextPort}
 	\PortBits{7}
@@ -373,7 +374,7 @@ Uploads sprite pattern data. 256 bytes are needed for each sprite. For 8-bit spr
 \end{NextPort}
 
 
-\subsubsection{\PortTextXRef{15}}
+\subsubsection{\PortTextXRef[]{15}}
 
 \PortDeclarationXRef{Tilemap}{15}
 
@@ -389,10 +390,11 @@ Uploads sprite pattern data. 256 bytes are needed for each sprite. For 8-bit spr
 
 Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset the index to 0 with \PortTextXRef{1C}, then write all 4 coordinates in succession.
 
-When ``over border'' mode is enabled (bit 1 of \PortTextXRef{15}), X coordinates are doubled internally.
+% note: we use comma for referencing port declaration page to avoid double closing parenthesis, more readable this way
+When ``over border'' mode is enabled (bit 1 of \PortTextXRef[,]{15}), X coordinates are doubled internally.
 
 
-\subsubsection{\PortTextXRef{1C}}
+\subsubsection{\PortTextXRef[]{1C}}
 
 \PortDeclarationXRef{Layer 2}{1C}
 
@@ -519,13 +521,13 @@ For unified relative sprites
 
 
 \pagebreak
-\subsubsection{\PortTextXRef{40}}
+\subsubsection{\PortTextXRef[]{40}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{41}}
+\subsubsection{\PortTextXRef[]{41}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{43}}
+\subsubsection{\PortTextXRef[]{43}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{44}}
+\subsubsection{\PortTextXRef[]{44}}
 \PortDeclarationXRefCustom{Palette}{section \ref{\PortReference{40}}, pages \PortPage{40}-\PortPage{44}}
 
 \subsubsection{\PortDeclaration{4B}}

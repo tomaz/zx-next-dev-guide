@@ -135,8 +135,14 @@
 \newcommand{\PortPage}[1]{\pageref{\PortReference{#1}}}
 % creates a cross reference to the declaration of the port with the given address that includes section and page number
 \newcommand{\PortXRef}[1]{\XRef{\PortReference{#1}}}
+% creates optional page number for given port address
+% #1 "," to add page after comma, "()" to add page within parenthesis, leave out to not add page
+% #2 port address
+\newcommand{\PortXRefPage}[2]{\IfEqCase{#1}{{,}{, page \PortPage{#2}}{()}{ (page \PortPage{#2})}{}{}}}
 % creates a cross reference to the declaration of the given port with the given address that uses `\PortText` as the cross reference text
-\newcommand{\PortTextXRef}[1]{\protect\hyperref[\PortReference{#1}]{\PortText{#1}}}
+% #1 (optional): "," to add page after comma, "()" to add page within parenthesis, leave out to not add page information, just port text (clickable in PDF)
+% #2 port address
+\NewDocumentCommand{\PortTextXRef}{ O{()} m}{\protect\hyperref[\PortReference{#2}]{\PortText{#2}\PortXRefPage{#1}{#2}}}
 
 % creates a longer text variant of the reference to the given port that includes chapter title and section number, mostly used for register lists when referring to previously described register. Parameters:
 % #1 section name
@@ -151,7 +157,7 @@
 % #3 last port number, for last page
 \newcommand{\PortDeclarationXRefMultiple}[3]{
 	\vspace*{-2ex}
-	See description under #1, section section \ref{\PortReference{#2}}, pages \PortPage{#2}-\PortPage{#3}.
+	See description under #1, section \ref{\PortReference{#2}}, pages \PortPage{#2}-\PortPage{#3}.
 }
 % similar to `\PortDeclarationXRef' but allows completely custom reference implementation
 %  #1 section name

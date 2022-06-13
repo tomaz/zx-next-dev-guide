@@ -199,8 +199,8 @@ Note: on Next, default ULA colours can be changed, see Palette chapter \XRef{zx_
 
 \subsection{Border}
 
+% note: use of "previous page" in parenthesis below - this works as long as colours table will be physically on previous page in printed book, but make sure it's adjusted if additional content it added, or layout changes otherwise in the future ("in previous section" or "above" for example, or, if several pages are inserted in between, use \XRef)
 Next inherits Spectrum border colour handling through \PortTextXRef{xxFEWrite}. The bottom 3 bits are used to specify one of 8 possible colours (see table on the previous page for full list). Example:
-% note: use of "previous page" in parenthesis above - this works as long as colours table will be physically on previous page in printed book, but make sure it's adjusted if additional content it added, or layout changes otherwise in the future ("in previous section" or "above" for example)
 
 \begin{tcblisting}{}
 	LD A, 1			; Select blue colour
@@ -260,24 +260,25 @@ ZX Spectrum Next also supports several enhanced ULA modes like Timex Sinclair Do
 		\PortDesc{Border colour}
 \end{NextPort}
 
-Note: when read with certain high byte values, \PortTextXRef{xxFE} will read keyboard status. See section \PortXRef{xxFE} for details.
+% note: we don't show page next to port since we use more verbose link to the section+page afterwards
+Note: when read with certain high byte values, \PortTextXRef[]{xxFE} will read keyboard status. See Keyboard, section \PortXRef{xxFE} for details.
 
 
-\subsubsection{\PortTextXRef{7FFD}}
+\subsubsection{\PortTextXRef[]{7FFD}}
 \PortDeclarationXRef{Memory Map and Paging}{7FFD}
 
 
-\subsubsection{\PortTextXRef{40}}
+\subsubsection{\PortTextXRef[]{40}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{41}}
+\subsubsection{\PortTextXRef[]{41}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{42}}
+\subsubsection{\PortTextXRef[]{42}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{43}}
+\subsubsection{\PortTextXRef[]{43}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{44}}
+\subsubsection{\PortTextXRef[]{44}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{4A}}
+\subsubsection{\PortTextXRef[]{4A}}
 \PortDeclarationXRefMultiple{Palette}{40}{4A}
 
 

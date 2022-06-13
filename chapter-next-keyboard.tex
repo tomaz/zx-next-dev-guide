@@ -52,7 +52,8 @@ The first program is more understandable at a glance - the port address is given
 
 \subsection{Next Extended Keys}
 
-Next uses larger 8$\times$7 matrix for keyboard, with 10 additional keys. By default, hardware is translating keys from extra two columns into the existing 8$\times$5 set. But you can turn this off with bit {\tt 4} of \PortTextXRef{B1}. Extra keys can be read separately via \PortTextXRef{B0} and \PortTextXRef{B1}, details on page \PortPage{B0}.
+% note: we only show page number after last port xref since both are declared on the same page, but if this changes in the future, we should update this text accordingly
+Next uses larger 8$\times$7 matrix for keyboard, with 10 additional keys. By default, hardware is translating keys from extra two columns into the existing 8$\times$5 set. But you can turn this off with bit {\tt 4} of \PortTextXRef{68}. Extra keys can be read separately via \PortTextXRef[]{B0} and \PortTextXRef[]{B1}, details on page \PortPage{B0}.
 
 
 \subsection{Keyboard Ports and Registers}
@@ -86,10 +87,11 @@ Returns keyboard status when read with certain high byte values:
 
 Bits are reversed: if a key is pressed, the corresponding bit is {\tt 0}, if a key is not pressed, bit is {\tt 1}.
 
-Note: when written to, \PortTextXRef{xxFEWrite} is used to set border colour and audio devices. See section \PortXRef{xxFEWrite} for details.
+% note: we don't show page next to port since we use more verbose link to the section+page afterwards
+Note: when written to, \PortTextXRef[]{xxFEWrite} is used to set border colour and audio devices. See ULA Layer, section \PortXRef{xxFEWrite} for details.
 
 
-\subsubsection{\PortTextXRef{68}}
+\subsubsection{\PortTextXRef[]{68}}
 
 \PortDeclarationXRef{Tilemap}{68}
 

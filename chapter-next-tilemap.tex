@@ -85,7 +85,8 @@ If both ULA and tilemap are used, memory should be arranged to avoid overlap. Gi
 	Max Tile Definitions & 215 & 175 & 175 & 95 \\
 \end{ElegantTable}
 
-We as programmers need to tell hardware where in the memory tilemap and tile definitions are stored. \PortTextXRef{6E} and \PortTextXRef{6F} are used for that.
+% note: we only show page number on second port xref since both are declared on the same page, but if this changes in the future, we should update this text accordingly
+We as programmers need to tell hardware where in the memory tilemap and tile definitions are stored. \PortTextXRef[]{6E} and \PortTextXRef[]{6F} registers (page \PortPage{6E}) are used for that.
 
 Both addresses are provided as most significant byte of the offset into memory slot 5 (which starts at \MemAddr{4000}). This means we can only store data at multiples of 256 bytes. For example, if data is stored at \MemAddr{6000}, the MSB offset value would be {\tt \$20} ({\tt \$6000 - \$4000 = \$\underline{20}00}).
 
@@ -241,7 +242,7 @@ You can find fully working example in companion code on GitHub in folder {\tt ti
 Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset the index to 0 in \PortTextXRef{1C}, then write all 4 coordinates in succession.
 
 
-\subsubsection{\PortTextXRef{1C}}
+\subsubsection{\PortTextXRef[]{1C}}
 
 \PortDeclarationXRef{Layer 2}{1C}
 
@@ -255,7 +256,8 @@ Which coordinate gets set, is determined by index. As each write to this registe
 		\PortDesc{Most significant bit(s) of X offset}
 \end{NextPort}
 
-In 40x32 mode, meaningful range is {\tt 0-319}, for 80x32 {\tt 0-639}. Low 8-bits are stored in \PortTextXRef{30}.
+% note: port page is not used here since the declaration is on the same page
+In 40x32 mode, meaningful range is {\tt 0-319}, for 80x32 {\tt 0-639}. Low 8-bits are stored in \PortTextXRef[]{30}.
 
 
 \subsubsection{\PortDeclaration{30}}
@@ -265,7 +267,8 @@ In 40x32 mode, meaningful range is {\tt 0-319}, for 80x32 {\tt 0-639}. Low 8-bit
 		\PortDesc{X offset for drawing tilemap in pixels}
 \end{NextPort}
 
-Tilemap X offset in pixels. Meaningful range is {\tt 0-319} for 40x32 and {\tt 0-639} for 80x32 mode. To write values larger than 255, \PortTextXRef{2F} is used to store MSB.
+% note: port page is not used here since the declaration is on the same page
+Tilemap X offset in pixels. Meaningful range is {\tt 0-319} for 40x32 and {\tt 0-639} for 80x32 mode. To write values larger than 255, \PortTextXRef[]{2F} is used to store MSB.
 
 
 \subsubsection{\PortDeclaration{31}}
@@ -278,13 +281,13 @@ Tilemap X offset in pixels. Meaningful range is {\tt 0-319} for 40x32 and {\tt 0
 Y offset is {\tt 0-255}.
 
 
-\subsubsection{\PortTextXRef{40}}
+\subsubsection{\PortTextXRef[]{40}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{41}}
+\subsubsection{\PortTextXRef[]{41}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{43}}
+\subsubsection{\PortTextXRef[]{43}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{44}}
+\subsubsection{\PortTextXRef[]{44}}
 \PortDeclarationXRefCustom{Palette}{section \ref{\PortReference{40}}, pages \PortPage{40}-\PortPage{44}}
 
 
@@ -357,7 +360,8 @@ See \PortTextXRef{15} for different priorities and mixing of ULA, Layer 2 and Sp
 \pagebreak
 \subsubsection{\PortDeclaration{6C}}
 
-If single byte tilemap mode is selected (bit 5 of \PortTextXRef{6B} set), this register defines attributes for all tiles.
+% note: we don't use page number for port xref since the declaration is on previous page, same spread
+If single byte tilemap mode is selected (bit 5 of \PortTextXRef[]{6B}), this register defines attributes for all tiles.
 
 \begin{NextPort}
 	\PortBits{7-4}

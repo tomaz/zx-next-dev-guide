@@ -69,7 +69,7 @@
 		\zxport{RW}{xx6B}{---- ---- 0110 1011}{Controls zxnDMA chip \ZXSee{xx6B}}
 		\zxport{-W}{xxDF}{---- ---- --01 1111}{Output to SpecDrum DAC}
 		\zxport{RW}{xxFE}{xxxx xxxx ---- ---0}{Reading with particular high bytes returns keyboard status \ZXSee{xxFE}, write changes border colour and base Spectrum audio settings \ZXSee{xxFEWrite}}
-		\zxport{RW}{xxFF}{---- ---- ---- ----}{Controls Timex Sinclair video modes and colours in hi-res mode. Readable when \PortTextXRef{08} bit 2 is set (see section \XRef{zx_next_ula})}
+		\zxport{RW}{xxFF}{---- ---- ---- ----}{Controls Timex Sinclair video modes and colours in hi-res mode. Readable when bit 2 of \PortTextXRef{08} is set}
 
 	\end{tabularx}
 \endgroup
@@ -80,7 +80,7 @@
 \subsection{Next/TBBlue Feature Control Registers}
 \label{zx_next_tbblue_registers}
 
-Specific features of the Next are controlled via these register numbers, accessed through ports \PortTextXRef{243B}~ and \PortTextXRef{253B}. All registers can also be written to directly with the {\tt NEXTREG} instruction.
+Specific features of the Next are controlled via these register numbers, accessed through ports \PortTextXRef[]{243B} and \PortTextXRef[]{253B} (see page \PortPage{243B} for details). All registers can also be written to directly with the {\tt NEXTREG} instruction.
 
 \begingroup
 	\NewDocumentEnvironment{tbbluereg}{ +b }{
@@ -150,11 +150,11 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{RW}{32}{Pixel X offset ({\tt 0-255}) to use when drawing LoRes Layer}
 		\nextport{RW}{33}{Pixel Y offset ({\tt 0-191}) to use when drawing LoRes Layer}
 		\nextport{RW}{34}{Selects sprite index {\tt 0-127} to be affected by writes to other Sprite ports (and mirrors) \ZXSee{34}}
-		\nextport{-W}{35}{Writes directly into byte 1 of \PortTextXRef{xx57} \ZXSee{35}}
-		\nextport{-W}{36}{Writes directly into byte 2 of \PortTextXRef{xx57} \ZXSee{36}}
-		\nextport{-W}{37}{Writes directly into byte 3 of \PortTextXRef{xx57} \ZXSee{37}}
-		\nextport{-W}{38}{Writes directly into byte 4 of \PortTextXRef{xx57} \ZXSee{38}}
-		\nextport{-W}{39}{Writes directly into byte 5 of \PortTextXRef{xx57} \ZXSee{39}}
+		\nextport{-W}{35}{Writes directly into byte 1 of port \PortAddr{xx57}~\ZXSee{35}}
+		\nextport{-W}{36}{Writes directly into byte 2 of port \PortAddr{xx57}~\ZXSee{36}}
+		\nextport{-W}{37}{Writes directly into byte 3 of port \PortAddr{xx57}~\ZXSee{37}}
+		\nextport{-W}{38}{Writes directly into byte 4 of port \PortAddr{xx57}~\ZXSee{38}}
+		\nextport{-W}{39}{Writes directly into byte 5 of port \PortAddr{xx57}~\ZXSee{39}}
 		\nextport{RW}{40}{Chooses a palette element (index) to manipulate with \ZXSee{40}}
 		\nextport{RW}{41}{Use to set/read 8-bit colours of the ULANext palette \ZXSee{41}}
 		\nextport{RW}{42}{Specifies mask to extract ink colour from attribute cell value in ULANext mode}
@@ -190,11 +190,11 @@ Specific features of the Next are controlled via these register numbers, accesse
 		\nextport{RW}{6F}{Base address of the tiles' graphics \ZXSee{6F}}
 		\nextport{RW}{70}{Layer 2 resolution, palette offset \ZXSee{70}}
 		\nextport{RW}{71}{Sets pixel offset for drawing Layer 2 graphics on the screen \ZXSee{61}}
-		\nextport{-W}{75}{Same as \PortTextXRef{35} plus increments \MemAddr{34} \ZXSee{75}}
-		\nextport{-W}{76}{Same as \PortTextXRef{36} plus increments \MemAddr{34} \ZXSee{76}}
-		\nextport{-W}{77}{Same as \PortTextXRef{37} plus increments \MemAddr{34} \ZXSee{77}}
-		\nextport{-W}{78}{Same as \PortTextXRef{38} plus increments \MemAddr{34} \ZXSee{78}}
-		\nextport{-W}{79}{Same as \PortTextXRef{39} plus increments \MemAddr{34} \ZXSee{79}}
+		\nextport{-W}{75}{Same as register \PortAddr{35}~plus increments \PortAddr{34}~\ZXSee{75}}
+		\nextport{-W}{76}{Same as register \PortAddr{36}~plus increments \PortAddr{34}~\ZXSee{76}}
+		\nextport{-W}{77}{Same as register \PortAddr{37}~plus increments \PortAddr{34}~\ZXSee{77}}
+		\nextport{-W}{78}{Same as register \PortAddr{38}~plus increments \PortAddr{34}~\ZXSee{78}}
+		\nextport{-W}{79}{Same as register \PortAddr{39}~plus increments \PortAddr{34}~\ZXSee{79}}
 		\nextport{RW}{7F}{8-bit storage for user}
 		\nextport{RW}{80}{Expansion bus enable/config}
 		\nextport{RW}{81}{Expansion bus controls}
@@ -303,11 +303,11 @@ This example nicely demonstrates a common dilemma when programming: frequently w
 
 
 \subsubsection{Writing to Next registers}
-% note: at the moment we don't have ports 243B and 253B declared elsewhere, so we label them here; this was cross references will lead to this place
+% note: at the moment we don't have ports 243B and 253B declared elsewhere, so we label them here; this was cross references will lead to this place. Since this **IS** the declaration, we don't use XRefs when mentioning both ports below.
 \label{\PortReference{243B}}
 \label{\PortReference{253B}}
 
-Writing values to Next/TBBlue registers occurs through \PortText{253B} ports. It's composed from 2 steps: first we select the register via write to port \MemAddr{243B}, then write the value through port \MemAddr{253B}. For example writing value of {\tt 5} to Next register \MemAddr{16}:
+Writing values to Next/TBBlue registers occurs through \PortText{243B}~and \PortText{253B}~ports. It's composed from 2 steps: first we select the register via write to port \MemAddr{243B}, then write the value through port \MemAddr{253B}. For example writing value of {\tt 5} to Next register \MemAddr{16}:
 
 \begin{multicols}{2}
 	\begin{tcblisting}{right skip=1em}

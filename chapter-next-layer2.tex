@@ -530,6 +530,7 @@ You can find fully working example in companion code on GitHub in folder {\tt la
 
 \subsubsection{\PortDeclaration{123B}}
 
+% note: most port xrefs exclude page numbers since those ports/registers are declared on the same page spread
 \begin{NextPort}
 	\PortBits{7-6}
 		\PortDesc{Video RAM bank select}
@@ -549,14 +550,14 @@ You can find fully working example in companion code on GitHub in folder {\tt la
 		\PortDesc{Use Shadow Layer 2 for paging}
 		\PortDescOnly{
 			\begin{PortBitConfig}
-				\PortBitLine{0}{Map \PortTextXRef{12}}
-				\PortBitLine{1}{Map \PortTextXRef{13}}
+				\PortBitLine{0}{Map \PortTextXRef[]{12}}
+				\PortBitLine{1}{Map \PortTextXRef[]{13}}
 			\end{PortBitConfig}
 		}
 	\PortBits{2}
 		\PortDesc{Enable Layer 2 read-only paging on 16K slot 0 (core 3.0+)}
 	\PortBits{1}
-		\PortDesc{Layer 2 visible, see \PortTextXRef{12}}
+		\PortDesc{Layer 2 visible, see \PortTextXRef[]{12}}
 		\PortDescOnly{Since core 3.0 this bit has mirror in \PortTextXRef{69}}
 	\PortBits{0}
 		\PortDesc{Enable Layer 2 write-only paging on 16K slot 0}
@@ -600,6 +601,7 @@ Note: this register uses 16K bank numbers. If you're using 8K banks, you have to
 
 \subsubsection{\PortDeclaration{13}}
 
+% note: most port xrefs exclude page numbers since those ports/registers are declared on the same page spread
 \begin{NextPort}
 	\PortBits{7}
 		\PortDesc{Reserved, must be {\tt 0}}
@@ -607,9 +609,9 @@ Note: this register uses 16K bank numbers. If you're using 8K banks, you have to
 		\PortDesc{Starting 16K bank of Layer 2 shadow screen}
 \end{NextPort}
 
-Similar to \PortTextXRef{12} except this register sets up starting 16K bank for Layer 2 shadow screen. The other difference is that changes to this registers are not immediately visible on screen.
+Similar to \PortTextXRef[]{12} except this register sets up starting 16K bank for Layer 2 shadow screen. The other difference is that changes to this registers are not immediately visible on screen.
 
-Note: this register doesn't affect the shadow screen in any way besides when bit 3 is set in \PortTextXRef{123B}. We can circumvent it completely if a manual paging scheme is used to swap banks for reading and writing.
+Note: this register doesn't affect the shadow screen in any way besides when bit 3 is set in \PortTextXRef[]{123B}. We can circumvent it completely if a manual paging scheme is used to swap banks for reading and writing.
 
 \subsubsection{\PortDeclaration{14}}
 
@@ -647,12 +649,13 @@ Valid range is:
 
 \subsubsection{\PortDeclaration{18}}
 
+% note: most port xrefs exclude page numbers since those ports/registers are declared on the same page spread
 \begin{NextPort}
 	\PortBits{7-0}
 		\PortDesc{Reads and writes clip-window coordinates for Layer 2}
 \end{NextPort}
 
-4 coordinates need to be set: X1, X2, Y1 and Y2. Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset the index to {\tt 0} in \PortTextXRef{1C}, then write all 4 coordinates in succession. Positions are inclusive. Furthermore, X positions are doubled for 320$\times$256 mode, quadrupled for 640$\times$256. Therefore, to view the whole of Layer 2, the values are:
+4 coordinates need to be set: X1, X2, Y1 and Y2. Which coordinate gets set, is determined by index. As each write to this register will also increment index, the usual flow is to reset the index to {\tt 0} in \PortTextXRef[]{1C}, then write all 4 coordinates in succession. Positions are inclusive. Furthermore, X positions are doubled for 320$\times$256 mode, quadrupled for 640$\times$256. Therefore, to view the whole of Layer 2, the values are:
 
 \begin{tabular}{cllll}
 	& & 
@@ -697,23 +700,24 @@ Read:
 \end{NextPort}
 
 
-\subsubsection{\PortTextXRef{40}}
+\subsubsection{\PortTextXRef[]{40}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{41}}
+\subsubsection{\PortTextXRef[]{41}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{43}}
+\subsubsection{\PortTextXRef[]{43}}
 \vspace*{-2ex}
-\subsubsection{\PortTextXRef{44}}
+\subsubsection{\PortTextXRef[]{44}}
 \PortDeclarationXRefMultiple{Palette}{40}{44}
 
 
 \subsubsection{\PortDeclaration{69}}
 
+% note: we use comma for referencing port declaration page to avoid double closing parenthesis, more readable this way
 \begin{NextPort}
 	\PortBits{7}
-		\PortDesc{{\tt 1} to enable Layer 2 (alias for bit 1 in \PortTextXRef{123B})}
+		\PortDesc{{\tt 1} to enable Layer 2 (alias for bit 1 in \PortTextXRef[,]{123B})}
 	\PortBits{6}
-		\PortDesc{{\tt 1} to enable ULA shadow display (alias for bit 3 in \PortTextXRef{7FFD})}
+		\PortDesc{{\tt 1} to enable ULA shadow display (alias for bit 3 in \PortTextXRef[,]{7FFD})}
 	\PortBits{5-0}
 		\PortDesc{Alias for bits 5-0 in Timex Sinclair Video Mode Control \MemAddr{xxFF}}
 \end{NextPort}

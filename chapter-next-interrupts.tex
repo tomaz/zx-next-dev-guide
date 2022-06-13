@@ -17,7 +17,8 @@
 
 Like many other functionalities, Next also inherits interrupts handling from ZX Spectrum. As described in the Z80 chapter, section \XRef{z80_interrupts}, Interrupt Mode 0 is used for a short period of time after booting up, before ROM activates Mode 1. IM1 remains active unless we explicitly change it. To replace the default IM1 interrupt handler, we can page out ROM or change to Interrupt Mode 2.
 
-Both IM1 and IM2 are triggered by standard Spectrum ULA on every video frame. However timing can be adjusted using \PortTextXRef{22} and \PortTextXRef{23}. This allows disabling standard ULA interrupt, or add an extra interrupt that occurs on a particular video line.
+% note: we reference page number manually since both registers are declared on the same page, but if this changes in the future, we should update this text accordingly
+Both IM1 and IM2 are triggered by standard Spectrum ULA on every video frame. However timing can be adjusted using \PortTextXRef[]{22} and \PortTextXRef[]{23} registers (page \PortPage{22}). This allows disabling standard ULA interrupt, or add an extra interrupt that occurs on a particular video line.
 
 Interrupts are most frequently used for driving music playback. Though they can also be used for other purposes such as synchronizing game state etc.
 
@@ -335,7 +336,8 @@ Line value starts with 0 for the first line of pixels. But the line-interrupt ha
 		\PortDesc{LSB of interrupt line value ({\tt 0} after reset)}
 \end{NextPort}
 
-On core 3.1.5+ line numbering can be offset by \PortTextXRef{64}.
+% note: port page is not used here since the declaration is on the same page
+On core 3.1.5+ line numbering can be offset by \PortTextXRef[]{64}.
 
 
 \subsubsection{\PortDeclaration{64}}
@@ -367,7 +369,8 @@ Since a change in offset takes effect when the ULA reaches row 0, the change can
 		\PortDesc{Maskable interrupt mode: {\tt 1} IM2, {\tt 0} pulse}
 \end{NextPort}
 
-If bit 3 is set, the return address pushed during an NMI acknowledge cycle will be written to \PortTextXRef{C3} and \PortTextXRef{C3} instead of the memory (the stack pointer will be decremented). The first {\tt RETN} after the NMI acknowledge will then take its return address from the registers instead of memory (the stack pointer will be incremented). If bit 3 is {\tt 0}, and in other circumstances (if there is no NMI first), {\tt RETN} functions normally.
+% note port xrefs don't use pages here since both ports are declared on the same page, immediately below
+If bit 3 is set, the return address pushed during an NMI acknowledge cycle will be written to \PortTextXRef[]{C2} and \PortTextXRef[]{C3} instead of the memory (the stack pointer will be decremented). The first {\tt RETN} after the NMI acknowledge will then take its return address from the registers instead of memory (the stack pointer will be incremented). If bit 3 is {\tt 0}, and in other circumstances (if there is no NMI first), {\tt RETN} functions normally.
 
 
 \subsubsection{\PortDeclaration{C2}}
@@ -477,7 +480,8 @@ Read indicates whether the given interrupt was generated in the past. Write with
 		\PortDesc{CTC channel 0 interrupt}
 \end{NextPort}
 
-Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortTextXRef{C0}) with interrupts enabled.
+% note: we use comma for referencing port declaration page to avoid double closing parenthesis, more readable this way
+Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortTextXRef[,]{C0}) with interrupts enabled.
 
 
 \subsubsection{\PortDeclaration{CA}}
@@ -501,7 +505,8 @@ Read indicates whether the given interrupt was generated in the past. Write with
 		\PortDesc{UART0 Rx available interrupt}
 \end{NextPort}
 
-Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortTextXRef{C0}) with interrupts enabled.
+% note: we use comma for referencing port declaration page to avoid double closing parenthesis, more readable this way
+Read indicates whether the given interrupt was generated in the past. Write with {\tt 1} clears given bit unless in IM2 mode (bit 0 set on \PortTextXRef[,]{C0}) with interrupts enabled.
 
 
 \subsubsection{\PortDeclaration{CC}}

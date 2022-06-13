@@ -223,13 +223,14 @@ Allows selecting:
 
 Ports involved:
 
+% note: since all ports are declared on the same page, we group the page in more info section below the table
 \begin{itemize}[topsep=0pt,itemsep=0pt]
-	\item \PortTextXRef{7FFD} bit 4 selects ROM bank for slot 0
-	\item \PortTextXRef{7FFD} bits 2-0 select one of 8 RAM banks for slot 3
-	\item \PortTextXRef{DFFD} bits 3-0 are added as MSB to 2-0 from \MemAddr{7FFD} to form 128 banks for slot 3 (Next specific)
+	\item \PortTextXRef[]{7FFD} bit 4 selects ROM bank for slot 0
+	\item \PortTextXRef[]{7FFD} bits 2-0 select one of 8 RAM banks for slot 3
+	\item \PortTextXRef[]{DFFD} bits 3-0 are added as MSB to 2-0 from \MemAddr{7FFD} to form 128 banks for slot 3 (Next specific)
 \end{itemize}
 
-If you are using the standard interrupt handler or OS routines, then any time you write to \PortTextXRef{7FFD} you should also store the value at \MemAddr{5B5C}.
+See page \PortPage{7FFD} for details on ports \MemAddr{7FFD} and \MemAddr{DFFD}. If you are using the standard interrupt handler or OS routines, then any time you write to \PortTextXRef[]{7FFD} you should also store the value at \MemAddr{5B5C}.
 
 
 \subsubsection{+3 Normal Mode}
@@ -247,16 +248,18 @@ Allows selecting:
 	\item 16K RAM to be visible in the top 16K slot (3) from 8 possible banks (128 banks on Next)
 \end{itemize}
 
+\pagebreak
 Ports involved:
 
+% note: since all ports are declared on the same page, we group the page in more info section below the table
 \begin{itemize}[topsep=0pt,itemsep=0pt]
-	\item \PortTextXRef{1FFD} bit 2 as LSB for selecting ROM bank for slot 0
-	\item \PortTextXRef{7FFD} bit 4 forms MSB for selecting ROM bank for slot 0
-	\item \PortTextXRef{7FFD} bits 2-0 select one of 8 RAM banks for slot 3
-	\item \PortTextXRef{DFFD} bits 3-0 are added as MSB to 2-0 from \PortAddr{7FFD} to form 128 banks for slot 3 (Next specific)
+	\item \PortTextXRef[]{1FFD} bit 2 as LSB selects ROM bank for slot 0
+	\item \PortTextXRef[]{7FFD} bit 4 forms MSB selects ROM bank for slot 0
+	\item \PortTextXRef[]{7FFD} bits 2-0 select one of 8 RAM banks for slot 3
+	\item \PortTextXRef[]{DFFD} bits 3-0 are added as MSB to 2-0 from \MemAddr{7FFD} to form 128 banks for slot 3 (Next specific)
 \end{itemize}
 
-If you are using the standard interrupt handler or OS routines, then any time you write to \PortTextXRef{1FFD} you should also store the same value at \MemAddr{5B67} and every time your write to \PortTextXRef{7FFD} you should also store the value at \MemAddr{5B5C}.
+See page \PortPage{7FFD} for details on ports \MemAddr{1FFD}, \MemAddr{7FFD} and \MemAddr{DFFD}. If you are using the standard interrupt handler or OS routines, then any time you write to \PortTextXRef[]{1FFD} you should also store the same value at \MemAddr{5B67} and any time your write to \PortTextXRef[]{7FFD} you should also store the value at \MemAddr{5B5C}.
 
 
 \subsubsection{+3 All-RAM Mode}
@@ -276,12 +279,13 @@ Also called ``Special Mode'' or ``CP/M Mode''. Allows selecting all 4 slots from
 
 Ports involved:
 
+% note: since all ports are declared on the same page, we group the page in more info section below the table
 \begin{itemize}[topsep=0pt,itemsep=0pt]
-	\item \PortTextXRef{1FFD} bit 0 enables All-RAM (if {\tt 1}) or normal mode ({\tt 0})
-	\item \PortTextXRef{1FFD} bits 2-1 select memory configuration
+	\item \PortTextXRef[]{1FFD} bit 0 enables All-RAM (if {\tt 1}) or normal mode ({\tt 0})
+	\item \PortTextXRef[]{1FFD} bits 2-1 select memory configuration
 \end{itemize}
 
-If you are using the standard interrupt handler or OS routines, then any time you write to \PortTextXRef{1FFD} you should also store the same value at \MemAddr{5B67}.
+See page \PortPage{1FFD} for details on port \MemAddr{1FFD}. If you are using the standard interrupt handler or OS routines, then any time you write to \PortTextXRef[]{1FFD} you should also store the same value at \MemAddr{5B67}.
 
 
 \subsubsection{Pentagon 512K/1024K Mode}
@@ -335,17 +339,18 @@ In this mode, 64K memory accessible to the CPU is divided into 8 slots called MM
 			& {\tt 0-255}		& {\tt 0-255}		& {\tt 0-255}		& {\tt 0-255}		& {\tt 0-255}		& {\tt 0-255}		& {\tt 0-255}		& {\tt 0-255} \\
 \end{tabular}
 
-Bank selection is set via Next registers:
+Bank selection is set via Next registers (see page \PortPage{50} for details):
 
+% note: since all ports are declared on the same page, we group the page in more info section below the table
 \begin{itemize}[topsep=0pt,itemsep=0pt]
-	\item \PortTextXRef{50}
-	\item \PortTextXRef{51}
-	\item \PortTextXRef{52}
-	\item \PortTextXRef{53}
-	\item \PortTextXRef{54}
-	\item \PortTextXRef{55}
-	\item \PortTextXRef{56}
-	\item \PortTextXRef{57}
+	\item \PortTextXRef[]{50}
+	\item \PortTextXRef[]{51}
+	\item \PortTextXRef[]{52}
+	\item \PortTextXRef[]{53}
+	\item \PortTextXRef[]{54}
+	\item \PortTextXRef[]{55}
+	\item \PortTextXRef[]{56}
+	\item \PortTextXRef[]{57}
 \end{itemize}
 
 While not absolutely required, it's good practice to store original slot values and then restore before exiting program or returning from subroutines.
@@ -365,7 +370,8 @@ next:
 	DJNZ next
 \end{tcblisting}
 
-Note: \PortTextXRef{50} and \PortTextXRef{51} have extra ``functionality'': ROM can be automatically paged in if otherwise nonexistent 8K page \MemAddr{FF} is set. Low or high 8K ROM bank is automatically determined based on which 8K slot is used. This may be useful if temporarily paging RAM into the bottom 16K region and then wanting to restore back to ROM.
+% note: since both ports are declared on the same page, we group the page
+Note: registers \PortTextXRef[]{50} and \PortTextXRef[]{51} (page \PortPage{50}) have extra ``functionality'': ROM can be automatically paged in if otherwise nonexistent 8K page \MemAddr{FF} is set. Low or high 8K ROM bank is automatically determined based on which 8K slot is used. This may be useful if temporarily paging RAM into the bottom 16K region and then wanting to restore back to ROM.
 
 
 \subsection{Interaction Between Paging Modes}
@@ -396,6 +402,8 @@ Layer 2 uses specific ports and registers that are can be used to change memory 
 \subsection{Paging Mode Ports and Registers}
 \label{zx_next_memorypaging_registers}
 
+% note: almost all references to ports are described on this same page spread, hence no page numbers in XRefs
+
 \subsubsection{\PortDeclaration{1FFD}}
 
 \begin{NextPort}
@@ -422,12 +430,12 @@ Layer 2 uses specific ports and registers that are can be used to change memory 
 
 \begin{NextPort}
 	\PortBits{7-6}
-		\PortDesc{Extra two bits for 16K RAM bank if in Pentagon 512K/1024K mode (see \PortTextXRef{DFFD})}
+		\PortDesc{Extra two bits for 16K RAM bank if in Pentagon 512K/1024K mode (see \PortTextXRef[]{DFFD} below)}
 	\PortBits{5}
 		\PortDesc{{\tt 1} locks pages; cannot be unlocked until next reset on regular ZX128)}
 	\PortBits{4}
 		\PortDesc{128K: ROM select ({\tt 0} = 128K editor, {\tt 1} = 48K BASIC)}
-		\PortDescOnly{+2/+3: low bit of ROM select (see \PortTextXRef{1FFD} above)}
+		\PortDescOnly{+2/+3: low bit of ROM select (see \PortTextXRef[]{1FFD} above)}
 	\PortBits{3}
 		\PortDesc{ULA layer shadow screen toggle (0 = bank 5, 1 = bank 7)}
 	\PortBits{2-0}
@@ -440,7 +448,7 @@ Layer 2 uses specific ports and registers that are can be used to change memory 
 	\PortBits{7}
 		\PortDesc{1 to set Pentagon 512K/1024K mode}
 	\PortBits{3-0}
-		\PortDesc{Most significant bits of the 16K RAM bank selected in \PortTextXRef{7FFD}}
+		\PortDesc{Most significant bits of the 16K RAM bank selected in \PortTextXRef[]{7FFD}}
 \end{NextPort}
 
 
@@ -470,21 +478,21 @@ Layer 2 uses specific ports and registers that are can be used to change memory 
 
 \begin{NextPort}
 	\PortBits{7}
-		\PortDesc{Access to bit 0 of \PortTextXRef{DFFD}}
+		\PortDesc{Access to bit 0 of \PortTextXRef[]{DFFD}}
 	\PortBits{6-4}
-		\PortDesc{Access to bits 2-0 of \PortTextXRef{7FFD}}
+		\PortDesc{Access to bits 2-0 of \PortTextXRef[]{7FFD}}
 	\PortBits{3}
 		\PortDesc{Read will always return {\tt 1}}
 		\PortDescOnly{Write {\tt 1} to change RAM bank, {\tt 0} for no change to MMU6,7, \MemAddr{7FFD} and \MemAddr{DFFD}}
 	\PortBits{2}
 		\PortDesc{{\tt 0} for normal paging mode, {\tt 1} for special all-RAM mode}
 	\PortBits{1}
-		\PortDesc{Access to bit 2 of \PortTextXRef{1FFD}}
+		\PortDesc{Access to bit 2 of \PortTextXRef[]{1FFD}}
 	\PortBits{0}
-		\PortDesc{If bit 2 = {\tt 0} (normal mode): bit 4 of \PortTextXRef{7FFD}}
-		\PortDescOnly{If bit 2 = {\tt 1} (special mode): bit 1 of \PortTextXRef{1FFD}}
+		\PortDesc{If bit 2 = {\tt 0} (normal mode): bit 4 of \PortTextXRef[]{7FFD}}
+		\PortDescOnly{If bit 2 = {\tt 1} (special mode): bit 1 of \PortTextXRef[]{1FFD}}
 \end{NextPort}
 
-Acts as a shortcut for reading and writing \PortTextXRef{1FFD}, \PortTextXRef{7FFD} and \PortTextXRef{DFFD} all at once. Mainly to simplify classic Spectrum memory mapping. Though, as mentioned, Next specific programs should prefer MMU based memory mapping.
+Acts as a shortcut for reading and writing \PortTextXRef[]{1FFD}, \PortTextXRef[]{7FFD} and \PortTextXRef[]{DFFD} all at once. Mainly to simplify classic Spectrum memory mapping. Though, as mentioned, Next specific programs should prefer MMU based memory mapping.
 
 \pagebreak
