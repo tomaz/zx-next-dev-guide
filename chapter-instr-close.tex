@@ -34,6 +34,100 @@ Where possible, multiple variants of same instruction are grouped together and w
 \pagebreak
 \thispagestyle{plain} % use toc style without headers for this explanation page, it better matches chapter start page
 
+
+\subsubsection{Flags}
+
+\newcommand{\DetailsFlagTableList}[1]{
+	\vspace*{-2ex}
+	\setlist{leftmargin=1em,after=\vspace{-2ex}}
+	\begin{itemize}
+		\setlength\itemsep{-4pt}
+		#1
+	\end{itemize}
+}
+
+\newcommand{\DetailsFlagTableParagraph}{\vspace{1ex}}
+
+{	
+	\renewcommand{\arraystretch}{1.5}
+
+	\begin{tabularx}{\linewidth}{cX}
+		\FlagSF{} &
+			\textbf{Sign Flag} is set to twos-complement of the most-significant bit (bit 7) of the result of an instruction. If the result is positive (bit 7 is {\tt 0}), \FlagSF{} is set, and if the result is negative (bit 7 is {\tt 1}), \FlagSF{} is reset. This leaves bits 0-6 to represent the value. Positive numbers range from {\tt 0} to {\tt 127} and negative from {\tt -1} to {\tt -128}.
+			\\
+
+		\FlagZF{} &
+			\textbf{Zero Flag} depends on whether the result of an instruction is {\tt 0}. \FlagZF{} is set if the result if {\tt 0} and reset otherwise.
+			\\
+
+		\FlagHF{} &
+			\textbf{Half Carry Flag} represents a carry or borrow status between bits 3 and 4 of an 8-bit arithmetic operation (bits 11 and 12 for 16-bit operations). Set if:
+		
+			\DetailsFlagTableList{
+				\item A carry from bit 3 to bit 4 occurs during addition (bit 11 to 12 for 16-bit operations)
+				\item A borrow from bit 4 occurs during subtraction (from bit 12 for 16-bit operations)
+			}
+			\\
+
+		\FlagPV{} &
+			\textbf{Parity/Overflow Flag} value depends on the type of the operation.
+			
+			\DetailsFlagTableParagraph
+			For arithmetic operations, \FlagPV{} indicates an overflow. The flag is set when the sign of the result is different from the sign of the operands:
+			
+			\DetailsFlagTableList{
+				\item all operands are positive but the result is negative or
+				\item all operands are negative but the result is positive
+			}
+			
+			\DetailsFlagTableParagraph
+			For logical and rotate operations, \FlagPV{} indicates the parity of the result. The number of set bits in the result are counted. If the total is an even value, \FlagPV{} is set. If the total is odd, \FlagPV{} is reset.
+			\\
+
+		\FlagNF{} &
+			\textbf{Add/Subtract Flag} is used primarily for {\tt DAA} instruction to distinguish between add and subtract operations. But other instructions may also affect it as described in the following pages.
+			\\
+
+		\textbf{CF} &
+			\textbf{Carry Flag} represents a carry or borrow status for arithmetic operations. \textbf{CF} is set if add instruction generates a carry, or subtract generates a borrow.
+			
+			\DetailsFlagTableParagraph
+			For rotate and shift instructions, \textbf{CF} is used:
+			
+			\DetailsFlagTableList{
+				\item as a link between least-significat and most significant bit for {\tt RLA}, {\tt RL}, {\tt RRA} and {\tt RR}
+				\item contains the value shifted out of bit 7 for {\tt RLC}, {\tt RLCA} and {\tt SLA}
+				\item contains the value shifted out of bit 0 for {\tt RRC}, {\tt RRCA}, {\tt SRA} and {\tt SRL}
+			}
+
+			\DetailsFlagTableParagraph
+			Finally, some instructions directly affect the value of \textbf{CF}:
+
+			\DetailsFlagTableList{
+				\item reset with {\tt AND}, {\tt OR} and {\tt XOR}
+				\item set with {\tt SCF}
+				\item completed with {\tt CCF}
+			}
+			\\
+	\end{tabularx}
+}
+
+
+\subsubsection{Effects}
+
+\begin{tabular}{cl}
+	{\tt 0} & Flag is set to {\tt 0} \\
+	{\tt 1} & Flag is set to {\tt 1} \\
+	{\tt \FS} & Flag is modified according to operation \\
+	{\tt \FN} & Flag is not affected \\
+	{\tt \FU} & Effect on flag is unpredictable \\
+	{\tt \FX} & Special case, see notes below effects table \\
+	\DetailParityOverflow{v} & P/V flag is used as overflow \\
+	\DetailParityOverflow{p} & P/V flag is used as parity \\
+	\DetailParityOverflow{} & P/V is undefined or indicates other result \\
+\end{tabular}
+
+
 \subsubsection{Abbreviations}
 
 \begin{tabularx}{\textwidth}{lX}
@@ -53,19 +147,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\ZXN & Indicates ZX Spectrum Next extended instruction \\		
 \end{tabularx}
 
-\subsubsection{Effects}
 
-\begin{tabular}{cl}
-	{\tt 0} & Flag is set to {\tt 0} \\
-	{\tt 1} & Flag is set to {\tt 1} \\
-	{\tt \FS} & Flag is modified according to operation \\
-	{\tt \FN} & Flag is not affected \\
-	{\tt \FU} & Effect on flag is unpredictable \\
-	{\tt \FX} & Special case, see notes below effects table \\
-	\DetailParityOverflow{v} & P/V flag is used as overflow \\
-	\DetailParityOverflow{p} & P/V flag is used as parity \\
-	\DetailParityOverflow{} & P/V is undefined or indicates other result \\
-\end{tabular}
+\pagebreak
+\IntentionallyEmpty
+\pagebreak
+
+
 
 \begin{basedescript}{
 	% setup basedescript styling for labels
@@ -76,7 +163,16 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\setlength\itemsep{1.5em}
 
 	\pagebreak
-	\begin{DetailItem}{ADC d,s}
+
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{ADC}{d,s}
 		{\IH{AD}d with \IH{C}arry}
 		{\SymADC{d}{s}}
 
@@ -93,10 +189,15 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\begin{DetailEffects}[v]
 			\FlagsADCr[8-bit]
 			\FlagsADCrr[16-bit]
-			\DetailFlagsComments{
-				\item 16-bit HF is set by carry from bit 11 (half carry in high byte)
-			}
 		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagHF{\DetailFlagResultHalfCarry}*
+			\DetailFlagPV{\DetailFlagResultOverflow}*
+			\DetailFlagCF{\DetailFlagResultCarry}
+		\end{DetailEffectsFlags}
 
 		\begin{DetailTiming}
 			\DetailTime[A,r]{1}{4}
@@ -108,8 +209,17 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\end{DetailTiming}
 		
 	\end{DetailItem}
+	
+	\pagebreak
 
-	\begin{DetailItem}{ADD d,s}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{ADD}{d,s}
 		{\IH{ADD}}
 		{\SymADD{d}{s}}
 
@@ -132,11 +242,19 @@ Where possible, multiple variants of same instruction are grouped together and w
 		\begin{DetailEffects}[v]
 			\FlagsADDr[8-bit]
 			\FlagsADDrr[16-bit]
-			\FlagsADDrra[\tt ADD rr,A]
-			\FlagsADDrrnn[\tt ADD rr,nn]
-			\DetailFlagsComments{
-				\item 16-bit HF is set by carry from bit 11 (half carry in high byte)
-			}
+		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF[8-bit only, set if:]{\DetailFlagResultSign}
+			\DetailFlagZF[8-bit only, set if:]{\DetailFlagResultZero}
+			\DetailFlagHF{\DetailFlagResultHalfCarry*}*
+			\DetailFlagPV[8-bit only, set if:]{\DetailFlagResultOverflow}*
+			\DetailFlagCF{\DetailFlagResultCarry*}
+		\end{DetailEffectsFlags}
+
+		\begin{DetailEffects}
+			\FlagsADDrra[\tt ADD rr,A\ZXN]
+			\FlagsADDrrnn[\tt ADD rr,nn\ZXN]
 		\end{DetailEffects}
 
 		\begin{DetailTiming}
@@ -154,7 +272,16 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{AND s}
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{AND}{s}
 		{bitwise \IH{AND}}
 		{\SymAND{s}}
 
@@ -203,6 +330,12 @@ Where possible, multiple variants of same instruction are grouped together and w
 			\FlagsANDr
 		\end{DetailEffects}
 
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagPV{\DetailFlagResultParity}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime[r]{1}{4}
 			\DetailTime[n]{2}{7}
@@ -213,8 +346,14 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\end{DetailItem}
 
-	\pagebreak
-	\begin{DetailItem}{BIT b,s}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{BIT}{b,s}
 		{test \IH{BIT}}
 		{\SymBIT{s}}
 
@@ -235,11 +374,15 @@ Where possible, multiple variants of same instruction are grouped together and w
 			BIT b,(IY+d)
 		\end{DetailVariants}
 
-		Tests specified bit {\tt b} ({\tt 0-7}) of the given register {\tt s} or contents of memory addressed by {\tt s} and sets zero flag according to result; if bit was 1, {\tt ZF} is 0 and vice versa.
+		Tests specified bit {\tt b} ({\tt 0-7}) of the given register {\tt s} or contents of memory addressed by {\tt s} and sets zero flag according to result; if bit was 1, \FlagZF{} is 0 and vice versa.
 
 		\begin{DetailEffects}
 			\FlagsBITr
 		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagZF{bit {\tt b} of the given source argument is {\tt 0}}
+		\end{DetailEffectsFlags}
 
 		\begin{DetailTiming}
 			\DetailTime[b,r]{2}{8}
@@ -250,88 +393,17 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{BRLC DE,B\ZXN}
-		{\IH{B}arrel \IH{R}otate \IH{L}eft \IH{C}ircular}
-		{\SymBRLC}
+	% these instructions should be here in alphabetical order, but I want them to be placed on the same page spread so reader can check the differences easily
+	\DetailItemsSeePageReference{BRLC, BSLA, BSRA, BSRF, BSRL}{See pages \DetailItemPageRef{BRLC} and \DetailItemPageRef{BSRL}}
 
-		Rotates value in register pair {\tt DE} left for the amount given in bits 3-0 (low nibble) of register {\tt B}. To rotate right, use formula: {\tt B=16-places}. The result is stored in {\tt DE}.
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
 
-		\begin{DetailEffects}
-			\FlagsBRLC
-		\end{DetailEffects}
-
-		\begin{DetailTiming}
-			\DetailTime{2}{8}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-
-	\begin{DetailItem}{BSLA DE,B\ZXN}
-		{\IH{B}arrel \IH{S}hift \IH{L}eft \IH{A}rithmetic}
-		{\SymBSLA}
-
-		Performs shift left of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. The result is stored in {\tt DE}.
-
-		\begin{DetailEffects}
-			\FlagsBSLA
-		\end{DetailEffects}
-		
-		\begin{DetailTiming}
-			\DetailTime{2}{8}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-
-	\begin{DetailItem}{BSRA DE,B\ZXN}
-		{\IH{B}arrel \IH{S}hift \IH{R}ight \IH{A}rithmetic}
-		{\SymBSRA}
-
-		Performs arithmetical shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. The result is stored in {\tt DE}.
-
-		\begin{DetailEffects}
-			\FlagsBSRA
-		\end{DetailEffects}
-		
-		\begin{DetailTiming}
-			\DetailTime{2}{8}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-
-	\begin{DetailItem}{BSRF DE,B\ZXN}
-		{\IH{B}arrel \IH{S}hift \IH{R}ight \IH{F}ill-one}
-		{\SymBSRF}
-
-		Performs fill-one-way shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. The result is stored in {\tt DE}.
-
-		\begin{DetailEffects}
-			\FlagsBSRF
-		\end{DetailEffects}
-		
-		\begin{DetailTiming}
-			\DetailTime{2}{8}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-
-	\begin{DetailItem}{BSRL DE,B\ZXN}
-		{\IH{B}arrel \IH{S}hift \IH{R}ight \IH{L}ogical}
-		{\SymBSRL}
-
-		Performs logical shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. The result is stored in {\tt DE}.
-
-		\begin{DetailEffects}
-			\FlagsBSRL
-		\end{DetailEffects}
-		
-		\begin{DetailTiming}
-			\DetailTime{2}{8}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-	
-	\pagebreak
-	\begin{DetailItem}{CALL nn}
+	\begin{DetailItem}{CALL}{nn}
 		{\IH{CALL} subroutine}
 		{\SymCALL{nn}}
 
@@ -347,20 +419,27 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{CALL c,nn}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{CALL c,nn}{}
 		{\IH{CALL} subroutine conditionally}
 		{\SymCALLc{nn}}
 
 		\vspace{1ex} % we need some vertical space to achieve same separation as multicols
 		\begin{tabular}{@{}llcll}			
-			{\tt CALL C,nn} & calls if {\tt CF} is set & &
-				{\tt CALL M,nn} & calls if {\tt SF} is set\\
-			{\tt CALL NC,nn} & calls if {\tt CF} is reset & &
-				{\tt CALL P,nn} & calls if {\tt SF} is reset\\
-			{\tt CALL Z,nn} & calls if {\tt ZF} is set & &
-				{\tt CALL PE,nn} & calls if {\tt PV} is set\\
-			{\tt CALL NZ,nn} & calls if {\tt ZF} is reset & &
-				{\tt CALL PO,nn} & calls if {\tt PV} is reset\\
+			{\tt CALL C,nn} & calls if \FlagCF{} is set & &
+				{\tt CALL M,nn} & calls if \FlagSF{} is set\\
+			{\tt CALL NC,nn} & calls if \FlagCF{} is reset & &
+				{\tt CALL P,nn} & calls if \FlagSF{} is reset\\
+			{\tt CALL Z,nn} & calls if \FlagZF{} is set & &
+				{\tt CALL PE,nn} & calls if \FlagPV{} is set\\
+			{\tt CALL NZ,nn} & calls if \FlagZF{} is reset & &
+				{\tt CALL PO,nn} & calls if \FlagPV{} is reset\\
 		\end{tabular}
 
 		If the given condition is met, {\tt CALL nn} is performed, as described above.
@@ -376,28 +455,167 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{CCF}
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{BRLC}{DE,B\ZXN}
+		{\IH{B}arrel \IH{R}otate \IH{L}eft \IH{C}ircular}
+		{\SymBRLC}
+
+		Rotates value in register pair {\tt DE} left for the amount given in bits 3-0 (low nibble) of register {\tt B}. To rotate right, use formula: {\tt B=16-places}. The result is stored in {\tt DE}.
+
+		\begin{DetailEffects}
+			\FlagsBRLC
+		\end{DetailEffects}
+
+		\begin{DetailTiming}
+			\DetailTime{2}{8}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{BSLA}{DE,B\ZXN}
+		{\IH{B}arrel \IH{S}hift \IH{L}eft \IH{A}rithmetic}
+		{\SymBSLA}
+
+		Performs shift left of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. The result is stored in {\tt DE}.
+
+		\begin{DetailEffects}
+			\FlagsBSLA
+		\end{DetailEffects}
+		
+		\begin{DetailTiming}
+			\DetailTime{2}{8}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{BSRA}{DE,B\ZXN}
+		{\IH{B}arrel \IH{S}hift \IH{R}ight \IH{A}rithmetic}
+		{\SymBSRA}
+
+		Performs arithmetical shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. The result is stored in {\tt DE}.
+
+		\begin{DetailEffects}
+			\FlagsBSRA
+		\end{DetailEffects}
+		
+		\begin{DetailTiming}
+			\DetailTime{2}{8}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{BSRF}{DE,B\ZXN}
+		{\IH{B}arrel \IH{S}hift \IH{R}ight \IH{F}ill-one}
+		{\SymBSRF}
+
+		Performs fill-one-way shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. The result is stored in {\tt DE}.
+
+		\begin{DetailEffects}
+			\FlagsBSRF
+		\end{DetailEffects}
+		
+		\begin{DetailTiming}
+			\DetailTime{2}{8}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{BSRL}{DE,B\ZXN}
+		{\IH{B}arrel \IH{S}hift \IH{R}ight \IH{L}ogical}
+		{\SymBSRL}
+
+		Performs logical shift right of the value in register pair {\tt DE} for the amount given in lower 5 bits of register {\tt B}. The result is stored in {\tt DE}.
+
+		\begin{DetailEffects}
+			\FlagsBSRL
+		\end{DetailEffects}
+		
+		\begin{DetailTiming}
+			\DetailTime{2}{8}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	% CALL instructions should be here in alphabetical order, but I placed them before B*** above so they can be in the same page spread
+	\DetailItemSeePageReference{CALL}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{CCF}{}
 		{\IH{C}omplement \IH{C}arry \IH{F}lag}
 		{\SymCCF}
 
-		Complements (inverts) carry flag {\tt CF}; if {\tt CF} was {\tt 0} it's now {\tt 1} and vice versa. Previous value of {\tt CF} is copied to {\tt HF}.
+		Complements (inverts) carry flag \FlagCF{}; if \FlagCF{} was {\tt 0} it's now {\tt 1} and vice versa. Previous value of \FlagCF{} is copied to \FlagHF{}.
 
 		\begin{DetailEffects}
 			\FlagsCCF
-			\DetailFlagsComments{
-				\item Documentation says original value of {\tt CF}, is copied to {\tt HF}, however my tests show that {\tt HF} remains unchanged
-			}
 		\end{DetailEffects}
+
+		
+		\begin{DetailEffectsFlags}
+			\DetailFlagHF[]{Documentation says original value of \FlagCF{} is copied to \FlagHF{}, however under my tests \FlagHF{} remained unchanged}
+			\DetailFlagCF[]{if \FlagCF{} was {\tt 0} it's now {\tt 1} and vice versa}
+		\end{DetailEffectsFlags}
 		
 		\begin{DetailTiming}
 			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
-	
+
 	\pagebreak
-	\label{DetailRefCP}
-	\begin{DetailItem}{CP s}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{CP}{s}
 		{\IH{C}om\IH{P}are}
 		{\SymCP{s}}
 
@@ -425,29 +643,165 @@ Where possible, multiple variants of same instruction are grouped together and w
 			CP IYL\UNDOC
 		\end{DetailVariants}
 
-		Operand {\tt s} or content of the memory location addressed by {\tt s} is subtracted from accumulator {\tt A}. Status flags are updated according to the result, but the result is then discarded (value of {\tt A} is not changed). Some general rules:
-
-		\begin{multicols}{2}
-			\begin{DetailCompactList}[Signed]
-				\item {\tt A=s}: {\tt ZF} set
-				\item {\tt A$\neq$s}: {\tt ZF} reset
-				\item {\tt A<s}: {\tt CF} set
-				\item {\tt A$\geqslant$s}: {\tt CF} reset	
-			\end{DetailCompactList}
-
-			\columnbreak
-			\begin{DetailCompactList}[Unsigned]
-				\item {\tt A=s}: {\tt ZF} set
-				\item {\tt A$\neq$s}: {\tt ZF} reset
-				\item {\tt A<s}: {\tt SF} and {\tt PV} different
-				\item {\tt A$\geqslant$s}: {\tt SF} and {\tt PV} the same				
-			\end{DetailCompactList}
-		\end{multicols}
+		Operand {\tt s} or content of the memory location addressed by {\tt s} is subtracted from accumulator {\tt A}. Status flags are updated according to the result, but the result is then discarded (value of {\tt A} is not changed).
 
 		\begin{DetailEffects}[v]
 			\FlagsCPr
 		\end{DetailEffects}
-		
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagHF{\DetailFlagResultHalfBorrow}*
+			\DetailFlagPV{
+				\DetailFlagsList{
+					\item {\tt A} and {\tt s} positive and {\tt A-s} result negative
+					\item {\tt A} and {\tt s} negative and {\tt A-s} result positve
+				}
+				\DetailFlagResultOverflowListBottomSpacing % we don't want additional space below the table, otherwise next item would have larger gap
+			}
+		\end{DetailEffectsFlags}
+
+		Other flags are set like this when {\tt A} is greater than, equal or less than {\tt s}:
+
+		\begin{DetailEffects}[v][]
+			\Flags[A$>$s]{0}{0}{\FS}{\FS}{1}{0}
+			\Flags[A$=$s]{0}{1}{\FS}{\FS}{1}{0}
+			\Flags[A$<$s]{1}{0}{\FS}{\FS}{1}{1}
+		\end{DetailEffects}
+
+		With this in mind, we can derive the programs for common comparisons:
+
+		\newcommand{\CPExampleTitle}[1]{{\tt #1}\vspace{-1.5ex}}
+
+		%-----------------------------------------------------------------------------------------------------
+		\begin{multicols}{2}
+			\CPExampleTitle{A=s}
+			\begin{tcblisting}{right skip=1em}
+	CP s
+	JP Z, true ; A=s?
+false: ; A!=s
+true:   ; A=s
+			\end{tcblisting}
+
+			\CPExampleTitle{A$\neq$s}
+			\begin{tcblisting}{}
+	CP s
+	JP NZ, true ; A!=s?
+false: ; A=s
+true:   ; A!=s
+			\end{tcblisting}
+		\end{multicols}
+
+		%-----------------------------------------------------------------------------------------------------
+		\begin{multicols}{2}
+			\CPExampleTitle{A$\leqslant$s}
+			\begin{tcblisting}{right skip=1em}
+	CP s
+	JP M, true  ; A<s?
+	JP Z, true  ; A=s?
+false: ; A>s
+true:   ; A<=s
+			\end{tcblisting}
+
+			\columnbreak
+			\CPExampleTitle{A<s}
+			\begin{tcblisting}{}
+	CP s
+	JP M, true ; A<s?
+false: ; A>=s
+true:   ; A<s
+			\end{tcblisting}
+		\end{multicols}
+
+		%-----------------------------------------------------------------------------------------------------
+		\begin{multicols}{2}
+			\CPExampleTitle{A$\geqslant$s}
+			\begin{tcblisting}{right skip=1em}
+	CP s
+	JP M, false ; A<s?
+true:   ; A>=s
+false: ; A<s
+			\end{tcblisting}
+
+			\columnbreak
+			\CPExampleTitle{A>s}
+			\begin{tcblisting}{}
+	CP s
+	JP M, false ; A<s?
+	JP Z, false ; A=s?
+true:   ; A>s
+false: ; A<=s
+			\end{tcblisting}
+		\end{multicols}
+
+		\DetailNote[-1ex]{
+			Note: the examples use two labels to emphasize both results. But only one is needed. Furthermore, depending on the actual needs, the programs can also use no label at all. For example, we can use {\tt RET} instead of {\tt JP} when used within a subroutine, and the desired outcome is to return if the condition is not met:
+		}
+
+		%-----------------------------------------------------------------------------------------------------
+		\begin{multicols}{2}
+			\CPExampleTitle{A=s}
+			\begin{tcblisting}{right skip=1em}
+	CP s
+	RET NZ ; A!=s?
+	; A=s
+			\end{tcblisting}
+
+			\CPExampleTitle{A$\neq$s}
+			\begin{tcblisting}{}
+	CP s
+	RET Z ; A=s?
+	; A!=s
+			\end{tcblisting}
+		\end{multicols}
+
+		%-----------------------------------------------------------------------------------------------------
+		\begin{multicols}{2}
+			\CPExampleTitle{A$\leqslant$s}
+			\begin{tcblisting}{right skip=1em}
+	CP s
+	JP M, true  ; A<s?
+	JP Z, true  ; A=s?
+	RET         ; A>s
+true:   ; A<=s
+			\end{tcblisting}
+
+			\columnbreak
+			\CPExampleTitle{A<s}
+			\begin{tcblisting}{}
+	CP s
+	RET P ; A>=s?
+	; A<s
+			\end{tcblisting}
+		\end{multicols}
+
+		%-----------------------------------------------------------------------------------------------------
+		\begin{multicols}{2}
+			\CPExampleTitle{A$\geqslant$s}
+			\begin{tcblisting}{right skip=1em}
+	CP s
+	RET M ; A<s?
+	; A>=s
+			\end{tcblisting}
+
+			\CPExampleTitle{A>s}
+			\begin{tcblisting}{}
+	CP s
+	RET M ; A<s?
+	RET Z ; A=s?
+	; A>s
+			\end{tcblisting}
+		\end{multicols}
+
+		\DetailNote[-1ex]{
+			Note: some of the comparisons are reversed. And {\tt A$\leqslant$s} still requires a label because the condition is true if either \FlagSF{} or \FlagZF{} is set.
+		}
+
+		\DetailNote{
+			Note: I opted to use \FlagSF{} for some of the comparisons. It makes more sense to me this way. But you can just as well use \FlagCF{} instead. As evident from the table on the previous page, both flags are updated the same way, so you could use {\tt JP C} or {\tt RET C} instead of {\tt M} and {\tt JP NZ} or {\tt RET NZ} instead of {\tt P}. This is due to {\tt CP} performing a subtraction {\tt A-s} internally. So when {\tt s} is greater than {\tt A}, the result of the subtraction is negative, meaning the sign flag is set. At the same time a borrow is needed, so the carry is set too. I thought it's worth mentioning since you may find examples using the carry flag elsewhere and wonder why.
+		}
+
+		\vspace{2ex} % some vertical gap between notes and timings
+
 		\begin{DetailTiming}
 			\DetailTime[r]{1}{4}
 			\DetailTime[n]{2}{7}
@@ -458,29 +812,16 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\end{DetailItem}
 
-	% this item is not in alphabetical order, should be behind CPIR, but we have empty space here and following set of instructions belong together so want to keep them on the same page
-	\label{DetailRefCPL}
-	\begin{DetailItem}{CPL}
-		{\IH{C}om\IH{PL}ement accumulator}
-		{\SymCPL}
-		% \bookmark[dest=details_cpl]{}
-
-		Complements (inverts) all bits of the accumulator {\tt A} and stores the result back to {\tt A}.
-
-		\begin{DetailEffects}
-			\FlagsCPL
-		\end{DetailEffects}
-		
-		\begin{DetailTiming}
-			\DetailTime{1}{4}
-		\end{DetailTiming}
-
-		\DetailNote{Note: {\tt CPL} is alphabetically after {\tt CPD}, {\tt CPDR}, {\tt CPI} and {\tt CPIR}, but is placed here to avoid empty space and to allow {\tt CPxx} instructions to be presented together}
-
-	\end{DetailItem}
-
 	\pagebreak
-	\begin{DetailItem}{CPD}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{CPD}{}
 		{\IH{C}om\IH{P}are and \IH{D}ecrement}
 		{\SymCPD}
 
@@ -488,11 +829,14 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		\begin{DetailEffects}
 			\FlagsCPD
-			\DetailFlagsComments{
-				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is decremented, reset otherwise
-				\item {\tt PV} set if {\tt BC$\neq$0} after execution, reset otherwise
-			}
 		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{{\tt A<(HL)} before {\tt HL} is decremented}
+			\DetailFlagZF{{\tt A=(HL)} before {\tt HL} is decremented}
+			\DetailFlagPV{{\tt BC$\neq$0} after execution}
+		\end{DetailEffectsFlags}
+
 
 		\begin{DetailTiming}
 			\DetailTime{4}{16}
@@ -500,20 +844,29 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{CPDR}
+		%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{CPDR}{}
 		{\IH{C}om\IH{P}are and \IH{D}ecrement \IH{R}epeated}
 		{\SymCPDR}
 
-		Repeats {\tt CPD} until either {\tt A=(HL)} or {\tt BC=0}. See {\tt CPIR} for example.
+		Repeats {\tt CPD} until either {\tt A=(HL)} or {\tt BC=0}. If {\tt BC} is set to {\tt 0} before instruction execution, it loops through 64KB if no match is found. See {\tt CPIR} for example.
 
 		\begin{DetailEffects}
 			\FlagsCPDR
-			\DetailFlagsComments{
-				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is decremented, reset otherwise
-				\item {\tt PV} set if {\tt BC$\neq$0} after execution, reset otherwise
-			}
 		\end{DetailEffects}
-				
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{{\tt A<(HL)} before {\tt HL} is decremented}
+			\DetailFlagZF{{\tt A=(HL)} before {\tt HL} is decremented}
+			\DetailFlagPV{{\tt BC$\neq$0} after execution}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTimeRegular[{\tt BC}=0 or {\tt A}={\tt (HL)}]{4}{16}
 			\DetailTimeRegular[{\tt BC}$\neq$0 and {\tt A}$\neq${\tt (HL)}]{5}{21}
@@ -522,7 +875,15 @@ Where possible, multiple variants of same instruction are grouped together and w
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{CPI}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{CPI}{}
 		{\IH{C}om\IH{P}are and \IH{I}ncrement}
 		{\SymCPI}
 
@@ -530,23 +891,32 @@ Where possible, multiple variants of same instruction are grouped together and w
 
 		\begin{DetailEffects}
 			\FlagsCPI
-			\DetailFlagsComments{
-				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is incremented, reset otherwise
-				\item {\tt PV} set if {\tt BC$\neq$0} after execution, rest otherwise
-			}
 		\end{DetailEffects}
-		
+				
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{{\tt A<(HL)} before {\tt HL} is decremented}
+			\DetailFlagZF{{\tt A=(HL)} before {\tt HL} is decremented}
+			\DetailFlagPV{{\tt BC$\neq$0} after execution}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{CPIR}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{CPIR}{}
 		{\IH{C}om\IH{P}are and \IH{D}ecrement \IH{R}epeated}
 		{\SymCPIR}
 
-		Repeats {\tt CPI} until either {\tt A=(HL)} or {\tt BC=0}.
+		Repeats {\tt CPI} until either {\tt A=(HL)} or {\tt BC=0}. If {\tt BC} is set to {\tt 0} before instruction execution, it loops through 64KB if no match is found.
 
 		Example, searching for {\tt \$AB} in memory from \MemAddr{0000}-\MemAddr{999}:
 
@@ -570,12 +940,14 @@ CPDR
 
 		\begin{DetailEffects}
 			\FlagsCPIR
-			\DetailFlagsComments{
-				\item {\tt ZF} set if {\tt A=(HL)} before {\tt HL} is incremented, reset otherwise
-				\item {\tt PV} set if {\tt BC$\neq$0} after execution, rest otherwise
-			}
 		\end{DetailEffects}
-				
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{{\tt A<(HL)} before {\tt HL} is decremented}
+			\DetailFlagZF{{\tt A=(HL)} before {\tt HL} is decremented}
+			\DetailFlagPV{{\tt BC$\neq$0} after execution}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTimeRegular[{\tt BC}=0 or {\tt A}={\tt (HL)}]{4}{16}
 			\DetailTimeRegular[{\tt BC}$\neq$0 and {\tt A}$\neq${\tt (HL)}]{5}{21}
@@ -583,25 +955,110 @@ CPDR
 
 	\end{DetailItem}
 
-	\DetailItemRef{CPL}{DetailRefCPL}
-
 	\pagebreak
-	\begin{DetailItem}{DAA}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	% by moving CPL to next page, we can have DAA fit the whole of the page. Otherwise last part (timing) doesn't fit the same page (it's still in the same spread, but this way it's nicer)
+	\DetailItemsSeePageReference{CPL}{See next page}
+
+	\begin{DetailItem}{DAA}{}
 		{\IH{D}ecimal \IH{A}djust \IH{A}ccumulator}
 		{}
 
 		Updates accumulator {\tt A} for BCD correction after arithmetic operations using the following algorithm:
 
 		\begin{enumerate}
-			\item If least significant 4 bits of {\tt A} (low nibble) contain invalid BCD number (greater than 9), or {\tt HF} is set, {\tt \$06} is added to {\tt A}
-			\item Then 4 most significant bits (high nibble) of {\tt A} are checked; if they contain invalid BCD number, or {\tt CF} is set, {\tt \$60} is added to {\tt A}
+			\item The least significant 4 bits of accumulator {\tt A} (low nibble) are checked first. If they contain invalid BCD number (greater than 9), or \FlagHF{} is set, the value of {\tt A} is adjusted based on the value of \FlagNF{}: if it's reset, {\tt \$06} is added to {\tt A}, if set, {\tt \$06} is removed from {\tt A}.
+			\item Then 4 most significant bits of accumulator {\tt A} (high nibble) are checked in a similar fashion. If they contain invalid BCD number, or \textbf{CF} is set, the value of {\tt A} is adjusted: if \FlagNF{} is not set, {\tt \$60} is added to {\tt A}, if \FlagNF{} is set, {\tt \$60} is removed from {\tt A}.
+			\item Finally flags are changed accordingly, as described below.
 		\end{enumerate}
+
+		% Symbolically, the algorithm could be expressed as:
+
+		% {
+		% 	\tt \small
+		% 	if (A$\wedge$\$0F>\$09)$\vee$(HF=1):\\
+		% 	\hspace*{1em}if NF=0:~A$\leftarrow$A+\$06~else:~A$\leftarrow$A-\$06\\
+		% 	if (A$\wedge$\$F0>\$90)$\vee$(CF=1):\\
+		% 	\hspace*{1em}if NF=0:~A$\leftarrow$A+\$60~else:~A$\leftarrow$A-\$60\\
+		% }
 		
 		\begin{DetailEffects}[p]
 			\FlagsDAA
-			\DetailFlagsComments{
-				\item {\tt CF} set if second addition was required
-			}
+		\end{DetailEffects}
+
+		\newcommand{\DAAIn}[1]{#1}
+		\newcommand{\DAAOut}[1]{\RArrow{6pt}#1}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign[A] after operation}
+			\DetailFlagZF{\DetailFlagResultZero[A] after operation}*
+			\DetailFlagHF[depends on:]{
+				input values of \FlagNF{}, \FlagHF{} and bits 0-3 of {\tt A}:
+				{
+					\tt
+					\begin{tabular}{ccc|c}
+						\DAAIn{NF} & \DAAIn{HF} & \DAAIn{A\textsubscript{{[}3-0{]}}} & \DAAOut{HF} \notet\noteb \\
+						\hline
+						0 & * & 0-9 & 0 \notet \\
+						0 & * & A-F & 1 \notet \\
+						1 & 0 & * & 0 \notet \\
+						1 & 1 & 0-5 & 1 \notet \\
+						1 & 1 & 6-F & 0 \notet\noteb \\
+					\end{tabular}
+				}
+			}*
+			\DetailFlagPV{\DetailFlagResultParity[A] after operation}
+		\end{DetailEffectsFlags}
+
+		\vspace*{-1ex} % using separate DetailEffectsFlags allows us to control vertical spacing between CF and PV
+		\begin{DetailEffectsFlags}
+			\DetailFlagCF[depends on:]{
+				input values of \textbf{CF} and both nibbles of {\tt A}:
+				{
+					\tt
+					\begin{tabular}{ccc|c}
+						\DAAIn{CF} & \DAAIn{A\textsubscript{{[}7-4{]}}} & \DAAIn{A\textsubscript{{[}3-0{]}}} & \DAAOut{CF} \notet\noteb \\
+						\hline
+						0 & 0-9 & 0-9 & 0 \notet \\
+						0 & 0-8 & A-F & 0 \notet \\
+						0 & 9-F & A-F & 1 \notet \\
+						0 & A-F & 0-9 & 1 \notet \\
+						1 & * & * & 1 \notet\noteb \\
+					\end{tabular}
+				}
+			}*
+		\end{DetailEffectsFlags}
+		
+		\begin{DetailTiming}
+			\DetailTime{1}{4}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{CPL}{}
+		{\IH{C}om\IH{PL}ement accumulator}
+		{\SymCPL}
+
+		Complements (inverts) all bits of the accumulator {\tt A} and stores the result back to {\tt A}.
+
+		\begin{DetailEffects}
+			\FlagsCPL
 		\end{DetailEffects}
 		
 		\begin{DetailTiming}
@@ -610,7 +1067,14 @@ CPDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{DEC s}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{DEC}{s}
 		{\IH{DEC}rement}
 		{\SymDEC{s}}
 
@@ -649,11 +1113,15 @@ CPDR
 		\begin{DetailEffects}[v]
 			\FlagsDECr[8-bit]
 			\FlagsDECrr[16-bit (no effect)]
-			\DetailFlagsComments{
-				\item 8-bit: {\tt PV} set if value was {\tt \$80} before decrementing
-			}
 		\end{DetailEffects}
-		
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF[8-bit only, set if:]{\DetailFlagResultSign}
+			\DetailFlagZF[8-bit only, set if:]{\DetailFlagResultZero}
+			\DetailFlagHF[8-bit only, set if:]{\DetailFlagResultHalfBorrow}
+			\DetailFlagPV[8-bit only, set if:]{value was {\tt \$80} before decrementing}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime[r]{1}{4}
 			\DetailTime[rr]{1}{6}
@@ -667,7 +1135,15 @@ CPDR
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{DI}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{DI}{}
 		{\IH{D}isable \IH{I}nterrupts}
 		{\SymDI}
 
@@ -683,11 +1159,18 @@ CPDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{DJNZ e}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{DJNZ}{e}
 		{\IH{D}ecrement {\tt B} and \IH{J}ump if \IH{N}ot \IH{Z}ero}
 		{\SymDJNZ{e}}
 
-		Decrements {\tt B} register and jumps to given relative address if {\tt B$\neq$0}. Given offset is added to the value of {\tt PC} after parsing {\tt DJNZ} instruction, so effective offset it {\tt -126} to {\tt +129}. Assembler automatically subtracts {\tt 2} from offset value {\tt e} to generate opcode.
+		Decrements {\tt B} register and jumps to the given relative address if {\tt B$\neq$0}. Given offset is added to the value of {\tt PC} after parsing {\tt DJNZ} instruction, so effective offset it {\tt -126} to {\tt +129}. Assembler automatically subtracts {\tt 2} from offset value {\tt e} to generate opcode.
 
 		\begin{DetailEffects}
 			\FlagsDJNZ
@@ -700,7 +1183,14 @@ CPDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{EI}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{EI}{}
 		{\IH{E}nable \IH{I}nterrupts}
 		{\SymEI}
 
@@ -717,7 +1207,15 @@ CPDR
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{EX d,s}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{EX}{d,s}
 		{\IH{EX}change register pair}
 		{\SymEX{d}{s}}
 
@@ -747,8 +1245,8 @@ CPDR
 		\end{tabular}\\[5pt] % some spacing between table and effects
 
 		\begin{DetailEffects}
-			\FlagsEXrr[No effect]
 			\FlagsEXaf[{\tt EX AF,AF'}]
+			\FlagsEXrr[Other variants no effect]
 			\DetailFlagsComments{
 				\item {\tt EX AF,AF'} sets flags directly from the value of {\tt F'}
 			}
@@ -763,7 +1261,14 @@ CPDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{EXX}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{EXX}{}
 		{\IH{EX}change alternate registers}
 		{\SymEXX}
 
@@ -780,7 +1285,15 @@ CPDR
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{HALT}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{HALT}{}
 		{\IH{HALT}}
 		{}
 
@@ -796,7 +1309,14 @@ CPDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{IM n}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{IM}{n}
 		{\IH{I}nterrupt \IH{M}ode}
 		{}
 
@@ -822,7 +1342,15 @@ CPDR
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{IN r,(s)}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{IN}{r,(s)}
 		{\IH{IN}put from port}
 		{\SymIN{r}{s}}
 
@@ -866,22 +1394,36 @@ IN A, (&FE)
 
 		\begin{DetailEffects}[p]
 			\FlagsINrc[\tt IN r,(C)]
-			\FlagsINan[{\tt IN A,(n)} (no effect)]
+			\FlagsINan[{\tt IN A,(n)} no effect]
 		\end{DetailEffects}
-						
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF[{\tt \small IN r,(C)}, set if:]{input data is negative (bit 7 is set)}
+			\DetailFlagZF[{\tt \small IN r,(C)}, set if:]{input data is {\tt 0}}
+			\DetailFlagPV[{\tt \small IN r,(C)}, set if:]{input data has even number of bits set}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime[r,(n)]{3}{11}
 			\DetailTime[r,(C)]{3}{12}
 		\end{DetailTiming}
 
-		\DetailNote{Note: {\tt IN (C)} (or its alternative form {\tt IN F,(C)}) variant performs an input, but does not store the result, only sets the flags.}
+		\DetailNote{Note: {\tt IN (C)} (or its alternative form {\tt IN F,(C)}) performs an input, but does not store the result, only sets the flags.}
 
 		\DetailNote[]{Note: some assemblers also allow {\tt (BC)} to be used instead of {\tt (C)}.}
 
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{INC s}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{INC}{s}
 		{\IH{INC}rement}
 		{\SymINC{s}}
 
@@ -918,11 +1460,15 @@ IN A, (&FE)
 		\begin{DetailEffects}[v]
 			\FlagsINCr[8-bit]
 			\FlagsINCrr[16-bit (no effect)]
-			\DetailFlagsComments{
-				\item 8-bit: {\tt PV} set if value was {\tt \$7F} before incrementing
-			}
 		\end{DetailEffects}
-				
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF[8-bit only, set if:]{\DetailFlagResultSign}
+			\DetailFlagZF[8-bit only, set if:]{\DetailFlagResultZero}
+			\DetailFlagHF[8-bit only, set if:]{\DetailFlagResultHalfCarry}
+			\DetailFlagPV[8-bit only, set if:]{value was {\tt \$7F} before incrementing}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime[r]{1}{6}
 			\DetailTime[rr]{1}{6}
@@ -935,8 +1481,19 @@ IN A, (&FE)
 
 	\end{DetailItem}
 
+	% with an empty page, we can achieve nice spreads for upcoming related instructions...
 	\pagebreak
-	\begin{DetailItem}{IND}
+	\IntentionallyEmpty
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{IND}{}
 		{\IH{IN}put and \IH{D}ecrement}
 		{\SymIND}
 
@@ -944,11 +1501,14 @@ IN A, (&FE)
 
 		\begin{DetailEffects}
 			\FlagsIND
-			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
-				\item {\tt ZF} set if {\tt B} becomes zero after decrementing, otherwise reset
-			}
 		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagZF{{\tt B} becomes zero after decrementing}
+			\DetailFlagHF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagPV[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+		\end{DetailEffectsFlags}
 				
 		\begin{DetailTiming}
 			\DetailTime{4}{16}
@@ -956,7 +1516,14 @@ IN A, (&FE)
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{INDR}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{INDR}{}
 		{\IH{IN}put and \IH{D}ecrement \IH{R}epeated}
 		{\SymINDR}
 
@@ -964,11 +1531,14 @@ IN A, (&FE)
 
 		\begin{DetailEffects}
 			\FlagsINDR
-			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
-			}
-			\end{DetailEffects}
-				
+		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagHF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagPV[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTimeRegular[{\tt B}=0]{4}{16}
 			\DetailTimeRegular[{\tt B}$\neq$0]{5}{21}
@@ -977,7 +1547,15 @@ IN A, (&FE)
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{INI}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{INI}{}
 		{\IH{IN}put and \IH{I}ncrement}
 		{\SymINI}
 
@@ -985,19 +1563,29 @@ IN A, (&FE)
 
 		\begin{DetailEffects}
 			\FlagsINI
-			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
-				\item {\tt ZF} set if {\tt B} becomes zero after decrementing, otherwise reset
-			}
-			\end{DetailEffects}
-				
+		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagZF{{\tt B} becomes zero after decrementing}
+			\DetailFlagHF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagPV[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{INIR}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{INIR}{}
 		{\IH{IN}put and \IH{I}ncrement \IH{R}epeated}
 		{\SymINIR}
 
@@ -1005,11 +1593,14 @@ IN A, (&FE)
 
 		\begin{DetailEffects}
 			\FlagsINIR
-			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
-			}
-			\end{DetailEffects}
-				
+		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagHF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagPV[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTimeRegular[{\tt B}=0]{4}{16}
 			\DetailTimeRegular[{\tt B}$\neq$0]{5}{21}
@@ -1018,7 +1609,15 @@ IN A, (&FE)
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{JP nn}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{JP}{nn}
 		{\IH{J}um\IH{P}}
 		{\SymJP{nn}}
 
@@ -1046,26 +1645,33 @@ IN A, (&FE)
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{JP c,nn}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{JP c,nn}{}
 		{\IH{J}um\IH{P} conditionally}
 		{\SymJPc{nn}}
 
-		\vspace{1ex} % we need some vertical space to achieve same separation as multicols
+		\vspace{1ex} % we need some vertical space to achieve same separation as with multicols
 		\begin{tabular}{@{}llcll}			
-			{\tt JP C,nn} & jumps if {\tt CF} is set & &
-				{\tt JP M,nn} & jumps if {\tt SF} is set\\
+			{\tt JP C,nn} & jumps if \FlagCF{} is set & &
+				{\tt JP M,nn} & jumps if \FlagSF{} is set\\
 
-			{\tt JP NC,nn} & jumps if {\tt CF} is reset & &
-				{\tt JP P,nn} & jumps if {\tt SF} is reset\\
+			{\tt JP NC,nn} & jumps if \FlagCF{} is reset & &
+				{\tt JP P,nn} & jumps if \FlagSF{} is reset\\
 
-			{\tt JP Z,nn} & jumps if {\tt ZF} is set & &
-				{\tt JP PE,nn} & jumps if {\tt PV} is set\\
+			{\tt JP Z,nn} & jumps if \FlagZF{} is set & &
+				{\tt JP PE,nn} & jumps if \FlagPV{} is set\\
 
-			{\tt JP NZ,nn} & jumps if {\tt ZF} is reset & &
-				{\tt JP PO,nn} & jumps if {\tt PV} is reset\\
+			{\tt JP NZ,nn} & jumps if \FlagZF{} is reset & &
+				{\tt JP PO,nn} & jumps if \FlagPV{} is reset\\
 		\end{tabular}
 
-		Conditionally jumps to the given absolute address. See {\tt CP} on page \pageref{DetailRefCP} for more details on comparisons.
+		Conditionally jumps to the given absolute address. See {\tt CP} on page \DetailItemPageRef{CP} for more details on comparisons.
 
 		\begin{DetailEffects}
 			\FlagsJPccnn
@@ -1077,13 +1683,22 @@ IN A, (&FE)
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{JP (C)\ZXN}
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{JP (C)}{\DetailItemZXN}
 		{\IH{J}um\IH{P}}
 		{\SymJPC}
 
 		Sets bottom 14 bits of current program counter {\tt PC}\See{*} to value read from I/O port: {\tt PC[13-0] = (IN (C) << 6)}. Can be used to execute code block read from a disk stream.
 		
-		\DetailNote[]{\See{*}``Current {\tt PC}'' is address of the next instruction after {\tt JP (C)}; {\tt PC} was already advanced after fetching {\tt JP (C)} instruction from memory. If {\tt JP (C)} instruction is located at the very end of 16K memory block (\MemAddr{..FE} or \MemAddr{..FF} address), then new {\tt PC} value will land into following 16K block.}
+		\DetailNote[]{\See{*}``Current {\tt PC}'' is the address of the next instruction after {\tt JP (C)}; {\tt PC} was already advanced after fetching {\tt JP (C)} instruction from memory. If {\tt JP (C)} instruction is located at the very end of 16K memory block (\MemAddr{..FE} or \MemAddr{..FF} address), then the new {\tt PC} value will land into the following 16K block.}
 
 		\begin{DetailEffects}
 			\FlagsJPc
@@ -1095,7 +1710,14 @@ IN A, (&FE)
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{JR e}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{JR}{e}
 		{\IH{J}ump \IH{R}elative}
 		{\SymJR{e}}
 		
@@ -1111,19 +1733,26 @@ IN A, (&FE)
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{JR c,n}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{JR c,n}{}
 		{\IH{J}ump \IH{R}elative conditionally}
 		{\SymJRc{c}{n}}
 
-		\vspace{1ex} % we need some vertical space to achieve same separation as multicols
-		\begin{tabular}{@{}ll}
-			{\tt JR C,e} & jumps if {\tt CF} is set\\
-			{\tt JR NC,e} & jumps if {\tt CF} is reset\\
-			{\tt JR Z,e} & jumps if {\tt ZF} is set\\
-			{\tt JR NZ,e} & jumps if {\tt ZF} is reset\\
+		\vspace{1ex} % we need some vertical space to achieve same separation as with multicols
+		\begin{tabular}{@{}llcll}
+			{\tt JR C,e} & jumps if \FlagCF{} is set & &
+				{\tt JR Z,e} & jumps if \FlagZF{} is set\\
+			{\tt JR NC,e} & jumps if \FlagCF{} is reset & &
+				{\tt JR NZ,e} & jumps if \FlagZF{} is reset\\
 		\end{tabular}
 		
-		Conditionally performs relative jump. Note: in contrast to {\tt JP}, {\tt JR} only supports above 4 conditions. See {\tt CP} on page \pageref{DetailRefCP} for more details on conditions.
+		Conditionally performs relative jump. Note: in contrast to {\tt JP}, {\tt JR} only supports above 4 conditions. See {\tt CP} on page \DetailItemPageRef{CP} for more details on conditions.
 
 		\begin{DetailEffects}
 			\FlagsJRccn
@@ -1137,7 +1766,15 @@ IN A, (&FE)
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{LD d,s}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{LD}{d,s}
 		{\IH{L}oa\IH{D}}
 		{\SymLD{d}{s}}
 
@@ -1250,7 +1887,17 @@ IN A, (&FE)
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{LDD}
+
+	% note: LDx instructions are not listed alphabetically, instead all "single" operation instructions are listed together on one page spread, while their "repeat" variants on the following page spread. I thought this would result in nicer direct comparison of the variants. Plus it fits better on the pages without excess empty space
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{LDD}{}
 		{\IH{L}oa\IH{D} and \IH{D}ecrement}		
 		{\SymLDD}
 
@@ -1258,10 +1905,11 @@ IN A, (&FE)
 
 		\begin{DetailEffects}
 			\FlagsLDD
-			\DetailFlagsComments{
-				\item {\tt PV} set if {\tt BC$\neq$0} after execution, reset otherwise
-			}
 		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagPV{{\tt BC$\neq$0} after execution}
+		\end{DetailEffectsFlags}
 				
 		\begin{DetailTiming}
 			\DetailTime{4}{16}
@@ -1269,109 +1917,14 @@ IN A, (&FE)
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{LDDR}
-		{\IH{L}oa\IH{D} and \IH{D}ecrement \IH{R}epeated}		
-		{\SymLDDR}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
 
-		Repeats {\tt LDD} until {\tt BC=0}. {\tt LDDR} can be used for block transfer. See {\tt LDIR} for an example and comparison of both instructions.
-
-		\begin{DetailEffects}
-			\FlagsLDDR
-		\end{DetailEffects}
-				
-		\begin{DetailTiming}
-			\DetailTimeRegular[{\tt BC}=0]{4}{16}
-			\DetailTimeRegular[{\tt BC}$\neq$0]{5}{21}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-
-	\DetailItemRef{LDDX, LDDRX}{DetailRefLDDX}
-
-	\begin{DetailItem}{LDI}
-		{\IH{L}oa\IH{D} and \IH{I}ncrement}		
-		{\SymLDI}
-
-		Same as {\tt LDD}, except it increments {\tt DE} and {\tt HL}.
-
-		\begin{DetailEffects}
-			\FlagsLDI
-			\DetailFlagsComments{
-				\item {\tt PV} reset if {\tt BC=0} after execution, set otherwise
-			}
-		\end{DetailEffects}
-				
-		\begin{DetailTiming}
-			\DetailTime{4}{16}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-
-	\begin{DetailItem}{LDIR}
-		{\IH{L}oa\IH{D} and \IH{I}ncrement \IH{R}epeated}		
-		{\SymLDIR}
-
-		Repeats {\tt LDI} until {\tt BC=0}. Example of copying 100 bytes from {\tt source} to {\tt destination} with {\tt LDIR} and {\tt LDDR}:
-
-		\begin{multicols}{2}
-			{\tt LDIR} = copy forward
-			\begin{tcblisting}{right skip=1em}
-LD HL, source
-LD DE, destination
-LD BC, 100
-LDIR
-			\end{tcblisting}
-			
-			{\tt LDDR} = copy backwards
-			\begin{tcblisting}{}
-LD HL, source+99
-LD DE, destination+99
-LD BC, 100
-LDDR
-			\end{tcblisting}
-		\end{multicols}
-
-		\begin{DetailEffects}
-			\FlagsLDIR
-		\end{DetailEffects}
-				
-		\begin{DetailTiming}
-			\DetailTimeRegular[{\tt BC}=0]{4}{16}
-			\DetailTimeRegular[{\tt BC}$\neq$0]{5}{21}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-
-	\DetailItemsRef{LDIX, LDIRX}{See pages \pageref{DetailRefLDIX} and \pageref{DetailRefLDIRX}}
-
-	% this item is not in alphabetical order, should be after LDPIRX, but we have empty space here and following set of instructions belong together so want to keep them on the same page
-	\label{DetailRefLDWS}
-	\begin{DetailItem}{LDWS\ZXN}
-		{\IH{L}oa\IH{D} \IH{W}asp \IH{S}pecial}
-		{\SymLDWS}
-
-		Copies the byte pointed to by {\tt HL} to the address pointed to by {\tt DE}. Then increments {\tt L} and {\tt D}. Used for vertically copying bytes to Layer 2 display.
-			
-		\begin{DetailEffects}[v]
-			\FlagsLDWS
-			\DetailFlagsComments{
-				\item {\tt PV} set if {\tt D} was {\tt \$7F} before increment, otherwise reset
-			}
-		\end{DetailEffects}
-				
-		\begin{DetailTiming}
-			\DetailTime{4}{14}
-		\end{DetailTiming}
-
-		\DetailNote{Note: the source data are read only from single 256B (aligned) block of memory, because only {\tt L} is incremented, not {\tt HL} pair.}
-
-		\DetailNote[]{Note: {\tt LDWS} is alphabetically after {\tt LDPIRX}, but is placed here to avoid empty space and to allow Next extended {\tt LDxx} instructions to be presented together}
-
-	\end{DetailItem}
-
-	\pagebreak
-	\label{DetailRefLDDX}
-	\begin{DetailItem}{LDDX\ZXN}
+	\begin{DetailItem}{LDDX}{\DetailItemZXN}
 		{\IH{L}oa\IH{D} and \IH{D}ecrement e\IH{X}tended}		
 		{\SymLDDX}
 
@@ -1392,26 +1945,41 @@ LDDR
 
 	\end{DetailItem}
 
-	\label{DetailRefLDDRX}
-	\begin{DetailItem}{LDDRX\ZXN}
-		{\IH{L}oa\IH{D} and \IH{D}ecrement \IH{R}epeated e\IH{X}tended}		
-		{\SymLDDRX}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
 
-		Works similar to {\tt LDDR} except the differences noted at {\tt LDDX} above.
+	\begin{DetailItem}{LDI}{}
+		{\IH{L}oa\IH{D} and \IH{I}ncrement}		
+		{\SymLDI}
+
+		Same as {\tt LDD}, except it increments {\tt DE} and {\tt HL}.
 
 		\begin{DetailEffects}
-			\FlagsLDDRX
+			\FlagsLDI
 		\end{DetailEffects}
-					
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagPV{{\tt BC$\neq$0} after execution}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
-			\DetailTimeRegular[{\tt BC}=0]{4}{16}
-			\DetailTimeRegular[{\tt BC}$\neq$0]{5}{21}
+			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
 
-	\label{DetailRefLDIX}
-	\begin{DetailItem}{LDIX\ZXN}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{LDIX}{\DetailItemZXN}
 		{\IH{L}oa\IH{D} and \IH{I}ncrement e\IH{X}tended}		
 		{\SymLDIX}
 
@@ -1431,8 +1999,142 @@ LDDR
 
 	\end{DetailItem}
 
-	\label{DetailRefLDIRX}
-	\begin{DetailItem}{LDIRX\ZXN}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	% this item is not in alphabetical order, should be after LDPIRX, but we have empty space here and following set of instructions belong together so want to keep them on the same page
+	\begin{DetailItem}{LDWS}{\DetailItemZXN}
+		{\IH{L}oa\IH{D} \IH{W}asp \IH{S}pecial}
+		{\SymLDWS}
+
+		Copies the byte pointed to by {\tt HL} to the address pointed to by {\tt DE}. Then increments {\tt L} and {\tt D}. Used for vertically copying bytes to Layer 2 display. Flags are identical to what the {\tt INC D} instrution would produce.
+			
+		\begin{DetailEffects}[v]
+			\FlagsLDWS
+		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign[D]}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagHF{\DetailFlagResultHalfCarry}
+			\DetailFlagPV{{\tt D} was {\tt \$7F} before incrementing}
+		\end{DetailEffectsFlags}
+
+		\begin{DetailTiming}
+			\DetailTime{4}{14}
+		\end{DetailTiming}
+
+		\DetailNote{Note: the source data are read from a single 256B (aligned) block of memory, because only {\tt L} is incremented, not the whole {\tt HL} pair.}
+
+	\end{DetailItem}
+
+	\pagebreak
+
+	% note: LDxR instructions are not listed alphabetically, instead all "single" operation instructions are listed together on one page spread, while their "repeat" variants on the following page spread. I thought this would result in nicer direct comparison of the variants. Plus it fits better on the pages without excess empty space
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{LDDR}{}
+		{\IH{L}oa\IH{D} and \IH{D}ecrement \IH{R}epeated}		
+		{\SymLDDR}
+
+		Repeats {\tt LDD} until {\tt BC=0}. {\tt LDDR} can be used for block transfer. See {\tt LDIR} on page \DetailItemPageRef{LDIR} for an example and comparison of both instructions.
+
+		\begin{DetailEffects}
+			\FlagsLDDR
+		\end{DetailEffects}
+				
+		\begin{DetailTiming}
+			\DetailTimeRegular[{\tt BC}=0]{4}{16}
+			\DetailTimeRegular[{\tt BC}$\neq$0]{5}{21}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{LDDRX}{\DetailItemZXN}
+		{\IH{L}oa\IH{D} and \IH{D}ecrement \IH{R}epeated e\IH{X}tended}		
+		{\SymLDDRX}
+
+		Works similar to {\tt LDDR} except the differences noted at {\tt LDDX} above.
+
+		\begin{DetailEffects}
+			\FlagsLDDRX
+		\end{DetailEffects}
+					
+		\begin{DetailTiming}
+			\DetailTimeRegular[{\tt BC}=0]{4}{16}
+			\DetailTimeRegular[{\tt BC}$\neq$0]{5}{21}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{LDIR}{}
+		{\IH{L}oa\IH{D} and \IH{I}ncrement \IH{R}epeated}		
+		{\SymLDIR}
+
+		Repeats {\tt LDI} until {\tt BC=0}. Example of copying 100 bytes from {\tt source} to {\tt destination} with {\tt LDIR} and {\tt LDDR}:
+
+		\begin{multicols}{2}
+			{\tt LDIR} = copy forward
+			\begin{tcblisting}{right skip=1em}
+LD HL, source
+LD DE, destination
+LD BC, 100
+LDIR
+			\end{tcblisting}
+			
+			\columnbreak
+			{\tt LDDR} = copy backwards
+			\begin{tcblisting}{}
+LD HL, source+99
+LD DE, destination+99
+LD BC, 100
+LDDR
+			\end{tcblisting}
+		\end{multicols}
+
+		\begin{DetailEffects}
+			\FlagsLDIR
+		\end{DetailEffects}
+				
+		\begin{DetailTiming}
+			\DetailTimeRegular[{\tt BC}=0]{4}{16}
+			\DetailTimeRegular[{\tt BC}$\neq$0]{5}{21}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{LDIRX}{\DetailItemZXN}
 		{\IH{L}oa\IH{D} and \IH{I}ncrement \IH{R}epeated e\IH{X}tended}		
 		{\SymLDIRX}
 
@@ -1449,9 +2151,15 @@ LDDR
 
 	\end{DetailItem}
 
-	\label{DetailRefLDPIRX}
-	\begin{DetailItem}{LDPIRX\ZXN}
-		{\IH{L}oa\IH{D} \IH{P}attern fill and \IH{I}ncrement e\IH{X}tended}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{LDPIRX}{\DetailItemZXN}
+		{\IH{L}oa\IH{D} \IH{P}attern fill and \IH{I}ncrement \IH{R}epeated e\IH{X}tended}
 		{\SymLDPIRX}
 
 		Similar to {\tt LDIRX} except the source byte address is not just {\tt HL}, but is obtained by using the top 13 bits of {\tt HL} and lower 3 bits of {\tt DE}. Furthermore {\tt HL} is not incremented during the loop; it serves as the base address of the aligned 8-byte lookup table. {\tt DE} works as destination and also wrapping index 0..7 into the table. This instruction is intended for ``pattern fill'' functionality.
@@ -1467,28 +2175,16 @@ LDDR
 
 	\end{DetailItem}
 
-	\DetailItemRef{LDWS}{DetailRefLDWS}
-
 	\pagebreak
-	\begin{DetailItem}{MIRROR A\ZXN}
-		{\IH{MIRROR} bits}
-		{\SymMIRROR{A}}
 
-		Mirrors (reverses the order) of bits in the accumulator {\tt A}.
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
 
-		\begin{DetailEffects}
-			\FlagsMIRRORa
-		\end{DetailEffects}
-				
-		\begin{DetailTiming}
-			\DetailTime{2}{8}
-		\end{DetailTiming}
-
-		\DetailNote{Note: Older core versions also supported {\tt MIRROR DE}, but this was removed.}
-
-	\end{DetailItem}
-
-	\begin{DetailItem}{MUL D,E\ZXN}
+	\begin{DetailItem}{MUL}{D,E\ZXN}
 		{\IH{MUL}tiply}
 		{\SymMUL}
 
@@ -1504,23 +2200,45 @@ LDDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{NEG}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{NEG}{}
 		{\IH{NEG}ate}
 		{\SymNEG}
 
-		Negates contents of the accumulator {\tt A} and stores result back to {\tt A}.
+		Negates contents of the accumulator {\tt A} and stores result back to {\tt A}. You can also think of the operation as subtracting the value of {\tt A} from {\tt 0} ({\tt A$\leftarrow$0-A}). This way it might be easier to understand effects on flags.
 
 		\begin{DetailEffects}[p]
 			\FlagsNEG
 		\end{DetailEffects}
-				
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagHF{\DetailFlagResultHalfBorrow}
+			\DetailFlagPV{{\tt A} was {\tt \$80} before operation}
+			\DetailFlagCF{{\tt A} was not {\tt \$00} before operation}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime{2}{8}
 		\end{DetailTiming}
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{\small NEXTREG n,s{\scriptsize \ZXN}}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{NEXTREG}{n,s\ZXN}
 		{set \IH{NEXT} \IH{REG}ister value}
 		{\SymNEXTREG{s}}
 
@@ -1543,7 +2261,16 @@ LDDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{NOP}
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{NOP}{}
 		{\IH{N}o \IH{OP}eration}
 		{}
 
@@ -1559,7 +2286,14 @@ LDDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{OR s}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{OR}{s}
 		{bitwise \IH{OR}}
 		{\SymOR{s}}
 
@@ -1607,6 +2341,12 @@ LDDR
 		\begin{DetailEffects}[p]
 			\FlagsORr
 		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagPV{\DetailFlagResultParity}
+		\end{DetailEffectsFlags}
 				
 		\begin{DetailTiming}
 			\DetailTime[r]{1}{4}
@@ -1619,18 +2359,29 @@ LDDR
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{OTDR}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{OTDR}{}
 		{\IH{O}u\IH{T}put and \IH{D}ec\IH{R}ement}
 		{\SymOTDR}
 
-		Repeats {\tt OUTD} (see page \pageref{DetailRefOUTD}) until {\tt B=0}. Similar to {\tt OTIR} except {\tt HL} is decremented instead of incremented.
+		Repeats {\tt OUTD} (see page \DetailItemPageRef{OUTD}) until {\tt B=0}. Similar to {\tt OTIR} except {\tt HL} is decremented instead of incremented.
 
 		\begin{DetailEffects}
 			\FlagsOTDR
-			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
-			}
 		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagHF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagPV[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+		\end{DetailEffectsFlags}
 				
 		\begin{DetailTiming}
 			\DetailTimeRegular[{\tt B}=0]{4}{16}
@@ -1639,28 +2390,111 @@ LDDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{OTIR}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{OTIR}{}
 		{\IH{O}u\IH{T}put and \IH{I}nc\IH{R}ement}
 		{\SymOTIR}
 
-		Repeats {\tt OUTI} (see page \pageref{DetailRefOUTI}) until {\tt B=0}. Similar to {\tt OTDR} except {\tt HL} is incremented instead of decremented.
+		Repeats {\tt OUTI} (see page \DetailItemPageRef{OUTI}) until {\tt B=0}. Similar to {\tt OTDR} except {\tt HL} is incremented instead of decremented.
 
 		\begin{DetailEffects}
 			\FlagsOTIR
-			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
-			}
 		\end{DetailEffects}
-				
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagHF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagPV[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTimeRegular[{\tt B}=0]{4}{16}
 			\DetailTimeRegular[{\tt B}$\neq$0]{5}{21}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	% we want to keep OUTI and OUTD on the same page spread as their block repeat variants above
+	\DetailItemSeePageReference{OUT}
+
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{OUTD}{}
+		{\IH{OUT}put and \IH{D}ecrement}
+		{\SymOUTD}
+
+		Outputs the value from contents of memory addressed by {\tt HL} to port on address {\tt BC}. Then decrements both, {\tt HL} and {\tt B}.
+
+		\begin{DetailEffects}
+			\FlagsOUTD
+		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagZF{{\tt B=0} after decrement}
+			\DetailFlagHF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagPV[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+		\end{DetailEffectsFlags}
+
+		\begin{DetailTiming}
+			\DetailTime{4}{16}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{OUTI}{}
+		{\IH{OUT}put and \IH{I}ncrement}
+		{\SymOUTI}
+
+		Similar to {\tt OUTD} except {\tt HL} is incremented.
+		
+		\begin{DetailEffects}
+			\FlagsOUTI
+		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagZF{{\tt B=0} after decrement}
+			\DetailFlagHF[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+			\DetailFlagPV[]{destroyed on Next, Z80 see \XRef{z80_undocumented_instructions_io_block}}
+		\end{DetailEffectsFlags}
+
+		\begin{DetailTiming}
+			\DetailTime{4}{16}
 		\end{DetailTiming}
 
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{OUT (d),s}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{OUT}{(d),s}
 		{\IH{OUT}put to port}
 		{\SymOUT{d}{s}}
 
@@ -1671,12 +2505,12 @@ LDDR
 			OUT (C),A\\
 			OUT (C),B\\
 			OUT (C),C\\
-			OUT (C),D\\
-			OUT (C),E\\
-			OUT (C),H\\
-			OUT (C),L
+			OUT (C),D
 
 			\columnbreak
+			OUT (C),E\\
+			OUT (C),H\\
+			OUT (C),L\\
 			OUT (C),0\UNDOC
 		\end{DetailVariants}
 
@@ -1704,50 +2538,14 @@ LDDR
 
 	\end{DetailItem}
 
-	\label{DetailRefOUTD}
-	\begin{DetailItem}{OUTD}
-		{\IH{OUT}put and \IH{D}ecrement}
-		{\SymOUTD}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
 
-		Outputs the value from contents of memory addressed by {\tt HL} to port on address {\tt BC}. Then decrements both, {\tt HL} and {\tt B}.
-
-		\begin{DetailEffects}
-			\FlagsOUTD
-			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
-				\item {\tt ZF} set if {\tt B=0} after decrement, reset otherwise
-			}
-		\end{DetailEffects}
-				
-		\begin{DetailTiming}
-			\DetailTime{4}{16}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-
-	\pagebreak
-	\label{DetailRefOUTI}
-	\begin{DetailItem}{OUTI}
-		{\IH{OUT}put and \IH{I}ncrement}
-		{\SymOUTI}
-
-		Similar to {\tt OUTD} (see page \pageref{DetailRefOUTD}) except {\tt HL} is incremented.
-		
-		\begin{DetailEffects}
-			\FlagsOUTI
-			\DetailFlagsComments{
-				\item {\tt SF}, {\tt HF} and {\tt PV} are destroyed on Next, for other Z80 computers see \XRef{z80_undocumented_instructions_io_block}
-				\item {\tt ZF} set if {\tt B=0} after decrement, reset otherwise
-			}
-		\end{DetailEffects}
-				
-		\begin{DetailTiming}
-			\DetailTime{4}{16}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-
-	\begin{DetailItem}{OUTINB\ZXN}
+	\begin{DetailItem}{OUTINB}{\DetailItemZXN}
 		{\IH{OUT}put and \IH{I}ncrement with \IH{N}o \IH{B}}
 		{\SymOUTINB}
 
@@ -1763,7 +2561,16 @@ LDDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{PIXELAD\ZXN}
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{PIXELAD}{\DetailItemZXN}
 		{\IH{PIXEL} \IH{AD}dress}
 		{\SymPIXELAD}
 
@@ -1778,9 +2585,15 @@ LDDR
 		\end{DetailTiming}
 
 	\end{DetailItem}
-	
-	\pagebreak
-	\begin{DetailItem}{PIXELDN\ZXN}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{PIXELDN}{\DetailItemZXN}
 		{\IH{PIXEL} \IH{D}ow\IH{N}}
 		{\SymPIXELDN}
 
@@ -1796,7 +2609,16 @@ LDDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{POP rr}
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{POP}{rr}
 		{\IH{POP} from stack}
 		{\SymPOP{rr}}
 
@@ -1817,8 +2639,8 @@ LDDR
 		Copies 2 bytes from stack pointer {\tt SP} into contents of the given register pair {\tt ss} and increments {\tt SP} by {\tt 2}.
 
 		\begin{DetailEffects}
-			\FlagsPOPrr[No effect]
 			\FlagsPOPaf[{\tt POP AF}]
+			\FlagsPOPrr[Other variants no effect]
 			\DetailFlagsComments{
 				\item {\tt POP AF} flags set directly to low 8-bits of the value from {\tt SP}
 			}
@@ -1832,8 +2654,14 @@ LDDR
 
 	\end{DetailItem}
 
-	\pagebreak
-	\begin{DetailItem}{PUSH ss}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{PUSH}{ss}
 		{\IH{PUSH} on stack}
 		{\SymPUSH{ss}}
 
@@ -1866,7 +2694,16 @@ LDDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{RES b,s}
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RES}{b,s}
 		{\IH{RES}et bit}
 		{\SymRES{s}}
 
@@ -1918,7 +2755,15 @@ LDDR
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{RET}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RET}{}
 		{\IH{RET}urn from subroutine}
 		{\SymRET}
 
@@ -1934,20 +2779,27 @@ LDDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{RET c}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RET c}{}
 		{\IH{RET}urn from subroutine conditionally}
 		{\SymRETc{c}}
 
 		\vspace{1ex} % we need some vertical space to achieve same separation as multicols
 		\begin{tabular}{@{}llcll}
-			{\tt RET C,nn} & returns if {\tt CF} is set & & 
-				{\tt RET M,nn} & returns if {\tt SF} is set\\
-			{\tt RET NC,nn} & returns if {\tt CF} is reset & & 
-				{\tt RET P,nn} & returns if {\tt SF} is reset\\
-			{\tt RET Z,nn} & returns if {\tt ZF} is set & & 
-				{\tt RET PE,nn} & returns if {\tt PV} is set\\
-			{\tt RET NZ,nn} & returns if {\tt ZF} is reset & & 
-				{\tt RET PO,nn} & returns if {\tt PV} is reset\\
+			{\tt RET C,nn} & returns if \FlagCF{} is set & & 
+				{\tt RET M,nn} & returns if \FlagSF{} is set\\
+			{\tt RET NC,nn} & returns if \FlagCF{} is reset & & 
+				{\tt RET P,nn} & returns if \FlagSF{} is reset\\
+			{\tt RET Z,nn} & returns if \FlagZF{} is set & & 
+				{\tt RET PE,nn} & returns if \FlagPV{} is set\\
+			{\tt RET NZ,nn} & returns if \FlagZF{} is reset & & 
+				{\tt RET PO,nn} & returns if \FlagPV{} is reset\\
 		\end{tabular}
 
 		If given condition is met, {\tt RET} is performed, as described above.
@@ -1963,7 +2815,16 @@ LDDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{RETI}
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RETI}{}
 		{\IH{RET}urn from \IH{I}nterrupt}
 		{\SymRETI}
 
@@ -1981,8 +2842,14 @@ LDDR
 
 	\end{DetailItem}
 
-	\pagebreak
-	\begin{DetailItem}{RETN}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RETN}{}
 		{\IH{RET}urn from \IH{N}on-maskable interrupt}
 		{\SymRETN}
 
@@ -1998,7 +2865,16 @@ LDDR
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{RL s}
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RL}{s}
 		{\IH{R}otate \IH{L}eft}
 		{\SymRL{s}}
 
@@ -2033,12 +2909,19 @@ LDDR
 			RL (IY+d),L\UNDOC
 		\end{DetailVariants}
 
-		Performs 9-bit left rotation of the value of the operand {\tt s} or memory addressed by {\tt s} through the carry flag {\tt CF} so that contents of {\tt CF} are moved to bit {\tt 0} and bit {\tt 7} to {\tt CF}. Result is then stored back to {\tt s}.
+		Performs 9-bit left rotation of the value of the operand {\tt s} or memory addressed by {\tt s} through the carry flag \FlagCF{} so that contents of \FlagCF{} are moved to bit {\tt 0} and bit {\tt 7} to \FlagCF{}. Result is then stored back to {\tt s}.
 
 		\begin{DetailEffects}[p]
 			\FlagsRLr
 		\end{DetailEffects}
-						
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagPV{\DetailFlagResultParity}
+			\DetailFlagCF[set to:]{bit {\tt 7} of the original value}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime[r]{2}{8}
 			\DetailTime[(HL)]{4}{15}
@@ -2048,24 +2931,43 @@ LDDR
 
 	\end{DetailItem}
 
-	\pagebreak
-	\begin{DetailItem}{RLA}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RLA}{}
 		{\IH{R}otate \IH{L}eft \IH{A}ccumulator}
 		{\SymRL{A}}
 
-		Performs {\tt RL A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
+		Performs {\tt RL A}, but twice faster and preserves \FlagSF{}, \FlagZF{} and \FlagPV{}.
 
 		\begin{DetailEffects}
 			\FlagsRLA
 		\end{DetailEffects}
-						
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagCF[set to:]{bit {\tt 7} of the original value}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
-	
-	\begin{DetailItem}{RLC s}
+
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RLC}{s}
 		{\IH{R}otate \IH{L}eft \IH{C}ircular}
 		{\SymRLC{s}}
 
@@ -2100,7 +3002,7 @@ LDDR
 			RLC (IY+d),L\UNDOC
 		\end{DetailVariants}
 
-		Performs 8-bit rotation to the left. Bit {\tt 7} is moved to carry flag {\tt CF} as well as to bit {\tt 0}. Result is then stored back to {\tt s}.
+		Performs 8-bit rotation to the left. Bit {\tt 7} is moved to carry flag \FlagCF{} as well as to bit {\tt 0}. Result is then stored back to {\tt s}.
 
 		Note: undocumented variants work slightly differently:
 
@@ -2113,7 +3015,14 @@ LDDR
 		\begin{DetailEffects}[p]
 			\FlagsRLCr
 		\end{DetailEffects}
-						
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagPV{\DetailFlagResultParity}
+			\DetailFlagCF[set to:]{bit {\tt 7} of the original value}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime[r]{2}{8}
 			\DetailTime[(HL)]{4}{15}
@@ -2124,29 +3033,214 @@ LDDR
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{RLCA}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RLCA}{}
 		{\IH{R}otate \IH{L}eft \IH{C}ircular \IH{A}ccumulator}
 		{\SymRLC{A}}
 		
-		Performs {\tt RLC A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
+		Performs {\tt RLC A}, but twice faster and preserves \FlagSF{}, \FlagZF{} and \FlagPV{}.
 
 		\begin{DetailEffects}
 			\FlagsRLCA
 		\end{DetailEffects}
-						
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagCF[set to:]{bit {\tt 7} of the original value}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime{1}{4}
 		\end{DetailTiming}
 
 	\end{DetailItem}
 
-	\label{DetailRefRLD}
-	\begin{DetailItem}{RLD}
+	% RLD and RRD are similar instructions, so while RLD would alphabetically fit here, moving it on the same page spread with RRD allows direct comparison between the two
+	\DetailItemSeePageReference{RLD}
+
+	% % these instructions were moved before backwards so they can be all together on the same page spread for better direct comparison
+	% \DetailItemsSeePageReference{RR, RRA, RRC, RRCA}{See pages \DetailItemPageRef{RR} and \DetailItemPageRef{RRCA}}
+
+	% \pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RR}{s}
+		{\IH{R}otate \IH{R}ight}
+		{\SymRR{s}}
+
+		\begin{DetailVariants}
+			RR A\\
+			RR B\\
+			RR C\\
+			RR D\\
+			RR E\\
+			RR H\\
+			RR L\\
+			RR (HL)\\
+			RR (IX+d)\\
+			RR (IY+d)
+
+			\columnbreak
+			RR (IX+d),A\UNDOC\\
+			RR (IX+d),B\UNDOC\\
+			RR (IX+d),C\UNDOC\\
+			RR (IX+d),D\UNDOC\\
+			RR (IX+d),E\UNDOC\\
+			RR (IX+d),H\UNDOC\\
+			RR (IX+d),L\UNDOC
+
+			\columnbreak
+			RR (IY+d),A\UNDOC\\
+			RR (IY+d),B\UNDOC\\
+			RR (IY+d),C\UNDOC\\
+			RR (IY+d),D\UNDOC\\
+			RR (IY+d),E\UNDOC\\
+			RR (IY+d),H\UNDOC\\
+			RR (IY+d),L\UNDOC
+		\end{DetailVariants}
+
+		Performs 9-bit right rotation of the contents of the operand {\tt s} or memory addressed by {\tt s} through carry flag \FlagCF{} so that contents of \FlagCF{} are moved to bit {\tt 7} and bit {\tt 0} to \FlagCF{}. Result is then stored back to {\tt s}.
+
+		\begin{DetailEffects}[p]
+			\FlagsRRr
+		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagPV{\DetailFlagResultParity}
+			\DetailFlagCF[set to:]{bit {\tt 0} of the original value}
+		\end{DetailEffectsFlags}
+
+		\begin{DetailTiming}
+			\DetailTime[r]{2}{8}
+			\DetailTime[(HL)]{4}{15}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RRA}{}
+		{\IH{R}otate \IH{R}ight \IH{A}ccumulator}
+		{\SymRR{A}}
+
+		Performs {\tt RR A}, but twice faster and preserves \FlagSF{}, \FlagZF{} and \FlagPV{}.
+
+		\begin{DetailEffects}
+			\FlagsRRA
+		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagCF[set to:]{bit {\tt 0} of the original value}
+		\end{DetailEffectsFlags}
+
+		\begin{DetailTiming}
+			\DetailTime{1}{4}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RRC}{s}
+		{\IH{R}otate \IH{R}ight \IH{C}ircular}
+		{\SymRRC{s}}
+
+		\begin{DetailVariants}
+			RRC A\\
+			RRC B\\
+			RRC C\\
+			RRC D\\
+			RRC E\\
+			RRC H\\
+			RRC L\\
+			RRC (HL)\\
+			RRC (IX+d)\\
+			RRC (IY+d)
+
+			\columnbreak
+			RRC (IX+d),A\UNDOC\\
+			RRC (IX+d),B\UNDOC\\
+			RRC (IX+d),C\UNDOC\\
+			RRC (IX+d),D\UNDOC\\
+			RRC (IX+d),E\UNDOC\\
+			RRC (IX+d),H\UNDOC\\
+			RRC (IX+d),L\UNDOC
+
+			\columnbreak
+			RRC (IY+d),A\UNDOC\\
+			RRC (IY+d),B\UNDOC\\
+			RRC (IY+d),C\UNDOC\\
+			RRC (IY+d),D\UNDOC\\
+			RRC (IY+d),E\UNDOC\\
+			RRC (IY+d),H\UNDOC\\
+			RRC (IY+d),L\UNDOC
+		\end{DetailVariants}
+
+		Performs 8-bit rotation of the source {\tt s} to the right. Bit {\tt 0} is moved to \FlagCF{} as well as to bit {\tt 7}. Result is then stored back to {\tt s}.
+
+		\begin{DetailEffects}[p]
+			\FlagsRRCr
+		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagPV{\DetailFlagResultParity}
+			\DetailFlagCF[set to:]{bit {\tt 0} of the original value}
+		\end{DetailEffectsFlags}
+
+		\begin{DetailTiming}
+			\DetailTime[r]{2}{8}
+			\DetailTime[(HL)]{4}{15}
+			\DetailTime[(IX+d)]{6}{23}
+			\DetailTime[(IY+d)]{6}{23}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	\pagebreak
+
+	% while RRCA should alphabetically be before RLD, I opted for this changed order so that both RLD and RRD are rendered at the top of their pages - easier to compare both this way
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RLD}{}
 		{\IH{R}otate \IH{L}eft bcd \IH{D}igit}
 		{\SymRLD}
 
 		Performs leftward 12-bit rotation of 4-bit nibbles where 2 least significant nibbles are stored in memory location addressed by {\tt HL} and most significant digit as lower 4 bits of the accumulator {\tt A}.
-        
+
 		If used with BCD numbers: as the shift happens by 1 digit to the left, this effectively results in multiplication with {\tt 10}. {\tt A} acts as a sort of decimal carry in the operation. Example of multiplying multi-digit BCD number by 10:
 
 		\begin{tabular}{m{8cm}p{0.1cm}m{4.3cm}}
@@ -2232,70 +3326,31 @@ digits = &-number   ;(2)
 			\DetailTime{5}{18}
 		\end{DetailTiming}
 
-		\DetailNote{Note: instruction doesn't assume any format of the data; it simply rotates nibbles. So while it's most frequently associated with BCD numbers, it can be used for shifting hexadecimal values (in which case it would represent multiplication by {\tt 16}) or any other content.}
+		\DetailNote{Note: instruction doesn't assume any format of the data; it simply rotates nibbles. So while it's most frequently associated with BCD numbers, it can be used for shifting hexadecimal values or any other content.}
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{RR s}
-		{\IH{R}otate \IH{R}ight}
-		{\SymRR{s}}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
 
-		\begin{DetailVariants}
-			RR A\\
-			RR B\\
-			RR C\\
-			RR D\\
-			RR E\\
-			RR H\\
-			RR L\\
-			RR (HL)\\
-			RR (IX+d)\\
-			RR (IY+d)
+	\begin{DetailItem}{RRCA}{}
+		{\IH{R}otate \IH{R}ight \IH{C}ircular \IH{A}ccumulator}
+		{\SymRRC{A}}
 
-			\columnbreak
-			RR (IX+d),A\UNDOC\\
-			RR (IX+d),B\UNDOC\\
-			RR (IX+d),C\UNDOC\\
-			RR (IX+d),D\UNDOC\\
-			RR (IX+d),E\UNDOC\\
-			RR (IX+d),H\UNDOC\\
-			RR (IX+d),L\UNDOC
-
-			\columnbreak
-			RR (IY+d),A\UNDOC\\
-			RR (IY+d),B\UNDOC\\
-			RR (IY+d),C\UNDOC\\
-			RR (IY+d),D\UNDOC\\
-			RR (IY+d),E\UNDOC\\
-			RR (IY+d),H\UNDOC\\
-			RR (IY+d),L\UNDOC
-		\end{DetailVariants}
-
-		Performs 9-bit right rotation of the contens of the operand {\tt s} or memory addressed by {\tt s} through carry flag {\tt CF} so that contents of {\tt CF} are moved to bit {\tt 7} and bit {\tt 0} to {\tt CF}. Result is then stored back to {\tt s}.
-
-		\begin{DetailEffects}[p]
-			\FlagsRRr
-		\end{DetailEffects}
-						
-		\begin{DetailTiming}
-			\DetailTime[r]{2}{8}
-			\DetailTime[(HL)]{4}{15}
-			\DetailTime[(IX+d)]{6}{23}
-			\DetailTime[(IY+d)]{6}{23}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-
-	\begin{DetailItem}{RRA}
-		{\IH{R}otate \IH{R}ight \IH{A}ccumulator}
-		{\SymRR{A}}
-
-		Performs {\tt RR A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
+		Performs {\tt RRC A}, but twice faster and preserves \FlagSF{}, \FlagZF{} and \FlagPV{}.
 
 		\begin{DetailEffects}
-			\FlagsRRA
+			\FlagsRRCA
 		\end{DetailEffects}
-						
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagCF[set to:]{bit {\tt 0} of the original value}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime{1}{4}
 		\end{DetailTiming}
@@ -2303,79 +3358,20 @@ digits = &-number   ;(2)
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{RRC s}
-		{\IH{R}otate \IH{R}ight \IH{C}ircular}
-		{\SymRRC{s}}
 
-		\begin{DetailVariants}
-			RRC A\\
-			RRC B\\
-			RRC C\\
-			RRC D\\
-			RRC E\\
-			RRC H\\
-			RRC L\\
-			RRC (HL)\\
-			RRC (IX+d)\\
-			RRC (IY+d)
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
 
-			\columnbreak
-			RRC (IX+d),A\UNDOC\\
-			RRC (IX+d),B\UNDOC\\
-			RRC (IX+d),C\UNDOC\\
-			RRC (IX+d),D\UNDOC\\
-			RRC (IX+d),E\UNDOC\\
-			RRC (IX+d),H\UNDOC\\
-			RRC (IX+d),L\UNDOC
-
-			\columnbreak
-			RRC (IY+d),A\UNDOC\\
-			RRC (IY+d),B\UNDOC\\
-			RRC (IY+d),C\UNDOC\\
-			RRC (IY+d),D\UNDOC\\
-			RRC (IY+d),E\UNDOC\\
-			RRC (IY+d),H\UNDOC\\
-			RRC (IY+d),L\UNDOC
-		\end{DetailVariants}
-
-		Performs 8-bit rotation of the source {\tt s} to the right. Bit {\tt 0} is moved to {\tt CF} as well as to bit {\tt 7}. Result is then stored back to {\tt s}.
-
-		\begin{DetailEffects}[p]
-			\FlagsRRCr
-		\end{DetailEffects}
-						
-		\begin{DetailTiming}
-			\DetailTime[r]{2}{8}
-			\DetailTime[(HL)]{4}{15}
-			\DetailTime[(IX+d)]{6}{23}
-			\DetailTime[(IY+d)]{6}{23}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-
-	\begin{DetailItem}{RRCA}
-		{\IH{R}otate \IH{R}ight \IH{C}ircular \IH{A}ccumulator}
-		{\SymRRC{A}}
-
-		Performs {\tt RRC A}, but twice faster and preserves {\tt SF} and {\tt ZF}.
-
-		\begin{DetailEffects}
-			\FlagsRRCA
-		\end{DetailEffects}
-						
-		\begin{DetailTiming}
-			\DetailTime{1}{4}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-
-	\begin{DetailItem}{RRD}
+	\begin{DetailItem}{RRD}{}
 		{\IH{R}otate \IH{R}ight bcd \IH{D}igit}
 		{\SymRRD}
 		
-		Similar to {\tt RLD} (page \pageref{DetailRefRLD}) except rotation is to the right. If used with BCD values, this operation effectively divides 3-digit BCD number by {\tt 10} and stores remainder in {\tt A}. Taking the example from {\tt RLD}, we can easily convert it to division by 10 simply by using {\tt RRD}. Note however we also need to change the order - we start from MSB now (which is exactly how division would be performed by hand):
+		Similar to {\tt RLD} except rotation is to the right. If used with BCD values, this operation effectively divides 3-digit BCD number by {\tt 10} and stores remainder in {\tt A}. Taking the example from {\tt RLD}, we can easily convert it to division by 10 simply by using {\tt RRD}. Note however we also need to change the order - we start from MSB now (which is exactly how division would be performed by hand):
 
-		\pagebreak % we need this break as otherwise LaTeX gets confused due to page break and renders tcblisting very weird - no homogenous background etc. Remove it if future updates allow RRD from being displayed without a page break!
 		\begin{tabular}{m{8cm}p{0.1cm}m{4.3cm}}
 
 			{ % tcblisting must be enclosed within {} inside tabular otherwise latex compiler gets confused
@@ -2459,9 +3455,20 @@ digits = &-number   ;(2)
 			\DetailTime{5}{18}
 		\end{DetailTiming}
 
+		\DetailNote{Note: similar to {\tt RLD}, this instruction also doesn't assume any format of the data; it simply rotates nibbles. So while it's most frequently associated with BCD numbers, it can be used for shifting hexadecimal values or any other content.}
+
 	\end{DetailItem}
 
-	\begin{DetailItem}{RST n}
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{RST}{n}
 		{\IH{R}e\IH{ST}art}
 		{\SymRST{n}}
 
@@ -2490,66 +3497,21 @@ digits = &-number   ;(2)
 
 	\end{DetailItem}
 
-	\pagebreak
-	\begin{DetailItem}{SBC d,s}
-		{\IH{S}u\IH{B}tract with \IH{C}arry}
-		{\SymSBC{d}{s}}
-	
-		\begin{DetailVariants}
-			\textnormal{8 bit}\\
-			SBC A,A\\
-			SBC A,B\\
-			SBC A,C\\
-			SBC A,D\\
-			SBC A,E\\
-			SBC A,H\\
-			SBC A,L\\
-			SBC A,n
+	% SBC should be listed here alphabetically, but we move it backwards so we can have both SBC and SUB on the same page spread for easier comparison
+	\DetailItemSeePageReference{SBC}
 
-			\columnbreak
-			\textnormal{8 bit}\\
-			SBC A,IXH\UNDOC\\
-			SBC A,IXL\UNDOC\\
-			SBC A,IYH\UNDOC\\
-			SBC A,IYL\UNDOC\\
-			SBC A,(HL)\\
-			SBC A,(IX+d)\\
-			SBC A,(IY+d)
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
 
-			\columnbreak
-			\textnormal{16 bit}\\
-			SBC HL,BC\\
-			SBC HL,DE\\
-			SBC HL,HL\\
-			SBC HL,SP
-		\end{DetailVariants}
-		
-		Subtracts source operand {\tt s} or contents of the memory location addressed by {\tt s} and carry flag {\tt CF} from destination {\tt d}. Result is then stored to destination {\tt d}.
-
-		\begin{DetailEffects}[v]
-			\FlagsSBCr[8-bit]
-			\FlagsSBCrr[16-bit]
-			\DetailFlagsComments{
-				\item 16-bit: {\tt HF} set by carry from bit 11 (half carry in high byte)
-			}
-		\end{DetailEffects}
-						
-		\begin{DetailTiming}
-			\DetailTime[r]{1}{4}
-			\DetailTime[n]{2}{7}
-			\DetailTime[(HL)]{2}{7}
-			\DetailTime[HL,rr]{4}{15}
-			\DetailTime[(IX+d)]{5}{19}
-			\DetailTime[(IY+d)]{5}{19}
-		\end{DetailTiming}
-
-	\end{DetailItem}
-
-	\begin{DetailItem}{SCF}
+	\begin{DetailItem}{SCF}{}
 		{\IH{S}et \IH{C}arry \IH{F}lag}
 		{\SymSCF}
 
-		Sets carry flag {\tt CF}.
+		Sets carry flag \FlagCF{}.
 
 		\begin{DetailEffects}
 			\FlagsSCF
@@ -2562,7 +3524,15 @@ digits = &-number   ;(2)
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{SET b,s}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{SET}{b,s}
 		{\IH{SET} bit}
 		{\SymSET{s}}
 
@@ -2609,7 +3579,7 @@ digits = &-number   ;(2)
 
 		\begin{DetailEffects}
 			\FlagsSETr
-		\end{DetailEffects}			
+		\end{DetailEffects}
 
 		\begin{DetailTiming}
 			\DetailTime[r]{2}{8}
@@ -2620,7 +3590,14 @@ digits = &-number   ;(2)
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{SETAE\ZXN}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{SETAE}{\DetailItemZXN}
 		{\IH{SET} \IH{A}ccumulator from \IH{E}}
 		{\SymSETAE}
 
@@ -2637,7 +3614,15 @@ digits = &-number   ;(2)
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{SLA s}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{SLA}{s}
 		{\IH{S}hift \IH{L}eft \IH{A}rithmetic}
 		{\SymSLA{s}}
 		
@@ -2672,12 +3657,19 @@ digits = &-number   ;(2)
 			SLA (IY+d),L\UNDOC
 		\end{DetailVariants}
 
-		Performs arithmetic shift left of the operand {\tt s} or memory location addressed by {\tt s}. Bit {\tt 0} is forced to {\tt 0} and bit {\tt 7} is moved to {\tt CF}.
+		Performs arithmetic shift left of the operand {\tt s} or memory location addressed by {\tt s}. Bit {\tt 0} is forced to {\tt 0} and bit {\tt 7} is moved to \FlagCF{}.
 
 		\begin{DetailEffects}[p]
 			\FlagsSLAr
 		\end{DetailEffects}
-						
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagPV{\DetailFlagResultParity}
+			\DetailFlagCF[set to:]{bit 7 of the original value}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime[r]{2}{8}
 			\DetailTime[(HL)]{4}{15}
@@ -2687,7 +3679,14 @@ digits = &-number   ;(2)
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{SLL}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{SLL}{}
 		{\IH{S}hift \IH{L}eft \IH{L}ogical}
 		{}
 
@@ -2696,9 +3695,17 @@ digits = &-number   ;(2)
 	\end{DetailItem}
 
 	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
 	\begin{DetailItemMultiline}
-		{SLI s\UNDOC}{\IH{S}hift \IH{L}eft and \IH{I}ncrement}
-		{SL1 s\UNDOC}{\IH{S}hift \IH{L}eft and add \IH{1}}
+		{SLI}{s\UNDOC}{\IH{S}hift \IH{L}eft and \IH{I}ncrement}
+		{SL1}{s\UNDOC}{\IH{S}hift \IH{L}eft and add \IH{1}}
 		{\SymSLI{s}}
 		
 		\begin{DetailVariants}
@@ -2737,7 +3744,14 @@ digits = &-number   ;(2)
 		\begin{DetailEffects}[p]
 			\FlagsSLIr
 		\end{DetailEffects}
-						
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagPV{\DetailFlagResultParity}
+			\DetailFlagCF[set to:]{bit 7 of the original value}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime[r]{2}{8}
 			\DetailTime[(HL)]{4}{15}
@@ -2750,7 +3764,15 @@ digits = &-number   ;(2)
 	\end{DetailItemMultiline}
 
 	\pagebreak
-	\begin{DetailItem}{SRA s}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{SRA}{s}
 		{\IH{S}hift \IH{R}ight \IH{A}rithmetic}
 		{\SymSRA{s}}
 				
@@ -2765,12 +3787,19 @@ digits = &-number   ;(2)
 			SRA L	&				& SRA (IX+d),L\UNDOC	& SRA (IY+d),L\UNDOC \\
 		\end{DetailVariants}
 
-		Performs arithmetic shift right of the operand {\tt s} or memory location addressed by {\tt s}. Bit {\tt 0} is moved to {\tt CF} while bit {\tt 7} remains unchanged (on the assumption that it's the sign bit).
+		Performs arithmetic shift right of the operand {\tt s} or memory location addressed by {\tt s}. Bit {\tt 0} is moved to \FlagCF{} while bit {\tt 7} remains unchanged (on the assumption that it's the sign bit).
 
 		\begin{DetailEffects}[p]
 			\FlagsSRAr
 		\end{DetailEffects}
-						
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagPV{\DetailFlagResultParity}
+			\DetailFlagCF[set to:]{bit 0 of the original value}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime[r]{2}{8}
 			\DetailTime[(HL)]{4}{15}
@@ -2780,7 +3809,16 @@ digits = &-number   ;(2)
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{SRL s}
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{SRL}{s}
 		{\IH{S}hift \IH{R}ight \IH{L}ogical}
 		{\SymSRL{s}}
 				
@@ -2795,12 +3833,19 @@ digits = &-number   ;(2)
 			SRL L	&				& SRL (IX+d),L\UNDOC	& SRL (IY+d),L\UNDOC \\
 		\end{DetailVariants}
 
-		Performs logical shift right of the operand {\tt s} or memory location addressed by {\tt s}. Bit {\tt 0} is moved to {\tt CF} while {\tt 0} is moved to bit {\tt 7}.
+		Performs logical shift right of the operand {\tt s} or memory location addressed by {\tt s}. Bit {\tt 0} is moved to \FlagCF{} while {\tt 0} is moved to bit {\tt 7}.
 
 		\begin{DetailEffects}[p]
 			\FlagsSRLr
 		\end{DetailEffects}
-						
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagPV{\DetailFlagResultParity}
+			\DetailFlagCF[set to:]{bit 0 of the original value}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime[r]{2}{8}
 			\DetailTime[(HL)]{4}{15}
@@ -2811,7 +3856,83 @@ digits = &-number   ;(2)
 	\end{DetailItem}
 
 	\pagebreak
-	\begin{DetailItem}{SUB s}
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{SBC}{d,s}
+		{\IH{S}u\IH{B}tract with \IH{C}arry}
+		{\SymSBC{d}{s}}
+	
+		\begin{DetailVariants}
+			\textnormal{8 bit}\\
+			SBC A,A\\
+			SBC A,B\\
+			SBC A,C\\
+			SBC A,D\\
+			SBC A,E\\
+			SBC A,H\\
+			SBC A,L\\
+			SBC A,n
+
+			\columnbreak
+			\textnormal{8 bit}\\
+			SBC A,IXH\UNDOC\\
+			SBC A,IXL\UNDOC\\
+			SBC A,IYH\UNDOC\\
+			SBC A,IYL\UNDOC\\
+			SBC A,(HL)\\
+			SBC A,(IX+d)\\
+			SBC A,(IY+d)
+
+			\columnbreak
+			\textnormal{16 bit}\\
+			SBC HL,BC\\
+			SBC HL,DE\\
+			SBC HL,HL\\
+			SBC HL,SP
+		\end{DetailVariants}
+		
+		Subtracts source operand {\tt s} or contents of the memory location addressed by {\tt s} and carry flag \FlagCF{} from destination {\tt d}. Result is then stored to destination {\tt d}.
+
+		\begin{DetailEffects}[v]
+			\FlagsSBCr[8-bit]
+			\FlagsSBCrr[16-bit]
+		\end{DetailEffects}
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagHF{\DetailFlagResultHalfBorrow*}*
+			\DetailFlagPV{\DetailFlagResultOverflow}*
+			\DetailFlagCF{\DetailFlagResultBorrow*}
+		\end{DetailEffectsFlags}
+
+		\begin{DetailTiming}
+			\DetailTime[r]{1}{4}
+			\DetailTime[n]{2}{7}
+			\DetailTime[(HL)]{2}{7}
+			\DetailTime[HL,rr]{4}{15}
+			\DetailTime[(IX+d)]{5}{19}
+			\DetailTime[(IY+d)]{5}{19}
+		\end{DetailTiming}
+
+	\end{DetailItem}
+
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{SUB}{s}
 		{\IH{SUB}tract}
 		{\SymSUB{s}}
 
@@ -2842,7 +3963,15 @@ digits = &-number   ;(2)
 		\begin{DetailEffects}[v]
 			\FlagsSUBr
 		\end{DetailEffects}
-						
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagHF{\DetailFlagResultHalfBorrow*}*
+			\DetailFlagPV{\DetailFlagResultOverflow}*
+			\DetailFlagCF{\DetailFlagResultBorrow*}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime[r]{1}{4}
 			\DetailTime[n]{2}{7}
@@ -2853,11 +3982,20 @@ digits = &-number   ;(2)
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{SWAPNIB\ZXN}
+	\pagebreak
+
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{SWAPNIB}{\DetailItemZXN}
 		{\IH{SWAP} \IH{NIB}bles}
 		{\SymSWAPNIB}
 
-		Swaps the high and low nibbles of accumulator {\tt A}.
+		Swaps the high and low nibbles of the accumulator {\tt A}.
 
 		\begin{DetailEffects}
 			\FlagsSWAPNIB
@@ -2869,24 +4007,44 @@ digits = &-number   ;(2)
 
 	\end{DetailItem}
 
-	\begin{DetailItem}{TEST n\ZXN}
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
+	\begin{DetailItem}{TEST}{n\ZXN}
 		{\IH{TEST}}
 		{\SymTEST}
 
-		Similar to {\tt CP} (page \pageref{DetailRefCP}), but performs an {\tt AND} instead of a subtraction.
+		Similar to {\tt CP} (page \DetailItemPageRef{CP}), but performs an {\tt AND} instead of a subtraction. Again, {\tt AND} is performed between the accumulator {\tt A} and value {\tt n}. Status flags are updated according to the result, but the result is then discarded (value of {\tt A} is not changed).
 
 		\begin{DetailEffects}[p]
 			\FlagsTESTn
 		\end{DetailEffects}
-						
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero ~(no bits matched)}
+			\DetailFlagPV{\DetailFlagResultParity}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime{3}{11}
 		\end{DetailTiming}
 
 	\end{DetailItem}
 
+	%----------------------------------------------------------------------------------------------------------------------
+	% ███████████████████████████████████████████████████████████████████
+	% █▄─▄█▄─▀█▄─▄█─▄▄▄▄█─▄─▄─█▄─▄▄▀█▄─██─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█
+	% ██─███─█▄▀─██▄▄▄▄─███─████─▄─▄██─██─██─███▀███─████─██─██─██─█▄▀─██
+	% ▀▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▀▄▄▄▄▀▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀
+	%----------------------------------------------------------------------------------------------------------------------
+
 	\pagebreak
-	\begin{DetailItem}{XOR s}
+	\begin{DetailItem}{XOR}{s}
 		{bitwise e\IH{X}clusive \IH{OR}}
 		{\SymXOR{s}}
 
@@ -2932,7 +4090,13 @@ digits = &-number   ;(2)
 		\begin{DetailEffects}[p]
 			\FlagsXORr
 		\end{DetailEffects}
-						
+
+		\begin{DetailEffectsFlags}
+			\DetailFlagSF{\DetailFlagResultSign}
+			\DetailFlagZF{\DetailFlagResultZero}
+			\DetailFlagPV{\DetailFlagResultParity}
+		\end{DetailEffectsFlags}
+
 		\begin{DetailTiming}
 			\DetailTime[r]{1}{4}
 			\DetailTime[n]{2}{7}
@@ -2944,8 +4108,3 @@ digits = &-number   ;(2)
 	\end{DetailItem}
 
 \end{basedescript}
-
-
-\pagebreak
-\IntentionallyEmpty
-\pagebreak

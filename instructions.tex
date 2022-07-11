@@ -57,7 +57,7 @@
 	\IfEqCase{#1}{
 		{0}{DE$\leftarrow$signed(DE)}
 		{1}{>>(B$\wedge$\$1F)}
-		{}{\SymBSRA[0]>>\SymBSRA[1]}
+		{}{\SymBSRA[0]\SymBSRA[1]}
 	}
 }
 
@@ -779,12 +779,12 @@
 \newcommand{\FlagsBRLC}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsCALLnn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
 \newcommand{\FlagsCALLccnn}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsCCF}[1][]{\Flags[#1]{\FN}{\FN}{\FN\FlagsSee{2}}{\FN}{0}{\FS}}
+\newcommand{\FlagsCCF}[1][]{\Flags[#1]{\FN}{\FN}{\FX\FlagsSee{2}}{\FN}{0}{\FS}}
 \newcommand{\FlagsCPr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{1}{\FS}}
-\newcommand{\FlagsCPI}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
-\newcommand{\FlagsCPIR}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
-\newcommand{\FlagsCPD}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
-\newcommand{\FlagsCPDR}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FX\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
+\newcommand{\FlagsCPI}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FS\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
+\newcommand{\FlagsCPIR}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FS\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
+\newcommand{\FlagsCPD}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FS\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
+\newcommand{\FlagsCPDR}[1][]{\Flags[#1]{\FS\FlagsSee{1}}{\FS\FlagsSee{2}}{\FS\FlagsSee{1}}{\FX\FlagsSee{3}}{1}{\FN}}
 \newcommand{\FlagsCPL}[1][]{\Flags[#1]{\FN}{\FN}{1}{\FN}{1}{\FN}}
 \newcommand{\FlagsDAA}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPP}{\FN}{\FS}}
 \newcommand{\FlagsDECr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV\FlagsSee{5}}{1}{\FN}}
@@ -873,5 +873,5 @@
 \newcommand{\FlagsSRLr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{\FS}}
 \newcommand{\FlagsSUBr}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPV}{1}{\FS}}
 \newcommand{\FlagsSWAPNIB}[1][\FlagsNoEffect]{\Flags[#1]{\FN}{\FN}{\FN}{\FN}{\FN}{\FN}}
-\newcommand{\FlagsTESTn}[1][]{\Flags[#1]{\FS}{\FS}{\FS}{\FlagsFPP}{\FU}{\FS}}
+\newcommand{\FlagsTESTn}[1][]{\Flags[#1]{\FS}{\FS}{1}{\FlagsFPP}{\FU}{0}}
 \newcommand{\FlagsXORr}[1][]{\Flags[#1]{\FS}{\FS}{0}{\FlagsFPP}{0}{0}}

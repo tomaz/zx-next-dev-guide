@@ -64,6 +64,7 @@
 \newcommand{\DetailSymbol}[1]{{\tt #1}}
 % symbolic operation for alternative variants
 \newcommand{\DetailSymbolVariants}[2]{
+	\small
 	\underline{\tt #1}:\\[1ex]
 	\DetailSymbol{#2}
 }
@@ -74,16 +75,24 @@
 % (I)nstruction (H)ighlight (for highlighting letters forming mnemonic in `DetailName`)
 \newcommand{\IH}[1]{\underline{#1}}
 
+% forms label name for the given item
+% #1 mnemonic
+\newcommand{\DetailItemRef}[1]{InstrDetailRef#1}
+% convenience for less verbose page reference for given item
+% #1 mnemonic
+\newcommand{\DetailItemPageRef}[1]{\pageref{\DetailItemRef{#1}}}
+
 
 % ▒█▀▄▀█ ░█▀▀█ ▀█▀ ▒█▄░▒█ 　 ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀█ ▒█░░░ ░█▀▀█ ▒█▀▀█ ░█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ ▒█▀▀▀█ 
 % ▒█▒█▒█ ▒█▄▄█ ▒█░ ▒█▒█▒█ 　 ▒█░▒█ ▒█▀▀▀ ▒█░░░ ▒█░░░ ▒█▄▄█ ▒█▄▄▀ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ ░▀▀▀▄▄ 
 % ▒█░░▒█ ▒█░▒█ ▄█▄ ▒█░░▀█ 　 ▒█▄▄▀ ▒█▄▄▄ ▒█▄▄█ ▒█▄▄█ ▒█░▒█ ▒█░▒█ ▒█░▒█ ░▒█░░ ▄█▄ ▒█▄▄▄█ ▒█░░▀█ ▒█▄▄▄█
 
 % main instruction enviroment, takes 3 parameters:
-% - mnemonic (uses `DetailMnemonic` under the hood)
-% - name (uses `DetailName` under the hood)
-% - symbolic operation (uses `DetailSymbol` under the hood)
-\newenvironment{DetailItem}[3]{
+% #1 mnemonic only (mainly for section names and references)
+% #2 parameters (uses `DetailMnemonic` under the hood)
+% #3 name (uses `DetailName` under the hood)
+% #4 symbolic operation (uses `DetailSymbol` under the hood)
+\newenvironment{DetailItem}[4]{
 	% insert invisible section marker for TOC (only for e-book)
 	\ifdefined\isPDF
 		\refstepcounter{section}
@@ -91,14 +100,15 @@
 		\sectionmark{#1}
 	\fi
 
-	\DetailMnemonic{#1}
-	\DetailName{#2}
+	\label{\DetailItemRef{#1}}
+	\DetailMnemonic{#1 #2}
+	\DetailName{#3}
 	% if symbolic operation is not given we should not use any spacing, otherwise, we should
-	\if\relax\detokenize{#3}\relax
+	\if\relax\detokenize{#4}\relax
 		% we don't have symbolic operation
 	\else
 		\\[1.2ex]
-		\DetailSymbol{#3}
+		\DetailSymbol{#4}
 	\fi
 	% reduce spacing before and after multicols
 	\setlength{\multicolsep}{1ex}
@@ -107,28 +117,33 @@
 	% we want some spacing below each item
 	\vspace{1em}
 }
+
 % same as DetailItem but allows 2 lines for title:
-% - mnemonic line 1 (uses `DetailMnemonic` under the hood)
-% - name for line 1 (uses `DetailName` under the hood)
-% - mnemonic line 2 (for second line)
-% - name for line 2
-% - symbolic operation (uses `DetailSymbol` under the hood)
-\newenvironment{DetailItemMultiline}[5]{
+% #1 mnemonic line 1 (uses `DetailMnemonic` under the hood)
+% #2 parameters line 1
+% #3 name for line 1 (uses `DetailName` under the hood)
+% #4 mnemonic line 2 (for second line)
+% #5 parameters line 2
+% #6 name for line 2
+% #7 symbolic operation (uses `DetailSymbol` under the hood)
+\newenvironment{DetailItemMultiline}[7]{
 	% insert invisible section marker for TOC (only for e-book)
 	\ifdefined\isPDF
 		\refstepcounter{section}
-		\addcontentsline{toc}{section}{\protect\numberline{\thesection}#1 / #3}
-		\sectionmark{#1 / #3}
+		\addcontentsline{toc}{section}{\protect\numberline{\thesection}#1 / #4}
+		\sectionmark{#1 / #4}
 	\fi
 
-	\DetailMnemonic{#1\\#3}
-	\DetailName{#2\\#4}
+	\label{\DetailItemRef{#1}}
+	\label{\DetailItemRef{#4}}
+	\DetailMnemonic{#1 #2\\#4 #5}
+	\DetailName{#3\\#6}
 	% if symbolic operation is not given we should not use any spacing, otherwise, we should
-	\if\relax\detokenize{#5}\relax
+	\if\relax\detokenize{#7}\relax
 		% we don't have symbolic operation
 	\else
 		\\[1.2ex]
-		\DetailSymbol{#5}
+		\DetailSymbol{#7}
 	\fi
 	% reduce spacing before and after multicols
 	\setlength{\multicolsep}{1ex}
@@ -137,6 +152,10 @@
 	% we want some spacing below each item
 	\vspace{1em}
 }
+
+% use this as parameters in above 2 macros when ZX Next Extended instruction doesn't have any parameters. It will eliminate space between mnemonic and ZX indicator
+\newcommand{\DetailItemZXN}{\hspace*{-1ex}\ZXN}
+
 
 % ▒█▀▀▄ ▒█▀▀▀ ▒█▀▀▀█ ▒█▀▀█ ▒█▀▀█ ▀█▀ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 　 ▒█▀▀▀█ ▒█▀▀▀ ▒█▀▀█ ▀▀█▀▀ ▀█▀ ▒█▀▀▀█ ▒█▄░▒█ 
 % ▒█░▒█ ▒█▀▀▀ ░▀▀▀▄▄ ▒█░░░ ▒█▄▄▀ ▒█░ ▒█▄▄█ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 　 ░▀▀▀▄▄ ▒█▀▀▀ ▒█░░░ ░▒█░░ ▒█░ ▒█░░▒█ ▒█▒█▒█ 
@@ -215,7 +234,7 @@
 % - p = indicate Parity
 % - v = indicate oVerflow
 % - default = just PV
-\NewDocumentEnvironment{DetailEffects}{ O{} +b }{   
+\NewDocumentEnvironment{DetailEffects}{ O{} O{Effects} +b }{   
 	%                               /spacer
 	%                               |/note
 	\vspace{3pt}                   %||/SF     /ZF      /(YF)    /HF      /(XF)    /PV      /NF      /CF      |
@@ -223,7 +242,7 @@
 		% we need to use hhline because \cellcolor renders on top of cline/hline, and we can't use \rowcolor because we only want some cells to use background...
 		\hhline{~~|*{8}{-|}}
 
-		\multicolumn{2}{@{}X}{\textbf{Effects}} &
+		\multicolumn{2}{@{}X}{\textbf{#2}} &
 		\multicolumn{1}{|c|}{\DetailEffectHead{SF}} &
 		\DetailEffectHead{ZF} &
 		\DetailEffectHead{} &
@@ -233,21 +252,87 @@
 		\DetailEffectHead{NF} &
 		\DetailEffectHead{CF}\notet\noteb\\[1pt]\cline{3-10}
 
-		#2
+		#3
 
 	\end{tabularx}
 	\vspace{2pt}
 }{}
 
+% effects details
+\NewDocumentEnvironment{DetailEffectsFlags}{ +b }{
+	{
+	\vspace{0pt}
+	\renewcommand{\arraystretch}{0.5}	% setting default row spacing low will allow us to manipulate individual rows to be taller (see \DetailFlag)
+	\begin{tabularx}{\linewidth}{@{}llR{3.35cm}X}
+
+		#1
+
+	\end{tabularx}
+	\vspace{2pt}
+	}
+}{}
+
+% common flag result descriptions
+\NewDocumentCommand{\DetailFlagResultHalfBorrow}{ s }{borrow from bit 4\IfBooleanTF{#1}{ (bit 12 for 16-bit)}{}}
+\NewDocumentCommand{\DetailFlagResultBorrow}{ s }{borrow from bit 8\IfBooleanTF{#1}{ (bit 16 for 16-bit)}{}}
+\NewDocumentCommand{\DetailFlagResultHalfCarry}{ s }{carry from bit 3\IfBooleanTF{#1}{ (bit 11 for 16-bit)}{}}
+\NewDocumentCommand{\DetailFlagResultCarry}{ s }{carry from bit 7\IfBooleanTF{#1}{ (bit 15 for 16-bit)}{}}
+\newcommand{\DetailFlagResultOverflowListBottomSpacing}{\vspace*{-4ex}}
+\newcommand{\DetailFlagResultSign}[1][]{\IfEq{#1}{}{result}{{\tt #1}} is negative (bit {\tt 7} is set)}
+\newcommand{\DetailFlagResultZero}[1][]{\IfEq{#1}{}{result}{{\tt #1}} is {\tt 0}}
+\newcommand{\DetailFlagResultParity}[1][]{\IfEq{#1}{}{result}{{\tt #1}} has even number of bits set}
+\newcommand{\DetailFlagResultOverflow}{
+	\DetailFlagsList{
+		\item both operands positive and result negative
+		\item both operands negative and result positve
+	}
+	\DetailFlagResultOverflowListBottomSpacing % we don't want additional space below the table, otherwise next item would have larger gap
+}
+
+% describes the given flag in details
+% #1 mandatory flag name, empty will leave less space before this row
+% #2 mandatory prefix before description
+% #3 mandatory description
+% #4 optional, if "p" some vertical "prefix" space is inserted above
+% note use of \rule when #1 (flag name) is empty - we want to have less spacing before next row in such case to keep all rows of the same flag closer together (don't use both, #4=p and empty #1 since they both set rules, results may be unpredictable)
+\NewDocumentCommand{\DetailFlag}{ m m m O{} }{
+	& \textbf{#1} & #2 & #3 
+	\IfEq{#4}{p}{
+		\rule{0pt}{1ex}
+		\rule[-2ex]{0pt}{0pt}
+	}{}
+	\IfEq{#1}{}{}{
+		\rule[2.5ex]{0pt}{0pt}
+	} \\[2pt]
+}
+% concrete flags (so we don't have to type in the names as strings)
+% #1 optional prefix before description (default = "set if:")
+% #2 optional name of the flag, empty will leave less space before this row
+% #3 mandatory description
+% #4 * to add some vertical spacing before the item, empty to leave default
+\NewDocumentCommand{\DetailFlagSF}{ O{set if:} O{SF} m s }{\DetailFlag{#2}{#1}{#3}[\IfBooleanTF{#4}{p}{}]}
+\NewDocumentCommand{\DetailFlagZF}{ O{set if:} O{ZF} m s }{\DetailFlag{#2}{#1}{#3}[\IfBooleanTF{#4}{p}{}]}
+\NewDocumentCommand{\DetailFlagHF}{ O{set if:} O{HF} m s }{\DetailFlag{#2}{#1}{#3}[\IfBooleanTF{#4}{p}{}]}
+\NewDocumentCommand{\DetailFlagPV}{ O{set if:} O{PV} m s }{\DetailFlag{#2}{#1}{#3}[\IfBooleanTF{#4}{p}{}]}
+\NewDocumentCommand{\DetailFlagNF}{ O{set if:} O{NF} m s }{\DetailFlag{#2}{#1}{#3}[\IfBooleanTF{#4}{p}{}]}
+\NewDocumentCommand{\DetailFlagCF}{ O{set if:} O{CF} m s }{\DetailFlag{#2}{#1}{#3}[\IfBooleanTF{#4}{p}{}]}
+
+% creates a list with specific margins and spacing to be used within detail flags descriptions
+\newcommand{\DetailFlagsList}[1]{
+	\vspace{-3ex}
+	\setlist{leftmargin=1em,after=\vspace{-2ex}}
+	\begin{itemize}
+		\setlength\itemsep{-1pt}
+		#1
+	\end{itemize}
+}
+
 % this is used where additional comments are needed below flags table (actually, technically, from LaTeX point of view, from within the table itself); each item should be provided with `\item` command
 \newcommand{\DetailFlagsComments}[1]{ 
 	& & \multicolumn{8}{p{7.8cm}}{
-		\vspace{-2ex}
-		\setlist{leftmargin=1em}
-		\begin{itemize}
-			\setlength\itemsep{-1pt}
-			#1
-		\end{itemize}	
+		\vspace{1ex}	% compensate for -3ex from \DetailFlagsList, we want -2ex
+		\DetailFlagsList{#1}
+		\vspace{2ex}	% compenase for -2ex from \DetailFlagsList, we want default
 	} \\[-3ex]
 }
 
@@ -306,9 +391,9 @@
 }
 
 % references to multiple items from other pages; parameters:
-% - items description
-% - page references (from `label` command)
-\newcommand{\DetailItemsRef}[2]{
+% #1 items description
+% #2 page references (from `label` command)
+\newcommand{\DetailItemsSeePageReference}[2]{
 	\vspace*{-1.5em}
 	\desclabelstyle{\pushlabel}
 	\DetailMnemonic{#1}
@@ -316,6 +401,7 @@
 	\DetailNote{#2}
 }
 % reference to single item from another page
-\newcommand{\DetailItemRef}[2]{
-	\DetailItemsRef{#1}{See page \pageref{#2}}
+% #1 mnemonic (also serves to form the page reference itself)
+\newcommand{\DetailItemSeePageReference}[1]{
+	\DetailItemsSeePageReference{#1}{See page \DetailItemPageRef{#1}}
 }
