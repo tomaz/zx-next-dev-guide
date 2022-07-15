@@ -356,9 +356,9 @@
 
 \newcommand{\SymOUTD}[1][]{
 	\IfEqCase{#1}{
-		{0}{(BC)$\leftarrow$(HL)}
-		{1}{HL$\leftarrow$HL-1}
-		{2}{B$\leftarrow$B-1}
+		{0}{B$\leftarrow$B-1}
+		{1}{(BC)$\leftarrow$(HL)}
+		{2}{HL$\leftarrow$HL-1}
 		{}{\SymOUTD[0]\\\SymOUTD[1]\\\SymOUTD[2]}
 	}
 }
