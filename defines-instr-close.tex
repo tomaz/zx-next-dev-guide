@@ -95,12 +95,10 @@
 % #3 name (uses `DetailName` under the hood)
 % #4 symbolic operation (uses `DetailSymbol` under the hood)
 \newenvironment{DetailItem}[4]{
-	% insert invisible section marker for TOC (only for e-book)
-	\ifdefined\isPDF
-		\refstepcounter{section}
-		\addcontentsline{toc}{section}{\protect\numberline{\thesection}#1}
-		\sectionmark{#1}
-	\fi
+	% insert invisible section marker for TOC
+	\refstepcounter{section}
+	\addcontentsline{toc}{section}{\protect\numberline{\thesection}#1}
+	\sectionmark{#1}
 
 	\label{\DetailItemRef{#1}}
 	\DetailMnemonic{#1 #2}
