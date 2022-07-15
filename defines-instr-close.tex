@@ -19,6 +19,8 @@
 
 % ~ doesn't work here, so we need to use invisible characters instead
 \renewcommand{\SymTab}{\phantom{>>}}
+% similar to \SymTab, ~ doesn't work, so we use manual space instead; however the macros already space it way too much, so we basically need to reduce it to get approximate 1 space
+\renewcommand{\SymSpc}{\hspace*{-2ex}}
 
 % all drawings should be scaled up and drawn slightly to the left to be aligned perfectly with the rest of the text. Note that instruction tables use optional parameter for vertical spacing, we take it over for horizontal spacing - vertical spacing is fine in details, but we do need horizontal to align drawing with rest of the text
 \renewcommand{\SymDrawing}[2][-1.7em]{

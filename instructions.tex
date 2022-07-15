@@ -21,6 +21,7 @@
 
 % tab declaration that's used for all symbolic operation macros
 \newcommand{\SymTab}{~~}
+\newcommand{\SymSpc}{~}
 
 % drawing declaration that's used for all symbolic operation macros; allows redeclaring so that all drawings may be repositioned or resized for example; allows one optional argument that is used for vertical spacing by default (but can be reused for something else in redeclaration)
 \newcommand{\SymDrawing}[2][-10pt]{
@@ -232,7 +233,7 @@
 	\IfEqCase{#1}{
 		{0}{do LDD}
 		{1}{while BC>0}
-		{}{\SymLDDR[0]\\\SymLDDR[1]}
+		{}{\SymLDDR[0]:\\\SymTab{}\SymLDD[0]\\\SymTab{}\SymLDD[1]:\SymSpc{}\SymTab{}\SymLDD[2]:\SymSpc{}\SymTab{}\SymLDD[3]\\\SymLDDR[1]}
 	}
 }
 
@@ -240,7 +241,7 @@
 	\IfEqCase{#1}{
 		{0}{do LDDX}
 		{1}{while BC>0}
-		{}{\SymLDDRX[0]\\\SymLDDRX[1]}
+		{}{\SymLDDRX[0]:\\\SymTab{}\SymLDDX[0]\\\SymTab{}\SymLDDX[1]:\SymSpc{}\SymTab{}\SymLDDX[2]:\SymSpc{}\SymTab{}\SymLDDX[3]\\\SymLDDRX[1]}
 	}
 }
 
@@ -268,7 +269,7 @@
 	\IfEqCase{#1}{
 		{0}{do LDI}
 		{1}{while BC>0}
-		{}{\SymLDIR[0]\\\SymLDIR[1]}
+		{}{\SymLDIR[0]:\\\SymTab{}\SymLDI[0]\\\SymTab{}\SymLDI[1]:\SymSpc{}\SymTab{}\SymLDI[2]:\SymSpc{}\SymTab{}\SymLDI[3]\\\SymLDIR[1]}
 	}
 }
 
@@ -286,7 +287,7 @@
 	\IfEqCase{#1}{
 		{0}{do LDIX}
 		{1}{while BC>0}
-		{}{\SymLDIRX[0]\\\SymLDIRX[1]}
+		{}{\SymLDIRX[0]:\\\SymTab{}\SymLDIX[0]\\\SymTab{}\SymLDIX[1]:\SymSpc{}\SymTab{}\SymLDIX[2]:\SymSpc{}\SymTab{}\SymLDIX[3]\\\SymLDIRX[1]}
 	}
 }
 
@@ -298,7 +299,7 @@
 		{3}{\SymTab{}DE$\leftarrow$DE+1}
 		{4}{\SymTab{}BC$\leftarrow$BC-1}
 		{5}{while BC>0}
-		{}{\SymLDPIRX[0]\\\SymLDPIRX[1]\\\SymLDPIRX[2]\\\SymLDPIRX[3]\\\SymLDPIRX[4]\\\SymLDPIRX[5]}
+		{}{\SymLDPIRX[0]\\\SymLDPIRX[1]\\\SymLDPIRX[2]\\\SymLDPIRX[3]:\SymSpc{}\SymLDPIRX[4]\\\SymLDPIRX[5]}
 	}
 }
 
