@@ -80,6 +80,8 @@
 % forms label name for the given item
 % #1 mnemonic
 \newcommand{\DetailItemRef}[1]{InstrDetailRef#1}
+% this is used to avoid warning about repeated label in macros below (in reality there is no repetition in the generated document, just suppresses compiler warning)
+\newcommand{\DetailItemLabel}[1]{\label{\DetailItemRef{#1}}}
 % convenience for less verbose page reference for given item
 % #1 mnemonic
 \newcommand{\DetailItemPageRef}[1]{\pageref{\DetailItemRef{#1}}}
@@ -100,7 +102,7 @@
 	\addcontentsline{toc}{section}{\protect\numberline{\thesection}#1}
 	\sectionmark{#1}
 
-	\label{\DetailItemRef{#1}}
+	\DetailItemLabel{#1}
 	\DetailMnemonic{#1 #2}
 	\DetailName{#3}
 	% if symbolic operation is not given we should not use any spacing, otherwise, we should
@@ -134,8 +136,8 @@
 		\sectionmark{#1 / #4}
 	\fi
 
-	\label{\DetailItemRef{#1}}
-	\label{\DetailItemRef{#4}}
+	\DetailItemLabel{#1}
+	\DetailItemLabel{#4}
 	\DetailMnemonic{#1 #2\\#4 #5}
 	\DetailName{#3\\#6}
 	% if symbolic operation is not given we should not use any spacing, otherwise, we should
