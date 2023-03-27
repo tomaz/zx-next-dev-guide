@@ -41,12 +41,12 @@ Before we can start playing sounds, we need to enable the sound hardware. While 
 \begin{tcblisting}{}
 	; Setup Turbo Sound chip
 	LD BC, &FFFD            ; Turbo Sound Next Control Register
-	LD A, %11111101         ; Enable left+right audio, select AY1
+	LD A, %11111101         ; Enable left+right audio, select AY2
 	OUT (C), A
 	
 	; Setup mapping of chip channels to stereo channels
 	NEXTREG &08, %00010010  ; Use ABC, enable internal speaker & turbosound
-	NEXTREG &09, %11100000  ; Enable mono for AY1-3
+	NEXTREG &09, %11100000  ; Enable mono for AY0-2
 \end{tcblisting}
 
 Programming AY consists of writing various values to its registers. As mentioned, this is a two-step process: first select register number, then write the value. Multiple writes are required for each tone to set period, volume etc. To make it simpler, I created a subroutine. It takes 2 parameters: {\tt A} for register number ({\tt 0-13}) and {\tt D} with value to write.
@@ -90,9 +90,9 @@ When bit {\tt 7} is {\tt 1}:
 		\PortDescOnly{
 			\begin{PortBitConfig}
 				\PortBitLine{00}{Unused}
-				\PortBitLine{01}{AY3}
-				\PortBitLine{10}{AY2}
-				\PortBitLine{11}{AY1}
+				\PortBitLine{01}{AY2}
+				\PortBitLine{10}{AY1}
+				\PortBitLine{11}{AY0}
 			\end{PortBitConfig}
 		}
 \end{NextPort}

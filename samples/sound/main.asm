@@ -23,7 +23,7 @@
 start:
 	; Setup Turbo Sound chip
 	LD BC, $FFFD		; Turbo Sound Next Control Register
-	LD A, %11111101		; Enable left+right audio, select AY1
+	LD A, %11111101		; Enable left+right audio, select AY2
 	OUT (C), A
 
 	; Setup mapping of chip channels to stereo channels
